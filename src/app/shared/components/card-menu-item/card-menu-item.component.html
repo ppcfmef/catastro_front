@@ -1,0 +1,20 @@
+<div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
+    <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer">
+        <div class="aspect-w-9 aspect-h-6">
+            <div class="flex items-center justify-center">
+                <!-- Icon -->
+                <mat-icon
+                    class="icon-size-14 text-hint"
+                    [svgIcon]="item?.icon"></mat-icon>
+            </div>
+        </div>
+        <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+            <div class="truncate"
+                 [matTooltip]="item?.title">
+                {{item?.title}}</div>
+            <ng-container *ngIf="item?.subtitle">
+                <div class="text-secondary truncate">{{item?.subtitle}}</div>
+            </ng-container>
+        </div>
+    </a>
+</div>
