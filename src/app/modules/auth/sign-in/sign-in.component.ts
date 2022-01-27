@@ -9,7 +9,8 @@ import { AuthService } from 'app/core/auth/auth.service';
     selector     : 'auth-sign-in',
     templateUrl  : './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations   : fuseAnimations,
+    styleUrls  : ['./sign-in.component.scss']
 })
 export class AuthSignInComponent implements OnInit
 {
@@ -98,7 +99,7 @@ export class AuthSignInComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Wrong email or password'
+                        message: 'Usuario o contraseña incorrecta'
                     };
 
                     // Show the alert
