@@ -2,3 +2,24 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+
+:root {
+    --mef-c-red: #db4b4b;
+    --mef-c-purple: #666699;
+    --mef-c-grey: #656364;
+  }
+
+.bg-mef{
+    background-color: var(--mef-c-red) !important;
+}
+
+.c-purple-mef{
+    color: var(--mef-c-purple) !important ;
+}
+.c-grey-mef{
+    color: var(--mef-c-grey) !important;
+}
+
+.c-grey-red{
+    color: var(--mef-c-red) !important;
+}
