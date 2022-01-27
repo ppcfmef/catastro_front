@@ -26,51 +26,9 @@
                 </div>
             </div>
 
-            <!-- Items list -->
-            <ng-container *ngIf="navigation?.default?.length > 0; else noItems">
-                <div class="flex flex-col gap-2 p-6">
-                    <!-- Items -->
-                    <ng-container *ngFor="let item of navigation?.default; trackBy:trackByFn">
-                        <div [ngSwitch]="item?.type">
-                            <ng-container *ngSwitchCase="'basic'">
-                                <app-card-menu-item [item]="item"></app-card-menu-item>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'group'">
-                                <div class="flex flex-col">
-                                    <div class="font-medium">{{ item?.title }}</div>
-                                    <div class="flex flex-row">
-                                        <ng-container *ngFor="let child of item?.children; trackBy:trackByFn">
-                                            <app-card-menu-item
-                                                [item]="child"></app-card-menu-item>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'collapsable'">
-                                <ng-container
-                                    *ngFor="let subChild of item?.children; trackBy:trackByFn">
-                                    <app-card-menu-item
-                                        [item]="subChild"></app-card-menu-item>
-                                </ng-container>
-                            </ng-container>
-                        </div>
-                    </ng-container>
-
-                </div>
-            </ng-container>
-
-            <!-- No items template -->
-            <ng-template #noItems>
-                <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
-                    <mat-icon
-                        class="icon-size-24"
-                        [svgIcon]="'iconsmind:file_hide'"></mat-icon>
-                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Usted no tiene permisos
-                        asignados en el sistema!
-                    </div>
-                </div>
-            </ng-template>
-
+            <div class="p-6">
+                <router-outlet></router-outlet>
+            </div>
 
         </div>
 
