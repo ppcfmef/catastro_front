@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 
 @Component({
@@ -9,6 +9,8 @@ import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 export class CardMenuItemComponent implements OnInit {
 
     @Input() item: FuseNavigationItem;
+
+    @Output() eventPageRedirect: EventEmitter<void> = new EventEmitter<void>();
 
     constructor() {
     }

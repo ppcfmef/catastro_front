@@ -19,25 +19,15 @@ import {ActivatedRoute, Router} from '@angular/router';
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    encapsulation  : ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    navigationType: 'aside'
-        | 'basic'
-        | 'collapsable'
-        | 'divider'
-        | 'group'
-        | 'spacer';
 
     title = 'Menú Principal';
-
-    navigation: Navigation;
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
@@ -55,45 +45,16 @@ export class HomeComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Subscribe to navigation data
-        this._navigationService.navigation$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((navigation: Navigation) => {
-                this.navigation = navigation;
-                console.log('navigation', this.navigation);
-            });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
-
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
     }
 
     /**
      * On backdrop clicked
      */
-    onBackdropClicked(): void
-    {
+    onBackdropClicked(): void {
         // Go back to the list
         this._router.navigate(['./'], {relativeTo: this._activatedRoute});
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-
 }
