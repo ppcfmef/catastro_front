@@ -70,6 +70,10 @@ export const appRoutes: Route[] = [
                 path: 'home',
                 loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule)
             },
+            {
+                path: 'security',
+                loadChildren: () => import('app/modules/admin/security/security.module').then(m => m.SecurityModule)
+            },
         ]
     }
 ];
