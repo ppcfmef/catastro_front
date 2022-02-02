@@ -74,6 +74,10 @@ export const appRoutes: Route[] = [
                 path: 'security',
                 loadChildren: () => import('app/modules/admin/security/security.module').then(m => m.SecurityModule)
             },
+            {
+                path: 'mapping',
+                loadChildren: () => import('app/modules/admin/mapping/mapping.module').then(m => m.MappingModule)
+            },
         ]
     }
 ];

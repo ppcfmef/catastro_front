@@ -1,7 +1,7 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-const host = 'https://0c10-161-132-234-232.ngrok.io/';
+const host = 'https://c8cf-179-6-220-227.ngrok.io/';
 
 export const environment = {
     production: false,
