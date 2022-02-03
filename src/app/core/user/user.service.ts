@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
+import {IPagination} from '../common/interfaces/common.interface';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -66,5 +68,15 @@ export class UserService
                 this._user.next(response);
             })
         );
+    }
+
+
+    /**
+     * Get Users All
+     *
+     */
+    getUsers(queryParams = null): Observable<IPagination<User>>
+    {
+        return this._httpClient.get<IPagination<User>>(`${environment.apiUrl}/users/`, {params: queryParams});
     }
 }
