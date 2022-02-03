@@ -9,16 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class UsersComponent implements OnInit {
 
-    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
-    drawerMode: 'side' | 'over';
-
-    title = 'Gestion de usuarios';
-
-    constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _router: Router,
-    ) {
+    constructor() {
     }
 
     /**
@@ -27,15 +18,6 @@ export class UsersComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    /**
-     * On backdrop clicked
-     */
-    onBackdropClicked(): void {
-        // Go back to the list
-        this._router.navigate(['./'], {relativeTo: this._activatedRoute});
 
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    }
 
 }
