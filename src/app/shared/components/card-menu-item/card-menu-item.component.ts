@@ -9,6 +9,7 @@ import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 export class CardMenuItemComponent implements OnInit {
 
     @Input() item: FuseNavigationItem;
+    @Input() bgColor = 'white';
 
     @Output() eventPageRedirect: EventEmitter<void> = new EventEmitter<void>();
 

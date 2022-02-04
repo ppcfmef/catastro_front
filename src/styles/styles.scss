@@ -34,3 +34,24 @@
     font-size: 16px;
     font-weight: 500;
 }
+
+/******************
+Personalizacion 
+
+*******************/
+
+button.mat-flat-button.mat-primary{
+    background-color: var(--mef-c-purple) !important;
+}
+
+.separador-footer{
+    height: 88px;
+    display: block;
+    width: 100%;
+}
+.footer-fixed{
+    position: fixed;
+    width: 280px;
+    bottom: 0;
+    background-color: #1f1f40;
+}
