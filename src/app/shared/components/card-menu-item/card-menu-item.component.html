@@ -1,14 +1,14 @@
-<div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card" (click)="eventPageRedirect.emit()">
+<div [style]="'background-color:' + bgColor" class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl" (click)="eventPageRedirect.emit()">
     <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer">
         <div class="aspect-w-9 aspect-h-6">
             <div class="flex items-center justify-center">
                 <!-- Icon -->
                 <mat-icon
-                    class="icon-size-14 text-hint"
+                    class="icon-size-14 text-hint text-white"
                     [svgIcon]="item?.icon"></mat-icon>
             </div>
         </div>
-        <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+        <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium text-white">
             <div class="truncate"
                  [matTooltip]="item?.title">
                 {{item?.title}}</div>

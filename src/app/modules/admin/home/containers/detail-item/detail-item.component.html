@@ -5,6 +5,7 @@
         <ng-container *ngFor="let item of navigationItems; trackBy:trackByFn">
             <div class="w-4/12">
                 <app-card-menu-item (eventPageRedirect)="redirectPage(item)"
+                [bgColor]="'#ffae35'"
                                     [item]="item"></app-card-menu-item>
             </div>
         </ng-container>
