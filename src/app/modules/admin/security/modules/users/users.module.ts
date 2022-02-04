@@ -15,6 +15,7 @@ import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatRippleModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import {MatSelectModule} from '@angular/material/select';
         MatInputModule,
         ReactiveFormsModule,
         MatRippleModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSlideToggleModule
     ]
 })
 export class UsersModule {

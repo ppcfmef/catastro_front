@@ -79,24 +79,184 @@
                 <div
                     class="mt-3 text-4xl font-bold truncate">{{ id ? 'Editar usuario' : 'Nuevo usuario'}}</div>
 
-                <!-- Username -->
-                <div class="mt-8">
+                <div class="w-full mt-3">
+                    <h2 class="title-centered-hr">Datos del usuario</h2>
+                    <hr>
+                </div>
+
+                <!-- Personal Info -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Institucion</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <mat-select formControlName="institution">
+                                    <ng-container *ngFor="let institute of institutes$ | async">
+                                        <mat-option [value]="institute.id">{{ institute.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
                     <div class="space-y-4">
                         <div class="flex">
                             <mat-form-field
                                 class="fuse-mat-no-subscript flex-auto flex-auto">
-                                <mat-label>DNI</mat-label>
+                                <mat-label>D.N.I.</mat-label>
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                 <input
                                     matInput
+                                    required
                                     [formControlName]="'dni'"
-                                    [placeholder]="'DNI'">
+                                    [placeholder]="'D.N.I.'">
                             </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Info -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field class="fuse-mat-no-subscript flex-auto">
+                                <mat-label>Nombres</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'firstName'"
+                                    [placeholder]="'Nombre'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Info -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
                             <mat-form-field
-                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
+                                class="fuse-mat-no-subscript flex-auto w-full">
+                                <mat-label>Apellidos</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'lastName'"
+                                    [placeholder]="'Apellidos'">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emails -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Correo Electronico</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                <input
+                                    matInput
+                                    type="email"
+                                    [formControlName]="'email'"
+                                    [placeholder]="'Correo Electronico'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- puesto -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript flex-auto w-full">
+                                <mat-label>Puesto laboral</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'jobTitle'"
+                                    [placeholder]="'Puesto laboral'">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full mt-3">
+                    <h2 class="title-centered-hr">Cuenta</h2>
+                    <hr>
+                </div>
+
+                <!-- Emails -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Rol</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <mat-select formControlName="role">
+                                    <ng-container *ngFor="let role of roles$ | async">
+                                        <mat-option [value]="role.id">{{ role.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- usuario -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full">
+                                <mat-label>Usuario</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden touched sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'username'"
+                                    [placeholder]="'Usuario'">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- contraseña -->
+                <div class="mt-3">
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full">
                                 <mat-label>Contraseña</mat-label>
                                 <mat-icon
                                     [matTooltip]="'Generar contraseña'"
@@ -114,104 +274,21 @@
                     </div>
                 </div>
 
-                <!-- Personal Info -->
-                <div class="mt-8">
+                <!-- contraseña -->
+                <div class="mt-3">
                     <div class="space-y-4">
                         <div class="flex">
-                            <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                <mat-label>Nombre</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'firstName'"
-                                    [placeholder]="'Nombre'"
-                                    [spellcheck]="false">
-                            </mat-form-field>
-                            <mat-form-field
-                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
-                                <mat-label>Apellido</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'lastName'"
-                                    [placeholder]="'Apellido'">
-                            </mat-form-field>
+                            <mat-slide-toggle [formControlName]="'isActive'">Activo</mat-slide-toggle>
                         </div>
                     </div>
                 </div>
 
-                <!-- Emails -->
-                <div class="mt-8">
-                    <div class="space-y-4">
-                        <div class="flex">
-                            <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                <mat-label>Email</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                                <input
-                                    matInput
-                                    type="email"
-                                    [formControlName]="'email'"
-                                    [placeholder]="'Correo Electronic'"
-                                    [spellcheck]="false">
-                            </mat-form-field>
-                            <mat-form-field class="fuse-mat-no-subscript w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
-                                <mat-label>Rol</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <mat-select formControlName="role">
-                                    <ng-container *ngFor="let role of roles$ | async">
-                                        <mat-option [value]="role.id">{{ role.name }}</mat-option>
-                                    </ng-container>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+                <div class="w-full mt-3">
+                    <h2 class="title-centered-hr">Ambito</h2>
+                    <hr>
                 </div>
 
-                <!-- Personal Info -->
-                <div class="mt-8">
-                    <div class="space-y-4">
-                        <div class="flex">
-                            <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                <mat-label>Institucion</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <mat-select formControlName="institution">
-                                    <ng-container *ngFor="let institute of institutes$ | async">
-                                        <mat-option [value]="institute.id">{{ institute.name }}</mat-option>
-                                    </ng-container>
-                                </mat-select>
-                            </mat-form-field>
-                            <mat-form-field
-                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
-                                <mat-label>Puesto de trabajo</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'jobTitle'"
-                                    [placeholder]="'Puesto de trabajo'">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Personal Info -->
+                <!-- Ambito -->
                 <div class="mt-8">
                     <div class="space-y-4">
                         <div class="flex gap-4">
@@ -255,6 +332,11 @@
                     </div>
                 </div>
 
+                <div class="w-full mt-3">
+                    <h2 class="title-centered-hr">Detalles de cuenta</h2>
+                    <hr>
+                </div>
+
                 <!-- Notes -->
                 <div class="mt-8">
                     <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
@@ -272,6 +354,7 @@
                             matTextareaAutosize></textarea>
                     </mat-form-field>
                 </div>
+
 
                 <!-- Actions -->
                 <div
@@ -291,7 +374,7 @@
                         class="ml-auto"
                         mat-button
                         [matTooltip]="'Cancelar'"
-                        (click)="closeDrawer()">
+                        [routerLink]="['../']">
                         Cancelar
                     </button>
                     <!-- Save -->
