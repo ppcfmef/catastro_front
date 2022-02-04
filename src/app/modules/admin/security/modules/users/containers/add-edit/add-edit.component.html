@@ -77,22 +77,41 @@
 
                 <!-- Title -->
                 <div
-                    class="mt-3 text-4xl font-bold truncate">{{ user?.id ? 'Editar usuario' : 'Nuevo usuario'}}</div>
+                    class="mt-3 text-4xl font-bold truncate">{{ id ? 'Editar usuario' : 'Nuevo usuario'}}</div>
 
                 <!-- Username -->
                 <div class="mt-8">
-                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <mat-label>Usuario</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                        <input
-                            matInput
-                            [formControlName]="'username'"
-                            [placeholder]="'Usuario'"
-                            [spellcheck]="false">
-                    </mat-form-field>
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript flex-auto flex-auto">
+                                <mat-label>DNI</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'dni'"
+                                    [placeholder]="'DNI'">
+                            </mat-form-field>
+                            <mat-form-field
+                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
+                                <mat-label>Contraseña</mat-label>
+                                <mat-icon
+                                    [matTooltip]="'Generar contraseña'"
+                                    (click)="generatePassword()"
+                                    matPrefix
+                                    class="hidden touched sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                                <input
+                                    matInput
+                                    type="password"
+                                    [formControlName]="'password'"
+                                    [placeholder]="'Contraseña'">
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Personal Info -->
@@ -111,7 +130,8 @@
                                     [placeholder]="'Nombre'"
                                     [spellcheck]="false">
                             </mat-form-field>
-                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
                                 <mat-label>Apellido</mat-label>
                                 <mat-icon
                                     matPrefix
@@ -129,31 +149,33 @@
                 <!-- Emails -->
                 <div class="mt-8">
                     <div class="space-y-4">
-                            <div class="flex">
-                                <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                    <mat-label>Email</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                                    <input
-                                        matInput
-                                        [formControlName]="'email'"
-                                        [placeholder]="'Correo Electronic'"
-                                        [spellcheck]="false">
-                                </mat-form-field>
-                                <mat-form-field class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
-                                    <mat-label>DNI</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:tag'"></mat-icon>
-                                    <input
-                                        matInput
-                                        [formControlName]="'documentNumber'"
-                                        [placeholder]="'DNI'">
-                                </mat-form-field>
-                            </div>
+                        <div class="flex">
+                            <mat-form-field class="fuse-mat-no-subscript flex-auto">
+                                <mat-label>Email</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                <input
+                                    matInput
+                                    type="email"
+                                    [formControlName]="'email'"
+                                    [placeholder]="'Correo Electronic'"
+                                    [spellcheck]="false">
+                            </mat-form-field>
+                            <mat-form-field class="fuse-mat-no-subscript w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
+                                <mat-label>Rol</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <mat-select formControlName="role">
+                                    <ng-container *ngFor="let role of roles$ | async">
+                                        <mat-option [value]="role.id">{{ role.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                     </div>
                 </div>
 
@@ -167,13 +189,14 @@
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
                                     [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'institution'"
-                                    [placeholder]="'Institucion'"
-                                    [spellcheck]="false">
+                                <mat-select formControlName="institution">
+                                    <ng-container *ngFor="let institute of institutes$ | async">
+                                        <mat-option [value]="institute.id">{{ institute.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-60 ml-2 sm:ml-6">
                                 <mat-label>Puesto de trabajo</mat-label>
                                 <mat-icon
                                     matPrefix
@@ -197,34 +220,36 @@
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'department'"
-                                    [placeholder]="'Departamento'"
-                                    [spellcheck]="false">
+                                    [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+                                <mat-select formControlName="department">
+                                    <ng-container *ngFor="let department of departments$ | async">
+                                        <mat-option [value]="department.code">{{ department.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
                             </mat-form-field>
                             <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                 <mat-label>Provincia</mat-label>
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'province'"
-                                    [placeholder]="'Provincia'">
+                                    [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+                                <mat-select formControlName="province">
+                                    <ng-container *ngFor="let province of provinces$ | async">
+                                        <mat-option [value]="province.code">{{ province.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
                             </mat-form-field>
                             <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                 <mat-label>Distrito</mat-label>
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControlName]="'district'"
-                                    [placeholder]="'Distrito'">
+                                    [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+                                <mat-select formControlName="district">
+                                    <ng-container *ngFor="let district of districts$ | async">
+                                        <mat-option [value]="district.code">{{ district.name }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
                             </mat-form-field>
                         </div>
                     </div>
@@ -249,15 +274,18 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                <div
+                    class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
                     <!-- Delete -->
-                    <button
-                        mat-button
-                        [color]="'warn'"
-                        [matTooltip]="'Eliminar usuario'"
-                        (click)="deleteContact()">
-                        Eliminar
-                    </button>
+                    <ng-container *ngIf="id">
+                        <button
+                            mat-button
+                            [color]="'warn'"
+                            [matTooltip]="'Eliminar usuario'"
+                            (click)="delete()">
+                            Eliminar
+                        </button>
+                    </ng-container>
                     <!-- Cancel -->
                     <button
                         class="ml-auto"
@@ -271,7 +299,6 @@
                         class="ml-2"
                         mat-flat-button
                         [color]="'primary'"
-                        [disabled]="userForm.invalid"
                         [matTooltip]="'Guardar / actualizar usuario'"
                         (click)="updateContact()">
                         Guardar
