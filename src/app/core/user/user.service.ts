@@ -1,23 +1,25 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { User } from 'app/core/user/user.types';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {Role, User, UserCreate} from 'app/core/user/user.types';
 import {IPagination} from '../common/interfaces/common.interface';
 import {environment} from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
-export class UserService
-{
+export class UserService {
+
+    public _refreshUsers: Subject<void> = new Subject();
+
+    private _apiUrl = environment.apiUrl;
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
-    {
+    constructor(private _httpClient: HttpClient) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -29,14 +31,12 @@ export class UserService
      *
      * @param value
      */
-    set user(value: User)
-    {
+    set user(value: User) {
         // Store the value
         this._user.next(value);
     }
 
-    get user$(): Observable<User>
-    {
+    get user$(): Observable<User> {
         return this._user.asObservable();
     }
 
@@ -47,8 +47,7 @@ export class UserService
     /**
      * Get the current logged in user data
      */
-    get(): Observable<User>
-    {
+    get(): Observable<User> {
         return this._httpClient.get<User>('api/common/user').pipe(
             tap((user) => {
                 this._user.next(user);
@@ -61,8 +60,7 @@ export class UserService
      *
      * @param user
      */
-    update(user: User): Observable<any>
-    {
+    update(user: User): Observable<any> {
         return this._httpClient.patch<User>('api/common/user', {user}).pipe(
             map((response) => {
                 this._user.next(response);
@@ -70,13 +68,61 @@ export class UserService
         );
     }
 
+    /**
+     * Update the user
+     *
+     * @param id
+     */
+    getUserById(id: number): Observable<User> {
+        return this._httpClient.get<User>(`${this._apiUrl}/users/${id}/`);
+    }
+
 
     /**
      * Get Users All
      *
      */
-    getUsers(queryParams = null): Observable<IPagination<User>>
-    {
-        return this._httpClient.get<IPagination<User>>(`${environment.apiUrl}/users/`, {params: queryParams});
+    getUsers(queryParams = null): Observable<IPagination<User>> {
+        return this._httpClient.get<IPagination<User>>(`${this._apiUrl}/users/`, {params: queryParams});
+    }
+
+    /**
+     * Users Create info
+     *
+     */
+    createUser(payload: UserCreate): Observable<User> {
+        return this._httpClient.post<User>(`${this._apiUrl}/users/`, payload);
+    }
+
+    /**
+     * Users update Info
+     *
+     */
+    updateUserById(payload: Partial<UserCreate>): Observable<User> {
+        return this._httpClient.patch<User>(`${this._apiUrl}/users/${payload.id}/`, payload);
+    }
+
+    /**
+     * Users delete
+     *
+     */
+    deleteUserById(id: number): Observable<void> {
+        return this._httpClient.delete<void>(`${this._apiUrl}/users/${id}/`);
+    }
+
+    /**
+     * Get Users All
+     *
+     */
+    getRoles(queryParams = null): Observable<IPagination<Role>> {
+        return this._httpClient.get<IPagination<Role>>(`${this._apiUrl}/users/role/`, {params: queryParams});
+    }
+
+    /**
+     * Get Role Select
+     *
+     */
+    getRoleSelectable(): Observable<Role[]> {
+        return this._httpClient.get<Role[]>(`${this._apiUrl}/users/role/select/`);
     }
 }

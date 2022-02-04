@@ -14,6 +14,7 @@ import {UserService} from '../../../../../../../core/user/user.service';
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
+import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 
 @Component({
     selector: 'app-list',
@@ -48,7 +49,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userService: UserService,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _fuseConfirmationService: FuseConfirmationService,
     ) {
     }
 
@@ -81,6 +83,12 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
+            });
+
+        this._userService._refreshUsers
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((_) => {
+                this.changesSubject.next(true);
             });
     }
 
@@ -138,6 +146,29 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
+    }
+
+    delete(id: number): void {
+        // Open the confirmation dialog
+        const confirmation = this._fuseConfirmationService.open({
+            title: 'Eliminar usuario',
+            message: 'Estas seguro de eliminar este usuario? Esta accion no puede revertirse!',
+            actions: {
+                confirm: {
+                    label: 'Eliminar'
+                }
+            }
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe(async (result) => {
+
+            // If the confirm button pressed...
+            if (result === 'confirmed') {
+                await this._userService.deleteUserById(id).toPromise();
+                this.changesSubject.next(true);
+            }
+        });
     }
 
 }

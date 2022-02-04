@@ -14,6 +14,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatRippleModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {MatRippleModule} from '@angular/material/core';
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
-        MatRippleModule
+        MatRippleModule,
+        MatSelectModule
     ]
 })
 export class UsersModule {
