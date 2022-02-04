@@ -18,4 +18,13 @@ export class CommonUtils {
             form.get(key).reset(typeof rawValue[key] === 'object' ? rawValue[key] : null, {emitEvent: false});
         });
     }
+
+    static deleteKeysNullInObject(rawValue): any {
+        Object.keys(rawValue).forEach((key) => {
+            if (!rawValue[key]) {
+                delete rawValue[key];
+            }
+        });
+        return rawValue;
+    }
 }

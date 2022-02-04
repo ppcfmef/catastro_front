@@ -12,6 +12,7 @@ import {environment} from '../../../environments/environment';
 export class UserService {
 
     public _refreshUsers: Subject<void> = new Subject();
+    public _refreshRoles: Subject<void> = new Subject();
 
     private _apiUrl = environment.apiUrl;
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
@@ -116,6 +117,38 @@ export class UserService {
      */
     getRoles(queryParams = null): Observable<IPagination<Role>> {
         return this._httpClient.get<IPagination<Role>>(`${this._apiUrl}/users/role/`, {params: queryParams});
+    }
+
+    /**
+     * Get Role by Id
+     *
+     */
+    getRoleById(id: number): Observable<Role> {
+        return this._httpClient.get<Role>(`${this._apiUrl}/users/role/${id}/`);
+    }
+
+    /**
+     * Create Role
+     *
+     */
+    createRole(payload: Partial<Role>): Observable<Role> {
+        return this._httpClient.post<Role>(`${this._apiUrl}/users/role/`, payload);
+    }
+
+    /**
+     * Get Role by Id
+     *
+     */
+    updateRoleById(payload: Partial<Role>): Observable<Role> {
+        return this._httpClient.patch<Role>(`${this._apiUrl}/users/role/${payload.id}/`, payload);
+    }
+
+    /**
+     * delete Role by Id
+     *
+     */
+    deleteRoleById(id: number): Observable<void> {
+        return this._httpClient.delete<void>(`${this._apiUrl}/users/role/${id}/`);
     }
 
     /**
