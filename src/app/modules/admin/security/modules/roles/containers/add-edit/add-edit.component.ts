@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -13,7 +13,9 @@ import {MatDrawerToggleResult} from '@angular/material/sidenav';
 @Component({
     selector: 'app-add-edit',
     templateUrl: './add-edit.component.html',
-    styleUrls: ['./add-edit.component.scss']
+    styleUrls: ['./add-edit.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddEditComponent implements OnInit, OnDestroy {
 
