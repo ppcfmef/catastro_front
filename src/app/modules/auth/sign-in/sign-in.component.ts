@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { fuseAnimations } from '@fuse/animations';
-import { FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {fuseAnimations} from '@fuse/animations';
+import {FuseAlertType} from '@fuse/components/alert';
+import {AuthService} from 'app/core/auth/auth.service';
+import {ReCaptchaV3Service} from "ng-recaptcha";
 
 @Component({
     selector     : 'auth-sign-in',
@@ -27,6 +28,7 @@ export class AuthSignInComponent implements OnInit
      * Constructor
      */
     constructor(
+        private recaptchaV3Service: ReCaptchaV3Service,
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
@@ -59,8 +61,9 @@ export class AuthSignInComponent implements OnInit
     /**
      * Sign in
      */
-    signIn(): void
+    async signIn(): Promise<void>
     {
+
         // Return if the form is invalid
         if ( this.signInForm.invalid )
         {
@@ -73,6 +76,8 @@ export class AuthSignInComponent implements OnInit
         // Hide the alert
         this.showAlert = false;
 
+        const payload = this.signInForm.getRawValue();
+        payload.token = await this.getTokenByCaptcha();
         // Sign in
         this._authService.signIn(this.signInForm.value)
             .subscribe(
@@ -106,5 +111,13 @@ export class AuthSignInComponent implements OnInit
                     this.showAlert = true;
                 }
             );
+    }
+
+    async getTokenByCaptcha(): Promise<string> {
+        try {
+            return await this.recaptchaV3Service.execute('importantAction').toPromise();
+        } catch (err) {
+            return null;
+        }
     }
 }

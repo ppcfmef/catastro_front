@@ -14,11 +14,14 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaV3Module} from 'ng-recaptcha';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
 };
+
+const RECAPTCHA_V3_STACKBLITZ_KEY = '6LeHBK0bAAAAAOQVTvBOWhfb08cQfUpFoSE3FsmP';
 
 const MY_DATE_FORMAT = {
     parse: {
@@ -53,7 +56,8 @@ const MY_DATE_FORMAT = {
         LayoutModule,
 
         // 3rd party modules that require global configuration via forRoot
-        MarkdownModule.forRoot({})
+        MarkdownModule.forRoot({}),
+        RecaptchaV3Module
     ],
     bootstrap   : [
         AppComponent
@@ -61,6 +65,7 @@ const MY_DATE_FORMAT = {
     providers: [
         {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
         {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT},
+        [{ provide: RECAPTCHA_V3_SITE_KEY, useValue: RECAPTCHA_V3_STACKBLITZ_KEY }],
     ]
 })
 export class AppModule
