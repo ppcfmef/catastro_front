@@ -65,7 +65,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         this._activatedRoute
             .params
             .pipe(map((params: Params) => {
-                this.id = params?.id || null;
+                this.id = +params?.id || null;
             })).subscribe((_) => {
             this.loadModel();
         });

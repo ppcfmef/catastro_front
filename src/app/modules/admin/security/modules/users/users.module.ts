@@ -16,6 +16,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatRippleModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
         ReactiveFormsModule,
         MatRippleModule,
         MatSelectModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatDatepickerModule
     ]
 })
 export class UsersModule {

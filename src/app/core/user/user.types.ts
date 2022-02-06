@@ -11,8 +11,7 @@ export interface Institute {
     name: string;
 }
 
-export interface User
-{
+export interface User {
     id?: number;
     username: string;
     name?: string;
@@ -48,4 +47,11 @@ export interface UserCreate {
     district?: string;
     observation?: string;
     isActive: boolean;
+}
+
+export interface RoleCreate {
+    id?: number;
+    name?: string;
+    description?: string;
+    isActive?: boolean;
 }

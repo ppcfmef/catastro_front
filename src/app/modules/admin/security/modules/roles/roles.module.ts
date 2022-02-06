@@ -6,19 +6,35 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { ListComponent } from './containers/list/list.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { AddEditComponent } from './containers/add-edit/add-edit.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
     declarations: [
     RolesComponent,
-    ListComponent
+    ListComponent,
+    AddEditComponent
   ],
     imports: [
         CommonModule,
         RolesRouting,
         MatSidenavModule,
         MatTableModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTooltipModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSlideToggleModule
     ]
 })
 export class RolesModule {

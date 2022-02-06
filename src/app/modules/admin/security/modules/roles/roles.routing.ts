@@ -2,14 +2,27 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RolesComponent} from './roles.component';
 import {ListComponent} from './containers/list/list.component';
+import {AddEditComponent} from './containers/add-edit/add-edit.component';
 
 const routes: Routes = [
     {
         path: '',
         component: RolesComponent,
         children: [
-            {path: '', pathMatch: 'full', redirectTo: 'list'},
-            {path: 'list', component: ListComponent},
+            {
+                path: '',
+                component: ListComponent,
+                children: [
+                    {
+                        path: 'add',
+                        component: AddEditComponent
+                    },
+                    {
+                        path: ':id',
+                        component: AddEditComponent
+                    }
+                ]
+            },
         ]
     }
 ];

@@ -22,6 +22,11 @@ const routes: Routes = [
         loadChildren: () => import('app/modules/admin/security/modules/menu/menu.module')
             .then(m => m.MenuModule)
     },
+    {
+        path: 'permissions',
+        loadChildren: () => import('app/modules/admin/security/modules/permissions/permissions.module')
+            .then(m => m.PermissionsModule)
+    },
 ];
 
 @NgModule({

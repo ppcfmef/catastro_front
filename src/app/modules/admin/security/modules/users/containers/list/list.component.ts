@@ -7,14 +7,18 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {BehaviorSubject, merge, Subject} from 'rxjs';
+import {BehaviorSubject, merge, Observable, Subject} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
+import {Role} from '../../../../../../../core/user/user.types';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-list',
@@ -26,14 +30,17 @@ import {FuseConfirmationService} from '../../../../../../../../@fuse/services/co
 export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
     drawerMode: 'side' | 'over';
 
     title = 'Gestion de usuarios';
 
-    displayedColumns = ['nro', 'username', 'rol', 'status', 'creationDate', 'actions'];
+    displayedColumns = ['nro', 'username', 'institute', 'rol', 'status', 'creationDate', 'actions'];
+
+    filters: FormGroup;
+
+    roles$: Observable<Role[]>;
 
     dataSource = [];
     count = 0;
@@ -49,6 +56,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userService: UserService,
+        private _fb: FormBuilder,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {
@@ -58,6 +66,17 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+
+        this.roles$ = this._userService.getRoleSelectable();
+
+        this.filters = this._fb.group({
+            search: [''],
+            isActive: [''],
+            role: [''],
+            initDate: [''],
+            endDate: [''],
+        });
+
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe((opened) => {
             if (!opened) {
@@ -112,10 +131,15 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
      * Init pagination results
      */
     initPagination(): void {
-        merge(this.paginator.page, this.changesSubject)
+        merge(this.paginator.page, this.changesSubject, this.filters.valueChanges)
             .pipe(
+                debounceTime(300),
                 switchMap(() => {
-                    const queryParamsByPaginator = {} as any;
+                    const filterRawValue = this.filters.getRawValue();
+                    filterRawValue.initDate = filterRawValue.initDate ? moment(filterRawValue.initDate).format('YYYY-MM-DD') : null;
+                    filterRawValue.endDate = filterRawValue.endDate ? moment(filterRawValue.endDate).format('YYYY-MM-DD') : null;
+                    const rawValueFilter = CommonUtils.deleteKeysNullInObject(filterRawValue);
+                    const queryParamsByPaginator = {...rawValueFilter} as any;
                     queryParamsByPaginator.limit = this.paginator.pageSize;
                     queryParamsByPaginator.offset = queryParamsByPaginator.limit * this.paginator.pageIndex;
                     return this._userService.getUsers(queryParamsByPaginator);

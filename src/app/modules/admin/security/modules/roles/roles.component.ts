@@ -9,33 +9,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class RolesComponent implements OnInit {
 
-    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
-    drawerMode: 'side' | 'over';
-
-    title = 'Gestion de roles y permisos';
-
-    constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _router: Router,
-    ) {
+    constructor() {
     }
 
     /**
      * On init
      */
     ngOnInit(): void {
-    }
-
-    /**
-     * On backdrop clicked
-     */
-    onBackdropClicked(): void {
-        // Go back to the list
-        this._router.navigate(['./'], {relativeTo: this._activatedRoute});
-
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
     }
 
 }
