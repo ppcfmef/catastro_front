@@ -104,6 +104,14 @@ export class UserService {
     }
 
     /**
+     * Users update avatar
+     *
+     */
+    updateAvatarUserById(id: number, payload: FormData): Observable<User> {
+        return this._httpClient.patch<User>(`${this._apiUrl}/users/${id}/`, payload);
+    }
+
+    /**
      * Users delete
      *
      */

@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
             return;
         }
 
-        const allowedTypes = ['image/jpeg', 'image/png'];
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         const file = fileList[0];
 
         // Return if the file is not allowed
@@ -99,7 +99,9 @@ export class ProfileComponent implements OnInit {
         }
 
         // Upload the avatar
-        // this._contactsService.uploadAvatar(this.contact.id, file).subscribe();
+        const formData = new FormData();
+        formData.append('avatar', file);
+        this._userService.updateAvatarUserById(this.accountForm.get('id').value, formData).subscribe();
     }
 
     removeAvatar(): void {
