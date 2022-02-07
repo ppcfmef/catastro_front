@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../../core/user/user.service';
 import {switchMap, takeUntil} from 'rxjs/operators';
@@ -10,6 +10,8 @@ import {Subject} from 'rxjs';
     styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+
+    @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
 
     accountForm: FormGroup;
 
@@ -27,6 +29,7 @@ export class ProfileComponent implements OnInit {
         // Create the form
         this.accountForm = this._formBuilder.group({
             id: [null],
+            avatar: [''],
             fullName: [''],
             username: [''],
             password: [''],
@@ -79,6 +82,38 @@ export class ProfileComponent implements OnInit {
 
     showPassword(): void {
         this.typeInputPassword = this.typeInputPassword === 'password' ? 'text' : 'password';
+    }
+
+    uploadAvatar(fileList: FileList): void {
+        // Return if canceled
+        if (!fileList.length) {
+            return;
+        }
+
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        const file = fileList[0];
+
+        // Return if the file is not allowed
+        if (!allowedTypes.includes(file.type)) {
+            return;
+        }
+
+        // Upload the avatar
+        // this._contactsService.uploadAvatar(this.contact.id, file).subscribe();
+    }
+
+    removeAvatar(): void {
+        // Get the form control for 'avatar'
+        const avatarFormControl = this.accountForm.get('avatar');
+
+        // Set the avatar as null
+        avatarFormControl.setValue(null);
+
+        // Set the file input value as null
+        this._avatarFileInput.nativeElement.value = null;
+
+        // Update the contact
+        // this.user.avatar = null;
     }
 
 }
