@@ -12,13 +12,16 @@ import { AssignmentsComponent } from './containers/assignments/assignments.compo
 import {PermissionListComponent} from './components/permission-list/permission-list.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import { ListComponent } from './containers/list/list.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
     declarations: [
         PermissionsComponent,
         AssignmentsComponent,
-        PermissionListComponent
+        PermissionListComponent,
+        ListComponent
     ],
     imports: [
         CommonModule,
@@ -31,7 +34,8 @@ import {MatSelectModule} from '@angular/material/select';
         MatSidenavModule,
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule,
+        MatPaginatorModule
     ]
 })
 export class PermissionsModule {

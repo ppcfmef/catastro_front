@@ -14,3 +14,8 @@ export interface NavigationView {
     order: number;
     parent: string;
 }
+
+export interface Permission {
+    id: number;
+    description: string;
+}
