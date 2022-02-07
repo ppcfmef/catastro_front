@@ -4,6 +4,13 @@
         <!-- Form -->
         <form [formGroup]="accountForm">
 
+            <div class="relative w-24 h-24">
+                <img
+                    class="w-full h-full rounded-full"
+                    [src]="'assets/images/avatars/avatar_default.jpeg'"
+                    alt="User avatar">
+            </div>
+
             <!-- Section -->
             <div class="w-full">
                 <div class="text-xl">Perfil</div>
@@ -27,13 +34,13 @@
                 <div class="sm:col-span-2">
                     <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
                         <mat-label>Usuario</mat-label>
-                        <div
-                            class="text-secondary"
-                            matPrefix>
-                            catastrofiscal.com.pe/
-                        </div>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix></mat-icon>
                         <input
-                            [formControlName]="'username'"
+                            disabled
+                            [value]="accountForm.get('dni').value"
                             matInput>
                     </mat-form-field>
                 </div>
@@ -42,12 +49,13 @@
                     <mat-form-field class="fuse-mat-no-subscript w-full">
                         <mat-label>Contraseña</mat-label>
                         <mat-icon
-                            class="icon-size-5"
+                            class="icon-size-5 touched"
+                            (click)="showPassword()"
                             [svgIcon]="'heroicons_solid:eye'"
-                            matPrefix></mat-icon>
+                            matSuffix></mat-icon>
                         <input
                             [formControlName]="'password'"
-                            type="password"
+                            [type]="typeInputPassword"
                             matInput>
                     </mat-form-field>
                 </div>

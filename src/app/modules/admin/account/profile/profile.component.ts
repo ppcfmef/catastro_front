@@ -15,6 +15,8 @@ export class ProfileComponent implements OnInit {
 
     unsubscribe = new Subject();
 
+    typeInputPassword = 'password';
+
     constructor(
         private _formBuilder: FormBuilder,
         private _userService: UserService,
@@ -32,7 +34,7 @@ export class ProfileComponent implements OnInit {
             institution: [''],
             observation: [''],
             email: ['', Validators.email],
-            dni: [''],
+            dni: ['', [Validators.required]],
             country: [''],
             language: ['']
         });
@@ -59,6 +61,7 @@ export class ProfileComponent implements OnInit {
                 delete payload.password;
                 delete payload.institution;
             }
+            payload.username = payload.dni;
             this.executeTransaction(payload);
         } else {
             this.accountForm.markAllAsTouched();
@@ -72,6 +75,10 @@ export class ProfileComponent implements OnInit {
         } catch (err) {
             throw new Error('Error: ' + err);
         }
+    }
+
+    showPassword(): void {
+        this.typeInputPassword = this.typeInputPassword === 'password' ? 'text' : 'password';
     }
 
 }
