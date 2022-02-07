@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {NavigationView, TypePermission} from '../../../../../../../shared/models/permission.interface';
@@ -10,7 +10,7 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
     templateUrl: './permission-list.component.html',
     styleUrls: ['./permission-list.component.scss']
 })
-export class PermissionListComponent implements OnInit {
+export class PermissionListComponent implements OnInit, OnChanges {
 
     @Input() permissions = [];
 
@@ -26,6 +26,12 @@ export class PermissionListComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         this.columnsToDisplay = await this.getDisplayedColumns();
         this.dataSource.data = await this.getDataSource();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.permissions.currentValue) {
+            console.log('permissions', this.permissions);
+        }
     }
 
     async getDisplayedColumns(): Promise<string[]> {

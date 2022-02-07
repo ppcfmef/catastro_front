@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
 import {map, switchMap} from 'rxjs/operators';
 import {NavigationView, Permission} from '../../../../../../../shared/models/permission.interface';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 @Component({
     selector: 'app-assignments',
@@ -50,11 +50,17 @@ export class AssignmentsComponent implements OnInit {
             .pipe(
                 switchMap((params) => {
                     this.id = +params?.id || null;
-                    return this._permissionService.getPermissionById(this.id);
+                    if (this.id) {
+                        return this._permissionService.getPermissionById(this.id);
+                    }
+                    return of(null);
                 }),
                 switchMap((permission: Permission) => {
-                    this.editForm.patchValue(permission);
-                    return this._permissionService.getNavigationPermissionById(this.id);
+                    if (this.id) {
+                        this.editForm.patchValue(permission);
+                        return this._permissionService.getNavigationPermissionById(this.id);
+                    }
+                    return of([]);
                 })
             ).subscribe((response) => {
             this.permissionsNavigation = response;
