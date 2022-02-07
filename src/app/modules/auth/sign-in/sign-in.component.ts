@@ -79,7 +79,7 @@ export class AuthSignInComponent implements OnInit
         const payload = this.signInForm.getRawValue();
         payload.token = await this.getTokenByCaptcha();
         // Sign in
-        this._authService.signIn(this.signInForm.value)
+        this._authService.signIn(payload)
             .subscribe(
                 () => {
 
