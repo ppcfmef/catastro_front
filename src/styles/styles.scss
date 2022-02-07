@@ -55,3 +55,8 @@ button.mat-flat-button.mat-primary{
     bottom: 0;
     background-color: #1f1f40;
 }
+
+.mat-header-cell {
+    background: var(--mef-c-purple);
+    color: white !important;
+}
