@@ -11,9 +11,10 @@ import {Form, FormBuilder, FormControl, FormGroup, Validators} from '@angular/fo
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {NavigationView, Permission} from '../../../../../../../shared/models/permission.interface';
 import {Observable, of} from 'rxjs';
+import {PermissionListComponent} from '../../components/permission-list/permission-list.component';
 
 @Component({
     selector: 'app-assignments',
@@ -23,6 +24,8 @@ import {Observable, of} from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignmentsComponent implements OnInit {
+
+    @ViewChild(PermissionListComponent) permissionListComponent: PermissionListComponent;
 
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
@@ -58,7 +61,8 @@ export class AssignmentsComponent implements OnInit {
                 switchMap((permission: Permission) => {
                     if (this.id) {
                         this.editForm.patchValue(permission);
-                        return this._permissionService.getNavigationPermissionById(this.id);
+                        return this._permissionService.getNavigationPermissionById(this.id)
+                            .pipe(tap(console.log));
                     }
                     return of([]);
                 })
@@ -102,7 +106,7 @@ export class AssignmentsComponent implements OnInit {
     saveOrUpdateItem(): void {
         if (this.editForm.valid) {
             const payload = this.editForm.getRawValue();
-            payload.permissionsNavigation = [];
+            payload.permissionsNavigation = this.permissionListComponent.parsedResponse();
             this.validateTransaction(payload);
         } else {
             this.editForm.markAllAsTouched();

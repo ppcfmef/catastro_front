@@ -12,6 +12,8 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
 })
 export class PermissionListComponent implements OnInit, OnChanges {
 
+    @ViewChild(MatTable) recordsTable: MatTable<any>;
+
     @Input() permissions = [];
 
     typePermissions: TypePermission[] = [];
@@ -30,7 +32,19 @@ export class PermissionListComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.permissions.currentValue) {
-            console.log('permissions', this.permissions);
+            this.setValuesPermissionOfTable(this.permissions);
+        }
+    }
+
+    setValuesPermissionOfTable(permissions = []): void {
+        console.log('permissions ==>', permissions);
+        if (permissions?.length > 0) {
+            permissions.forEach((permission) => {
+                const dataSource = this.dataSource.data;
+                const elementFound = dataSource.find((element: any) => element.id === permission.navigationView);
+                elementFound[permission.type] = true;
+            });
+            console.log('data', this.dataSource.data);
         }
     }
 
@@ -68,7 +82,39 @@ export class PermissionListComponent implements OnInit, OnChanges {
 
 
     updatePermission(key, element): void {
-        console.log(key, element[key]);
+        console.log(key, element);
+    }
+
+    parsedResponse(): any {
+        const parsedData = this.dataSource.data;
+        let response = [];
+        parsedData.forEach((element) => {
+            const elementParsed = this.extractKeysToList(element);
+            response = [...response, ...elementParsed];
+        });
+        return response;
+    }
+
+    extractKeysToList(element): any[] {
+        const response = [];
+        Object.keys(element).forEach((key: string) => {
+            if (this.validateKeysToExtract(key) && element[key]) {
+                const payload = {type: key, navigationView: element.id};
+                response.push(payload);
+            }
+        });
+        return response;
+    }
+
+    validateKeysToExtract(key: string): boolean {
+        switch (key) {
+            case 'id':
+            case 'fullTitle':
+            case 'module':
+                return false;
+            default:
+                return true;
+        }
     }
 
 }
