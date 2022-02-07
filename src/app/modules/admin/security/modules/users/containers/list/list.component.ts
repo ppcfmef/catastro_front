@@ -71,10 +71,13 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.filters = this._fb.group({
             search: [''],
-            isActive: [''],
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            is_active: [''],
             role: [''],
-            initDate: [''],
-            endDate: [''],
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            init_date: [''],
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            end_date: [''],
         });
 
         // Subscribe to MatDrawer opened change
@@ -136,8 +139,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
                 debounceTime(300),
                 switchMap(() => {
                     const filterRawValue = this.filters.getRawValue();
-                    filterRawValue.initDate = filterRawValue.initDate ? moment(filterRawValue.initDate).format('YYYY-MM-DD') : null;
-                    filterRawValue.endDate = filterRawValue.endDate ? moment(filterRawValue.endDate).format('YYYY-MM-DD') : null;
+                    filterRawValue.init_date = filterRawValue.init_date ? moment(filterRawValue.init_date).format('YYYY-MM-DD') : null;
+                    filterRawValue.end_date = filterRawValue.end_date ? moment(filterRawValue.end_date).format('YYYY-MM-DD') : null;
                     const rawValueFilter = CommonUtils.deleteKeysNullInObject(filterRawValue);
                     const queryParamsByPaginator = {...rawValueFilter} as any;
                     queryParamsByPaginator.limit = this.paginator.pageSize;

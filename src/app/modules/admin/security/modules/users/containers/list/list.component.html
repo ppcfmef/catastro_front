@@ -54,7 +54,7 @@
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-                            <mat-select formControlName="isActive">
+                            <mat-select formControlName="is_active">
                                 <mat-option [value]="true">Activo</mat-option>
                                 <mat-option [value]="false">Inactivo</mat-option>
                             </mat-select>
@@ -75,14 +75,14 @@
 
                         <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="fill">
                             <mat-label>Fecha Inicio</mat-label>
-                            <input matInput [matDatepicker]="picker" formControlName="initDate">
+                            <input matInput [matDatepicker]="picker" formControlName="init_date">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
 
                         <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="fill">
                             <mat-label>Fecha Fin</mat-label>
-                            <input matInput [matDatepicker]="picker3" formControlName="endDate">
+                            <input matInput [matDatepicker]="picker3" formControlName="end_date">
                             <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                             <mat-datepicker #picker3></mat-datepicker>
                         </mat-form-field>
