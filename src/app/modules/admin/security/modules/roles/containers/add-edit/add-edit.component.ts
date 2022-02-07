@@ -9,6 +9,8 @@ import {map} from 'rxjs/operators';
 import {Role, RoleCreate, User, UserCreate} from '../../../../../../../core/user/user.types';
 import {ListComponent} from '../list/list.component';
 import {MatDrawerToggleResult} from '@angular/material/sidenav';
+import {PermissionService} from '../../../../../../../shared/services/permission.service';
+import {Permission} from '../../../../../../../shared/models/permission.interface';
 
 @Component({
     selector: 'app-add-edit',
@@ -23,6 +25,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     roleForm: FormGroup;
 
+    permissions$: Observable<Permission[]>;
+
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -30,6 +34,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _userService: UserService,
+        private _permissionService: PermissionService,
         private _listComponent: ListComponent,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -44,6 +49,9 @@ export class AddEditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
+        this.permissions$ = this._permissionService.getSelectPermissions();
+
         // Open the drawer
         this._listComponent.matDrawer.open();
 
@@ -51,6 +59,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         this.roleForm = this._formBuilder.group({
             id: [''],
             name: ['', [Validators.required]],
+            permissions: [[], [Validators.required]],
             description: [''],
             isActive: [true, [Validators.required]],
         });
@@ -96,7 +105,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
             const payload: UserCreate = this.roleForm.getRawValue();
             payload.username = payload.dni;
             this.createOrUpdateRole(payload).subscribe((role: Role) => {
-                this._userService._refreshUsers.next();
+                this._userService._refreshRoles.next();
                 this._router.navigate(['security', 'roles', role.id]);
             });
         } else {

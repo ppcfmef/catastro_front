@@ -17,5 +17,8 @@ export interface NavigationView {
 
 export interface Permission {
     id: number;
+    name?: string;
     description: string;
+    isActive?: boolean;
+    permissionsNavigation?: NavigationView[];
 }

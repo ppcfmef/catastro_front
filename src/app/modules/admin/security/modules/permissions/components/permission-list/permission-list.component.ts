@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
-import {map} from 'rxjs/operators';
-import {TypePermission} from '../../../../../../../shared/models/permission.interface';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {NavigationView, TypePermission} from '../../../../../../../shared/models/permission.interface';
+import {Observable, of} from 'rxjs';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
 
 @Component({
     selector: 'app-permission-list',
@@ -10,9 +12,11 @@ import {TypePermission} from '../../../../../../../shared/models/permission.inte
 })
 export class PermissionListComponent implements OnInit {
 
+    @Input() permissions = [];
+
     typePermissions: TypePermission[] = [];
     columnsToDisplay: string[] = [];
-    dataSource = [];
+    dataSource = new MatTableDataSource<any>();
 
     constructor(
         private _permissionService: PermissionService,
@@ -21,7 +25,7 @@ export class PermissionListComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.columnsToDisplay = await this.getDisplayedColumns();
-        this.dataSource = await this.getDataSource();
+        this.dataSource.data = await this.getDataSource();
     }
 
     async getDisplayedColumns(): Promise<string[]> {
