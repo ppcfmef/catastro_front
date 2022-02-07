@@ -1,4 +1,12 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import {BehaviorSubject, merge, Subject} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
 import {debounceTime, switchMap} from 'rxjs/operators';
@@ -8,15 +16,23 @@ import {FormBuilder} from '@angular/forms';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatDrawer} from '@angular/material/sidenav';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.scss']
+    styleUrls: ['./list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit, AfterViewInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
+
+    drawerMode: 'side' | 'over';
+
+    title = 'Gestion de permisos';
 
     displayedColumns = ['nro', 'name', 'actions'];
 
@@ -98,5 +114,16 @@ export class ListComponent implements OnInit, AfterViewInit {
                 this.changesSubject.next(true);
             }
         });
+    }
+
+    /**
+     * On backdrop clicked
+     */
+    onBackdropClicked(): void {
+        // Go back to the list
+        this._router.navigate(['./'], {relativeTo: this._activatedRoute});
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
     }
 }

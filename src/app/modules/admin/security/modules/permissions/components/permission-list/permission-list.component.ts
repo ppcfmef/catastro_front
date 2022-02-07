@@ -1,18 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
-import {map} from 'rxjs/operators';
-import {TypePermission} from '../../../../../../../shared/models/permission.interface';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {NavigationView, TypePermission} from '../../../../../../../shared/models/permission.interface';
+import {Observable, of} from 'rxjs';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
 
 @Component({
     selector: 'app-permission-list',
     templateUrl: './permission-list.component.html',
     styleUrls: ['./permission-list.component.scss']
 })
-export class PermissionListComponent implements OnInit {
+export class PermissionListComponent implements OnInit, OnChanges {
+
+    @ViewChild(MatTable) recordsTable: MatTable<any>;
+
+    @Input() permissions = [];
 
     typePermissions: TypePermission[] = [];
     columnsToDisplay: string[] = [];
-    dataSource = [];
+    dataSource = new MatTableDataSource<any>();
 
     constructor(
         private _permissionService: PermissionService,
@@ -21,7 +27,25 @@ export class PermissionListComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.columnsToDisplay = await this.getDisplayedColumns();
-        this.dataSource = await this.getDataSource();
+        this.dataSource.data = await this.getDataSource();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.permissions.currentValue) {
+            this.setValuesPermissionOfTable(this.permissions);
+        }
+    }
+
+    setValuesPermissionOfTable(permissions = []): void {
+        console.log('permissions ==>', permissions);
+        if (permissions?.length > 0) {
+            permissions.forEach((permission) => {
+                const dataSource = this.dataSource.data;
+                const elementFound = dataSource.find((element: any) => element.id === permission.navigationView);
+                elementFound[permission.type] = true;
+            });
+            console.log('data', this.dataSource.data);
+        }
     }
 
     async getDisplayedColumns(): Promise<string[]> {
@@ -58,7 +82,39 @@ export class PermissionListComponent implements OnInit {
 
 
     updatePermission(key, element): void {
-        console.log(key, element[key]);
+        console.log(key, element);
+    }
+
+    parsedResponse(): any {
+        const parsedData = this.dataSource.data;
+        let response = [];
+        parsedData.forEach((element) => {
+            const elementParsed = this.extractKeysToList(element);
+            response = [...response, ...elementParsed];
+        });
+        return response;
+    }
+
+    extractKeysToList(element): any[] {
+        const response = [];
+        Object.keys(element).forEach((key: string) => {
+            if (this.validateKeysToExtract(key) && element[key]) {
+                const payload = {type: key, navigationView: element.id};
+                response.push(payload);
+            }
+        });
+        return response;
+    }
+
+    validateKeysToExtract(key: string): boolean {
+        switch (key) {
+            case 'id':
+            case 'fullTitle':
+            case 'module':
+                return false;
+            default:
+                return true;
+        }
     }
 
 }

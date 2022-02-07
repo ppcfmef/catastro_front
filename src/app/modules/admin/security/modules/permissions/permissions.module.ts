@@ -14,6 +14,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { ListComponent } from './containers/list/list.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -35,7 +38,10 @@ import {MatPaginatorModule} from "@angular/material/paginator";
         ReactiveFormsModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatInputModule,
+        MatSlideToggleModule
     ]
 })
 export class PermissionsModule {
