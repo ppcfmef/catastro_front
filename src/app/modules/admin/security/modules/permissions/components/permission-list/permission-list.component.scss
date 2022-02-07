@@ -1,0 +1,15 @@
+
+.mat-header-cell:first-child {
+    text-align: left;
+    width: 210px;
+}
+
+.mat-cell:first-child {
+    text-align: left;
+    width: 210px;
+}
+
+.mat-header-cell, .mat-cell {
+    text-align: center;
+    width: 100px;
+}
