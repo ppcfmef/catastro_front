@@ -33,14 +33,14 @@
         <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
         <span>Perfil</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item *ngIf="false">
         <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
         <span>Configuracion</span>
     </button>
     <button
         mat-menu-item
         [matMenuTriggerFor]="userStatus">
-        <mat-icon [svgIcon]="'heroicons_outline:dots-circle-horizontal'"></mat-icon>
+        <mat-icon [svgIcon]="'heroicons_outline:dots-circle-horizontal'" *ngIf="false"></mat-icon>
         <span>Estado</span>
     </button>
     <mat-divider class="my-2"></mat-divider>
