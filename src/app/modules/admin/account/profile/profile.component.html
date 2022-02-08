@@ -1,0 +1,198 @@
+<div class="p-6 w-full">
+    <div class="w-full">
+
+        <!-- Form -->
+        <form [formGroup]="accountForm">
+
+            <!-- Section -->
+            <div class="w-full">
+                <div class="text-xl">Perfil</div>
+                <div class="text-secondary">Informacion personal!</div>
+            </div>
+            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+
+                <div class="sm:col-span-4 items-center avatar">
+                    <div
+                        class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+
+                        <!-- Upload / Remove avatar -->
+                        <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <div>
+                                <input
+                                    id="avatar-file-input"
+                                    class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
+                                    type="file"
+                                    [multiple]="false"
+                                    [accept]="'image/jpeg, image/png'"
+                                    (change)="uploadAvatar(avatarFileInput.files)"
+                                    #avatarFileInput>
+                                <label
+                                    class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-hover"
+                                    for="avatar-file-input"
+                                    matRipple>
+                                    <mat-icon
+                                        class="text-white"
+                                        [svgIcon]="'heroicons_outline:camera'"></mat-icon>
+                                </label>
+                            </div>
+                            <div>
+                                <button
+                                    mat-icon-button
+                                    (click)="removeAvatar()">
+                                    <mat-icon
+                                        class="text-white"
+                                        [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image/Letter -->
+                        <img
+                            class="object-cover w-full h-full"
+                            [src]="accountForm.get('avatar').value || 'assets/images/avatars/avatar_default.jpeg'">
+
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="sm:col-span-4">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Nombres completos</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix></mat-icon>
+                        <input
+                            [formControlName]="'fullName'"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- Username -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                        <mat-label>Usuario</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix></mat-icon>
+                        <input
+                            disabled
+                            [value]="accountForm.get('dni').value"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- password -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Contraseña</mat-label>
+                        <mat-icon
+                            class="icon-size-5 touched"
+                            (click)="showPassword()"
+                            [svgIcon]="'heroicons_solid:eye'"
+                            matSuffix></mat-icon>
+                        <input
+                            [formControlName]="'password'"
+                            [type]="typeInputPassword"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- Title -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Trabajo</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:briefcase'"
+                            matPrefix></mat-icon>
+                        <input
+                            [formControlName]="'jobTitle'"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- Company -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Institucion</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:office-building'"
+                            matPrefix></mat-icon>
+                        <input
+                            [formControlName]="'institution'"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- About -->
+                <div class="sm:col-span-4">
+                    <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                        <mat-label>Sobre mi</mat-label>
+                        <textarea
+                            matInput
+                            [formControlName]="'observation'"
+                            matTextareaAutosize
+                            [matAutosizeMinRows]="5"></textarea>
+                    </mat-form-field>
+                    <!--                    <div class="mt-1 text-md text-hint">Brief description for your profile. Basic HTML and Emoji are allowed.</div>-->
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="my-10 border-t"></div>
+
+            <!-- Section -->
+            <div class="w-full">
+                <div class="text-xl">Informacion Personal</div>
+                <div class="text-secondary">Detalles</div>
+            </div>
+            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+                <!-- Email -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Correo Electronico</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:mail'"
+                            matPrefix></mat-icon>
+                        <input
+                            [formControlName]="'email'"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- Phone -->
+                <div class="sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>D.N.I.</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:user'"
+                            matPrefix></mat-icon>
+                        <input
+                            [formControlName]="'dni'"
+                            matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="mt-11 mb-10 border-t"></div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end">
+                <button
+                    mat-stroked-button
+                    type="button">
+                    Cancelar
+                </button>
+                <button
+                    class="ml-4"
+                    mat-flat-button
+                    (click)="updateInformation()"
+                    type="button"
+                    [color]="'primary'">Guardar
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
