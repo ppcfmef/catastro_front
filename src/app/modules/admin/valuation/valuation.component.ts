@@ -42,7 +42,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
           order: 0,
           featureLayer: null,
-          definitionExpression:'1<>1',
+          definitionExpression:'1=1',
         },
 
 
@@ -302,7 +302,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
         const layer1 = this.layersInfo.find(e=> e.title==='Arancel').featureLayer;
         const layer2 = this.layersInfo.find(e=> e.title==='Arancel Carga').featureLayer;
-        /*layer1.definitionExpression = where;*/
+        layer1.definitionExpression = where;
         /*layer2.definitionExpression = where;*/
 
 
@@ -440,8 +440,10 @@ async createGeoJSON(features: any[]): Promise<any>{
     if (typeof attr.feature === 'object') {
       delete attr.feature;
     }
+    // eslint-disable-next-line guard-for-in
     for (const key in attr) {
-      if (!attr[key]) {
+      console.log(key);
+      if (!attr[key] || key.includes('.') ) {
           delete attr[key];
       }
     }
@@ -527,7 +529,7 @@ async createGeoJSON(features: any[]): Promise<any>{
 
     shapeToGeoJson(data: any): void{
         shp(data).then((geojson: any) =>{
-            //console.log(geojson.features);
+            console.log(geojson.features);
             const json=this.createArcgisJSON(geojson.features);
             console.log('json>>>',json);
             const layerInfo = this.layersInfo.find(e=> e.title==='Arancel Carga');
