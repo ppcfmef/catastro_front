@@ -1,0 +1,97 @@
+<!--<p>filters works!</p>-->
+
+<div class="flex flex-col  w-full gap-2 "  >
+
+
+    <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
+        <mat-label >Departamento</mat-label>
+
+        <mat-select  [(value)]="params.department" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDep()">
+            <ng-container *ngFor="let department of departments$ | async">
+                <mat-option [value]="department.code">{{ department.name }}</mat-option>
+            </ng-container>
+
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
+        <mat-label >Provincia</mat-label>
+
+        <mat-select  [(value)]="params.province" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectProv()">
+            <ng-container *ngFor="let province of provinces$ | async">
+                <mat-option [value]="province.code">{{ province.name }}</mat-option>
+            </ng-container>
+
+        </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
+        <mat-label >Distrito</mat-label>
+
+        <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  >
+            <ng-container *ngFor="let district of districts$ | async">
+                <mat-option [value]="district.code">{{ district.name }}</mat-option>
+            </ng-container>
+
+        </mat-select>
+    </mat-form-field>
+
+
+
+    <div>
+        <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+                (click)="buscar()"  >
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+            <span class="ml-2 mr-1">Buscar</span>
+        </button>
+    </div>
+
+
+    <div>
+        <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+                (click)="descargar()"  >
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+            <span class="ml-2 mr-1">Desargar</span>
+        </button>
+    </div>
+
+
+    <div class="flex flex-col sm:flex-row  w-full sm:justify-left items-center">
+        <label for="uploadfile"
+               class="flex flex-col w-48 sm:w-30  m-1 p-2 shadow rounded-2xl cursor-pointer bg-card justify-center">
+            <div class="aspect-w-9 aspect-h-6 ">
+                <div class="flex items-center justify-center">
+                    <div class="relative">
+                        <mat-icon class="notranslate icon-size-14 text-hint"
+                                  svgIcon="iconsmind:file_upload"></mat-icon>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                <div class="mat-tooltip-trigger truncate text-primary-500">Subir archivo</div>
+
+            </div>
+
+            <input accept=".zip" type="file" (change)="uploadFile($event)" hidden name="uploadfile"
+                   id="uploadfile" #uploadfile>
+
+        </label>
+        <div class="flex flex-col items-center justify-between p-3">
+            <h3 class="text-secondary font-bold text-2xl">{{ fileName ? fileName : "Nombre del Archivo"}}</h3>
+            <div>
+                <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+                        (click)="subirDato()" >
+                    <mat-icon svgIcon="heroicons_outline:clipboard-copy"></mat-icon>
+                    <span class="ml-2 mr-1">Cargar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

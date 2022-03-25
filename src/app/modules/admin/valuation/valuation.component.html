@@ -1,6 +1,17 @@
+<div #filterElement id="filterElement" [ngStyle]="{'visibility': visibility ,'background-color':'white' ,width:'350px',padding:'5px'}">
+
+    <app-filters  (buscarEventEmitter)="buscar($event)" (descargarEventEmmiterr)="descargar($event)"  (cargarEventEmmiterr)="cargar($event)" >
+
+    </app-filters>
+</div>
+
 <div #mapViewNode ></div>
 
 <link
   rel="stylesheet"
   href="https://js.arcgis.com/4.17/esri/themes/light/main.css"
 />
+
+<!--<script src="terraformer.min.js"></script>
+<script src="terraformer-arcgis-parser.min.js"></script>
+-->

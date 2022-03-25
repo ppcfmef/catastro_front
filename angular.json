@@ -24,6 +24,7 @@
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "allowedCommonJsDependencies": [
+                            "crypto",
                             "apexcharts",
                             "highlight.js",
                             "crypto-js/enc-utf8",
@@ -53,7 +54,7 @@
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss"
                         ],
-                        "scripts": []
+                        "scripts": ["src/assets/js/shpwrite.js"]
                     },
                     "configurations": {
                         "production": {
