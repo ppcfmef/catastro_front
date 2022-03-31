@@ -11,6 +11,8 @@ import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 declare var shpwrite: any;
 import { saveAs } from 'file-saver';
 import * as shp from 'shpjs';
+
+import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
 /*import { NgxSpinnerService } from 'ngx-spinner';*/
 
@@ -33,47 +35,66 @@ export class ValuationComponent implements OnInit,AfterViewInit {
     link: any;
     user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    proj4Catalog= 'EPSG';
+
+    proj4DestWkid=32718;
+    proj4ScrWkid=4326;
+    proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
+    proj4DestKey=this.proj4Catalog + ':' + String(this.proj4DestWkid);
     reader: any;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    TITLE_DESCARGA= 'Arancel';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    TITLE_CARGA= 'Arancel Carga';
+    displayTable ='none';
     layersInfo = [
-        {
-          title: 'Arancel',
+        {idServer:0,
+          title: this.TITLE_DESCARGA,
           id: 0,
           urlBase:
             'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
           order: 0,
           featureLayer: null,
-          definitionExpression:'1=1',
+          definitionExpression:'1<>1',
+          featureTable:null,
+          popupTemplate:null
         },
 
 
-        {
-            title: 'Arancel Carga',
+        {idServer:1,
+            title: this.TITLE_CARGA,
             id: 1,
             urlBase:
               'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression:'1=1',
+            definitionExpression:'1<>1',
+            featureTable:null,
+            popupTemplate:null
           },
 
 
-        {
+        {   idServer:7,
             title: 'Sectores',
-            id: 7,
+            id: 3,
             urlBase:
               'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_19/MapServer',
             order: 1,
             featureLayer: null,
             definitionExpression:'1=1',
+            featureTable:null,
+            popupTemplate:null
           },
-        {
+        {   idServer:0,
             title: 'Distritos',
-            id: 0,
+            id: 4,
             urlBase:
               'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/limites_nacional/MapServer',
             order: 2,
             featureLayer: null,
             definitionExpression:'1=1',
+            featureTable:null,
+            popupTemplate:null
           },
     ];
 
@@ -160,7 +181,9 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             projection,
             SpatialReference,
             Point,
-            Search
+            Search,
+            FeatureTable,
+            Popup
           ] = await loadModules([
             'esri/Map',
             'esri/views/MapView',
@@ -179,7 +202,9 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             'esri/geometry/projection',
             'esri/geometry/SpatialReference',
             'esri/geometry/Point',
-            'esri/widgets/Search'
+            'esri/widgets/Search',
+            'esri/widgets/FeatureTable',
+            'esri/widgets/Popup'
           ]);
 
           const mapProperties = {
@@ -242,31 +267,115 @@ export class ValuationComponent implements OnInit,AfterViewInit {
           this.view.ui.add(baseMapGalleryExpand, {
             position: 'top-right',
           });
-          const query ='UBIGEO=\'080108\' ';
+          const query ='UBIGEO=\'150101\' ';
           this.zoomToUbigeo(query);
 
 
 
-         this.layersInfo.reverse().map((l) => {
-            l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.id}`, {
-              title: l.title,
+          const fieldInfos=[
+            {
+                fieldName: 'ID_ARAN',
+                label: 'ID_ARAN',
+              },
 
+              {
+                fieldName: 'UBIGEO',
+                label: 'UBIGEO',
+              },
+
+              {
+                fieldName: 'COD_SECT',
+                label: 'COD_SECT',
+              },
+
+              {
+                fieldName: 'COD_MZN',
+                label: 'COD_MZN',
+              },
+              {
+                fieldName: 'FREN_MZN',
+                label: 'FREN_MZN',
+              },
+
+              {
+                fieldName: 'COD_FREN',
+                label: 'COD_FREN',
+              },
+
+              {
+                fieldName: 'COD_VIA',
+                label: 'COD_VIA',
+              },
+              {
+                fieldName: 'TIP_VIA',
+                label: 'TIP_VIA',
+              },
+
+              {
+                fieldName: 'NOM_VIA',
+                label: 'NOM_VIA',
+              },
+
+              {
+                fieldName: 'CUADRA',
+                label: 'CUADRA',
+              },
+
+              {
+                fieldName: 'VAL_ACT',
+                label: 'VAL_ACT',
+              },
+              {
+                fieldName: 'FUENTE',
+                label: 'FUENTE',
+              },
+
+          ];
+          const fieldConfigs = fieldInfos.map((e: any)=> ({ name:e.fieldName,label:e.label}));
+
+          const popupTemp = {
+
+            title: 'Arancel',
+            content: [
+              {
+                type: 'fields',
+                fieldInfos: fieldInfos,
+              },
+            ],
+          };
+
+         this.layersInfo.reverse().map((l) => {
+            l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.idServer}`, {
+              title: l.title,
               definitionExpression:l.definitionExpression,
-              //renderer:rendererUniqueValue
+              outFields: ["*"],
+              //popupTemplate:popupTemp
             });
 
-
+            if([0,1].includes(l.id)){
+              console.log(l.id);
+              popupTemp.title = l.title;
+              l.featureLayer.popupTemplate=popupTemp;
+              const featureTable = new FeatureTable({
+                  layer: l.featureLayer,
+                  multiSortEnabled: true,
+                 /* visibleElements: { selectionColumn: false },*/
+                  fieldConfigs: fieldConfigs,
+                  container:document.getElementById('tableDiv')
+              });
+            }
             this.map.add(l.featureLayer);
           });
 
           this.view.when(() => {
             this.visibility = 'visible';
+
            /* this._ngxSpinner.hide();*/
         });
 
 
 
-        const layer = this.layersInfo.find(e=> e.title==='Arancel').featureLayer;
+        const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
 
         const searchElement = document.getElementById(
             'searchElement'
@@ -300,10 +409,12 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
         this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
-        const layer1 = this.layersInfo.find(e=> e.title==='Arancel').featureLayer;
-        const layer2 = this.layersInfo.find(e=> e.title==='Arancel Carga').featureLayer;
+        const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
+        const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
         layer1.definitionExpression = where;
-        /*layer2.definitionExpression = where;*/
+        layer2.definitionExpression = where;
+
+
 
 
            const query = this.featureLayer.createQuery();
@@ -359,7 +470,7 @@ buscar(params: any): void{
 
 
 
-    this.featureLayer = this.layersInfo.find(e=> e.title==='Arancel').featureLayer;
+    this.featureLayer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
 
     const query = this.featureLayer.createQuery();
 
@@ -370,12 +481,11 @@ buscar(params: any): void{
      this.featureLayer.queryFeatures(query).then( (response) => {
 
       const features: any[] = response.features;
-      console.log('features>>>',features);
+      /*console.log('features>>>',features);*/
       this.createGeoJSON(features).then((data)=>{
-
+        console.log('data>>>',data);
         shpwrite.zip(data, options).then((content) =>{
 
-            //console.log(content);
 
 
                 saveAs(content, 'result.zip');
@@ -442,10 +552,14 @@ async createGeoJSON(features: any[]): Promise<any>{
     }
     // eslint-disable-next-line guard-for-in
     for (const key in attr) {
-      console.log(key);
-      if (!attr[key] || key.includes('.') ) {
+      //console.log(key);
+      /*if (!attr[key] || key.includes('.') ) {
           delete attr[key];
-      }
+      }*/
+
+      if ( key.includes('.') ) {
+        delete attr[key];
+    }
     }
 
     if (feature.geometry) {
@@ -488,9 +602,25 @@ async createGeoJSON(features: any[]): Promise<any>{
   return geojson;
 }
 /*/FeatureServer/0*/
- createArcgisJSON(features: any[]): any[]{
+ async createArcgisJSON(features: any[]): Promise<any[]>{
     const arcgisJson =[];
-    features.forEach((feature)=>{
+    const [
+      Graphic,
+      Polyline,
+      projection,
+      SpatialReference,
+    ] = await loadModules([
+
+      'esri/Graphic',
+      'esri/geometry/Polyline',
+      'esri/geometry/projection',
+      'esri/geometry/SpatialReference',
+    ]);
+
+
+    const outSpatialReference= new SpatialReference(this.proj4DestWkid);
+    return projection.load().then(()=>{
+      features.forEach((feature)=>{
         const attr = feature.properties;
 
         for (const key in attr) {
@@ -498,21 +628,27 @@ async createGeoJSON(features: any[]): Promise<any>{
               delete attr[key];
           }
         }
-        console.log(feature);
+
         if (feature.geometry) {
 
             const geoFeature = geojsonToArcGIS(feature);
+            console.log('geoFeature>>>',geoFeature);
+            const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
+            geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
+            arcgisJson.push(geoFeature);
 
-
-             arcgisJson.push(geoFeature);
 
 
       }
 
 
       });
+      return Promise.all(arcgisJson);
+    //  return arcgisJson;
+    });
 
-      return arcgisJson;
+
+    //return arcgisJson;
 
 };
     cargar(params: any): void{
@@ -527,20 +663,21 @@ async createGeoJSON(features: any[]): Promise<any>{
         reader.readAsArrayBuffer(file);
     }
 
-    shapeToGeoJson(data: any): void{
+     shapeToGeoJson(data: any): void{
+
         shp(data).then((geojson: any) =>{
             console.log(geojson.features);
-            const json=this.createArcgisJSON(geojson.features);
-            console.log('json>>>',json);
-            const layerInfo = this.layersInfo.find(e=> e.title==='Arancel Carga');
-            const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`;
-            const body ={features:json};
+            this.createArcgisJSON(geojson.features).then((json)=>{
+              console.log('json>>>',json);
+              const layerInfo = this.layersInfo.find(e=> e.title===this.TITLE_CARGA);
 
-            let formData = new FormData();
-            formData.append('features', JSON.stringify(json));
+              const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
+              const body ={features:json};
 
-/*
-            fetch(`${url}`, {
+              let formData = new FormData();
+              formData.append('features', JSON.stringify(json));
+
+              fetch(`${url}`, {
                 method: 'POST',
                 body: formData
             }).then((resObj) => {
@@ -549,11 +686,81 @@ async createGeoJSON(features: any[]): Promise<any>{
                                     })
                 .catch((error) => {
                     console.log('UPLOAD ERROR', error);
-                });*/
+                });
+
+            });
+
+
 
           });
 
     }
+
+
+    async projectGeometry(geometry: any): Promise<any> {
+
+
+      const [
+
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        SpatialReference,
+         // eslint-disable-next-line @typescript-eslint/naming-convention
+         Point
+      ] = await loadModules([
+
+        'esri/geometry/SpatialReference',
+        'esri/geometry/Point',
+      ]);
+
+      let pt = null;
+          let newPt = null;
+          console.log('geometry>>>',geometry);
+      let type ='point';
+          if (geometry.paths || geometry.rings) {
+            type ='polyline';
+
+          }
+      switch (type) {
+      case 'point':
+          newPt = this.projectPoint(geometry);
+          geometry = new Point({
+              x: newPt.x,
+              y: newPt.y,
+              spatialReference: new SpatialReference(this.proj4DestWkid)
+          });
+          break;
+
+      case 'polyline':
+      case 'polygon':
+          const paths = geometry.paths || geometry.rings;
+          const len = paths.length;
+          for (let k = 0; k < len; k++) {
+              const len2 = paths[k].length;
+              for (let j = 0; j < len2; j++) {
+                  pt = geometry.getPoint(k, j);
+                  newPt = this.projectPoint(pt);
+                  geometry.setPoint(k, j, new Point({
+                      x: newPt.x,
+                      y: newPt.y,
+                      spatialReference: new SpatialReference(this.proj4DestWkid)
+                  }));
+              }
+          }
+          geometry.spatialReference=new SpatialReference(this.proj4DestWkid);
+          break;
+
+      default:
+          break;
+      }
+
+      return geometry;
+  }
+
+
+  projectPoint(point: any ): any{
+    console.log('point>>>',point);
+   return proj4(proj4.defs[this.proj4SrcKey],proj4.defs[this.proj4DestKey] ).forward(point);
+  }
 
 
 }
