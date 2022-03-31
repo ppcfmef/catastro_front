@@ -1,0 +1,9 @@
+<section>
+  <h2><span>Alerta!</span></h2>
+  <mat-dialog-content>
+    <p>{{data.message}}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" #buttonYes [mat-dialog-close]="true" cdkFocusInitial>Aceptar</button>
+  </mat-dialog-actions>
+</section>

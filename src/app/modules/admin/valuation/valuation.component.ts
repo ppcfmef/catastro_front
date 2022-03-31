@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { arcgisToGeoJSON  } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 //import * as shpwrite from 'shp-write';
 declare var shpwrite: any;
 import { saveAs } from 'file-saver';
@@ -14,7 +15,7 @@ import * as shp from 'shpjs';
 
 import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
-/*import { NgxSpinnerService } from 'ngx-spinner';*/
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-valuation',
@@ -130,9 +131,11 @@ export class ValuationComponent implements OnInit,AfterViewInit {
       legendOptions: { title: 'Estado' },
     };*/
     where ='';
+    nameZip='';
     constructor(
-        //protected _ngxSpinner: NgxSpinnerService
-        private _userService: UserService
+        protected _ngxSpinner: NgxSpinnerService,
+        private _userService: UserService,
+        protected _messageProviderService: MessageProviderService
         ) {
             this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -150,6 +153,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
 
     ngAfterViewInit(): void {
+        this._ngxSpinner.show();
         setTimeout(() => { this.initializeMap(); }, 1000);
 
     }
@@ -370,7 +374,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
           this.view.when(() => {
             this.visibility = 'visible';
 
-           /* this._ngxSpinner.hide();*/
+            this._ngxSpinner.hide();
         });
 
 
@@ -409,11 +413,8 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
         this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
-        const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
-        const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
-        layer1.definitionExpression = where;
-        layer2.definitionExpression = where;
 
+        this._ngxSpinner.show();
 
 
 
@@ -422,6 +423,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             query.outSpatialReference = this.view.spatialReference;
 
             this.featureLayer.queryExtent(query).then( (response) => {
+                this._ngxSpinner.hide();
               this.view.goTo(response.extent ).catch( (error)=> {
                  //console.error(error);
 
@@ -443,9 +445,13 @@ buscar(params: any): void{
 
     const ubigeo=params.district;
     this.where = `UBIGEO='${ubigeo}'`;
-
+    this.nameZip = `${params.namedistrict}.zip`;
     this.zoomToUbigeo(this.where);
-    console.log(this.view.spatialReference);
+    const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
+    const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
+    layer1.definitionExpression = this.where;
+    layer2.definitionExpression = this.where;
+
 
 }
 
@@ -488,7 +494,7 @@ buscar(params: any): void{
 
 
 
-                saveAs(content, 'result.zip');
+                saveAs(content, this.nameZip);
           });
 
 
@@ -655,6 +661,7 @@ async createGeoJSON(features: any[]): Promise<any>{
         /*console.log(params);*/
         const file = params;
         const reader = new FileReader();
+        this._ngxSpinner.show();
         reader.onloadend = (e): void => {
             //console.log(reader.result);
             this.shapeToGeoJson(reader.result);
@@ -682,9 +689,11 @@ async createGeoJSON(features: any[]): Promise<any>{
                 body: formData
             }).then((resObj) => {
                     console.log(resObj);
-
-                                    })
+                    this._ngxSpinner.hide();
+                    this._messageProviderService.showSnack('Registrados cargados correctamente');
+                })
                 .catch((error) => {
+                    this._messageProviderService.showSnackError('Registrados no cargados');
                     console.log('UPLOAD ERROR', error);
                 });
 

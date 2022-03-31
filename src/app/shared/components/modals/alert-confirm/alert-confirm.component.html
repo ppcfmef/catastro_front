@@ -1,0 +1,14 @@
+<section>
+  <h2 class="text-center">Confirmación</h2>
+  <mat-dialog-content>
+    <p *ngIf="!data.isHtml" class="text-center">{{data.message}}</p>
+    <p *ngIf="data.isHtml" [innerHTML]="data.message"></p>
+  </mat-dialog-content>
+  <mat-dialog-actions >
+    <div class="text-center full-width">
+      <button mat-raised-button color="primary" #buttonNo [mat-dialog-close]="false" (keydown)="onKey($event)" cdkFocusInitial>No</button>
+      <button mat-stroked-button color="primary" #buttonYes [mat-dialog-close]="true" (keydown)="onKey($event)">Si</button>
+    </div>
+
+  </mat-dialog-actions>
+</section>

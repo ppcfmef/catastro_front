@@ -15,6 +15,8 @@ export class FiltersComponent implements OnInit {
     districts$: Observable<District[]>;
     isValid=true;
     fileName: string;
+    isDisabled =true;
+    isDisabledDescargar =true;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output()
     buscarEventEmitter = new EventEmitter<any>();
@@ -33,7 +35,7 @@ export class FiltersComponent implements OnInit {
         department:'',
         province:'',
         district:'',
-
+        namedistrict:''
     } ;
 
 
@@ -52,6 +54,16 @@ export class FiltersComponent implements OnInit {
 
 }
 
+selectDist(event: any): void{
+
+    if(this.params.district && this.params.district!=='' )
+    {
+        this.isDisabledDescargar=false;
+        this.params.namedistrict= event.source.triggerValue;
+
+    }
+}
+
 buscar(): void {
     this.buscarEventEmitter.emit(this.params);
 }
@@ -68,6 +80,7 @@ uploadFile(event: any): void {
     this.fileName = this.fileName.toString();
     const ext =  this.fileName.split('.').pop();
     console.log('ext>>',ext);
+    this.isDisabled = false;
 }
 
 subirDato(): void{

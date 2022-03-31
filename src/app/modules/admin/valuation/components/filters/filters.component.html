@@ -29,7 +29,7 @@
     <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
         <mat-label >Distrito</mat-label>
 
-        <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  >
+        <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDist($event)" >
             <ng-container *ngFor="let district of districts$ | async">
                 <mat-option [value]="district.code">{{ district.name }}</mat-option>
             </ng-container>
@@ -50,7 +50,7 @@
 
     <div>
         <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
-                (click)="descargar()"  >
+                (click)="descargar()" [disabled]="isDisabledDescargar"  >
             <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
             <span class="ml-2 mr-1">Descargar</span>
         </button>
@@ -84,7 +84,7 @@
             <h3 class="text-secondary font-bold text-2xl">{{ fileName ? fileName : "Nombre del Archivo"}}</h3>
             <div>
                 <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
-                        (click)="subirDato()" >
+                        (click)="subirDato()" [disabled]="isDisabled" >
                     <mat-icon svgIcon="heroicons_outline:clipboard-copy"></mat-icon>
                     <span class="ml-2 mr-1">Cargar</span>
                 </button>

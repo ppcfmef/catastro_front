@@ -5,7 +5,13 @@ import { CardMenuItemComponent } from './components/card-menu-item/card-menu-ite
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
+import { AlertConfirmComponent } from './components/modals/alert-confirm/alert-confirm.component';
+import { AlertMessageComponent } from './components/modals/alert-message/alert-message.component';
+import { AlertSnackComponent } from './components/modals/alert-snack/alert-snack.component';
+import { AlertSnackErrorComponent } from './components/modals/alert-snack-error/alert-snack-error.component';
+import { AlertSnackInfoComponent } from './components/modals/alert-snack-info/alert-snack-info.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 @NgModule({
     imports: [
         CommonModule,
@@ -13,15 +19,27 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         ReactiveFormsModule,
         MatButtonModule,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule,
+        MatSnackBarModule
     ],
     exports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CardMenuItemComponent
+        CardMenuItemComponent,
+        AlertConfirmComponent,
+        AlertMessageComponent,
+        AlertSnackComponent,
+        AlertSnackErrorComponent,
+        AlertSnackInfoComponent,
     ],
     declarations: [
+        AlertConfirmComponent,
+        AlertMessageComponent,
+        AlertSnackComponent,
+        AlertSnackErrorComponent,
+        AlertSnackInfoComponent,
       CardMenuItemComponent
     ]
 })
