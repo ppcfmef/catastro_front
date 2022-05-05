@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Department, District, Institute, Province} from '../interfaces/common.interface';
+import {Department, District, DistrictResource, Institute, Province} from '../interfaces/common.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -30,5 +30,9 @@ export class CommonService {
 
     getInstitutes(): Observable<Institute[]> {
         return this._httpClient.get<Institute[]>(`${this._apiUrl}/master/institution/`);
+    }
+
+    getDistrictResource(ubigeo: string): Observable<DistrictResource> {
+        return this._httpClient.get<DistrictResource>(`${this._apiUrl}/places/district-resource/${ubigeo}`);
     }
 }

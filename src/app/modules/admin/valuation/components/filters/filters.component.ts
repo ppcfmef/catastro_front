@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Department, District, Province } from 'app/core/common/interfaces/common.interface';
+import { Department, District, DistrictResource, Province } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { Observable } from 'rxjs';
 
@@ -38,6 +38,9 @@ export class FiltersComponent implements OnInit {
         namedistrict:''
     } ;
 
+    dataSearch: DistrictResource;
+
+/*districtResource: DistrictResource;*/
 
   isReadOnly=false;
   constructor(private _commonService: CommonService) { }
@@ -59,17 +62,21 @@ selectDist(event: any): void{
     if(this.params.district && this.params.district!=='' )
     {
         this.isDisabledDescargar=false;
-        this.params.namedistrict= event.source.triggerValue;
+
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        this._commonService.getDistrictResource(this.params.district).subscribe( (data: DistrictResource)=>{
+           this.dataSearch =data;
+        });
 
     }
 }
 
 buscar(): void {
-    this.buscarEventEmitter.emit(this.params);
+    this.buscarEventEmitter.emit(this.dataSearch);
 }
 
 descargar(): void{
-    this.descargarEventEmmiterr.emit(this.params);
+    this.descargarEventEmmiterr.emit(this.dataSearch);
 }
 
 
@@ -90,3 +97,4 @@ subirDato(): void{
 }
 
 }
+

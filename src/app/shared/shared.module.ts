@@ -12,6 +12,7 @@ import { AlertSnackErrorComponent } from './components/modals/alert-snack-error/
 import { AlertSnackInfoComponent } from './components/modals/alert-snack-info/alert-snack-info.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { GeoLocationComponent } from './components/geo-location/geo-location.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -33,6 +34,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         AlertSnackComponent,
         AlertSnackErrorComponent,
         AlertSnackInfoComponent,
+        GeoLocationComponent,
     ],
     declarations: [
         AlertConfirmComponent,
@@ -40,7 +42,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         AlertSnackComponent,
         AlertSnackErrorComponent,
         AlertSnackInfoComponent,
-      CardMenuItemComponent
+      CardMenuItemComponent,
+      GeoLocationComponent
     ]
 })
 export class SharedModule

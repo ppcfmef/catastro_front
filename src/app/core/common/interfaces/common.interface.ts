@@ -27,3 +27,31 @@ export interface Institute {
     id: number;
     name: string;
 }
+
+export interface DistrictResource {
+    code: string;
+    name: string;
+    department: string;
+    province: string;
+    extensions: Extension[];
+    resources: Resource[];
+}
+
+
+export interface Extension {
+    id: number;
+    xMin: string;
+    xMax: string;
+    yMin: string;
+    yMax: string;
+    x: string;
+    y: string;
+}
+
+export interface Resource {
+    id: number;
+    source: string;
+    utm: number;
+    gisService: string;
+    ubigeo: string;
+}

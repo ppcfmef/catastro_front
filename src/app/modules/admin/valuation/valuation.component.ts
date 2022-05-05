@@ -16,6 +16,7 @@ import * as shp from 'shpjs';
 import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DistrictResource, Extension } from 'app/core/common/interfaces/common.interface';
 
 @Component({
   selector: 'app-valuation',
@@ -406,10 +407,18 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
 
 
-  async    zoomToUbigeo(where: string): Promise<any> {
+  async    zoomToUbigeo(where: string,extent: Extension=null): Promise<any> {
     try {
+
+
+        const [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            Extent
+          ] = await loadModules([
+            'esri/geometry/Extent'
+          ]);
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        console.log('where>>>',where);
+        console.log('where>>>',where,extent);
 
         this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
@@ -417,20 +426,39 @@ export class ValuationComponent implements OnInit,AfterViewInit {
         this._ngxSpinner.show();
 
 
+        if (!extent){
 
-           const query = this.featureLayer.createQuery();
+            const query = this.featureLayer.createQuery();
             query.where = where;
             query.outSpatialReference = this.view.spatialReference;
 
             this.featureLayer.queryExtent(query).then( (response) => {
                 this._ngxSpinner.hide();
               this.view.goTo(response.extent ).catch( (error)=> {
-                 //console.error(error);
-
-              });
+                  });
             });
 
 
+
+        }
+
+        else{
+
+const newExtent =  new Extent({
+    xmin:parseFloat(extent.xMin),
+    ymin:parseFloat(extent.yMin),
+    xmax:parseFloat(extent.xMax),
+    ymax:parseFloat(extent.yMax),
+    spatialReference: {
+        wkid: 4326
+ }
+});
+
+console.log('extent>>',newExtent);
+this.view.extent = newExtent;
+this._ngxSpinner.hide();
+
+        }
     }
         catch (error) {
             console.error('EsriLoader: ', error);
@@ -440,14 +468,17 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 }
 
 
-buscar(params: any): void{
+buscar(params: DistrictResource): void{
+console.log('params>>',params);
 
-
-    const ubigeo=params.district;
+    const ubigeo=params.code;
     this.where = `UBIGEO='${ubigeo}'`;
-    this.nameZip = `${params.namedistrict}.zip`;
-    this.zoomToUbigeo(this.where);
+    this.nameZip = `${params.name}.zip`;
+    this.zoomToUbigeo(this.where,params.extensions[0]);
+
     const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
+    /*this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).urlBase = params.;*/
+    /*const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
     const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
     layer1.definitionExpression = this.where;
     layer2.definitionExpression = this.where;
@@ -455,8 +486,9 @@ buscar(params: any): void{
 
 }
 
- descargar(params: any): void{
-    console.log(params);
+ descargar(params: DistrictResource): void{
+    //console.log(params);
+
 
     const options = {
         types: {
@@ -467,10 +499,6 @@ buscar(params: any): void{
         },
         wkt :4326
     };
-
-
-
-
 
 
 
@@ -491,8 +519,6 @@ buscar(params: any): void{
       this.createGeoJSON(features).then((data)=>{
         console.log('data>>>',data);
         shpwrite.zip(data, options).then((content) =>{
-
-
 
                 saveAs(content, this.nameZip);
           });
