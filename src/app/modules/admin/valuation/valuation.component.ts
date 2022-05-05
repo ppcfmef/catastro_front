@@ -9,7 +9,7 @@ import { arcgisToGeoJSON  } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 //import * as shpwrite from 'shp-write';
-declare var shpwrite: any;
+declare let shpwrite: any;
 import { saveAs } from 'file-saver';
 import * as shp from 'shpjs';
 
@@ -163,11 +163,10 @@ export class ValuationComponent implements OnInit,AfterViewInit {
 
     }
 
-
+    /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
         try {
           const container = this.mapViewEl.nativeElement;
-
           const [
             Map,
             MapView,
@@ -211,6 +210,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             'esri/widgets/FeatureTable',
             'esri/widgets/Popup'
           ]);
+          /* eslint-enable @typescript-eslint/naming-convention */
 
           const mapProperties = {
             basemap: 'streets-vector',
@@ -353,7 +353,7 @@ export class ValuationComponent implements OnInit,AfterViewInit {
             l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.idServer}`, {
               title: l.title,
               definitionExpression:l.definitionExpression,
-              outFields: ["*"],
+              outFields: ['*'],
               //popupTemplate:popupTemp
             });
 
@@ -546,10 +546,10 @@ console.log('params>>',params);
 
 downloadFile(content, mimeType, fileName, useBlob): any{
     mimeType = mimeType || 'application/octet-stream';
-    let url = null;
-    let dataURI = 'data:' + mimeType + ',' + content;
+    const url = null;
+    const dataURI = 'data:' + mimeType + ',' + content;
     this.link = document.createElement('a');
-    let blob = new Blob([content], {
+    const blob = new Blob([content], {
         'type': mimeType
     });
 
@@ -636,6 +636,7 @@ async createGeoJSON(features: any[]): Promise<any>{
 /*/FeatureServer/0*/
  async createArcgisJSON(features: any[]): Promise<any[]>{
     const arcgisJson =[];
+    /* eslint-disable @typescript-eslint/naming-convention */
     const [
       Graphic,
       Polyline,
@@ -648,7 +649,7 @@ async createGeoJSON(features: any[]): Promise<any>{
       'esri/geometry/projection',
       'esri/geometry/SpatialReference',
     ]);
-
+    /* eslint-enable @typescript-eslint/naming-convention */
 
     const outSpatialReference= new SpatialReference(this.proj4DestWkid);
     return projection.load().then(()=>{
@@ -707,7 +708,7 @@ async createGeoJSON(features: any[]): Promise<any>{
               const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
               const body ={features:json};
 
-              let formData = new FormData();
+              const formData = new FormData();
               formData.append('features', JSON.stringify(json));
 
               fetch(`${url}`, {

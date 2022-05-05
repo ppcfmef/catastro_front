@@ -1,9 +1,9 @@
 {
-    "name": "@fuse/starter",
+    "name": "@mef/catastro-fiscal",
     "version": "13.4.0",
-    "description": "PCM - Catastro Fiscal",
-    "author": "https://themeforest.net/user/srcn",
-    "license": "https://themeforest.net/licenses/standard",
+    "description": "MEF - Catastro Fiscal",
+    "author": "",
+    "license": "",
     "private": true,
     "scripts": {
         "ng": "ng",

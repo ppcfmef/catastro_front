@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
-import {ReCaptchaV3Service} from "ng-recaptcha";
+import {ReCaptchaV3Service} from 'ng-recaptcha';
 
 @Component({
     selector     : 'auth-sign-in',

@@ -7,7 +7,7 @@ export class CommonUtils {
 
     static setFormValues(form: FormGroup, values: any, keyExcludedEmitEvent?: string, emitEvent = false): void {
         const rawValue = form.getRawValue();
-        Object.keys(rawValue).forEach(key => {
+        Object.keys(rawValue).forEach((key) => {
             if (values && values[key] || typeof values[key] === 'boolean') {
                 form.get(key).patchValue(values[key], {
                     onlySelf: true,
