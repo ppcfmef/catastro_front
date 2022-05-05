@@ -45,9 +45,7 @@ export class ProfileComponent implements OnInit {
 
         this._userService.user$
             .pipe(
-                switchMap((user) => {
-                    return this._userService.getUserById(user.id);
-                }),
+                switchMap(user => this._userService.getUserById(user.id)),
                 takeUntil(this.unsubscribe)
             )
             .subscribe((response: any) => {
