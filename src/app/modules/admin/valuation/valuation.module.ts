@@ -9,11 +9,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MapComponent } from './components/map/map.component';
+import { MapsModule } from 'app/shared/maps/maps.module';
 
 @NgModule({
   declarations: [
     ValuationComponent,
-    FiltersComponent
+    FiltersComponent,
+    MapComponent
   ],
   imports: [
     CommonModule,
@@ -24,6 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatTableModule,
     MatButtonModule,
+    MapsModule
   ]
 })
 export class ValuationModule { }

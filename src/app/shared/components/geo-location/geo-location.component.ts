@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { loadModules } from 'esri-loader';
 
 @Component({
@@ -7,7 +7,7 @@ import { loadModules } from 'esri-loader';
   templateUrl: './geo-location.component.html',
   styleUrls: ['./geo-location.component.scss']
 })
-export class GeoLocationComponent implements OnInit {
+export class GeoLocationComponent implements OnInit,AfterViewInit {
     @Input() x: number=  -71.955921;
     @Input() y: number=  -13.53063;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
@@ -18,12 +18,11 @@ export class GeoLocationComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-      //y latitude , x longitude
-    this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
-    this.initializeMap(this.points);
-
-    //this.initializeMap(this.x,this.y);
   }
+  ngAfterViewInit(): void {
+    this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
+    setTimeout(() => {this.initializeMap(this.points); }, 1000);
+    }
 
 
   async initializeMap(inputPoints: any[]=[] ): Promise<void> {
@@ -54,10 +53,13 @@ export class GeoLocationComponent implements OnInit {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         zoom: 15,
-        center: [this.x, this.y],
+
         map: this.map,
       };
       this.view = new MapView(mapViewProperties);
+
+
+
       const graphicsLayer = new GraphicsLayer();
 
       const x=inputPoints[0].longitude;
@@ -66,8 +68,7 @@ export class GeoLocationComponent implements OnInit {
         type: 'point',
         longitude : x,
         latitude: y
-        /*longitude: -118.80657463861,
-        latitude: 34.0005930608889*/
+
      };
 
      const simpleMarkerSymbol = {
@@ -86,8 +87,7 @@ export class GeoLocationComponent implements OnInit {
 
      this.view.graphics.addMany([pointGraphic]);
      this.view.center = [x,y];
-     /*graphicsLayer.add(pointGraphic);
-     this.map.add(graphicsLayer);*/
+
 
 
     } catch (error) {

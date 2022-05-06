@@ -1,6 +1,13 @@
-<ng-container *ngIf="points">
+<!--<ng-container *ngIf="points">
   <p *ngFor="let point of points">
     {{ point.latitude }}, {{ point.longitude }}
   </p>
-</ng-container>
+</ng-container>-->
 
+
+<div #mapViewNode  ></div>
+
+<link
+  rel="stylesheet"
+  href="https://js.arcgis.com/4.17/esri/themes/light/main.css"
+/>
