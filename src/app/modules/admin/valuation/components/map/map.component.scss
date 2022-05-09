@@ -10,3 +10,126 @@
     height: 100%;
     width: 100%;
   }
+
+
+  .map{
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+:host ::ng-deep{
+
+  /* General Widget */
+  .esri-component.esri-expand.esri-widget{
+    border-radius: 8px;
+    .esri-expand__container{
+      border-radius: 8px;
+      .esri-expand__panel{
+        border-radius: 8px;
+      }
+    }
+  }
+
+  @mixin styleBlockPanelWidget {  
+    padding:10px;
+    background-color: white;
+  }
+  
+
+  @mixin blockPanelWidget($vLeft,$vRight) {  
+    border-top-left-radius: $vLeft;
+    border-top-right-radius: $vRight;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  
+  /* --- End --- */
+
+  #ubigeoSearch_controls_content{
+    top: -1px;
+    left: 22px;
+    @include blockPanelWidget(0, 8px );
+    > div{
+     @include styleBlockPanelWidget();
+     @include blockPanelWidget(0, 8px );
+      max-width: 350px;      
+    }    
+  }
+  div[aria-controls="ubigeoSearch_controls_content"]{
+    background-color: #51518b;
+    border-radius: 8px;
+    .esri-collapse__icon{
+      color: white;
+    }
+  }
+
+
+  .esri-search.esri-widget{
+     border-radius: 8px;
+    .esri-search__container{
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+    .esri-search__input-container,
+      form,
+      input{
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+      
+    }
+    .esri-search__submit-button{
+      background: #51518b;
+      border-radius: 0 8px 8px 0;
+      color: white;
+    }
+  }
+
+
+  div[aria-controls="mapGalleryBase_controls_content"]{
+    background-color: #51518b;
+    border-radius: 8px;
+    .esri-collapse__icon{
+      color: white;
+    }
+  }
+
+  
+  #mapGalleryBase_controls_content{
+    top: -1px;
+    right: 22px;
+    @include blockPanelWidget(8px, 0 );
+    > div{
+      @include styleBlockPanelWidget();
+      @include blockPanelWidget(8px, 0 );
+    }    
+  }
+
+  #maplayerList_controls_content{
+      top: -1px;
+      right: 22px;
+      @include blockPanelWidget(8px, 0 );
+      > div{
+        @include styleBlockPanelWidget();
+        @include blockPanelWidget(8px, 0 );
+      }    
+    }
+
+    div[aria-controls="maplayerList_controls_content"]{
+      background-color: #51518b;
+      border-radius: 8px;
+      .esri-collapse__icon{
+        color: white;
+      }
+    }
+
+
+    .esri-popup, .esri-popup__main-container {
+      border-radius: 8px;
+      header h2{
+        color: #51518b;
+      }
+    }
+
+} 
