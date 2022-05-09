@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { arcgisToGeoJSON  } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 //import * as shpwrite from 'shp-write';
 declare let shpwrite: any;
 import { saveAs } from 'file-saver';
@@ -135,7 +136,8 @@ export class MapComponent implements OnInit,AfterViewInit {
     constructor(
         protected _ngxSpinner: NgxSpinnerService,
         private _userService: UserService,
-        protected _messageProviderService: MessageProviderService
+        protected _messageProviderService: MessageProviderService,
+        protected _FuseSplashScreenService: FuseSplashScreenService
         ) {
             this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -153,7 +155,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 
 
     ngAfterViewInit(): void {
-        this._ngxSpinner.show();
+        this._FuseSplashScreenService.show(0);
         setTimeout(() => { this.initializeMap(); }, 1000);
 
     }
@@ -382,7 +384,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         this.view.when(() => {
           this.visibility = 'visible';
 
-          this._ngxSpinner.hide();
+          this._FuseSplashScreenService.hide();
       });
 
 
@@ -422,7 +424,7 @@ async    zoomToUbigeo(where: string): Promise<any> {
       this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
 
-      this._ngxSpinner.show();
+      this._FuseSplashScreenService.show(0);
 
 
 
@@ -431,7 +433,7 @@ async    zoomToUbigeo(where: string): Promise<any> {
           query.outSpatialReference = this.view.spatialReference;
 
           this.featureLayer.queryExtent(query).then( (response) => {
-              this._ngxSpinner.hide();
+              this._FuseSplashScreenService.hide();
             this.view.goTo(response.extent ).catch( (error)=> {
                //console.error(error);
 
@@ -670,7 +672,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
       /*console.log(params);*/
       const file = params;
       const reader = new FileReader();
-      this._ngxSpinner.show();
+      this._FuseSplashScreenService.show(0);
       reader.onloadend = (e): void => {
           //console.log(reader.result);
           this.shapeToGeoJson(reader.result);
@@ -698,7 +700,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
               body: formData
           }).then((resObj) => {
                   console.log(resObj);
-                  this._ngxSpinner.hide();
+                  this._FuseSplashScreenService.hide();
                   this._messageProviderService.showSnack('Registrados cargados correctamente');
               })
               .catch((error) => {
