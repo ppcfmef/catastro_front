@@ -21,16 +21,23 @@ const routes: Routes = [
     component: UploadNewPage
   },
   {
-    path: 'search-owner',
-    component: SearchByOwnerPage
-  },
-  {
-    path: 'search-land',
-    component: SearchByLandPage
-  },
-  {
-    path: 'search-sumary',
-    component: SearchSumaryPage
+    path: 'search',
+    component: SearchSumaryPage,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'search-owner',
+      },
+      {
+        path: 'search-owner',
+        component: SearchByOwnerPage
+      },
+      {
+        path: 'search-land',
+        component: SearchByLandPage
+      },
+    ]
   },
 ];
 

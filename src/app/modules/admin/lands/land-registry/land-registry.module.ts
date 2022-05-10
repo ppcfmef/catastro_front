@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+
+import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
 
 import { UploadhistoryService } from './services/uploadhistory.service';
 import { LandRegistryRoutingModule } from './land-registry-routing.module';
@@ -15,6 +19,9 @@ import { SearchByOwnerPage } from './pages/search-by-owner/search-by-owner.page'
 import { SearchByLandPage } from './pages/search-by-land/search-by-land.page';
 import { SearchSumaryPage } from './pages/search-sumary/search-sumary.page';
 import { UploadhistoryListComponent } from './components/uploadhistory-list/uploadhistory-list.component';
+import { SearchOwnerTableComponent } from './components/search-owner-table/search-owner-table.component';
+import { SearchOwnerContainerComponent } from './components/search-owner-container/search-owner-container.component';
+import { SearchLandTableComponent } from './components/search-land-table/search-land-table.component';
 
 
 @NgModule({
@@ -25,15 +32,21 @@ import { UploadhistoryListComponent } from './components/uploadhistory-list/uplo
     SearchByOwnerPage,
     SearchByLandPage,
     SearchSumaryPage,
-    UploadhistoryListComponent
+    UploadhistoryListComponent,
+    SearchOwnerTableComponent,
+    SearchOwnerContainerComponent,
+    SearchLandTableComponent
   ],
   imports: [
     CommonModule,
     LandRegistryRoutingModule,
+    MatFormFieldModule,
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
+    MatInputModule,
+    CustomSharedModule,
   ],
   providers: [
     UploadhistoryService,

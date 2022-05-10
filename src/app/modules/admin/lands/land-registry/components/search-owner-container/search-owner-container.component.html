@@ -1,0 +1,14 @@
+<div class="flex flex-row gap-4" [formGroup]="formFilters" style="align-items: end;">
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-2/12">
+      <mat-label>Buscar</mat-label>
+      <input type="text" matInput formControlName="search"
+             placeholder="Buscar por Nombres o DNI"
+             autocomplete="off">
+      <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+  </mat-form-field>
+</div>
+<app-search-owner-table [dataSource]="dataSource"
+(changePage)="onChangePage($event)"
+(showLandsTable)="onShowLandsTable($event)"></app-search-owner-table>
+<app-search-land-table *ngIf="showLandsTable"></app-search-land-table>
+
