@@ -13,7 +13,7 @@ const routes: Routes = [
     component: UploadHistoryPage
   },
   {
-    path: 'history/detail',
+    path: 'history/:uploadRecordId',
     component: UploadDetailPage
   },
   {
