@@ -8,13 +8,17 @@ body fuse-splash-screen {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #111827;
+    background-color: rgba(17, 24, 39, 1);
     color: #F9FAFB;
     z-index: 999999;
-    pointer-events: none;
+    pointer-events: all;
     opacity: 1;
     visibility: visible;
     transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.opacityBg-fuse-splash-screen fuse-splash-screen{
+    background-color: rgba(17, 24, 39, 0.7);
 }
 
 body fuse-splash-screen img {

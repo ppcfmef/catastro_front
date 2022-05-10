@@ -7,10 +7,25 @@
     --mef-c-red: #db4b4b;
     --mef-c-purple: #666699;
     --mef-c-grey: #656364;
+    --mef-c-confirm: #4a68b3;
+    --mef-c-success: #488b55;
+    --mef-c-danger: #ad4c4c;
   }
 
 .bg-mef{
     background-color: var(--mef-c-red) !important;
+}
+
+.bg-success{
+    background-color: #488b55 !important;
+}
+
+.bg-danger{
+    background-color: #ad4c4c !important;
+}
+
+.bg-confirm{
+    background-color: #4a68b3 !important;
 }
 
 .c-purple-mef{
@@ -23,6 +38,23 @@
 .c-grey-red{
     color: var(--mef-c-red) !important;
 }
+
+.c-success{
+    color: #488b55 !important;
+}
+
+.c-danger{
+    color: #ad4c4c !important;
+}
+
+.c-confirm{
+    color: #4a68b3 !important;
+}
+
+.c-white{
+    color:white;
+}
+
 
 .touched {
     cursor: pointer;
