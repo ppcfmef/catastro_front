@@ -82,7 +82,7 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit {
 */
      const simpleMarkerSymbol = {
         type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-        url: 'assets/images/map/location2.png',
+        url: '/assets/images/map/location2.png',
         width: '20px',
         height: '30px'
       };
