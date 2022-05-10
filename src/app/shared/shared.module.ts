@@ -17,6 +17,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { GeoLocationComponent } from './components/geo-location/geo-location.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 
+import { OnlyNumbersDirective } from './directives/only-numbers.directive';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -42,6 +44,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
         AlertSnackInfoComponent,
         GeoLocationComponent,
         TabsComponent,
+        OnlyNumbersDirective,
     ],
     declarations: [
         AlertConfirmComponent,
@@ -51,7 +54,8 @@ import { TabsComponent } from './components/tabs/tabs.component';
         AlertSnackInfoComponent,
         CardMenuItemComponent,
         GeoLocationComponent,
-        TabsComponent
+        TabsComponent,
+        OnlyNumbersDirective,
     ]
 })
 export class SharedModule
