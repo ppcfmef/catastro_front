@@ -46,7 +46,7 @@
         <th mat-header-cell *matHeaderCellDef>Predios</th>
         <td mat-cell *matCellDef="let element; let i = index">
             <button mat-icon-button class="mat-primary"
-                    (click)="onShowLandsTable(element.id)"
+                    (click)="onShowLandsTable(element)"
                     matTooltip="ver detalle">
                     {{ element.numberLands }}
                     <mat-icon [svgIcon]="'heroicons_solid:arrow-right'"></mat-icon>

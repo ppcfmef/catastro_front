@@ -1,1 +1,124 @@
-<p>search-land-table works!</p>
+<div *ngIf="dataSource">
+  <table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+    <ng-container matColumnDef="nro">
+        <th mat-header-cell *matHeaderCellDef> Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+            {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="landCode">
+        <th mat-header-cell *matHeaderCellDef> Código único de predio</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.cup }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="municipalLandCode">
+        <th mat-header-cell *matHeaderCellDef> Código de predio municipal</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.cpm }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="habilitacionName">
+        <th mat-header-cell *matHeaderCellDef> Nombre habilitacion</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.habilitacionName }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="steetName">
+        <th mat-header-cell *matHeaderCellDef> Nombre de via </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.steetName }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="urbanMza">
+        <th mat-header-cell *matHeaderCellDef> MZA urbana </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.urbanMza }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="urbanLotNumber">
+        <th mat-header-cell *matHeaderCellDef> Lote urbano </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.urbanLotNumber }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="roadBlockNumber">
+        <th mat-header-cell *matHeaderCellDef> Nro de cuadra de la via </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.roadBlockNumber }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="site">
+        <th mat-header-cell *matHeaderCellDef> Lado </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.site }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="municipalNumber">
+        <th mat-header-cell *matHeaderCellDef> Nro municipal </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.municipalNumber }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="alternateNumber">
+        <th mat-header-cell *matHeaderCellDef> Nro alterno </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.alternateNumber }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dptoNumber">
+        <th mat-header-cell *matHeaderCellDef> Nro Departamento </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.dptoNumber }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="indoor">
+        <th mat-header-cell *matHeaderCellDef> Interior </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.indoor }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="block">
+        <th mat-header-cell *matHeaderCellDef> Bloque </th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.block }}
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="map">
+        <th mat-header-cell *matHeaderCellDef>Predios</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-icon-button class="mat-primary"
+                    (click)="onshowLandMap(element)"
+                    matTooltip="ver detalle">
+                    {{ 'ver' }}
+                    <mat-icon [svgIcon]="'heroicons_solid:arrow-right'"></mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [length]="dataSource.length"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"
+          (page)="onPage($event)"
+          >
+  </mat-paginator>
+</div>
+

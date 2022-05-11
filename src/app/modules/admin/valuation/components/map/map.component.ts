@@ -281,9 +281,9 @@ export class MapComponent implements OnInit,AfterViewInit {
         const query ='UBIGEO=\'150101\' ';
         this.zoomToUbigeo(query);
 
-        this.view.ui.remove("zoom"); // Remover el boton Zoom;
+        this.view.ui.remove('zoom'); // Remover el boton Zoom;
 
-        
+
 
 
         const fieldInfos=[

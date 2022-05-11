@@ -12,7 +12,7 @@ export class SearchOwnerTableComponent implements OnInit {
 
   @Input() dataSource: LandOwner[];
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
-  @Output() showLandsTable: EventEmitter<number> = new EventEmitter();
+  @Output() showLandsTable: EventEmitter<LandOwner> = new EventEmitter();
 
   displayedColumns = ['nro', 'documentType', 'dni', 'paternalSurname', 'maternalSurname', 'name', 'lands'];
   count = 0;
@@ -28,8 +28,8 @@ export class SearchOwnerTableComponent implements OnInit {
     this.changePage.emit(paginator);
   }
 
-  onShowLandsTable(landOwnerId: number): void {
-    this.showLandsTable.emit(landOwnerId);
+  onShowLandsTable(landOwner: LandOwner): void {
+    this.showLandsTable.emit(landOwner);
   }
 
 }

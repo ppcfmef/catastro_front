@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
+import { MapsModule } from 'app/shared/maps/maps.module';
 
 import { UploadhistoryService } from './services/uploadhistory.service';
 import { LandRegistryRoutingModule } from './land-registry-routing.module';
@@ -49,6 +50,7 @@ import { TableFilesComponent } from './pages/upload-new/components/table-files/t
     MatButtonModule,
     MatInputModule,
     CustomSharedModule,
+    MapsModule,
   ],
   providers: [
     UploadhistoryService,

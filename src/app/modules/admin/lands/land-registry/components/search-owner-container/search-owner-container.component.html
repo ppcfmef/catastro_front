@@ -10,5 +10,23 @@
 <app-search-owner-table [dataSource]="dataSource"
 (changePage)="onChangePage($event)"
 (showLandsTable)="onShowLandsTable($event)"></app-search-owner-table>
-<app-search-land-table *ngIf="showLandsTable"></app-search-land-table>
 
+<app-search-land-table *ngIf="showLandsTable" [dataSource]="dataSourceLands"
+(changePage)="onChangePage($event)"
+(showLandMap)="onShowLandsMap($event)"></app-search-land-table>
+
+<div>
+  <div style="height: 500px; width: 500px;" *ngIf="showLandsMap"> 
+    <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" ></app-show-map-point>
+  </div>
+  <div *ngIf="landRecord && landOwner">
+    <h2>Datos del predio</h2>
+    CUP: {{ landRecord?.cup }}
+    CPM: {{ landRecord?.cpm }}
+    Propietario: {{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname  }}
+    DNI: {{ landOwner?.dni }}
+    Área del Terreno: {{ landRecord?.landArea }} mt2
+    Área construida: {{ builtArea?.landArea }} mt2
+  </div>
+  
+</div>

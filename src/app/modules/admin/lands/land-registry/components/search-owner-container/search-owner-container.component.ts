@@ -9,7 +9,9 @@ import { MatPaginator } from '@angular/material/paginator';
 
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { LandOwner } from '../../interfaces/land-owner.interface';
+import { LandRecord } from '../../interfaces/land-record.interface';
 import { LandOwnerService } from '../../services/land-owner.service';
+import { LandRecordService } from '../../services/land-record.service';
 
 
 @Component({
@@ -27,10 +29,17 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   showLandsTable = false;
 
+  showLandsMap = false;
+
   dataSource: LandOwner[] = [];
+  dataSourceLands: LandRecord[] = [];
+
+  landOwner: LandOwner;
+  landRecord: LandRecord;
 
   constructor(
     private _landOwnerService: LandOwnerService,
+    private landRecordService: LandRecordService,
   ) {
     this.createFormFilters();
   }
@@ -74,8 +83,17 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     });
   }
 
-  onShowLandsTable(landOwnerId: number): void {
+  onShowLandsTable(landOwner: LandOwner): void {
     this.showLandsTable = true;
+    this.landOwner = landOwner;
+    this.landRecordService.getAllBy(landOwner.id).subscribe(
+      response => this.dataSourceLands = response.results
+    );
+  }
+
+  onShowLandsMap(landRecord: LandRecord): void {
+    this.showLandsMap = true;
+    this.landRecord = landRecord;
   }
 
   private createFormFilters(): void {
