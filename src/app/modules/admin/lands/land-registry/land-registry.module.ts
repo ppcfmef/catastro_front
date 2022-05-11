@@ -22,6 +22,7 @@ import { UploadhistoryListComponent } from './components/uploadhistory-list/uplo
 import { SearchOwnerTableComponent } from './components/search-owner-table/search-owner-table.component';
 import { SearchOwnerContainerComponent } from './components/search-owner-container/search-owner-container.component';
 import { SearchLandTableComponent } from './components/search-land-table/search-land-table.component';
+import { TableFilesComponent } from './pages/upload-new/components/table-files/table-files.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { SearchLandTableComponent } from './components/search-land-table/search-
     UploadhistoryListComponent,
     SearchOwnerTableComponent,
     SearchOwnerContainerComponent,
-    SearchLandTableComponent
+    SearchLandTableComponent,
+    TableFilesComponent
   ],
   imports: [
     CommonModule,
