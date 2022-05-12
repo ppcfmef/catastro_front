@@ -1,3 +1,7 @@
+@import '~styles/mixins';
+
+@include block-icon();
+
 .block-upload{
     display: flex;
     flex-direction: row;
@@ -87,69 +91,6 @@
   }
 
   
-
-  .block-icon{
-    display: flex;
-    padding: 16px;
-    border-radius: 7px;
-    background-color: white;
-    margin-bottom: 20px;
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-    margin: 0 20px;
-
-    .bgIcon{
-      background-color: #e2e2f9;
-      color: #666699,
-    }
-
-    .block-text{
-      margin-left: 16px;
-      display: flex;
-      flex-direction: column;
-      p{
-        color: #666699;
-      }
-      h5{
-        font-size: 24px;
-        text-align: center;
-        color: var(--mef-c-purple);
-        font-weight: bold;
-      }
-
-    }
-
-    &.green{
-      .bgIcon{
-        background-color: #e6f9e2;
-        mat-icon{
-          color: #779966;
-        }
-        
-      }
-      .block-text{
-        p,h5{
-          color: #779966;
-        }
-      
-    }
-  }
-
-  &.blue{
-    .bgIcon{
-      background-color: #e2eef9;
-      mat-icon{
-        color: #668199;
-      }
-      
-    }
-    .block-text{
-      p,h5{
-        color: #668199;
-      }
-      
-  }
-}
-}
 
 .bg-recepcionar{
   background-color: #2468a9 !important;

@@ -24,6 +24,7 @@ import { SearchOwnerTableComponent } from './components/search-owner-table/searc
 import { SearchOwnerContainerComponent } from './components/search-owner-container/search-owner-container.component';
 import { SearchLandTableComponent } from './components/search-land-table/search-land-table.component';
 import { TableFilesComponent } from './pages/upload-new/components/table-files/table-files.component';
+import { DetailPredioComponent } from './components/detail-predio/detail-predio.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { TableFilesComponent } from './pages/upload-new/components/table-files/t
     SearchOwnerTableComponent,
     SearchOwnerContainerComponent,
     SearchLandTableComponent,
-    TableFilesComponent
+    TableFilesComponent,
+    DetailPredioComponent
   ],
   imports: [
     CommonModule,

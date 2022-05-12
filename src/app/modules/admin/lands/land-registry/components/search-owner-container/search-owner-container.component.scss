@@ -17,21 +17,4 @@
         min-width: 60%;
         max-width: 60%;
     }
-    .list-detail{
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        color: #e55e47;
-        margin-bottom: 6px;
-        b{
-            display: flex;
-            color: #666699;
-            margin-right: 8px;
-            mat-icon{
-                margin-right: 6px;
-                color: #666699;
-            }
-        }
-
-    }
 }
