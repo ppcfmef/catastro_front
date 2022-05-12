@@ -1,6 +1,5 @@
-<div class="flex flex-row gap-4" [formGroup]="formFilters" style="align-items: end;">
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-2/12">
-      <mat-label>Buscar</mat-label>
+<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12">      
       <input type="text" matInput formControlName="search"
              placeholder="Buscar por Nombres o DNI"
              autocomplete="off">
@@ -15,18 +14,19 @@
 (changePage)="onChangePage($event)"
 (showLandMap)="onShowLandsMap($event)"></app-search-land-table>
 
-<div>
-  <div style="height: 500px; width: 500px;" *ngIf="showLandsMap"> 
+<div class="container-panel flex w-full" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+  <div class="map-container" *ngIf="showLandsMap"> 
     <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" ></app-show-map-point>
   </div>
-  <div *ngIf="landRecord && landOwner">
-    <h2>Datos del predio</h2>
-    CUP: {{ landRecord?.cup }}
-    CPM: {{ landRecord?.cpm }}
-    Propietario: {{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname  }}
-    DNI: {{ landOwner?.dni }}
-    Área del Terreno: {{ landRecord?.landArea }} mt2
-    Área construida: {{ builtArea?.landArea }} mt2
+  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner">
+    <h2 class="text-center font-bold text-xl mb-2 c-purple-mef">Datos del predio</h2>
+
+    <p class="list-detail"> <b><mat-icon svgIcon="mat_solid:house_siding"></mat-icon> CUP:</b>  {{ landRecord?.cup }}</p>
+    <p class="list-detail"> <b><mat-icon svgIcon="mat_solid:holiday_village"></mat-icon> CPM:</b> {{ landRecord?.cpm }}</p>
+    <p class="list-detail"> <b><mat-icon svgIcon="mat_solid:person"></mat-icon> Propietario:</b> {{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname  }}</p>
+    <p class="list-detail"> <b><mat-icon svgIcon="heroicons_outline:identification"></mat-icon> DNI:</b> {{ landOwner?.dni }}</p>
+    <p class="list-detail"> <b><mat-icon svgIcon="mat_solid:map"></mat-icon> Área del Terreno:</b> {{ landRecord?.landArea }} mt2  </p>
+    <p class="list-detail"> <b><mat-icon svgIcon="mat_solid:maps_home_work"></mat-icon> Área construida:</b> {{ builtArea?.landArea }} mt2 </p>
   </div>
   
 </div>
