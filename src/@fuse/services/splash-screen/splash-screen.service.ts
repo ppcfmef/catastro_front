@@ -35,8 +35,8 @@ export class FuseSplashScreenService
     show(opacityBg = 1): void
     {
         this._document.body.classList.remove('fuse-splash-screen-hidden');
-        if(opacityBg == 0){
-            this._document.body.classList.add('opacityBg-fuse-splash-screen');    
+        if(opacityBg === 0){
+            this._document.body.classList.add('opacityBg-fuse-splash-screen');
         }
     }
 

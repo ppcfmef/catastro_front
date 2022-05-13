@@ -17,7 +17,7 @@ import {MatPaginator} from '@angular/material/paginator';
   templateUrl: './table-files.component.html',
   styleUrls: ['./table-files.component.scss']
 })
-export class TableFilesComponent implements OnInit {
+export class TableFilesComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild(MatTable) recordsTable: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
