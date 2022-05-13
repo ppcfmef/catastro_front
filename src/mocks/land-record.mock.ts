@@ -22,6 +22,6 @@ export const landRecodMock = [
     longitude: -71.955921,
     landArea: 300,
     builtArea: 200,
-    ownerId: 1,
+    owner: 1,
   }
 ];

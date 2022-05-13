@@ -1,7 +1,7 @@
 export interface LandOwner {
   id: number;
   code: string;
-  documentType: number;
+  documentType: string;
   dni: string;
   name: string;
   paternalSurname: string;

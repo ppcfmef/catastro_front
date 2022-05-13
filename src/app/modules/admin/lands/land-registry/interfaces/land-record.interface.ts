@@ -16,5 +16,5 @@ export interface LandRecord {
   longitude: number;
   landArea: number;
   builtArea: number;
-  ownerId: number;
+  owner: number;
 }

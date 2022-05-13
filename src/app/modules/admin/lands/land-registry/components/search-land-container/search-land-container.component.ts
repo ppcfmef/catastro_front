@@ -47,7 +47,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngAfterViewInit(): void {
-    this.ownerLandSubscription = this.landRecordService.getList({})
+    this.ownerLandSubscription = this.landRecordService.getList({limit: 10})
     .subscribe(
       (response: IPagination<LandRecord>) => {
         this.dataSourceLands = response.results;
@@ -83,7 +83,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    this._landOwnerService.getDetail(landRecord.ownerId).subscribe(
+    this._landOwnerService.getDetail(landRecord.owner).subscribe(
       (response) => {
         this.dataSource = response.results;
         this.landOwner = response.results[0];

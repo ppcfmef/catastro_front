@@ -48,7 +48,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.ownerLandSubscription = this._landOwnerService.getList({})
+    this.ownerLandSubscription = this._landOwnerService.getList({limit: 10})
     .subscribe(
       (response: IPagination<LandOwner>) => {
         this.dataSource = response.results;
@@ -57,7 +57,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     this.formFilters.valueChanges.pipe(
       switchMap(() => {
         const rawValue = this.formFilters.getRawValue();
-        const search = rawValue?.search || null;
+        const search = rawValue?.search || '';
         const queryParams = { search };
         return this._landOwnerService.getList(queryParams);
       })
@@ -72,7 +72,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   onChangePage(paginator: MatPaginator): void {
     const rawValue = this.formFilters.getRawValue();
-    const search = rawValue?.search || null;
+    const search = rawValue?.search || '';
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     const queryParams = { limit, offset, search };
