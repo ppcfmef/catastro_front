@@ -43,6 +43,19 @@ export class LandOwnerService {
     );
   }
 
+  getDetail(landOwnerId: number): Observable<IPagination<LandOwner>> {
+    const data: LandOwner[] = this._getMockData();
+    return new Observable(
+      (observer) => {
+        const resultFind: LandOwner[] = data.filter((element: LandOwner) => element.id === landOwnerId);
+        setTimeout( () => {
+          observer.next(this._getMockPaginateData(resultFind));
+          observer.complete();
+        }, 2000);
+      }
+    );
+  }
+
   private _getMockData(): LandOwner[] {
     return [
       {
