@@ -7,3 +7,9 @@
   color: white !important;
 }
 
+.active-tr{
+  table tbody tr:hover td{
+    background-color: #bbc6eb5e;
+  }
+}
+

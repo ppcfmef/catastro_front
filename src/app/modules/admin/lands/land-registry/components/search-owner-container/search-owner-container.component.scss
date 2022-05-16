@@ -16,5 +16,18 @@
         width: 500px;
         min-width: 60%;
         max-width: 60%;
+        height: 450px;
+        min-height: 450px;
+    }
+    .input-icon-form{
+        input{
+            width: calc(100% - 63px) !important;
+            margin-right: 25px;
+        }
+        button{
+            border-radius: 0 5px 5px 0 !important;
+            margin-right: -16px;
+        }
+        
     }
 }
