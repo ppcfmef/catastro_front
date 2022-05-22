@@ -1,0 +1,33 @@
+@import '~styles/mixins';
+
+:host ::ng-deep{
+    app-search-owner-table, app-search-land-table{
+        @include table-border-radius;
+        @include table-hover;
+        @include table-padding-4;
+    }
+
+    .container-panel{
+        padding: 10px;
+        background-color: white;
+        border-radius: 8px;
+    }
+    .map-container{
+        width: 500px;
+        min-width: 60%;
+        max-width: 60%;
+        height: 450px;
+        min-height: 450px;
+    }
+    .input-icon-form{
+        input{
+            width: calc(100% - 63px) !important;
+            margin-right: 25px;
+        }
+        button{
+            border-radius: 0 5px 5px 0 !important;
+            margin-right: -16px;
+        }
+        
+    }
+}

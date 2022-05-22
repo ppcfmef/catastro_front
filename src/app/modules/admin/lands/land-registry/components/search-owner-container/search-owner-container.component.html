@@ -1,0 +1,29 @@
+<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">      
+      <input type="text" matInput formControlName="search"
+             placeholder="Buscar por Nombres o DNI"
+             autocomplete="off">
+          <button mat-flat-button
+          [color]="'primary'">
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          </button>
+  </mat-form-field>
+  
+</div>
+<app-search-owner-table [dataSource]="dataSource"
+(changePage)="onChangePage($event)"
+(showLandsTable)="onShowLandsTable($event)"></app-search-owner-table>
+
+<app-search-land-table *ngIf="showLandsTable" [dataSource]="dataSourceLands"
+(changePage)="onChangePage($event)"
+(showLandMap)="onShowLandsMap($event)"></app-search-land-table>
+
+<div class="container-panel flex w-full" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+  <div class="map-container" *ngIf="showLandsMap"> 
+    <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" ></app-show-map-point>
+  </div>
+  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner">
+    <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
+  </div>
+  
+</div>

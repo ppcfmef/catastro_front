@@ -1,0 +1,45 @@
+:host ::ng-deep table{
+
+    border-radius: 7px;
+
+    th.mat-header-cell{
+        color:white;
+        background-color: #4f49ae;
+        &:first-child{
+            border-radius: 7px 0 0 0;
+        }
+        &:last-child{
+            border-radius: 0 7px 0 0;
+        }
+    }
+    
+    thead tr{
+        border-radius: 7px 0 7px 0;
+        
+    }
+    tbody tr td.mat-cell{
+        border: none;
+    }
+    tbody tr:nth-child(2n+1){
+        background-color: #f5f5f5cc;
+    }
+    tbody tr:last-child{
+        td:first-child{
+            border-radius: 0 0 0 7px ;
+        }
+        td:last-child{
+            border-radius: 0 0 7px 0;
+        }
+    }
+    &.green{
+        thead th.mat-header-cell{
+            background-color: #10B981;
+        }
+    }
+
+    &.red{
+        thead th.mat-header-cell{
+            background-color: #EF4444;
+        }
+    }
+}

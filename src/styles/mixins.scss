@@ -6,3 +6,132 @@
     font-weight: bold;
     margin-top: 3px;
 }
+
+
+@mixin table-border-radius(){
+    table{
+        border-radius:8px 8px 0 0;
+    }
+    table thead tr{
+        th:nth-child(1){
+            border-radius: 8px 0 0 0;
+        }
+        th:last-child{
+            border-radius: 0 8px 0 0;
+        }
+        
+    }
+    table tbody tr:last-child{
+        td:nth-child(1){
+            border-radius: 0 0 0 8px;
+        }
+        td:last-child{
+            border-radius:0 0  8px 0;
+        }
+    }
+    mat-paginator{
+        border-radius: 0 0 8px 8px;
+    }
+}
+
+@mixin table-padding-4(){
+    table tbody tr td, table thead tr th {
+        padding:4px;
+    }
+}
+
+
+@mixin table-hover(){
+    table tbody tr:hover td{
+        background-color: #6666991a;
+    }
+}
+
+
+@mixin tavStyleActive(){
+    nav .mat-tab-list .mat-tab-links a.mat-tab-label-active{
+        opacity: 1;
+        color: #666699;
+        font-size: 16px;
+    }
+    mat-ink-bar{
+        background-color: #666699 !important;
+    }
+}
+
+@mixin button-style-icons-2(){
+    .button-style-icons-2{
+        color: #666699;
+        mat-icon:nth-of-type(1){
+            color:#666699;
+        }
+        mat-icon:nth-last-of-type(1){
+            color:#39daff;
+        }
+    }
+}
+
+@mixin block-icon(){
+    .block-icon{
+        display: flex;
+        padding: 16px;
+        border-radius: 7px;
+        background-color: white;
+        margin-bottom: 20px;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+        margin: 0 20px;
+    
+        .bgIcon{
+          background-color: #e2e2f9;
+          color: #666699,
+        }
+    
+        .block-text{
+          margin-left: 16px;
+          display: flex;
+          flex-direction: column;
+          p{
+            color: #666699;
+          }
+          h5{
+            font-size: 24px;
+            text-align: center;
+            color: var(--mef-c-purple);
+            font-weight: bold;
+          }
+    
+        }
+    
+        &.green{
+          .bgIcon{
+            background-color: #e6f9e2;
+            mat-icon{
+              color: #779966;
+            }
+            
+          }
+          .block-text{
+            p,h5{
+              color: #779966;
+            }
+          
+        }
+      }
+    
+      &.blue{
+        .bgIcon{
+          background-color: #e2eef9;
+          mat-icon{
+            color: #668199;
+          }
+          
+        }
+        .block-text{
+          p,h5{
+            color: #668199;
+          }
+          
+      }
+    }
+    }
+}

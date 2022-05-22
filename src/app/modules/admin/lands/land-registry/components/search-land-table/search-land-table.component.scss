@@ -1,0 +1,15 @@
+@import '~styles/mixins';
+
+@include button-style-icons-2();
+
+.mat-header-cell {
+  background: #e55e47;
+  color: white !important;
+}
+
+.active-tr{
+  table tbody tr:hover td{
+    background-color: #bbc6eb5e;
+  }
+}
+

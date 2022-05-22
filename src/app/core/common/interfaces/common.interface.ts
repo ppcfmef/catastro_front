@@ -55,3 +55,15 @@ export interface Resource {
     gisService: string;
     ubigeo: string;
 }
+
+
+export interface ITabLayout<T = string> {
+    label: string;
+    route: string;
+    title?: string;
+    queryParams?: any;
+    disable?: boolean;
+    hidden?: boolean;
+    target?: string;
+    pathId?: T;
+}

@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
@@ -137,13 +136,12 @@ export class MapComponent implements OnInit,AfterViewInit {
         protected _ngxSpinner: NgxSpinnerService,
         private _userService: UserService,
         protected _messageProviderService: MessageProviderService,
-        protected _FuseSplashScreenService: FuseSplashScreenService
+        protected _fuseSplashScreenService: FuseSplashScreenService
         ) {
             this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this.user = user;
-                console.log('user',this.user);
                 // Mark for check
                 /*this._changeDetectorRef.markForCheck();
             */
@@ -155,7 +153,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 
 
     ngAfterViewInit(): void {
-        this._FuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show(0);
         setTimeout(() => { this.initializeMap(); }, 1000);
 
     }
@@ -163,7 +161,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     ngOnInit(): void {
 
     }
-
+    /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
       try {
         const container = this.mapViewEl.nativeElement;
@@ -281,9 +279,9 @@ export class MapComponent implements OnInit,AfterViewInit {
         const query ='UBIGEO=\'150101\' ';
         this.zoomToUbigeo(query);
 
-        this.view.ui.remove("zoom"); // Remover el boton Zoom;
+        this.view.ui.remove('zoom'); // Remover el boton Zoom;
 
-        
+
 
 
         const fieldInfos=[
@@ -367,7 +365,6 @@ export class MapComponent implements OnInit,AfterViewInit {
           });
 
           if([0,1].includes(l.id)){
-            console.log(l.id);
             popupTemp.title = l.title;
             l.featureLayer.popupTemplate=popupTemp;
             const featureTable = new FeatureTable({
@@ -384,7 +381,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         this.view.when(() => {
           this.visibility = 'visible';
 
-          this._FuseSplashScreenService.hide();
+          this._fuseSplashScreenService.hide();
       });
 
 
@@ -412,19 +409,18 @@ export class MapComponent implements OnInit,AfterViewInit {
         console.error('EsriLoader: ', error);
       }
     }
+     /* eslint-enable @typescript-eslint/naming-convention */
 
 
 
 
 async    zoomToUbigeo(where: string): Promise<any> {
   try {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      console.log('where>>>',where);
 
       this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
 
-      this._FuseSplashScreenService.show(0);
+      this._fuseSplashScreenService.show(0);
 
 
 
@@ -433,7 +429,7 @@ async    zoomToUbigeo(where: string): Promise<any> {
           query.outSpatialReference = this.view.spatialReference;
 
           this.featureLayer.queryExtent(query).then( (response) => {
-              this._FuseSplashScreenService.hide();
+              this._fuseSplashScreenService.hide();
             this.view.goTo(response.extent ).catch( (error)=> {
                //console.error(error);
 
@@ -478,14 +474,6 @@ descargar(params: any): void{
       wkt :4326
   };
 
-
-
-
-
-
-
-
-
   this.featureLayer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
 
   const query = this.featureLayer.createQuery();
@@ -493,39 +481,17 @@ descargar(params: any): void{
    query.outSpatialReference = 4326;
    query.where =this.where;
 
-
    this.featureLayer.queryFeatures(query).then( (response) => {
 
     const features: any[] = response.features;
     /*console.log('features>>>',features);*/
     this.createGeoJSON(features).then((data)=>{
-      console.log('data>>>',data);
       shpwrite.zip(data, options).then((content) =>{
-
-
 
               saveAs(content, this.nameZip);
         });
-
-
-
-
     });
-
-
-
-
    });
-
-
-
-
-
-
-
-
-
-
 }
 
 downloadFile(content, mimeType, fileName, useBlob): any{
@@ -649,7 +615,6 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
       if (feature.geometry) {
 
           const geoFeature = geojsonToArcGIS(feature);
-          console.log('geoFeature>>>',geoFeature);
           const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
           geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
           arcgisJson.push(geoFeature);
@@ -672,7 +637,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
       /*console.log(params);*/
       const file = params;
       const reader = new FileReader();
-      this._FuseSplashScreenService.show(0);
+      this._fuseSplashScreenService.show(0);
       reader.onloadend = (e): void => {
           //console.log(reader.result);
           this.shapeToGeoJson(reader.result);
@@ -684,9 +649,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
    shapeToGeoJson(data: any): void{
 
       shp(data).then((geojson: any) =>{
-          console.log(geojson.features);
           this.createArcgisJSON(geojson.features).then((json)=>{
-            console.log('json>>>',json);
             const layerInfo = this.layersInfo.find(e=> e.title===this.TITLE_CARGA);
 
             const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
@@ -699,13 +662,11 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
               method: 'POST',
               body: formData
           }).then((resObj) => {
-                  console.log(resObj);
-                  this._FuseSplashScreenService.hide();
+                  this._fuseSplashScreenService.hide();
                   this._messageProviderService.showSnack('Registrados cargados correctamente');
               })
               .catch((error) => {
                   this._messageProviderService.showSnackError('Registrados no cargados');
-                  console.log('UPLOAD ERROR', error);
               });
 
           });
@@ -734,7 +695,6 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
 
     let pt = null;
         let newPt = null;
-        console.log('geometry>>>',geometry);
     let type ='point';
         if (geometry.paths || geometry.rings) {
           type ='polyline';
@@ -778,7 +738,6 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
 
 
 projectPoint(point: any ): any{
-  console.log('point>>>',point);
  return proj4(proj4.defs[this.proj4SrcKey],proj4.defs[this.proj4DestKey] ).forward(point);
 }
 

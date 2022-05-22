@@ -88,6 +88,10 @@ export const appRoutes: Route[] = [
                 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
                 loadChildren: () => import('app/modules/admin/valuation/valuation.module').then(m => m.ValuationModule)
             },
+            {
+                path: 'land',
+                loadChildren: () => import('app/modules/admin/lands/lands.module').then(m => m.LandsModule)
+            },
         ]
     }
 ];
