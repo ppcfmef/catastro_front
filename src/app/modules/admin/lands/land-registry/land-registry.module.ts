@@ -26,6 +26,10 @@ import { SearchLandTableComponent } from './components/search-land-table/search-
 import { TableFilesComponent } from './pages/upload-new/components/table-files/table-files.component';
 import { DetailPredioComponent } from './components/detail-predio/detail-predio.component';
 import { SearchLandContainerComponent } from './components/search-land-container/search-land-container.component';
+import { NewOwnerLandPage } from './pages/new-owner-land/new-owner-land.page';
+import { NewOwnerContainerComponent } from './components/new-owner-container/new-owner-container.component';
+import { ListLandContainerComponent } from './components/list-land-container/list-land-container.component';
+import { NewLandContainerComponent } from './components/new-land-container/new-land-container.component';
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 
 @NgModule({
@@ -43,6 +47,10 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     TableFilesComponent,
     SearchLandContainerComponent,
     DetailPredioComponent,
+    NewOwnerLandPage,
+    NewOwnerContainerComponent,
+    ListLandContainerComponent,
+    NewLandContainerComponent,
     LandRegistryGeolocationComponent,
   ],
   imports: [
