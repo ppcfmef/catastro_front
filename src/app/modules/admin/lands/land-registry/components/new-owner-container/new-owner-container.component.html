@@ -1,1 +1,17 @@
-<p>new-owner-container works!</p>
+<section class="container">
+    <article class="flex">
+        <section class="input-btn-icon mr-6">
+            <input type="search" placeholder="Nro. Documento">
+            <button>Buscar 
+                <mat-icon svgIcon="heroicons_outline:search">                    
+                </mat-icon>
+            </button>
+        </section>
+        
+        <button class="btn-success box-shadow-z1"> Nuevo contribuyente
+            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        </button>
+    </article>
+    <app-owner-land-detail></app-owner-land-detail>
+    <app-owner-land-create-and-edit></app-owner-land-create-and-edit>
+</section>

@@ -4,5 +4,9 @@
         padding: 10px;
         border-radius: 8px;
         margin-top: 10px;
+        position: absolute;
+        width: calc(100% - 20px);
+        bottom: 0;
+        
     }
 }

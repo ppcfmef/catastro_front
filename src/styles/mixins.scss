@@ -135,3 +135,100 @@
     }
     }
 }
+
+@mixin box-shadow-z1{
+  .box-shadow-z1{
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+}
+
+@mixin btn-basic-icon(){
+    color: white;
+    font-size: 14px;
+    border-radius:8px;
+    padding: 8px 16px;
+    display: flex;
+    mat-icon{
+      color:white;
+      margin-left: 10px;
+    }
+}
+
+@mixin btn-success() {
+  .btn-success{
+    background-color: #90D05D;
+    @include btn-basic-icon;
+  }
+}
+
+@mixin btn-confirm() {
+  .btn-confirm{
+    background-color: #54C8FA;
+    @include btn-basic-icon;
+  }
+}
+
+@mixin btn-danger() {
+  .btn-danger{
+    background-color: #D77676;
+    @include btn-basic-icon;
+  }
+}
+
+@mixin input-btn-icon(){
+  .input-btn-icon{
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    display: flex;
+
+    input{
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #4E4E4E;
+    }
+    button{
+      background-color: var(--mef-c-purple);
+      color: white;
+      font-size: 14px;
+      border-radius:0 5px 5px 0;
+      padding: 8px 16px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon{
+        margin-left: 10px;
+        color: white;
+      }
+    }
+  }
+}
+
+/* ***  FORMS *** */
+
+/* Reducir alto de inputs y aplicar focus */
+@mixin mat-form-field-style(){
+  mat-form-field.mat-form-field-style{
+    .mat-form-field-wrapper {
+      .mat-form-field-flex{
+        min-height: 36px !important;
+        padding: 0 10px !important;
+      }
+    }
+    input{
+      padding: 8px 0 !important;
+    }
+    mat-label{
+      font-size: 13px !important;
+    }
+  }
+
+  mat-form-field.mat-focused{
+    mat-label{
+      color: #666699 !important;
+    }
+  }
+}
