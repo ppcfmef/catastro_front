@@ -19,6 +19,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
 
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 
+
 @NgModule({
     imports: [
         CommonModule,
