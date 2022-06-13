@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewLandContainerComponent implements OnInit {
 
+  showEditForm= true;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  receivedShowFormEdit(event){
+    console.log(event);
+    this.showEditForm = event;
   }
 
 }

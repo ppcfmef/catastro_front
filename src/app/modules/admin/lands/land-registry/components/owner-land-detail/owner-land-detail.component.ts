@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-owner-land-detail',
@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OwnerLandDetailComponent implements OnInit {
 
+  @Output()
+  formEdit = new EventEmitter<boolean>();
+
+  tipo_doc ="DNI";
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  emitShowFormEdit(){
+    this.formEdit.emit(true);
   }
 
 }

@@ -1,0 +1,68 @@
+@import '~styles/mixins.scss';
+
+:host ::ng-deep{
+    @include table-base;
+    @include table-line-divider;
+    table tbody td{
+        font-size: 12px;
+    }
+}
+
+.block-via{
+    display: flex;
+    flex-direction: row;
+    section:nth-child(2){
+        width: 36px;
+        min-width: 36px;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        position: relative;
+    }
+}
+
+.container-triangle{
+    padding: 10px;
+}
+
+.triangle{
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 12px solid #54C8FA;
+}
+
+:host ::ng-deep table tbody tr.predioSelected {
+    background-color: #FFF7EC;
+    position: relative;
+    &::after{
+        content: "";
+        width: calc(100% + 22px);
+        height: 100%;
+        background-color: #FFF7EC;
+        display: block;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        box-shadow: -3px 4px 4px rgb(145 143 143 / 42%);
+    }
+
+    td{
+        position: relative;
+        z-index: 2;
+    }
+
+    .block-via{
+        section:nth-child(2){
+            .container-triangle{
+                position: relative;
+                right: -32px;
+                .triangle{
+                    border-left: 12px solid #666699;
+                }
+            }
+        }
+    }
+  }

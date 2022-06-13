@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./land-create-and-edit.component.scss']
 })
 export class LandCreateAndEditComponent implements OnInit {
+  
+  @Output()
+  showFormEdit = new EventEmitter<Boolean>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  emitShowFormEdit(){
+    this.showFormEdit.emit(true);
   }
 
 }

@@ -35,6 +35,7 @@ import { LandSummaryTableComponent } from './components/land-summary-table/land-
 import { OwnerLandDetailComponent } from './components/owner-land-detail/owner-land-detail.component';
 import { OwnerLandCreateAndEditComponent } from './components/owner-land-create-and-edit/owner-land-create-and-edit.component';
 import { LandCreateAndEditComponent } from './components/land-create-and-edit/land-create-and-edit.component';
+import { LandDetailSummaryComponent } from './components/land-detail-summary/land-detail-summary.component';
 
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 
@@ -61,6 +62,7 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     OwnerLandDetailComponent,
     OwnerLandCreateAndEditComponent,
     LandCreateAndEditComponent,
+    LandDetailSummaryComponent,
     LandRegistryGeolocationComponent,
   ],
   imports: [

@@ -1,11 +1,3 @@
-@import "~styles/mixins";
-
-:host ::ng-deep{
-    @include mat-form-field-style;
-    @include btn-confirm;
-    @include btn-danger;
-}
-
 :host{
     .container{
         background-color: white;
@@ -16,6 +8,11 @@
         width: calc(100% - 20px);
         bottom: 0;
         
+    }
+    p{
+        margin-bottom: 6px;
+        margin-right: 28px;
+        display: inline-block;
     }
 
     .subtitle-card{

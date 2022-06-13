@@ -1,5 +1,12 @@
 <section class="container">
     <app-show-map-point [points]="[{latitude: -13.53063, longitude: -71.955921}]" ></app-show-map-point>
-    <app-land-create-and-edit></app-land-create-and-edit>
+
+    <ng-container *ngIf="!showEditForm" >
+        <app-land-create-and-edit (showFormEdit)="receivedShowFormEdit($event)"></app-land-create-and-edit>
+    </ng-container>
+    <ng-container *ngIf="showEditForm">
+        <app-land-detail-summary (showFormEdit)="receivedShowFormEdit($event)"></app-land-detail-summary>
+    </ng-container>
+    
 </section>
 

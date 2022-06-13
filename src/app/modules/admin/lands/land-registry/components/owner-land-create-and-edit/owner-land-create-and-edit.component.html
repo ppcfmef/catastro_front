@@ -1,10 +1,9 @@
-<section class="container mt-4 gap-y-2.5">
+<section class="container mt-4 gap-y-2.5"  [formGroup]="formEdit">
     <h3 class="subtitle-card mb-2">Datos del contribuyente</h3>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Tipo de documento</mat-label>
-        <mat-select value="0">
-            <mat-option value="1">DNI</mat-option>
-            <mat-option value="1">OTRO</mat-option>
+        <mat-select value="0" formControlName="tipo_doc">
+            <mat-option *ngFor="let typeDoc of typeDocs" [value]="typeDoc.val"> {{typeDoc.name}}</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -13,23 +12,31 @@
         <input matInput type="text">
     </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
-        <mat-label>Nombres</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
-        <mat-label>Apellido paterno</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
-        <mat-label>Apellido materno</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+    <ng-container  [ngSwitch]="typeDocSelectValue">
+        <ng-container *ngSwitchCase="1">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
+                <mat-label>Nombres</mat-label>
+                <input matInput type="text">
+            </mat-form-field>
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+                <mat-label>Apellido paterno</mat-label>
+                <input matInput type="text">
+            </mat-form-field>
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12">
+                <mat-label>Apellido materno</mat-label>
+                <input matInput type="text">
+            </mat-form-field>
+        </ng-container>
+    
+        <ng-container *ngSwitchCase="2">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
+                <mat-label>Contibuyente</mat-label>
+                <input matInput type="text">
+            </mat-form-field>
+        </ng-container>
+    </ng-container>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
-        <mat-label>Referencia</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+   
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Teléfono</mat-label>
         <input matInput type="text">
@@ -105,7 +112,7 @@
     </mat-form-field>
 
     <div class="w-full flex items-center justify-end">
-        <button class="btn-confirm mr-4"> Guardar</button>
-        <button class="btn-danger">Cancelar</button>
+        <button class="btn-confirm mr-4" (click)="emitShowFormEdit()"> Guardar</button>
+        <button class="btn-danger" (click)="emitShowFormEdit()">Cancelar</button>
     </div>
 </section>
