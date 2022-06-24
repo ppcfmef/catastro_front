@@ -128,9 +128,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       };
       this.view = new MapView(mapViewProperties);
 
-
-
       const graphicsLayer = new GraphicsLayer();
+
       const simpleMarkerSymbol = {
         type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
@@ -147,13 +146,12 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         yoffset : '15px'
       };
 
-    /* const pointGraphic = new Graphic({
-        geometry: point,
-        symbol: simpleMarkerSymbol
-     });*/
+   
      const searchWidget = new Search({
         view: this.view,
       });
+
+
      this.view.ui.add(searchWidget, {
         position: 'top-left',
         index: 1
@@ -192,6 +190,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         await projection.load();
       }
+      
       const ptTrans = projection.project(pt, outSpatialReference);
       console.log('geogtrans>>>');
 
@@ -204,9 +203,10 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           // check if a feature is returned from the hurricanesLayer
           if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry ) {
 
+
             this.view.graphics.removeAll();
             const graphic = response.results[0].graphic;
-            console.log('graphic>>>',graphic);
+            //console.log('graphic>>>',graphic);
             const latitude=graphic.geometry.latitude;
             const longitude=graphic.geometry.longitude;
 
@@ -215,10 +215,12 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
                 longitude : longitude,
                 latitude: latitude
             };
+
             const pointGraphic = new Graphic({
                 geometry: point,
                 symbol: simpleMarkerSymbol
             });
+
             this.view.graphics.addMany([pointGraphic]);
             // do something with the graphic
           }
@@ -227,22 +229,25 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           else{
             //wkid=102100;
 
-            this.view.graphics.removeAll();
+          this.view.graphics.removeAll();
 
-            const graphic = response.results[0].mapPoint;
-            console.log('graphic>>>',graphic);
-            const longitude=graphic.longitude;
-            const latitude=graphic.latitude;
+          const graphic = response.results[0].mapPoint;
+            //console.log('graphic>>>',graphic);
+          const longitude=graphic.longitude;
+          const latitude=graphic.latitude;
 
-            const point = { //Create a point
+          const point = { //Create a point
               type: 'point',
               longitude : longitude,
               latitude: latitude
-            };
-            const pointGraphic = new Graphic({
+          };
+
+          const pointGraphic = new Graphic({
               geometry: point,
               symbol: simpleMarkerSymbolUndefined
           });
+
+
           this.view.graphics.addMany([pointGraphic]);
           }
         });

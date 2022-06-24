@@ -26,7 +26,7 @@ import { SearchLandTableComponent } from './components/search-land-table/search-
 import { TableFilesComponent } from './pages/upload-new/components/table-files/table-files.component';
 import { DetailPredioComponent } from './components/detail-predio/detail-predio.component';
 import { SearchLandContainerComponent } from './components/search-land-container/search-land-container.component';
-
+import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +43,7 @@ import { SearchLandContainerComponent } from './components/search-land-container
     TableFilesComponent,
     SearchLandContainerComponent,
     DetailPredioComponent,
+    LandRegistryGeolocationComponent,
   ],
   imports: [
     CommonModule,
@@ -54,8 +55,11 @@ import { SearchLandContainerComponent } from './components/search-land-container
     MatButtonModule,
     MatInputModule,
     CustomSharedModule,
+    //LandRegistryGeolocationComponent,
+
     MapsModule,
   ],
+  exports:[LandRegistryGeolocationComponent],
   providers: [
     UploadhistoryService,
   ]

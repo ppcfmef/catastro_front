@@ -10,7 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from './components/map/map.component';
-import { MapsModule } from 'app/shared/maps/maps.module';
+
+import { LandRegistryModule } from '../lands/land-registry/land-registry.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MapsModule } from 'app/shared/maps/maps.module';
     MatIconModule,
     MatTableModule,
     MatButtonModule,
-    MapsModule
+    //MapsModule,
+    LandRegistryModule
   ]
 })
 export class ValuationModule { }

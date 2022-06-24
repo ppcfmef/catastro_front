@@ -1,11 +1,17 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { CommonService } from 'app/core/common/services/common.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-land-registry-geolocation',
   templateUrl: './land-registry-geolocation.component.html',
   styleUrls: ['./land-registry-geolocation.component.scss']
 })
+
 export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     @Input() x: number=  639476.5456999997;
     @Input() y: number=  9265200.7227;
@@ -14,22 +20,27 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     view: any = null;
     map: any;
     points: any[];
+    user: User;
+    _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    ubigeo:string= '010101';
+projection:number=32717;
     layersInfo = [
         {
           title: '',
           id: 0,
           idServer:1,
           /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
-          urlBase:
-
-            'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_17/MapServer',
+          urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_17/MapServer',
           order: 0,
           featureLayer: null,
           definitionExpression:'1<>1',
           featureTable:null,
           popupTemplate:null
         },
+
+
+
 
 /*
         {idServer:1,
@@ -70,7 +81,24 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           },*/
     ];
 
-  constructor() { }
+  constructor(private _userService: UserService,private commonService: CommonService) { 
+
+    this._userService.user$
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user: User) => {
+        this.user = user;
+        this.ubigeo=(this.user.placeScope && this.user.placeScope.ubigeo)?this.user.placeScope.ubigeo:'010101';
+        this.commonService.getDistrictResource(this.ubigeo).subscribe((data:DistrictResource)=>{
+          
+          console.log('data>>>',data);
+          this.projection=parseInt('327${data.resources[0].utm}'); 
+
+        });
+        //console.log('this.user>>>',this.user);
+    });
+    
+
+  }
 
   ngOnInit(): void {
   }
@@ -170,6 +198,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         this.map.add(l.featureLayer);
       });
+      
 
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
@@ -248,7 +277,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         });
 
       });
-
 
     } catch (error) {
       console.error('EsriLoader: ', error);
