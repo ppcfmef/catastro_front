@@ -23,8 +23,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    ubigeo:string= '010101';
-projection:number=32717;
+    ubigeo: string= '010101';
+    projection: number=32717;
     layersInfo = [
         {
           title: '',
@@ -81,22 +81,22 @@ projection:number=32717;
           },*/
     ];
 
-  constructor(private _userService: UserService,private commonService: CommonService) { 
+  constructor(private _userService: UserService,private commonService: CommonService) {
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user: User) => {
         this.user = user;
         this.ubigeo=(this.user.placeScope && this.user.placeScope.ubigeo)?this.user.placeScope.ubigeo:'010101';
-        this.commonService.getDistrictResource(this.ubigeo).subscribe((data:DistrictResource)=>{
-          
-          console.log('data>>>',data);
-          this.projection=parseInt('327${data.resources[0].utm}'); 
+        this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
 
+          console.log('data>>>',data);
+          this.projection= parseInt('327'+data.resources[0].utm);
+          console.log('this.user>>>',this.projection);
         });
         //console.log('this.user>>>',this.user);
     });
-    
+
 
   }
 
@@ -198,7 +198,7 @@ projection:number=32717;
 
         this.map.add(l.featureLayer);
       });
-      
+
 
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
@@ -229,13 +229,16 @@ projection:number=32717;
 
       this.view.on('click', (event) => {
         // only include graphics from hurricanesLayer in the hitTest
+        this.view.graphics.removeAll();
         this.view.hitTest(event).then((response) => {
           // check if a feature is returned from the hurricanesLayer
-          if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry ) {
+          // eslint-disable-next-line max-len
 
-            this.view.graphics.removeAll();
+          console.log('results>>>',response.results);
+          if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
+
             const graphic = response.results[0].graphic;
-            console.log('graphic>>>',graphic);
+
             const latitude=graphic.geometry.latitude;
             const longitude=graphic.geometry.longitude;
 
