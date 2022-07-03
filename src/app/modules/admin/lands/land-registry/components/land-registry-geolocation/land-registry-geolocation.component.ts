@@ -31,7 +31,7 @@ projection:number=32717;
           id: 0,
           idServer:1,
           /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
-          urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_17/MapServer',
+          urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
           order: 0,
           featureLayer: null,
           definitionExpression:'1<>1',
