@@ -74,11 +74,11 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
   ngOnInit(): void {
   }
+
   ngAfterViewInit(): void {
     /*this.points=[{latitude: -13.53063, longitude: -71.955921}] ;*/
     setTimeout(() => {this.initializeMap(this.points); }, 1000);
-    }
-
+  }
 
   async initializeMap(inputPoints: any[]=[] ): Promise<void> {
     try {
@@ -123,7 +123,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         zoom: 17,
-
         map: this.map,
       };
       this.view = new MapView(mapViewProperties);
@@ -146,11 +145,9 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         yoffset : '15px'
       };
 
-   
      const searchWidget = new Search({
         view: this.view,
       });
-
 
      this.view.ui.add(searchWidget, {
         position: 'top-left',
@@ -190,7 +187,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         await projection.load();
       }
-      
+
       const ptTrans = projection.project(pt, outSpatialReference);
       console.log('geogtrans>>>');
 
