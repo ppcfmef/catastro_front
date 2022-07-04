@@ -1,8 +1,8 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { Lote } from '../interfaces/lote.interface';
 
-class LandRegistryMapModel implements LandRegistryMap{
+export class LandRegistryMapModel implements LandRegistryMap{
     id: number;
     secEjec:number;
     ubigeo:string;
@@ -63,8 +63,68 @@ class LandRegistryMapModel implements LandRegistryMap{
     resolutionType:string;
     resolutionDocument:string;
     idLote:number;
-    constructor(){
 
+    constructor(l?:LandRegistryMap){
+        this.id= l?.id;
+        this.secEjec=l?.secEjec;
+        this.ubigeo=l?.ubigeo;
+        this.cup =l?.cup;  // codigo unico patrimonial
+        this.codSect=l?.codSect ;
+        this.cpm=l?.cpm;  // codigo patrimonial municipio
+        this.codUu=l?.codUu;
+        this.codMzn=l?.codMzn;
+        this.codLand=l?.codLand;
+        this.codCuc=l?.codCuc;
+        this.uuType=l?.uuType;
+        this.habilitacionName=l?.habilitacionName;
+        this.referenceName=l?.referenceName;
+        this.urbanMza=l?.urbanMza;
+        this.urbanLotNumber=l?.urbanLotNumber;
+        this.streetType=l?.streetType;
+        this.streetName=l?.streetName;
+        this.streetNameAlt=l?.streetNameAlt;
+        this.municipalNumber=l?.municipalNumber;
+        this.block=l?.block;
+        this.indoor=l?.indoor;
+        this.floor=l?.floor;
+        this.km=l?.km;
+        this.site=l?.site;
+        this.landmark=l?.landmark;
+        this.municipalAddress=l?.municipalAddress;
+        this.urbanAddress=l?.urbanAddress;
+        this.assignedAddress=l?.assignedAddress;
+        this.latitude=l?.latitude;
+        this.longitude=l?.longitude;
+     
+        this.idAranc=l?.idAranc;
+       
+        this.documentType=l?.documentType;
+        this.document=l?.document;
+        
+        this.codOwner=l?.codOwner;
+        this.name=l?.name;
+        this.paternalSurname=l?.paternalSurname;
+        this.maternalSurname=l?.maternalSurname;
+        this.descriptionOwner=l?.descriptionOwner;
+        this.taxAddress=l?.taxAddress;
+        this.status=l?.status;
+        this.landArea=l?.landArea;
+        this.frontLength=l?.frontLength;
+        this.locationPark=l?.locationPark;
+        this.groupUseDesc=l?.groupUseDesc;
+        this.numberInhabitants=l?.numberInhabitants;
+        this.classificationLandDesc=l?.classificationLandDesc;
+        this.buildStatusDesc=l?.buildStatusDesc;
+        this.propertyType=l?.propertyType;
+        this.selfAssessmentTotal=l?.selfAssessmentTotal;
+        this.condominium=l?.condominium;
+        this.deduction=l?.deduction;
+        this.selfAssessmentAffection=l?.selfAssessmentAffection;
+    
+        this.sourceInformation=l?.sourceInformation;
+        this.resolutionType=l?.resolutionType;
+        this.resolutionDocument=l?.resolutionDocument;
+        this.idLote=l?.idLote;
 
     }
 
@@ -72,9 +132,7 @@ class LandRegistryMapModel implements LandRegistryMap{
     loteToLandRegistryMapModel(lote?: Lote){
 
         this.ubigeo =lote.UBIGEO;
-
         this.landArea =lote.AREA;
-        
         this.codMzn= lote.COD_MZN
         this.codSect =lote.COD_SECT
         this.codUu =lote.COD_UU
@@ -95,7 +153,7 @@ class LandRegistryMapModel implements LandRegistryMap{
         this.longitude = lote.COOR_Y;
         this.sourceInformation=lote.FUENTE;
         this.idAranc =lote.ID_ARANC;
-
+        this.idLote= lote.ID_LOTE;
 
     }
    

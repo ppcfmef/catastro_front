@@ -6,6 +6,7 @@ import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 @Component({
   selector: 'app-land-registry-geolocation',
@@ -82,7 +83,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           },*/
     ];
 
-  constructor(private _userService: UserService,private commonService: CommonService ,private landRegistryMapService: LandRegistryMapService) {
+  constructor(private _userService: UserService,private commonService: CommonService ,private _landRegistryMapService: LandRegistryMapService) {
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
@@ -95,10 +96,13 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           this.projection= parseInt('327'+data.resources[0].utm);
           console.log('this.user>>>',this.projection);
         });
-        //console.log('this.user>>>',this.user);
+       
     });
 
 
+    this._landRegistryMapService.landOut$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data:LandRegistryMapModel)=>{
+      //console.log('data__',data);
+    });
   }
 
   ngOnInit(): void {
@@ -258,6 +262,27 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             
             
             // do something with the graphic
+
+/*
+            this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: User) => {
+                this.user = user;
+                this.ubigeo=(this.user.placeScope && this.user.placeScope.ubigeo)?this.user.placeScope.ubigeo:'010101';
+                this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
+        
+                  console.log('data>>>',data);
+                  this.projection= parseInt('327'+data.resources[0].utm);
+                  console.log('this.user>>>',this.projection);
+                });
+               
+            });
+            */
+            let lote =graphic.attributes;
+            let landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+            landRegistryMapModel.loteToLandRegistryMapModel(lote);
+            this._landRegistryMapService.landOut=landRegistryMapModel;
+
           }
 
 
@@ -280,6 +305,12 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
               geometry: point,
               symbol: simpleMarkerSymbolUndefined
           });
+
+          let landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+          landRegistryMapModel.latitude = latitude;
+          landRegistryMapModel.longitude = longitude;
+          this._landRegistryMapService.landOut=landRegistryMapModel;
+
           this.view.graphics.addMany([pointGraphic]);
           }
         });

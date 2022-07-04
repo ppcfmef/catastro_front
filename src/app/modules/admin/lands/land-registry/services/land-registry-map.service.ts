@@ -21,12 +21,12 @@ export class LandRegistryMapService {
     set landIn(value: any){
         this._landIn.next(value);
     }
-    
+
     get landIn$():Observable<void>{
         return this._landIn.asObservable();
     }
     
-    set landOut(value: any){
+    set landOut(value: LandRegistryMap){
         this._landOut.next(value);
     }
 

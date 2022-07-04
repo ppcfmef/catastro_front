@@ -58,4 +58,6 @@ export interface LandRegistryMap {
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
+
+    idLote:number;
 }
