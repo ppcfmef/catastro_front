@@ -6,6 +6,7 @@ import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
 @Component({
   selector: 'app-land-registry-geolocation',
   templateUrl: './land-registry-geolocation.component.html',
@@ -81,7 +82,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           },*/
     ];
 
-  constructor(private _userService: UserService,private commonService: CommonService) {
+  constructor(private _userService: UserService,private commonService: CommonService ,private landRegistryMapService: LandRegistryMapService) {
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
@@ -251,7 +252,11 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
                 geometry: point,
                 symbol: simpleMarkerSymbol
             });
+
             this.view.graphics.addMany([pointGraphic]);
+            
+            
+            
             // do something with the graphic
           }
 

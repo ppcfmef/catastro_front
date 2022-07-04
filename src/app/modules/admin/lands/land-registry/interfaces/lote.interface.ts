@@ -22,13 +22,13 @@ export interface Lote {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     FUENTE: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    ID_ARANC: number;
+    ID_ARANC: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_LOTE: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    INTERIOR: number;
+    INTERIOR: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    KM: number;
+    KM: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     LADO: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -57,10 +57,7 @@ export interface Lote {
     TIP_VIA: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     UBIGEO: string;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    LATITUDE: number;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    LONGITUDE: number;
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
     AREA:number;
 }
