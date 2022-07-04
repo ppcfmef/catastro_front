@@ -1,0 +1,9 @@
+.container-block{
+    padding: 10px;
+    .block:nth-of-type(1){
+        min-width: 570px;
+        max-width: 700px;
+        padding-right: 10px;
+        box-sizing: border-box;
+    }
+}

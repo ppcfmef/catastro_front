@@ -1,0 +1,51 @@
+<table mat-table [dataSource]="dataSource" class="table-base table-line-divider">
+  
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element" class="text-center"> {{element.position}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="cup">
+      <th mat-header-cell *matHeaderCellDef> Cod. único predio </th>
+      <td mat-cell *matCellDef="let element"  class="text-center"> {{element.cup}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="cum">
+      <th mat-header-cell *matHeaderCellDef> Cod. predio municipal </th>
+      <td mat-cell *matCellDef="let element"  class="text-center"> {{element.cum}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nameHab">
+      <th mat-header-cell *matHeaderCellDef> Nombre Habilitación </th>
+      <td mat-cell *matCellDef="let element"  class="text-center"> {{element.nameHab}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="via">
+        <th mat-header-cell *matHeaderCellDef> Vía </th>
+        <td mat-cell *matCellDef="let element">
+            <article class="block-via">
+                <section>
+                    <div>Departamento - Provincia - Distrito</div>
+                    <div>{{element.nameVia}}</div>
+                    <div>
+                        <b>Mz.:</b> C <b>Lt.:</b>  53  
+                        <b>Nro. Cdra.:</b> 25  <b>Lado:</b> 2  
+                        <b>Nro. Mun.:</b> 2536 <b>Nro. Alter.:</b> -  
+                        <b>Nro. Dpto.:</b> 201  <b>Interior:</b> -  <b>Block:</b> -
+                    </div>
+                </section>
+                <section>
+                    <button class="container-triangle">
+                        <span class="triangle"></span>
+                    </button>
+                </section>
+            </article>
+            
+        </td>
+      </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        (click)="predioSelection(row)"
+        [class.predioSelected]="predioSelected.has(row)"></tr>
+  </table>

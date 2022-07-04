@@ -1,0 +1,9 @@
+<section class="container">
+    <app-land-registry-geolocation></app-land-registry-geolocation>
+    <ng-container *ngIf="!showEditForm" >
+        <app-land-create-and-edit (showFormEdit)="receivedShowFormEdit($event)"></app-land-create-and-edit>
+    </ng-container>
+    <ng-container *ngIf="showEditForm">
+        <app-land-detail-summary (showFormEdit)="receivedShowFormEdit($event)"></app-land-detail-summary>
+    </ng-container>
+</section>

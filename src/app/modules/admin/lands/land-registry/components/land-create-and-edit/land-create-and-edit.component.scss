@@ -1,0 +1,53 @@
+@import "~styles/mixins";
+
+:host ::ng-deep{
+    @include mat-form-field-style;
+    @include btn-confirm;
+    @include btn-danger;
+}
+
+:host{
+    .container{
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+        position: absolute;
+        width: calc(100% - 20px);
+        bottom: 0;
+        
+    }
+
+    .subtitle-card{
+        font-size: 16px;
+        line-height: 15px;
+        font-weight: 700;
+        color: #666699;
+        width: 100%;
+        text-align: center;
+    }
+    .button-collapse{
+        background-color: #54C8FA;
+        padding: 7px 20px;
+        border-radius: 8px 8px 0 0;
+        position: absolute;
+        top: -22px;
+        left: calc(50% - 33px);
+    }
+    .triangle-top{
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 13px solid transparent;
+        border-right: 13px solid transparent;
+        border-bottom: 12px solid white;
+    }
+    .triangle-bottom{
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 13px solid transparent;
+        border-right: 13px solid transparent;
+        border-top: 12px solid white;
+    }
+}

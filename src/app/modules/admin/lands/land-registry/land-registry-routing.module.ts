@@ -6,6 +6,7 @@ import { UploadDetailPage } from './pages/upload-detail/upload-detail.page';
 import { SearchByOwnerPage } from './pages/search-by-owner/search-by-owner.page';
 import { SearchByLandPage } from './pages/search-by-land/search-by-land.page';
 import { SearchSumaryPage } from './pages/search-sumary/search-sumary.page';
+import { NewOwnerLandPage } from './pages/new-owner-land/new-owner-land.page';
 
 const routes: Routes = [
   {
@@ -38,6 +39,10 @@ const routes: Routes = [
         component: SearchByLandPage
       },
     ]
+  },
+  {
+    path: 'new-owner',
+    component: NewOwnerLandPage
   },
 ];
 

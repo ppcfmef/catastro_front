@@ -7,6 +7,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
 import { MapsModule } from 'app/shared/maps/maps.module';
@@ -26,6 +27,16 @@ import { SearchLandTableComponent } from './components/search-land-table/search-
 import { TableFilesComponent } from './pages/upload-new/components/table-files/table-files.component';
 import { DetailPredioComponent } from './components/detail-predio/detail-predio.component';
 import { SearchLandContainerComponent } from './components/search-land-container/search-land-container.component';
+import { NewOwnerLandPage } from './pages/new-owner-land/new-owner-land.page';
+import { NewOwnerContainerComponent } from './components/new-owner-container/new-owner-container.component';
+import { ListLandContainerComponent } from './components/list-land-container/list-land-container.component';
+import { NewLandContainerComponent } from './components/new-land-container/new-land-container.component';
+import { LandSummaryTableComponent } from './components/land-summary-table/land-summary-table.component';
+import { OwnerLandDetailComponent } from './components/owner-land-detail/owner-land-detail.component';
+import { OwnerLandCreateAndEditComponent } from './components/owner-land-create-and-edit/owner-land-create-and-edit.component';
+import { LandCreateAndEditComponent } from './components/land-create-and-edit/land-create-and-edit.component';
+import { LandDetailSummaryComponent } from './components/land-detail-summary/land-detail-summary.component';
+
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 
 @NgModule({
@@ -43,6 +54,15 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     TableFilesComponent,
     SearchLandContainerComponent,
     DetailPredioComponent,
+    NewOwnerLandPage,
+    NewOwnerContainerComponent,
+    ListLandContainerComponent,
+    NewLandContainerComponent,
+    LandSummaryTableComponent,
+    OwnerLandDetailComponent,
+    OwnerLandCreateAndEditComponent,
+    LandCreateAndEditComponent,
+    LandDetailSummaryComponent,
     LandRegistryGeolocationComponent,
   ],
   imports: [
@@ -58,6 +78,7 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     //LandRegistryGeolocationComponent,
 
     MapsModule,
+    MatSelectModule,
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: [
