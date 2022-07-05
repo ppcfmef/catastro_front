@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { LandRecordService } from '../../services/land-record.service';
 
 @Component({
   selector: 'app-land-detail-summary',
@@ -9,9 +10,12 @@ export class LandDetailSummaryComponent implements OnInit {
   @Output()
   showFormEdit = new EventEmitter<Boolean>();
 
-  constructor() { }
+  constructor(
+    private readonly landRecordService: LandRecordService
+  ) { }
 
   ngOnInit(): void {
+    this.landRecordService.getLocalLandRecord();
   }
 
   emitShowFormEdit(){
