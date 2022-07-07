@@ -6,14 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-owner-container.component.scss']
 })
 export class NewOwnerContainerComponent implements OnInit {
-  showFormEdit = false;
+  showFormEdit = true;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  receivedShowFormEdit(event){
+  receivedShowFormEdit(event): void{
     this.showFormEdit = event;
   }
 

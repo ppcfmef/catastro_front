@@ -7,6 +7,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
+
+import { FuseConfirmationModule } from '@fuse/services/confirmation/confirmation.module';
+
 import { AlertConfirmComponent } from './components/modals/alert-confirm/alert-confirm.component';
 import { AlertMessageComponent } from './components/modals/alert-message/alert-message.component';
 import { AlertSnackComponent } from './components/modals/alert-snack/alert-snack.component';
@@ -32,6 +35,7 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
         MatDialogModule,
         MatSnackBarModule,
         MatTabsModule,
+        FuseConfirmationModule,
     ],
     exports: [
         CommonModule,

@@ -1,5 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
+
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 @Component({
   selector: 'app-owner-land-create-and-edit',
@@ -9,35 +11,65 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class OwnerLandCreateAndEditComponent implements OnInit {
 
   @Output()
-  showFormEdit = new EventEmitter<Boolean>();
+  showFormEdit = new EventEmitter<boolean>();
 
   formEdit: FormGroup;
   typeDocSelectValue: number = 1;
 
   typeDocs = [
-    {val: 1, name:'DNI'},
-    {val: 2, name:'RUC'},
+    {val: '01', name:'DNI'},
+    {val: '06', name:'RUC'},
   ];
 
-  constructor() {
+  constructor(
+    private fb: FormBuilder,
+    private alert: MessageProviderService
+    ) {
     this.createFormEdit();
   }
 
   ngOnInit(): void {
-    this.formEdit.get('tipo_doc').valueChanges.subscribe( () => {
-      const value =  this.formEdit.get('tipo_doc').value;
-      this.typeDocSelectValue = parseInt(value, 10);
+    this.formEdit.get('documentType').valueChanges.subscribe( () => {
+      this.typeDocSelectValue = this.formEdit.get('documentType').value;
     });
   }
 
   createFormEdit(): void{
-    this.formEdit =  new FormGroup({
-      tipo_doc: new FormControl(),
+    this.formEdit = this.fb.group({
+      documentType: ['01'],
+      dni: [''],
+      name: [''],
+      paternalSurname: [''],
+      maternalSurname: [''],
+      descriptionOwner: [''],
+      phone: [''],
+      email: [''],
+      address: this.fb.group({
+        ubigeo: [''],
+        uuType: [''],
+        codUu: [''],
+        habilitacionName: [''],
+        codStreet: [''],
+        streetType: [''],
+        streetName: [''],
+        urbanMza: [],
+        urbanLotNumber: [''],
+        block: [''],
+        indoor: [''],
+        floor: [''],
+        km: ['']
+      })
+
     });
   }
 
-  emitShowFormEdit(){
-    this.showFormEdit.emit(false);
+  emitShowFormEdit(): void{
+    console.log(this.formEdit);
+    if (this.formEdit.valid){
+      this.alert.showSnack('Propietario registrado correctamente');
+      this.showFormEdit.emit(false);
+    }else {
+      this.alert.showSnackError('Error al registrar propietario');
+    }
   }
-
 }

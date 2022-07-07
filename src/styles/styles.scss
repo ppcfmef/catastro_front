@@ -92,3 +92,22 @@ button.mat-flat-button.mat-primary{
     background: var(--mef-c-purple);
     color: white !important;
 }
+
+
+.snack-success {
+    background-color: #4CAF50!important;
+    color: white!important;
+
+    mat-icon {
+        color: white!important;
+    }
+
+}
+
+.snack-error {
+    background-color: rgb(182, 92, 92)!important;
+    color: white!important;
+    mat-icon {
+        color: white!important;
+    }
+}
