@@ -50,7 +50,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     displayTable ='none';
     layersInfo = [
         {idServer:0,
-          title: this.TITLE_DESCARGA,
+          title: this.TITLE_DESCARGA + ' Zona 18',
           id: 0,
           urlBase:
             'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
@@ -74,6 +74,7 @@ export class MapComponent implements OnInit,AfterViewInit {
             popupTemplate:null
           },
 
+/*
 
         {   idServer:7,
             title: 'Sectores',
@@ -85,12 +86,12 @@ export class MapComponent implements OnInit,AfterViewInit {
             definitionExpression:'1=1',
             featureTable:null,
             popupTemplate:null
-          },
+          },*/
         {   idServer:0,
             title: 'Distritos',
             id: 4,
             urlBase:
-              'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/limites_nacional/MapServer',
+              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2',
             order: 2,
             featureLayer: null,
             definitionExpression:'1=1',
@@ -417,6 +418,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 async    zoomToUbigeo(where: string): Promise<any> {
   try {
 
+    console.log('where>>',where);
       this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
 

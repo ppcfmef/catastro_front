@@ -30,6 +30,27 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     ubigeo: string= '010101';
     projection: number=32717;
     layerList: any;
+    groupLayers=[
+        {
+            id:0,
+            title:'Zona 17',
+            children:[0,1,2]
+        },
+
+        {
+            id:1,
+            title:'Zona 18',
+            children:[3,4,5]
+        },
+
+        {
+            id:2,
+            title:'Zona 19',
+            children:[6,7,8]
+        },
+
+    ]
+
     layersInfo = [
         {
           title: 'Lotes Zona 17',
@@ -46,7 +67,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         {
             title: 'Lotes Poligono Zona 17',
-            id: 0,
+            id: 1,
             idServer:5,
             /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
@@ -60,7 +81,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           {
             title: 'Via Zona 17',
-            id: 0,
+            id: 2,
             idServer:2,
 
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
@@ -73,7 +94,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         {
             title: 'Lotes Zona 18',
-            id: 0,
+            id: 3,
             idServer:1,
             /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
@@ -86,7 +107,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           {
             title: 'Lotes Poligono Zona 18',
-            id: 0,
+            id: 4,
             idServer:5,
             /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
@@ -99,7 +120,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           {
             title: 'Via Zona 18',
-            id: 0,
+            id: 5,
             idServer:2,
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
@@ -111,7 +132,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           {
             title: 'Lotes Zona 19',
-            id: 0,
+            id: 6,
             idServer:1,
             /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
@@ -125,7 +146,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
      {
             title: 'Lotes Poligono Zona 19',
-            id: 0,
+            id: 7,
             idServer:5,
             /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
@@ -138,7 +159,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           {
             title: 'Via Zona 19',
-            id: 0,
+            id: 8,
             idServer:2,
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
@@ -221,6 +242,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         LayerList,
  // eslint-disable-next-line @typescript-eslint/naming-convention
         Expand,
+// eslint-disable-next-line @typescript-eslint/naming-convention
+        GroupLayer
       ] = await loadModules([
         'esri/Map',
         'esri/views/MapView',
@@ -233,6 +256,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         'esri/geometry/SpatialReference',
         'esri/widgets/LayerList',
         'esri/widgets/Expand',
+        'esri/layers/GroupLayer',
       ]);
 
       const mapProperties = {
@@ -364,9 +388,20 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         );
 
 
+
+
         this.map.add(l.featureLayer);
       });
 
+
+       this.groupLayers.forEach((group: any)  => {
+        const layers = this.layersInfo.filter((l)=>{ if(group.children.includes(  l.id  )) {return l;}  })
+        const myGroupLayer = new GroupLayer({
+            title: group.title,
+            layers: layers
+            });
+            this.map.add(myGroupLayer);
+       });
 
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
