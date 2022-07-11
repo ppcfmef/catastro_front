@@ -387,7 +387,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 
 
 
-      const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
+     /* const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
 
       const searchElement = document.getElementById(
           'searchElement'
@@ -455,8 +455,8 @@ buscar(params: any): void{
   this.where = `UBIGEO='${ubigeo}'`;
   this.nameZip = `${params.namedistrict}.zip`;
   this.zoomToUbigeo(this.where);
-  const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
-  const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
+  const layer1 = this.layersInfo.find(e=> e.title.includes(this.TITLE_DESCARGA)).featureLayer;
+  const layer2 = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA)).featureLayer;
   layer1.definitionExpression = this.where;
   layer2.definitionExpression = this.where;
 
@@ -652,7 +652,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
 
       shp(data).then((geojson: any) =>{
           this.createArcgisJSON(geojson.features).then((json)=>{
-            const layerInfo = this.layersInfo.find(e=> e.title===this.TITLE_CARGA);
+            const layerInfo = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA));
 
             const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
             const body ={features:json};
