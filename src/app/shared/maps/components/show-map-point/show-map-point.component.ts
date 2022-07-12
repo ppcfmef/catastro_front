@@ -15,12 +15,55 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     view: any = null;
     map: any;
 
+
     simpleMarkerSymbol = {
         type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
         width: '20px',
         height: '30px'
       };
+
+      layersInfo = [
+
+
+        {idServer:0,
+          title:  ' Zona 17',
+          id: 0,
+          urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+          order: 0,
+          featureLayer: null,
+          definitionExpression:'1=1',
+          featureTable:null,
+          popupTemplate:null
+        },
+
+        {idServer:0,
+            title:  ' Zona 18',
+            id: 0,
+            urlBase:
+              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression:'1=1',
+            featureTable:null,
+            popupTemplate:null
+          },
+
+
+          {idServer:0,
+            title:  ' Zona 19',
+            id: 0,
+            urlBase:
+              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression:'1=1',
+            featureTable:null,
+            popupTemplate:null
+          }
+        ];
+
   constructor() { }
 
   ngOnInit(): void {
@@ -33,8 +76,10 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     }
 
   ngOnChanges(): void {
+    if(this.view){
+        this.addPoints(this.points);
+    }
 
-    this.addPoints(this.points);
     }
 
   async initializeMap( ): Promise<void> {
@@ -74,10 +119,25 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
       };
 
       this.view = new MapView(mapViewProperties);
-      const layer = new MapImageLayer({
-        url: 'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_17/MapServer'
+
+
+      this.layersInfo.forEach((l)=>{
+        const layer = new MapImageLayer({
+            url: l.urlBase
+          });
+        this.map.add(layer);
       });
-      this.map.add(layer);
+/*
+      const layer = new MapImageLayer({
+        url: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer'
+      });
+
+      const layer = new MapImageLayer({
+        url: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer'
+      });
+*/
+
+
       this.addPoints(this.points);
 /*
 if(inputPoints.length>0){
@@ -131,7 +191,7 @@ if(inputPoints.length>0){
       ]);
 
       this.view.graphics.removeAll();
-    if(inputPoints.length>0){
+        if(inputPoints.length>0){
 
         const x=inputPoints[0].longitude;
         const y=inputPoints[0].latitude;
