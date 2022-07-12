@@ -49,6 +49,35 @@ export class MapComponent implements OnInit,AfterViewInit {
     TITLE_CARGA= 'Arancel Carga';
     displayTable ='none';
     layersInfo = [
+
+
+      {idServer:0,
+        title: this.TITLE_DESCARGA + ' Zona 17',
+        id: 0,
+        urlBase:
+          'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
+        order: 0,
+        featureLayer: null,
+        definitionExpression:'1=1',
+        featureTable:null,
+        popupTemplate:null
+      },
+
+      {idServer:1,
+        title: this.TITLE_CARGA + ' Zona 17',
+        id: 1,
+        urlBase:
+          'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
+        order: 0,
+        featureLayer: null,
+        definitionExpression:'1=1',
+        featureTable:null,
+        popupTemplate:null
+      },
+
+
+
+
         {idServer:0,
           title: this.TITLE_DESCARGA + ' Zona 18',
           id: 0,
@@ -56,23 +85,55 @@ export class MapComponent implements OnInit,AfterViewInit {
             'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
           order: 0,
           featureLayer: null,
-          definitionExpression:'1<>1',
+          definitionExpression:'1=1',
           featureTable:null,
           popupTemplate:null
         },
 
 
+
+
+
         {idServer:1,
-            title: this.TITLE_CARGA,
+            title: this.TITLE_CARGA+ ' Zona 18',
             id: 1,
             urlBase:
               'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression:'1<>1',
+            definitionExpression:'1=1',
             featureTable:null,
             popupTemplate:null
           },
+
+
+          
+
+
+        {idServer:0,
+          title: this.TITLE_DESCARGA + ' Zona 19',
+          id: 1,
+          urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
+          order: 0,
+          featureLayer: null,
+          definitionExpression:'1=1',
+          featureTable:null,
+          popupTemplate:null
+        },
+
+        {idServer:1,
+          title: this.TITLE_CARGA + ' Zona 19',
+          id: 1,
+          urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
+          order: 0,
+          featureLayer: null,
+          definitionExpression:'1=1',
+          featureTable:null,
+          popupTemplate:null
+        },
+
 
 /*
 
@@ -86,12 +147,14 @@ export class MapComponent implements OnInit,AfterViewInit {
             definitionExpression:'1=1',
             featureTable:null,
             popupTemplate:null
+
+            https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/6
           },*/
-        {   idServer:0,
+        {   idServer:7,
             title: 'Distritos',
             id: 4,
             urlBase:
-              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2',
+              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer',
             order: 2,
             featureLayer: null,
             definitionExpression:'1=1',
@@ -277,9 +340,10 @@ export class MapComponent implements OnInit,AfterViewInit {
         this.view.ui.add(baseMapGalleryExpand, {
           position: 'top-right',
         });
-        const query ='UBIGEO=\'150101\' ';
-        this.zoomToUbigeo(query);
+     
+        //this.zoomToUbigeo(query);
 
+        
         this.view.ui.remove('zoom'); // Remover el boton Zoom;
 
 
@@ -379,15 +443,33 @@ export class MapComponent implements OnInit,AfterViewInit {
           this.map.add(l.featureLayer);
         });
 
+
         this.view.when(() => {
           this.visibility = 'visible';
 
           this._fuseSplashScreenService.hide();
+
+          const params ={
+            district:'150101',
+            namedistrict:'LIMA'
+          }
+          
+          
+         // 'UBIGEO=\'150101\' ';
+
+        
+          this.buscar(params);
+
+          /*setTimeout(() => {this.zoomToUbigeo(query);*/
+          
+          
+          
+         
       });
 
 
 
-      const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
+     /* const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
 
       const searchElement = document.getElementById(
           'searchElement'
@@ -450,15 +532,20 @@ async    zoomToUbigeo(where: string): Promise<any> {
 
 buscar(params: any): void{
 
-
+console.log('params',params);
   const ubigeo=params.district;
   this.where = `UBIGEO='${ubigeo}'`;
   this.nameZip = `${params.namedistrict}.zip`;
   this.zoomToUbigeo(this.where);
-  const layer1 = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
-  const layer2 = this.layersInfo.find(e=> e.title===this.TITLE_CARGA).featureLayer;
+  this.layersInfo.forEach(l=>{
+    const featureLayer= l.featureLayer;
+    featureLayer.definitionExpression = this.where;
+  });
+
+  /*const layer1 = this.layersInfo.find(e=> e.title.includes(this.TITLE_DESCARGA)).featureLayer;
+  const layer2 = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA)).featureLayer;
   layer1.definitionExpression = this.where;
-  layer2.definitionExpression = this.where;
+  layer2.definitionExpression = this.where;*/
 
 
 }
@@ -645,14 +732,14 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
           this.shapeToGeoJson(reader.result);
           //this.fileString = reader.result as string;
        };
-      reader.readAsArrayBuffer(file);
+      /*reader.readAsArrayBuffer(file);*/
   }
 
    shapeToGeoJson(data: any): void{
 
       shp(data).then((geojson: any) =>{
           this.createArcgisJSON(geojson.features).then((json)=>{
-            const layerInfo = this.layersInfo.find(e=> e.title===this.TITLE_CARGA);
+            const layerInfo = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA));
 
             const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
             const body ={features:json};

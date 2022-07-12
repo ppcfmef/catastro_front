@@ -243,7 +243,9 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
  // eslint-disable-next-line @typescript-eslint/naming-convention
         Expand,
 // eslint-disable-next-line @typescript-eslint/naming-convention
-        GroupLayer
+        GroupLayer,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        BasemapGallery,
       ] = await loadModules([
         'esri/Map',
         'esri/views/MapView',
@@ -257,6 +259,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         'esri/widgets/LayerList',
         'esri/widgets/Expand',
         'esri/layers/GroupLayer',
+        'esri/widgets/BasemapGallery',
+        
       ]);
 
       const mapProperties = {
@@ -285,6 +289,19 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       this.view.ui.add(layerListExpand, {
         position: 'top-right',
       });
+      const basemapGallery = new BasemapGallery({
+        view: this.view,
+      });
+
+      basemapGallery.activeBasemap ='satellite';
+
+
+      const baseMapGalleryExpand = new Expand({
+        view: this.view,
+        content: basemapGallery,
+        id: 'mapGalleryBase'
+      });
+
 
       const graphicsLayer = new GraphicsLayer();
       const simpleMarkerSymbol = {
@@ -303,14 +320,17 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         yoffset : '15px'
       };
 
-    /* const pointGraphic = new Graphic({
-        geometry: point,
-        symbol: simpleMarkerSymbol
-     });*/
+   
+
+      this.view.ui.add(baseMapGalleryExpand, {
+        position: 'top-right',
+      });
 
 
       this.featureDistrito= new FeatureLayer(this.urlSearchDistrito);
+
       const featureDirecciones= new FeatureLayer(this.urlSearchDirecciones);
+
       const searchWidget = new Search({
         view: this.view,
         sources: [
@@ -393,7 +413,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         this.map.add(l.featureLayer);
       });
 
-
+/*
        this.groupLayers.forEach((group: any)  => {
         const layers = this.layersInfo.filter((l)=>{ if(group.children.includes(  l.id  )) {return l;}  })
         const myGroupLayer = new GroupLayer({
@@ -402,7 +422,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             });
             this.map.add(myGroupLayer);
        });
-
+*/
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
       });
@@ -434,13 +454,37 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       this.view.on('click', (event) => {
         // only include graphics from hurricanesLayer in the hitTest
         this.view.graphics.removeAll();
+
+        const graphic = event.mapPoint;
+        console.log('graphic>>>',graphic);
+        const longitude=graphic.longitude;
+        const latitude=graphic.latitude;
+
+        const point = { //Create a point
+          type: 'point',
+          longitude : longitude,
+          latitude: latitude
+        };
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: simpleMarkerSymbolUndefined
+      });
+
+      const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+      landRegistryMapModel.latitude = latitude;
+      landRegistryMapModel.longitude = longitude;
+      this._landRegistryMapService.landOut=landRegistryMapModel;
+
+      this.view.graphics.addMany([pointGraphic]);
+
+
         this.view.hitTest(event).then((response) => {
           // check if a feature is returned from the hurricanesLayer
           // eslint-disable-next-line max-len
-
+         
           console.log('results>>>',response.results);
           if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
-
+            this.view.graphics.removeAll();
             const graphic = response.results[0].graphic;
 
             const latitude=graphic.geometry.latitude;
@@ -484,12 +528,10 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
           }
 
-
+/*
           else{
-            //wkid=102100;
 
-            this.view.graphics.removeAll();
-
+           
             const graphic = response.results[0].mapPoint;
             console.log('graphic>>>',graphic);
             const longitude=graphic.longitude;
@@ -511,10 +553,17 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           this._landRegistryMapService.landOut=landRegistryMapModel;
 
           this.view.graphics.addMany([pointGraphic]);
-          }
+          }*/
         });
 
+
+
+
+         
+
       });
+
+
 /*
       const landMapIn = new LandMapInModel();
       landMapIn.land = new LandModel();
