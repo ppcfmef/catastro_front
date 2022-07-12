@@ -92,6 +92,10 @@ export const appRoutes: Route[] = [
                 path: 'land',
                 loadChildren: () => import('app/modules/admin/lands/lands.module').then(m => m.LandsModule)
             },
+            {
+                path: 'reports',
+                loadChildren: () => import('app/modules/admin/reports/reports.module').then(m => m.ReportsModule)
+            },
         ]
     }
 ];
