@@ -65,14 +65,21 @@ selectDist(event: any): void{
 
         // eslint-disable-next-line @typescript-eslint/no-shadow
         this._commonService.getDistrictResource(this.params.district).subscribe( (data: DistrictResource)=>{
+           
            this.dataSearch =data;
         });
+
+        /*this._commonService.getDistrictResource(this.params.district).subscribe( (data: DistrictResource)=>{
+           
+            this.dataSearch =data;
+         });*/
 
     }
 }
 
 buscar(): void {
-    this.buscarEventEmitter.emit(this.dataSearch);
+
+    this.buscarEventEmitter.emit( this.params);
 }
 
 descargar(): void{
