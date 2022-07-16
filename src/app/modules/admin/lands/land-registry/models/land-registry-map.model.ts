@@ -1,4 +1,5 @@
 
+import { GestionPredios } from '../interfaces/gestion-predios.interface';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { Lote } from '../interfaces/lote.interface';
 
@@ -33,12 +34,12 @@ export class LandRegistryMapModel implements LandRegistryMap{
     assignedAddress:string;
     latitude: number;
     longitude: number;
- 
+
     idAranc:string;
-   
+
     documentType:string;
     document:string;
-    
+
     codOwner:string;
     name:string;
     paternalSurname:string;
@@ -95,12 +96,12 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.assignedAddress=l?.assignedAddress;
         this.latitude=l?.latitude;
         this.longitude=l?.longitude;
-     
+
         this.idAranc=l?.idAranc;
-       
+
         this.documentType=l?.documentType;
         this.document=l?.document;
-        
+
         this.codOwner=l?.codOwner;
         this.name=l?.name;
         this.paternalSurname=l?.paternalSurname;
@@ -120,7 +121,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.condominium=l?.condominium;
         this.deduction=l?.deduction;
         this.selfAssessmentAffection=l?.selfAssessmentAffection;
-    
+
         this.sourceInformation=l?.sourceInformation;
         this.resolutionType=l?.resolutionType;
         this.resolutionDocument=l?.resolutionDocument;
@@ -133,14 +134,13 @@ export class LandRegistryMapModel implements LandRegistryMap{
 
         this.ubigeo =lote.UBIGEO;
         this.landArea =lote.AREA;
-        this.codMzn= lote.COD_MZN
-        this.codSect =lote.COD_SECT
-        this.codUu =lote.COD_UU
-        this.codMzn =lote.COD_MZN
-        this.codLand =lote.COD_LOTE
+        this.codMzn= lote.COD_MZN;
+        this.codSect =lote.COD_SECT;
+        this.codUu =lote.COD_UU;
+        this.codMzn =lote.COD_MZN;
+        this.codLand =lote.COD_LOTE;
         this.uuType = lote.TIPO_UU;
         this.habilitacionName= lote.NOM_UU;
-        
         this.urbanLotNumber = lote.LOT_URB;
         this.streetType = lote.TIP_VIA;
         this.streetName = lote.NOM_VIA;
@@ -148,7 +148,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.indoor = lote.INTERIOR;
         this.floor = lote.PISO;
         this.km =lote.KM;
-        this.landmark =lote.REFEREN
+        this.landmark =lote.REFEREN;
         this.latitude = lote.COOR_X;
         this.longitude = lote.COOR_Y;
         this.sourceInformation=lote.FUENTE;
@@ -156,6 +156,94 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.idLote= lote.ID_LOTE;
 
     }
-   
+
+    getGestionPredios(): GestionPredios{
+        const gestion: GestionPredios ={
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            UBIGEO: this.ubigeo,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_MZN: this.codMzn,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_SECT: this.codSect,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_UU: this.codUu,
+
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_LOTE: this.codLand,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            TIPO_UU: this.uuType,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NOM_UU: this.habilitacionName,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            LOT_URB: this.urbanLotNumber,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            TIP_VIA: this.streetType,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NOM_VIA: this.streetName,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            BLOCK: this.block,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            INTERIOR: this.indoor,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            PISO: this.floor,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            KM: this.km,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            REFERENCIA: this.landmark,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COOR_X: this.latitude,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COOR_Y: this.longitude,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            FUENTE: this.sourceInformation,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_ARANC: this.idAranc,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_LOTE: this.idLote,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_PRED: 0,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_PRE: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            SEC_EJEC: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_CPU: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ANIO_CART: 0,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_VIA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            CUADRA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            LADO: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            MZN_URB: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NUM_MUN: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            PARTIDA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            RAN_NUM: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            TIP_DOC: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            DOC_IDEN: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_CONTR: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NOMBRE: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            AP_PAT: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            AP_MAT: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            DIR_FISCAL: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ESTADO: ''
+        };
+        return gestion;
+
+    }
+
 
 }

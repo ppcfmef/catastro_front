@@ -17,6 +17,7 @@ import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DistrictResource, Extension } from 'app/core/common/interfaces/common.interface';
+import { MapUtils } from 'app/shared/utils/map.utils';
 
 @Component({
   selector: 'app-map',
@@ -60,7 +61,8 @@ export class MapComponent implements OnInit,AfterViewInit {
         featureLayer: null,
         definitionExpression:'1=1',
         featureTable:null,
-        popupTemplate:null
+        popupTemplate:null,
+        projection:32717
       },
 
       {idServer:1,
@@ -72,7 +74,8 @@ export class MapComponent implements OnInit,AfterViewInit {
         featureLayer: null,
         definitionExpression:'1=1',
         featureTable:null,
-        popupTemplate:null
+        popupTemplate:null,
+        projection:32717
       },
 
 
@@ -87,7 +90,8 @@ export class MapComponent implements OnInit,AfterViewInit {
           featureLayer: null,
           definitionExpression:'1=1',
           featureTable:null,
-          popupTemplate:null
+          popupTemplate:null,
+          projection:32718
         },
 
 
@@ -103,11 +107,10 @@ export class MapComponent implements OnInit,AfterViewInit {
             featureLayer: null,
             definitionExpression:'1=1',
             featureTable:null,
-            popupTemplate:null
+            popupTemplate:null,
+            projection:32718
           },
 
-
-          
 
 
         {idServer:0,
@@ -119,7 +122,8 @@ export class MapComponent implements OnInit,AfterViewInit {
           featureLayer: null,
           definitionExpression:'1=1',
           featureTable:null,
-          popupTemplate:null
+          popupTemplate:null,
+          projection:32719
         },
 
         {idServer:1,
@@ -131,7 +135,8 @@ export class MapComponent implements OnInit,AfterViewInit {
           featureLayer: null,
           definitionExpression:'1=1',
           featureTable:null,
-          popupTemplate:null
+          popupTemplate:null,
+          projection:32719
         },
 
 
@@ -340,13 +345,9 @@ export class MapComponent implements OnInit,AfterViewInit {
         this.view.ui.add(baseMapGalleryExpand, {
           position: 'top-right',
         });
-     
-        //this.zoomToUbigeo(query);
 
-        
+
         this.view.ui.remove('zoom'); // Remover el boton Zoom;
-
-
 
 
         const fieldInfos=[
@@ -452,19 +453,9 @@ export class MapComponent implements OnInit,AfterViewInit {
           const params ={
             district:'150101',
             namedistrict:'LIMA'
-          }
-          
-          
-         // 'UBIGEO=\'150101\' ';
+          };
 
-        
           this.buscar(params);
-
-          /*setTimeout(() => {this.zoomToUbigeo(query);*/
-          
-          
-          
-         
       });
 
 
@@ -500,14 +491,15 @@ export class MapComponent implements OnInit,AfterViewInit {
 async    zoomToUbigeo(where: string): Promise<any> {
   try {
 
-    console.log('where>>',where);
-      this.featureLayer = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
+        console.log('where>>',where);
+      const layerDistrito = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
 
 
       this._fuseSplashScreenService.show(0);
+      MapUtils.zoomToFeature(this.view,layerDistrito,where);
 
-
-
+      this._fuseSplashScreenService.hide();
+/*
          const query = this.featureLayer.createQuery();
           query.where = where;
           query.outSpatialReference = this.view.spatialReference;
@@ -518,7 +510,7 @@ async    zoomToUbigeo(where: string): Promise<any> {
                //console.error(error);
 
             });
-          });
+          });*/
 
 
   }
@@ -535,7 +527,7 @@ buscar(params: any): void{
 console.log('params',params);
   const ubigeo=params.district;
   this.where = `UBIGEO='${ubigeo}'`;
-  this.nameZip = `${params.namedistrict}.zip`;
+  /*this.nameZip = `${params.namedistrict}.zip`;*/
   this.zoomToUbigeo(this.where);
   this.layersInfo.forEach(l=>{
     const featureLayer= l.featureLayer;
@@ -550,9 +542,11 @@ console.log('params',params);
 
 }
 
-descargar(params: any): void{
-  console.log(params);
-
+async descargar(params: any): Promise<void>{
+  /*console.log(params);*/
+  this.proj4DestWkid=params.projection;
+  this.proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
+  this.nameZip =`${params.namedistrict}.zip`;
   const options = {
       types: {
           'point': 'points',
@@ -562,25 +556,44 @@ descargar(params: any): void{
       },
       wkt :4326
   };
-
-  this.featureLayer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;
-
-  const query = this.featureLayer.createQuery();
+  /*console.log(this.layersInfo.find(e=> e.title.includes( this.TITLE_DESCARGA) && e.projection===params.projection ));*/
+  const featureLayer = this.layersInfo.find(e=> e.idServer===0 && e.projection===params.projection ).featureLayer;
+  console.log('this.featureLayer>>>',featureLayer);
+  const query = featureLayer.createQuery();
+  const ubigeo=params.district;
+   /*query.outSpatialReference = 4326;*/
+   query.where =`UBIGEO='${ubigeo}'`;
 
    query.outSpatialReference = 4326;
-   query.where =this.where;
+   query.outFields = '*';
+   query.returnGeometry = false;
+   query.returnDistinctValues = true;
+   const features = await MapUtils.queryFeaturesInLayer(featureLayer,query);
+   console.log('features>>',features);
+   this._fuseSplashScreenService.show(0);
+   this.createGeoJSON(features).then((data)=>{
+    shpwrite.zip(data, options).then((content) =>{
 
-   this.featureLayer.queryFeatures(query).then( (response) => {
+            saveAs(content, this.nameZip);
+            this._fuseSplashScreenService.hide();
+      });
+  });
+
+
+/*
+   featureLayer.queryFeatures(query).then( (response) => {
 
     const features: any[] = response.features;
-    /*console.log('features>>>',features);*/
+
+
+    console.log('features>>>',features);
     this.createGeoJSON(features).then((data)=>{
       shpwrite.zip(data, options).then((content) =>{
 
               saveAs(content, this.nameZip);
         });
     });
-   });
+   });*/
 }
 
 downloadFile(content, mimeType, fileName, useBlob): any{

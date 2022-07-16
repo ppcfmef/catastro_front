@@ -3,13 +3,22 @@ import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { MapUtils } from 'app/shared/utils/map.utils';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { GestionPredios } from '../../interfaces/gestion-predios.interface';
 import { LandMapIn } from '../../interfaces/land-map-in.interface';
+import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandMapInModel, LandModel } from '../../models/land-map-in.model';
 import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
+
+import { arcgisToGeoJSON  } from '@esri/arcgis-to-geojson-utils';
+import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
+import { FormUtils } from 'app/shared/utils/form.utils';
+
+
 @Component({
   selector: 'app-land-registry-geolocation',
   templateUrl: './land-registry-geolocation.component.html',
@@ -28,7 +37,14 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
     ubigeo: string= '010101';
-    projection: number=32717;
+    /*projection: number=32717;*/
+    proj4Catalog= 'EPSG';
+
+    proj4Wkid=32718;
+    proj4GestionPrediosWkid=4326;
+
+    /*proj4ScrWkid=4326;*/
+    proj4Src =this.proj4Catalog + ':' + String(this.proj4Wkid);
     layerList: any;
     groupLayers=[
         {
@@ -49,7 +65,25 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             children:[6,7,8]
         },
 
-    ]
+    ];
+
+
+    simpleMarkerSymbol = {
+        type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+        url: '/assets/images/map/location2.png',
+        width: '20px',
+        height: '30px',
+        yoffset : '15px'
+      };
+
+    simpleMarkerSymbolUndefined = {
+        type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+        url: '/assets/images/map/location_out2.png',
+        width: '20px',
+        height: '30px',
+        yoffset : '15px'
+      };
+
 
     layersInfo = [
         {
@@ -174,6 +208,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     //urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/5';
     urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =  'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
+    urlGestionPredios= 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';
     featureDistrito: any;
 
 
@@ -188,24 +223,31 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
 
           console.log('data>>>',data);
-          this.projection= parseInt('327'+data.resources[0].utm);
-          console.log('this.user>>>',this.projection);
+        this.proj4Wkid =  parseInt('327'+data.resources[0].utm);
+          /*this.projection= parseInt('327'+data.resources[0].utm);
+          console.log('this.user>>>',this.projection);*/
         });
     });
-
-
-
 
   }
 
   ngOnInit(): void {
 
-    this._landRegistryMapService.landIn$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: LandMapIn)=>{
-               if (data &&  data.land && data.land.ubigeo && !data.land.x,!data.land.y)
-        {  const where=" UBIGEO='"+data.land.ubigeo+"'";
+    this._landRegistryMapService.landIn$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: LandRegistryMap)=>{
 
-        setTimeout(() => {this.zoomToUbigeo(where); }, 1500);
+     if(data.status===0 || !data.status)
+        {
 
+            const where=" UBIGEO='"+data.ubigeo+"'";
+            setTimeout(() => {this.zoomToUbigeo(where); }, 1500);
+        }
+
+        else if(data.status===1 && data.latitude && data.longitude ){
+            this.addPoint(data.latitude,data.longitude);
+            if(this.view){
+                this.view.center= [data.latitude,data.longitude];
+                this.view.zoom=15;
+            }
         }
     });
 
@@ -260,7 +302,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         'esri/widgets/Expand',
         'esri/layers/GroupLayer',
         'esri/widgets/BasemapGallery',
-        
+
       ]);
 
       const mapProperties = {
@@ -304,23 +346,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
 
       const graphicsLayer = new GraphicsLayer();
-      const simpleMarkerSymbol = {
-        type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location2.png',
-        width: '20px',
-        height: '30px',
-        yoffset : '15px'
-      };
 
-      const simpleMarkerSymbolUndefined = {
-        type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location_out2.png',
-        width: '20px',
-        height: '30px',
-        yoffset : '15px'
-      };
 
-   
 
       this.view.ui.add(baseMapGalleryExpand, {
         position: 'top-right',
@@ -427,39 +454,16 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         wkid: 32717 //PE_GCS_ED_1950
       });
 
-      /*
-      const outSpatialReference = new SpatialReference({
-        wkid: 4326
-      });
-
-      const pt = new Point({
-        x: 639476.5456999997,
-        y: 9265200.7227,
-        spatialReference: {
-          wkid: 32717
-        }
-      });
-
-
-      if (!projection.isLoaded()) {
-
-        await projection.load();
-      }
-      const ptTrans = projection.project(pt, outSpatialReference);
-      console.log('geogtrans>>>');
-
-      this.view.center = [ptTrans.x,ptTrans.y];
-*/
 
       this.view.on('click', (event) => {
         // only include graphics from hurricanesLayer in the hitTest
-        this.view.graphics.removeAll();
 
-        const graphic = event.mapPoint;
+        let graphic = event.mapPoint;
         console.log('graphic>>>',graphic);
-        const longitude=graphic.longitude;
-        const latitude=graphic.latitude;
+        let longitude=graphic.longitude;
+        let latitude=graphic.latitude;
 
+       /* this.view.graphics.removeAll();
         const point = { //Create a point
           type: 'point',
           longitude : longitude,
@@ -467,42 +471,47 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         };
         const pointGraphic = new Graphic({
           geometry: point,
-          symbol: simpleMarkerSymbolUndefined
-      });
+          symbol: this.simpleMarkerSymbolUndefined
+        });
+        this.view.graphics.addMany([pointGraphic]);*/
+
+        this.addPoint(latitude,longitude);
 
       const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
       landRegistryMapModel.latitude = latitude;
       landRegistryMapModel.longitude = longitude;
       this._landRegistryMapService.landOut=landRegistryMapModel;
 
-      this.view.graphics.addMany([pointGraphic]);
+
 
 
         this.view.hitTest(event).then((response) => {
           // check if a feature is returned from the hurricanesLayer
           // eslint-disable-next-line max-len
-         
+
           console.log('results>>>',response.results);
           if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
             this.view.graphics.removeAll();
-            const graphic = response.results[0].graphic;
+            graphic = response.results[0].graphic;
 
-            const latitude=graphic.geometry.latitude;
-            const longitude=graphic.geometry.longitude;
+            latitude=graphic.geometry.latitude;
+            longitude=graphic.geometry.longitude;
 
-            const point = { //Create a point
+            this.addPoint(latitude,longitude);
+
+            /*const point = { //Create a point
                 type: 'point',
                 longitude : longitude,
                 latitude: latitude
             };
             const pointGraphic = new Graphic({
                 geometry: point,
-                symbol: simpleMarkerSymbol
+                symbol: this.simpleMarkerSymbol
             });
 
             this.view.graphics.addMany([pointGraphic]);
 
-
+*/
 
             // do something with the graphic
 
@@ -522,16 +531,23 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             });
             */
             const lote =graphic.attributes;
-            const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-            landRegistryMapModel.loteToLandRegistryMapModel(lote);
+            const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+            _landRegistryMapModel.loteToLandRegistryMapModel(lote);
             this._landRegistryMapService.landOut=landRegistryMapModel;
+
+            const _gestionPredio=_landRegistryMapModel.getGestionPredios();
+
+            this.saveGestionPredios(_gestionPredio);
+
+
+            //this.saveGestionPredios();
 
           }
 
 /*
           else{
 
-           
+
             const graphic = response.results[0].mapPoint;
             console.log('graphic>>>',graphic);
             const longitude=graphic.longitude;
@@ -559,7 +575,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
 
 
-         
+
 
       });
 
@@ -575,11 +591,43 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     }
   }
 
+async addPoint(longitude,latitude): Promise<any>{
+    try {
+        const [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            Graphic,
+
+          ] = await loadModules([
+            'esri/Graphic',
+          ]);
+
+
+        this.view.graphics.removeAll();
+        const point = { //Create a point
+          type: 'point',
+          longitude : longitude,
+          latitude: latitude
+        };
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: this.simpleMarkerSymbolUndefined
+        });
+        this.view.graphics.addMany([pointGraphic]);
+
+    } catch (error) {
+        console.error('EsriLoader: ', error);
+      }
+
+
+}
+
 
 async    zoomToUbigeo(where: string): Promise<any> {
   try {
         console.log('where>>>',where);
-         const query = this.featureDistrito.createQuery();
+
+        MapUtils.zoomToFeature(this.view,this.featureDistrito,where);
+         /*const query = this.featureDistrito.createQuery();
           query.where = where;
           query.outSpatialReference = this.view.spatialReference;
 
@@ -588,15 +636,111 @@ async    zoomToUbigeo(where: string): Promise<any> {
                console.error(error);
 
             });
-          });
+          });*/
 
 
   }
       catch (error) {
           console.error('EsriLoader: ', error);
-        }
-
+}
 
 }
 
+//async saveGestionPredios(_landRegistryMap: LandRegistryMap): Promise<void>{
+
+    async saveGestionPredios(_gestionPredios: GestionPredios): Promise<void>{
+    if (_gestionPredios.ID_LOTE)
+    {
+        /*const _landRegistryMapModel = new LandRegistryMapModel(_landRegistryMap);
+        const _gestionPredios: GestionPredios=_landRegistryMapModel.getGestionPredios();*/
+        const json= await this.createArcgisJSON([_gestionPredios]);
+        console.log('json>>>',json);
+        const formData = new FormData();
+        formData.append('features', JSON.stringify(json));
+
+
+        fetch(`${this.urlGestionPredios}`, {
+            method: 'POST',
+            body: formData
+        }).then((resObj) => {
+                /*this._fuseSplashScreenService.hide();
+                this._messageProviderService.showSnack('Registrados cargados correctamente');*/
+                 })
+            .catch((error) => {
+                /*this._messageProviderService.showSnackError('Registrados no cargados');*/
+        });
+
+    }
+}
+
+
+/*/FeatureServer/0*/
+async createArcgisJSON(features: GestionPredios[]): Promise<any[]>{
+    const arcgisJson =[];
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const [
+      Graphic,
+      Polyline,
+      projection,
+      SpatialReference,
+    ] = await loadModules([
+
+      'esri/Graphic',
+      'esri/geometry/Polyline',
+      'esri/geometry/projection',
+      'esri/geometry/SpatialReference',
+    ]);
+    /* eslint-enable @typescript-eslint/naming-convention */
+    const outSpatialReference= new SpatialReference(this.proj4GestionPrediosWkid);
+
+    return projection.load().then(()=>{
+      features.forEach((feature: GestionPredios)=>{
+        /*const attr = feature.properties;*/
+/*
+        for (const key in attr) {
+          if (!attr[key] || key ==='OBJECTID' ) {
+              delete attr[key];
+          }
+        }
+*/
+
+       // if(feature.geometry){
+            const geometry = {
+                x: feature.COOR_X,
+                y: feature.COOR_Y
+            };
+
+            const attributes=FormUtils.deleteKeysNullInObject(feature);
+            const geoFeature={
+                geometry,
+                attributes
+            };
+            arcgisJson.push(geoFeature);
+
+            /* {
+                "OWNER": "John Doe",
+                "VALUE": 17325.90,
+                "APPROVED": false,
+                "LASTUPDATE": 1227628579430
+              }*/
+
+            /*const newGeometry = projection.project(geometry, outSpatialReference);*/
+
+            /*
+            "geometry": {
+                "x": -118.15,
+                "y": 33.80
+            },
+             */
+        //}
+          /*if (feature.geometry) {
+            const geoFeature = geojsonToArcGIS(feature);
+            const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
+            geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
+            arcgisJson.push(geoFeature);
+      }*/
+      });
+      return Promise.all(arcgisJson);
+    });
+  };
 }
