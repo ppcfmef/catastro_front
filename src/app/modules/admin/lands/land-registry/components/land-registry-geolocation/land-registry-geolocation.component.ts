@@ -206,13 +206,14 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     ];
 
     //urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/5';
-    urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
+    urlSearchZonaUrbana = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =  'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
     urlGestionPredios= 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';
+
+
+    urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
+    featureZonaUrbana: any;
     featureDistrito: any;
-
-
-
   constructor(private _userService: UserService,private commonService: CommonService ,private _landRegistryMapService: LandRegistryMapService) {
 
     this._userService.user$
@@ -243,7 +244,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         }
 
         else if(data.status===1 && data.latitude && data.longitude ){
-            this.addPoint(data.latitude,data.longitude);
+            this.addPoint(data.latitude,data.longitude,this.simpleMarkerSymbol);
             if(this.view){
                 this.view.center= [data.latitude,data.longitude];
                 this.view.zoom=15;
@@ -354,6 +355,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       });
 
 
+      this.featureZonaUrbana= new FeatureLayer(this.urlSearchZonaUrbana);
       this.featureDistrito= new FeatureLayer(this.urlSearchDistrito);
 
       const featureDirecciones= new FeatureLayer(this.urlSearchDirecciones);
@@ -362,7 +364,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         view: this.view,
         sources: [
             {
-                layer: this.featureDistrito,
+                layer: this.featureZonaUrbana,
                 searchFields: ['DISTRITO','UBIGEO'],
                 displayField: 'DISTRITO',
                 exactMatch: false,
@@ -440,137 +442,65 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         this.map.add(l.featureLayer);
       });
 
-/*
-       this.groupLayers.forEach((group: any)  => {
-        const layers = this.layersInfo.filter((l)=>{ if(group.children.includes(  l.id  )) {return l;}  })
-        const myGroupLayer = new GroupLayer({
-            title: group.title,
-            layers: layers
-            });
-            this.map.add(myGroupLayer);
-       });
-*/
+
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
       });
 
 
-      this.view.on('click', (event) => {
+      this.view.on('click',   (event) => {
         // only include graphics from hurricanesLayer in the hitTest
 
         let graphic = event.mapPoint;
-        console.log('graphic>>>',graphic);
         let longitude=graphic.longitude;
         let latitude=graphic.latitude;
 
-       /* this.view.graphics.removeAll();
+
+        this.addPoint(latitude,longitude,this.simpleMarkerSymbolUndefined);
         const point = { //Create a point
-          type: 'point',
-          longitude : longitude,
-          latitude: latitude
-        };
-        const pointGraphic = new Graphic({
-          geometry: point,
-          symbol: this.simpleMarkerSymbolUndefined
+            type: 'point',
+            longitude : longitude,
+            latitude: latitude
+          };
+        const intersect= this.queryIntersectFeaturelayer(this.featureDistrito,point);
+        intersect.then( (data: any)=> {
+
+            if(data && data.attributes){
+
+                const ubigeo = data.attributes['UBIGEO'];
+                console.log('ubigeo>>',ubigeo);
+                const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+                landRegistryMapModel.latitude = latitude;
+                landRegistryMapModel.longitude = longitude;
+                landRegistryMapModel.ubigeo = ubigeo;
+                this._landRegistryMapService.landOut=landRegistryMapModel;
+                  this.view.hitTest(event).then((response) => {
+                    if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
+                      this.view.graphics.removeAll();
+                      graphic = response.results[0].graphic;
+                      latitude=graphic.geometry.latitude;
+                      longitude=graphic.geometry.longitude;
+                      const lote =graphic.attributes;
+
+                      const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+                      _landRegistryMapModel.loteToLandRegistryMapModel(lote);
+                      this._landRegistryMapService.landOut=landRegistryMapModel;
+                      const _gestionPredio=_landRegistryMapModel.getGestionPredios();
+                      this.addPoint(latitude,longitude,this.simpleMarkerSymbol);
+
+                    }
+                  });
+
+
+            }
+
+
+
         });
-        this.view.graphics.addMany([pointGraphic]);*/
-
-        this.addPoint(latitude,longitude);
-
-      const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-      landRegistryMapModel.latitude = latitude;
-      landRegistryMapModel.longitude = longitude;
-      this._landRegistryMapService.landOut=landRegistryMapModel;
 
 
 
 
-        this.view.hitTest(event).then((response) => {
-          // check if a feature is returned from the hurricanesLayer
-          // eslint-disable-next-line max-len
-
-          console.log('results>>>',response.results);
-          if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
-            this.view.graphics.removeAll();
-            graphic = response.results[0].graphic;
-
-            latitude=graphic.geometry.latitude;
-            longitude=graphic.geometry.longitude;
-
-            this.addPoint(latitude,longitude);
-
-            /*const point = { //Create a point
-                type: 'point',
-                longitude : longitude,
-                latitude: latitude
-            };
-            const pointGraphic = new Graphic({
-                geometry: point,
-                symbol: this.simpleMarkerSymbol
-            });
-
-            this.view.graphics.addMany([pointGraphic]);
-
-*/
-
-            // do something with the graphic
-
-/*
-            this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this.user = user;
-                this.ubigeo=(this.user.placeScope && this.user.placeScope.ubigeo)?this.user.placeScope.ubigeo:'010101';
-                this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
-
-                  console.log('data>>>',data);
-                  this.projection= parseInt('327'+data.resources[0].utm);
-                  console.log('this.user>>>',this.projection);
-                });
-
-            });
-            */
-            const lote =graphic.attributes;
-            const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-            _landRegistryMapModel.loteToLandRegistryMapModel(lote);
-            this._landRegistryMapService.landOut=landRegistryMapModel;
-
-            const _gestionPredio=_landRegistryMapModel.getGestionPredios();
-
-            this.saveGestionPredios(_gestionPredio);
-
-
-            //this.saveGestionPredios();
-
-          }
-
-/*
-          else{
-
-
-            const graphic = response.results[0].mapPoint;
-            console.log('graphic>>>',graphic);
-            const longitude=graphic.longitude;
-            const latitude=graphic.latitude;
-
-            const point = { //Create a point
-              type: 'point',
-              longitude : longitude,
-              latitude: latitude
-            };
-            const pointGraphic = new Graphic({
-              geometry: point,
-              symbol: simpleMarkerSymbolUndefined
-          });
-
-          const landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-          landRegistryMapModel.latitude = latitude;
-          landRegistryMapModel.longitude = longitude;
-          this._landRegistryMapService.landOut=landRegistryMapModel;
-
-          this.view.graphics.addMany([pointGraphic]);
-          }*/
-        });
 
 
 
@@ -580,18 +510,14 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       });
 
 
-/*
-      const landMapIn = new LandMapInModel();
-      landMapIn.land = new LandModel();
-      landMapIn.land.ubigeo='010101';
-      this._landRegistryMapService.landIn = landMapIn;*/
+
 
     } catch (error) {
       console.error('EsriLoader: ', error);
     }
   }
 
-async addPoint(longitude,latitude): Promise<any>{
+async addPoint(latitude,longitude,symbol): Promise<any>{
     try {
         const [
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -610,7 +536,8 @@ async addPoint(longitude,latitude): Promise<any>{
         };
         const pointGraphic = new Graphic({
           geometry: point,
-          symbol: this.simpleMarkerSymbolUndefined
+          symbol:symbol
+          /*symbol: this.simpleMarkerSymbolUndefined*/
         });
         this.view.graphics.addMany([pointGraphic]);
 
@@ -626,7 +553,7 @@ async    zoomToUbigeo(where: string): Promise<any> {
   try {
         console.log('where>>>',where);
 
-        MapUtils.zoomToFeature(this.view,this.featureDistrito,where);
+        MapUtils.zoomToFeature(this.view,this.featureZonaUrbana,where);
          /*const query = this.featureDistrito.createQuery();
           query.where = where;
           query.outSpatialReference = this.view.spatialReference;
@@ -695,16 +622,7 @@ async createArcgisJSON(features: GestionPredios[]): Promise<any[]>{
 
     return projection.load().then(()=>{
       features.forEach((feature: GestionPredios)=>{
-        /*const attr = feature.properties;*/
-/*
-        for (const key in attr) {
-          if (!attr[key] || key ==='OBJECTID' ) {
-              delete attr[key];
-          }
-        }
-*/
 
-       // if(feature.geometry){
             const geometry = {
                 x: feature.COOR_X,
                 y: feature.COOR_Y
@@ -717,30 +635,37 @@ async createArcgisJSON(features: GestionPredios[]): Promise<any[]>{
             };
             arcgisJson.push(geoFeature);
 
-            /* {
-                "OWNER": "John Doe",
-                "VALUE": 17325.90,
-                "APPROVED": false,
-                "LASTUPDATE": 1227628579430
-              }*/
 
-            /*const newGeometry = projection.project(geometry, outSpatialReference);*/
-
-            /*
-            "geometry": {
-                "x": -118.15,
-                "y": 33.80
-            },
-             */
-        //}
-          /*if (feature.geometry) {
-            const geoFeature = geojsonToArcGIS(feature);
-            const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
-            geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
-            arcgisJson.push(geoFeature);
-      }*/
       });
       return Promise.all(arcgisJson);
     });
   };
+
+
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    async queryIntersectFeaturelayer(layer: any, geometry: any) {
+
+    const parcelQuery = {
+     spatialRelationship: 'intersects', // Relationship operation to apply
+     geometry: geometry,  // The sketch feature geometry
+     returnGeometry: true,
+     outFields: ['UBIGEO'],
+    };
+
+
+
+    const results= await layer.queryFeatures(parcelQuery);
+    let feature={};
+    if(results.features && results.features.length>0)
+        {feature=results.features[0];}
+    return feature;
+     //return results.features ;
+
+    /*console.log('result>>',result);*/
+
+  }
+
+
+
 }
