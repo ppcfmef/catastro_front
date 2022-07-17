@@ -497,20 +497,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
 
         });
-
-
-
-
-
-
-
-
-
-
       });
-
-
-
 
     } catch (error) {
       console.error('EsriLoader: ', error);
