@@ -1,8 +1,8 @@
 <section class="container">
     <article class="flex">
         <section class="input-btn-icon mr-6">
-            <input type="search" placeholder="Nro. Documento">
-            <button>Buscar 
+            <input type="search" placeholder="Nro. Documento" [formControl]="search">
+            <button (click)="searchOwner()">Buscar 
                 <mat-icon svgIcon="heroicons_outline:search">                    
                 </mat-icon>
             </button>
