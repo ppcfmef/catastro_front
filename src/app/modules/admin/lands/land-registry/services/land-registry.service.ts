@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -10,10 +10,10 @@ import { LandOwner } from '../interfaces/land-owner.interface';
 export class LandRegistryService {
 
   apiUrl = environment.apiUrl;
-  private landOwner$: Subject<LandOwner> = new Subject();
+  private landOwner$ = new BehaviorSubject<LandOwner>(null);
 
   constructor(
-    private readonly html: HttpClient,
+    private readonly http: HttpClient,
   ) { }
 
   setLandOwner(value: LandOwner): void {
@@ -21,10 +21,14 @@ export class LandRegistryService {
   }
 
   getLandOwner(): Observable<LandOwner> {
-    return this.landOwner$.asObservable();
+    return this.landOwner$;
   }
 
   searchOwnerbyDocument(document: string): Observable<LandOwner> {
-    return this.html.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);
+    return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);
+  }
+
+  createOwner(data: LandOwner): Observable<LandOwner> {
+    return this.http.post<LandOwner>(`${this.apiUrl}/lands/owners/register/`, data);
   }
 }

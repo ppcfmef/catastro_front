@@ -4,7 +4,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
-import { LandOwnerModel } from '../../models/land-owner.model';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -14,7 +13,6 @@ import { LandOwnerModel } from '../../models/land-owner.model';
 export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   showFormEdit = true;
   search: FormControl = new FormControl();
-  landOwner: LandOwnerModel = new LandOwnerModel();
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -37,7 +35,6 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
       (result) => {
-        this.landOwner.setValue(result);
         this.receivedShowFormEdit(false);
         this.landRegistryService.setLandOwner(result);
       },

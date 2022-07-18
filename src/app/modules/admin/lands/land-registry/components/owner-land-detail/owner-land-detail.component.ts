@@ -10,8 +10,8 @@ import { LandRegistryService } from '../../services/land-registry.service';
   styleUrls: ['./owner-land-detail.component.scss']
 })
 export class OwnerLandDetailComponent implements OnInit, OnDestroy {
-  @Input() landOwner: LandOwnerModel;
   @Output() formEdit = new EventEmitter<boolean>();
+  landOwner: LandOwnerModel = new LandOwnerModel();
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(

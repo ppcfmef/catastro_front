@@ -1,7 +1,8 @@
 import { LandOwner, OwnerAddress } from '../interfaces/land-owner.interface';
 
 export enum DocumentType {
-  ruc = '06'
+  dni = '01',
+  ruc = '06',
 }
 
 export class LandOwnerModel implements LandOwner {
@@ -19,13 +20,36 @@ export class LandOwnerModel implements LandOwner {
   numberLands?: number;
   address?: OwnerAddress;
 
-  constructor() {}
+  constructor() {
+    this.documentType = DocumentType.dni;
+  }
+
+  get isBussiness(): boolean {
+    return this.documentType === DocumentType.ruc;
+  }
+
+  setId(value: number): void {
+    this.id = value;
+  }
 
   setValue(value: LandOwner): void {
     Object.assign(this, value);
   }
 
-  get isBussiness(): boolean {
-    return this.documentType === DocumentType.ruc;
+  toJson(): LandOwner {
+    return {
+      id: this.id,
+      code: this.code,
+      documentType: this.documentType,
+      dni: this.dni,
+      name: this.name,
+      paternalSurname: this.paternalSurname,
+      maternalSurname: this.maternalSurname,
+      descriptionOwner: this.descriptionOwner,
+      phone: this.phone,
+      email: this.email,
+      taxAddress: this.taxAddress,
+      address: this.address
+    };
   }
 }

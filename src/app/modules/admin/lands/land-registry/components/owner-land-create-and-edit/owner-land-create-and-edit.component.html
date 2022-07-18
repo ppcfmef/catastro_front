@@ -13,7 +13,7 @@
     </mat-form-field>
 
     <ng-container  [ngSwitch]="typeDocSelectValue">
-        <ng-container *ngSwitchCase="1">
+        <ng-container *ngSwitchCase="'01'">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
                 <mat-label>Nombres</mat-label>
                 <input matInput type="text" formControlName="name">
@@ -28,7 +28,7 @@
             </mat-form-field>
         </ng-container>
     
-        <ng-container *ngSwitchCase="2">
+        <ng-container *ngSwitchCase="'06'">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
                 <mat-label>Contibuyente</mat-label>
                 <input matInput type="text" formControlName="descriptionOwner">
