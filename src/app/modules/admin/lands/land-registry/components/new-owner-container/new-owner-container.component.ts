@@ -4,6 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
+import { LandOwnerModel } from '../../models/land-owner.model';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -13,6 +14,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   showFormEdit = true;
   search: FormControl = new FormControl();
+  landOwner: LandOwnerModel = new LandOwnerModel();
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -34,7 +36,11 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
     this.landRegistryService.searchOwnerbyDocument(searchText)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
-      (result) => { console.log('enviar datos al formularios', result); },
+      (result) => {
+        this.landOwner.setValue(result);
+        this.receivedShowFormEdit(false);
+        this.landRegistryService.setLandOwner(result);
+      },
       (error) => {
         const dialogRef = this.confirmationService.error(
           'Contribuyente no encontrado',
@@ -43,6 +49,7 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe((option) => {
           if (option === 'confirmed') {
+            this.receivedShowFormEdit(true);
             console.log('pasar documento al formulario', searchText);
           }
           this.search.reset();
@@ -55,5 +62,4 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
   }
-
 }
