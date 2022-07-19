@@ -28,7 +28,22 @@ export class LandRegistryService {
     return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);
   }
 
+  saveOwner(data: LandOwner): Observable<LandOwner> {
+    if (data.id) {
+      return this.editOwner(data.id, data);
+    }else {
+      return this.createOwner(data);
+    }
+  }
+
   createOwner(data: LandOwner): Observable<LandOwner> {
     return this.http.post<LandOwner>(`${this.apiUrl}/lands/owners/register/`, data);
+  }
+
+  editOwner(id: number, data: LandOwner): Observable<LandOwner> {
+    // Eliminando registros que el backend no modifica
+    delete data['dni'];
+    delete data['documentType'];
+    return this.http.patch<LandOwner>(`${this.apiUrl}/lands/owners/register/${id}/`, data);
   }
 }

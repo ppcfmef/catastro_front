@@ -1,4 +1,4 @@
-<section class="container mt-4 gap-y-2.5"  [formGroup]="formEdit">
+<section class="container mt-4 gap-y-2.5" *ngIf="formEdit" [formGroup]="formEdit">
     <h3 class="subtitle-card mb-2">Datos del contribuyente</h3>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Tipo de documento</mat-label>
@@ -108,7 +108,7 @@
         </mat-form-field>
     </ng-container>
     <div class="w-full flex items-center justify-end">
-        <button class="btn-confirm mr-4" (click)="emitShowFormEdit()"> Guardar</button>
+        <button class="btn-confirm mr-4" (click)="saveForm()"> Guardar</button>
         <button class="btn-danger" (click)="emitShowFormEdit()">Cancelar</button>
     </div>
 </section>

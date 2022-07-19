@@ -23,16 +23,22 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     private fb: FormBuilder,
     private alert: MessageProviderService,
     private landRegistryService: LandRegistryService,
-  ) {
-    this.createFormEdit();
-  }
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.landRegistryService.getLandOwner()
+    .subscribe(
+      (result) => {
+        this.landOwner.setValue(result);
+        this.createFormEdit();
+      }
+    );
+  }
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
-      documentType: [this.landOwner.documentType],
-      dni: [this.landOwner.dni],
+      documentType: [{ value: this.landOwner.documentType, disabled: !this.isCreate}],
+      dni: [{ value: this.landOwner.dni, disabled: !this.isCreate}],
       name: [this.landOwner.name],
       paternalSurname: [this.landOwner.paternalSurname],
       maternalSurname: [this.landOwner.maternalSurname],
@@ -58,15 +64,15 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     });
   }
 
-  emitShowFormEdit(): void{
+  saveForm(): void{
     if (this.formEdit.valid){
       this.landOwner.setValue(this.formEdit.value);
-      this.landRegistryService.createOwner(this.landOwner.toJson())
+      this.landRegistryService.saveOwner(this.landOwner.toJson())
       .subscribe(
         (result) => {
           this.landOwner.setId(result.id);
           this.landRegistryService.setLandOwner(this.landOwner.toJson());
-          this.showFormEdit.emit(false);
+          this.emitShowFormEdit(false);
           this.alert.showSnack('Propietario registrado correctamente');
         },
         (error) => {
@@ -78,7 +84,19 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     }
   }
 
+  emitShowFormEdit(value: boolean): void {
+    if (this.isCreate) {
+      this.formEdit.reset();
+    }else {
+      this.showFormEdit.emit(value);
+    }
+  }
+
   get typeDocSelectValue(): string {
     return this.formEdit.get('documentType').value;
+  }
+
+  get isCreate(): boolean {
+    return !this.landOwner.id;
   }
 }
