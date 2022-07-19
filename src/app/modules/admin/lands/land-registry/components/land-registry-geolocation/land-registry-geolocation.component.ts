@@ -491,6 +491,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
                     }
                   });
 
+                  //     this._landRegistryMapService.landOut   gestionPredios
 
             }
 
