@@ -2,9 +2,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LandRecordService } from '../../services/land-record.service';
 import { LandRegistryService } from '../../services/land-registry.service';
-import { LandRecord } from '../../interfaces/land-record.interface';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 
 
 @Component({
@@ -14,15 +14,15 @@ import { LandRecord } from '../../interfaces/land-record.interface';
 })
 export class ListLandContainerComponent implements OnInit, OnDestroy {
 
-  landRecords: LandRecord[];
+  landRecords: LandRegistryMap[];
   tableLength: number;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private landOwnerId!: number;
   private defaultTableLimit = 5;
 
   constructor(
-    private landRecordService: LandRecordService,
-    private landRegistryService: LandRegistryService
+    private landRegistryService: LandRegistryService,
+    private landRegistryMapService: LandRegistryMapService,
   ) { }
 
   ngOnInit(): void {
@@ -32,8 +32,8 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
       (ownerResult) => {
         this.landOwnerId = ownerResult?.id;
         if (this.landOwnerId) {
-          this.landRecordService
-          .getList({ limit: this.defaultTableLimit, owner: this.landOwnerId })
+          this.landRegistryService
+          .getLandList({ limit: this.defaultTableLimit, owner: this.landOwnerId })
           .subscribe(
             (landResult) => {
               this.landRecords = landResult.results;
@@ -45,13 +45,16 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
     );
   }
 
+  seledRecord(landRecord: LandRegistryMap): void {
+    this.landRegistryMapService.landIn = landRecord;
+  }
   onChangePage(paginator: MatPaginator): void {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     const queryParams = { limit, offset, ownerFilter };
 
-    this.landRecordService.getList(queryParams)
+    this.landRegistryService.getLandList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
   }

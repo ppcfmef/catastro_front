@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { LandOwner } from '../interfaces/land-owner.interface';
+import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
+import { IPagination } from 'app/core/common/interfaces/common.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +47,9 @@ export class LandRegistryService {
     delete data['dni'];
     delete data['documentType'];
     return this.http.patch<LandOwner>(`${this.apiUrl}/lands/owners/register/${id}/`, data);
+  }
+
+  getLandList(queryParams): Observable<IPagination<LandRegistryMap>> {
+    return this.http.get<IPagination<LandRegistryMap>>(`${this.apiUrl}/lands/records/`, {params: queryParams});
   }
 }

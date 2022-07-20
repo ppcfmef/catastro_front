@@ -236,14 +236,14 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
     this._landRegistryMapService.landIn$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: LandRegistryMap)=>{
 
-     if(data.status===0 || !data.status)
+     if(data && (data?.status===0 || !data?.status))
         {
 
             const where=" UBIGEO='"+data.ubigeo+"'";
             setTimeout(() => {this.zoomToUbigeo(where); }, 1500);
         }
 
-        else if(data.status===1 && data.latitude && data.longitude ){
+        else if(data?.status===1 && data?.latitude && data?.longitude ){
             this.addPoint(data.latitude,data.longitude,this.simpleMarkerSymbol);
             if(this.view){
                 this.view.center= [data.latitude,data.longitude];

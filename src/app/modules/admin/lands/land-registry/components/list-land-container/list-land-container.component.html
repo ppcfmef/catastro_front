@@ -1,5 +1,7 @@
 <section class="container">
     <app-land-summary-table *ngIf="landRecords"
     [dataSource]="landRecords"
-    [length]="tableLength"></app-land-summary-table>
+    [length]="tableLength"
+    (seledRecord)="seledRecord($event)"
+    ></app-land-summary-table>
 </section>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { LandRecord } from '../../interfaces/land-record.interface';
+import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 
 @Component({
   selector: 'app-land-summary-table',
@@ -9,12 +9,13 @@ import { LandRecord } from '../../interfaces/land-record.interface';
 })
 export class LandSummaryTableComponent implements OnInit {
 
-  @Input() dataSource: LandRecord[];
+  @Input() dataSource: LandRegistryMap[];
   @Input() length: number;
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
+  @Output() seledRecord: EventEmitter<LandRegistryMap> = new EventEmitter();
 
   displayedColumns: string[] = ['nro', 'cup', 'cpm', 'steetName'];
-  predioSelected = new Set<any>();
+  landSelected = new Set<any>();
   pageIndex = 0;
   pageSize = 5;
   pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
@@ -24,14 +25,14 @@ export class LandSummaryTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  predioSelection(row): void{
-    this.predioSelected.clear();
-    this.predioSelected.add(row);
+  landSelection(landRecord: LandRegistryMap): void{
+    this.landSelected.clear();
+    this.landSelected.add(landRecord);
+    this.seledRecord.emit(landRecord);
   }
 
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
     this.changePage.emit(paginator);
   }
-
 }
