@@ -475,23 +475,45 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
                 landRegistryMapModel.ubigeo = ubigeo;
                 this._landRegistryMapService.landOut=landRegistryMapModel;
                   this.view.hitTest(event).then((response) => {
-                    if (response.results.length && response.results[0]  && response.results[0].graphic && response.results[0].graphic.geometry) {
-                      this.view.graphics.removeAll();
-                      graphic = response.results[0].graphic;
-                      latitude=graphic.geometry.latitude;
-                      longitude=graphic.geometry.longitude;
-                      const lote =graphic.attributes;
 
-                      const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-                      _landRegistryMapModel.loteToLandRegistryMapModel(lote);
-                      this._landRegistryMapService.landOut=landRegistryMapModel;
-                      const _gestionPredio=_landRegistryMapModel.getGestionPredios();
-                      this.addPoint(latitude,longitude,this.simpleMarkerSymbol);
+                    /*console.log('response.results>>>',response.results);*/
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    const results=response.results.filter( (r) =>{ console.log(r , r.graphic , r.graphic.layer,  r.graphic.layer.layerId);
+                        if (r && r.graphic && r.graphic.layer&&  r.graphic.layer.layerId===1){ return r;}  });
+                    console.log(results);
+
+
+                    if (results.length >0) {
+
+                      const resultsLen =results.length - 1;
+
+                      if(results[resultsLen ]  && results[resultsLen].graphic && results[resultsLen].graphic.geometry)
+{
+
+    graphic = results[resultsLen].graphic;
+    //console.log('graphic>>', graphic);
+
+    if(graphic   && graphic.attributes && graphic.attributes['ID_LOTE']  ){
+      //  console.log('graphic.attributes>>', graphic.attributes);
+latitude=graphic.geometry.latitude;
+      longitude=graphic.geometry.longitude;
+
+      latitude=graphic.attributes['COOR_Y'];
+      longitude=graphic.attributes['COOR_X'];
+      const lote =graphic.attributes;
+      const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+      _landRegistryMapModel.loteToLandRegistryMapModel(lote);
+      this._landRegistryMapService.landOut=landRegistryMapModel;
+      const _gestionPredio=_landRegistryMapModel.getGestionPredios();
+      this.addPoint(latitude,longitude,this.simpleMarkerSymbol);
+    }
+}
+
+
 
                     }
                   });
 
-                  //     this._landRegistryMapService.landOut   gestionPredios
 
             }
 
