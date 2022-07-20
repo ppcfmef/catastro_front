@@ -223,8 +223,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         this.ubigeo=(this.user.placeScope && this.user.placeScope.ubigeo)?this.user.placeScope.ubigeo:'010101';
         this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
 
-          console.log('data>>>',data);
-        this.proj4Wkid =  parseInt('327'+data.resources[0].utm);
+            console.log('data>>>',data);
+            this.proj4Wkid =  parseInt('327'+data.resources[0].utm);
           /*this.projection= parseInt('327'+data.resources[0].utm);
           console.log('this.user>>>',this.projection);*/
         });
@@ -558,7 +558,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
     if(graphic   && graphic.attributes && graphic.attributes['ID_LOTE']  ){
       //  console.log('graphic.attributes>>', graphic.attributes);
-latitude=graphic.geometry.latitude;
+        latitude=graphic.geometry.latitude;
       longitude=graphic.geometry.longitude;
 
       latitude=graphic.attributes['COOR_Y'];
@@ -713,7 +713,6 @@ async createArcgisJSON(features: GestionPredios[]): Promise<any[]>{
       return Promise.all(arcgisJson);
     });
   };
-
 
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
