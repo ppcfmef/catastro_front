@@ -1,37 +1,37 @@
-<section class="container mt-4 gap-y-2.5"  [formGroup]="formEdit">
+<section class="container mt-4 gap-y-2.5" *ngIf="formEdit" [formGroup]="formEdit">
     <h3 class="subtitle-card mb-2">Datos del contribuyente</h3>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Tipo de documento</mat-label>
-        <mat-select value="0" formControlName="tipo_doc">
+        <mat-select value="0" formControlName="documentType">
             <mat-option *ngFor="let typeDoc of typeDocs" [value]="typeDoc.val"> {{typeDoc.name}}</mat-option>
         </mat-select>
     </mat-form-field>
 
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Nro de documento</mat-label>
-        <input matInput type="text">
+        <input matInput type="text" formControlName="dni">
     </mat-form-field>
 
     <ng-container  [ngSwitch]="typeDocSelectValue">
-        <ng-container *ngSwitchCase="1">
+        <ng-container *ngSwitchCase="'01'">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
                 <mat-label>Nombres</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" formControlName="name">
             </mat-form-field>
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
                 <mat-label>Apellido paterno</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" formControlName="paternalSurname">
             </mat-form-field>
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12">
                 <mat-label>Apellido materno</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" formControlName="maternalSurname">
             </mat-form-field>
         </ng-container>
     
-        <ng-container *ngSwitchCase="2">
+        <ng-container *ngSwitchCase="'06'">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
                 <mat-label>Contibuyente</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" formControlName="descriptionOwner">
             </mat-form-field>
         </ng-container>
     </ng-container>
@@ -39,80 +39,76 @@
    
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Teléfono</mat-label>
-        <input matInput type="text">
+        <input matInput type="text"  formControlName="phone">
     </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-8/12">
         <mat-label>Email</mat-label>
-        <input matInput type="text">
+        <input matInput type="text"  formControlName="email">
     </mat-form-field>
 
 
     <h3 class="subtitle-card mb-2 mt-6">Domicilio Fiscal</h3>
+    <ng-container formGroupName="address">
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Ubigeo</mat-label>
+            <input matInput type="text" formControlName="ubigeo">
+        </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Ubigeo</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
+            <mat-label>Tipo de Habilitación</mat-label>
+            <input matInput type="text" formControlName="uuType">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
+            <mat-label>Código de Habilitación</mat-label>
+            <input matInput type="text" formControlName="codUu">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
+            <mat-label>Nombre de Habilitación</mat-label>
+            <input matInput type="text" formControlName="habilitacionName">
+        </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
-        <mat-label>Tipo de Habilitación</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
-        <mat-label>Código de Habilitación</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
-        <mat-label>Nombre de Habilitación</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
+            <mat-label>Tipo vía</mat-label>
+            <input matInput type="text" formControlName="streetType">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Codigo vía</mat-label>
+            <input matInput type="text" formControlName="codStreet">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-7/12">
+            <mat-label>Nombre de vía</mat-label>
+            <input matInput type="text" formControlName="streetName">
+        </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
-        <mat-label>Tipo vía</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Codigo vía</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-7/12">
-        <mat-label>Nombre de vía</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Mz. urbana</mat-label>
+            <input matInput type="text" formControlName="urbanMza">
+        </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Mz. urbana</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Lt. urbano</mat-label>
+            <input matInput type="text" formControlName="urbanLotNumber">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
+            <mat-label>Nro. Bloque</mat-label>
+            <input matInput type="text" formControlName="block">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-1/12 pr-2.5">
+            <mat-label>Interior</mat-label>
+            <input matInput type="text" formControlName="indoor">
+        </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Lt. urbano</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
-        <mat-label>Nro. cuadra vía</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-1/12 pr-2.5">
-        <mat-label>Lado</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Nro. Puerta</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
-        <mat-label>Nro. Dpto</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12">
-        <mat-label>Interior</mat-label>
-        <input matInput type="text">
-    </mat-form-field>
-
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Piso</mat-label>
+            <input matInput type="text" formControlName="floor">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+            <mat-label>Km</mat-label>
+            <input matInput type="text" formControlName="km">
+        </mat-form-field>
+    </ng-container>
     <div class="w-full flex items-center justify-end">
-        <button class="btn-confirm mr-4" (click)="emitShowFormEdit()"> Guardar</button>
+        <button class="btn-confirm mr-4" (click)="saveForm()"> Guardar</button>
         <button class="btn-danger" (click)="emitShowFormEdit()">Cancelar</button>
     </div>
 </section>

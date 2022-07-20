@@ -1,3 +1,7 @@
 <section class="container">
-    <app-land-summary-table></app-land-summary-table>
+    <app-land-summary-table *ngIf="landRecords"
+    [dataSource]="landRecords"
+    [length]="tableLength"
+    (seledRecord)="seledRecord($event)"
+    ></app-land-summary-table>
 </section>

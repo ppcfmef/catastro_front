@@ -85,6 +85,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   onShowLandsTable(landOwner: LandOwner): void {
     this.showLandsTable = true;
+    this.showLandsMap = false;
     this.landOwner = landOwner;
     this.landRecordService.getAllBy(landOwner.id).subscribe(
       response => this.dataSourceLands = response.results
@@ -92,8 +93,9 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    this.showLandsMap = true;
+    this.showLandsMap = false;
     this.landRecord = landRecord;
+    setTimeout(()=> { this.showLandsMap = true; }, 1000);
   }
 
   private createFormFilters(): void {
