@@ -236,19 +236,19 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
     this._landRegistryMapService.landIn$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: LandRegistryMap)=>{
 
-     if(data && (data?.status===0 || !data?.status))
-        {
 
-            const where=" UBIGEO='"+data.ubigeo+"'";
-            setTimeout(() => {this.zoomToUbigeo(where); }, 1500);
-        }
-
-        else if(data?.status===1 && data?.latitude && data?.longitude ){
+        if(  data?.latitude && data?.longitude ){
             this.addPoint(data.latitude,data.longitude,this.simpleMarkerSymbol);
             if(this.view){
-                this.view.center= [data.latitude,data.longitude];
-                this.view.zoom=15;
+                this.view.center= [data.longitude,data.latitude];
+                this.view.zoom=19;
             }
+        }
+
+        else if(data && data.ubigeo){
+
+            const where=" UBIGEO='"+data.ubigeo+"'";
+            setTimeout(() => {this.zoomToUbigeo(where); }, 1000);
         }
     });
 
@@ -289,6 +289,8 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         GroupLayer,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         BasemapGallery,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        MapImageLayer
       ] = await loadModules([
         'esri/Map',
         'esri/views/MapView',
@@ -303,6 +305,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         'esri/widgets/Expand',
         'esri/layers/GroupLayer',
         'esri/widgets/BasemapGallery',
+        'esri/layers/MapImageLayer'
 
       ]);
 
@@ -419,6 +422,10 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         }
     };
 
+
+
+
+
       this.layersInfo.reverse().map((l) => {
         const options = {
             url: `${l.urlBase}/${l.idServer}`,
@@ -439,10 +446,66 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
 
 
-        this.map.add(l.featureLayer);
+        //this.map.add(l.featureLayer);
+      });
+
+      this.groupLayers.reverse().map((g) => {
+        const fs=g.children.map(c=>   this.layersInfo.find(l=>l.id===c)?.featureLayer );
+
+        const demographicGroupLayer = new GroupLayer({
+            title: g.title,
+           /* visible: true,*/
+            layers: fs,
+
+          });
+          this.map.add( demographicGroupLayer);
+
+       /* if (l.title.includes('Via'))
+        {   options['labelingInfo'] = [labelClassVias];
+        }
+        console.log(options);
+        l.featureLayer = new FeatureLayer(
+          options
+
+        );*/
+
       });
 
 
+
+
+/*
+      const imageLayer1 = new MapImageLayer({
+        url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+        sublayers: [
+            {
+              id: 0,
+              visible: false,
+              title: 'Lotes  Zona 17',
+            }, {
+              id: 1,
+              visible: true,
+              title: 'Lotes Poligono  Zona 17',
+            }, {
+              id: 5,
+              visible: true,
+              title: 'Vias  Zona 17',
+            }
+          ]
+      }
+
+        );
+        const imageLayer2 = new MapImageLayer(
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer'
+            );
+
+      const imageLayer3 = new MapImageLayer(
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer'
+        );
+        this.map.add(imageLayer1);
+        this.map.add(imageLayer2);
+
+        this.map.add(imageLayer3);*/
       const cs1 = new SpatialReference({
         wkid: 32717 //PE_GCS_ED_1950
       });
