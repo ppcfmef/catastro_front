@@ -40,7 +40,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     /*projection: number=32717;*/
     proj4Catalog= 'EPSG';
 
-    proj4Wkid=32718;
+    proj4Wkid=32717;
     proj4GestionPrediosWkid=4326;
 
     /*proj4ScrWkid=4326;*/
@@ -235,15 +235,20 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
   ngOnInit(): void {
 
     this._landRegistryMapService.landIn$.pipe(takeUntil(this._unsubscribeAll)).subscribe((data: LandRegistryMap)=>{
-
+        console.log(data);
 
         if(  data?.latitude && data?.longitude ){
+
+            /*this.proj4Wkid;*/
+
             this.addPoint(data.latitude,data.longitude,this.simpleMarkerSymbol);
             if(this.view){
                 this.view.center= [data.longitude,data.latitude];
                 this.view.zoom=19;
             }
         }
+
+
 
         else if(data && data.ubigeo){
 
@@ -322,21 +327,26 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         map: this.map,
       };
       this.view = new MapView(mapViewProperties);
-      this.layerList = new LayerList({
+
+
+      const layerList = new LayerList({
           view: this.view,
+          //container: document.getElementById('maplayerList')
       });
 
 
       const layerListExpand = new Expand({
         view: this.view,
-        content: this.layerList,
-        id: 'maplayerList'
+        content: layerList,
+        id: 'maplayerListExpand',
+        group: 'bottom-right'
       });
-      this.view.ui.add(layerListExpand, {
-        position: 'top-right',
-      });
+
+
+
       const basemapGallery = new BasemapGallery({
         view: this.view,
+        //container: document.getElementById('mapGalleryBase')
       });
 
       basemapGallery.activeBasemap ='satellite';
@@ -345,18 +355,26 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
       const baseMapGalleryExpand = new Expand({
         view: this.view,
         content: basemapGallery,
-        id: 'mapGalleryBase'
+        id: 'mapGalleryBaseExpand',
+        group: 'bottom-right'
       });
 
 
-      const graphicsLayer = new GraphicsLayer();
+      //const graphicsLayer = new GraphicsLayer();
 
 
-
-      this.view.ui.add(baseMapGalleryExpand, {
+     const toolbar= document.getElementById(
+        'toolbar'
+      );
+      this.view.ui.add([toolbar], {
         position: 'top-right',
       });
 
+
+
+      this.view.ui.add([baseMapGalleryExpand,layerListExpand], {
+        position: 'top-right',
+      });
 
       this.featureZonaUrbana= new FeatureLayer(this.urlSearchZonaUrbana);
       this.featureDistrito= new FeatureLayer(this.urlSearchDistrito);

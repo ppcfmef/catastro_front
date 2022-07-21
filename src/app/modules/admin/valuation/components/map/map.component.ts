@@ -565,9 +565,9 @@ async descargar(params: any): Promise<void>{
    query.where =`UBIGEO='${ubigeo}'`;
 
    query.outSpatialReference = 4326;
-   query.outFields = '*';
-   query.returnGeometry = false;
-   query.returnDistinctValues = true;
+   //query.outFields = '*';
+   query.returnGeometry = true;
+   //query.returnDistinctValues = true;
    const features = await MapUtils.queryFeaturesInLayer(featureLayer,query);
    console.log('features>>',features);
    this._fuseSplashScreenService.show(0);
