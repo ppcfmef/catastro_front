@@ -14,8 +14,7 @@ export class NewLandContainerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  receivedShowFormEdit(event){
-    console.log(event);
+  receivedShowFormEdit(event): void{
     this.showEditForm = event;
   }
 
