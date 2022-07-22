@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { LandRecordService } from '../../services/land-record.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
@@ -17,7 +16,6 @@ export class LandDetailSummaryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.landRecordService.getLocalLandRecord();
     this.landRegistryMapService.landIn$
     .subscribe(result => this.landRecord = result);
   }
