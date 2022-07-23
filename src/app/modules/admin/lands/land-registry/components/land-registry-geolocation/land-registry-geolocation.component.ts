@@ -342,8 +342,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         group: 'bottom-right'
       });
 
-
-
       const basemapGallery = new BasemapGallery({
         view: this.view,
         //container: document.getElementById('mapGalleryBase')

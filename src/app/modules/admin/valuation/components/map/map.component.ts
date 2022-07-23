@@ -43,6 +43,8 @@ export class MapComponent implements OnInit,AfterViewInit {
     proj4ScrWkid=4326;
     proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
     proj4DestKey=this.proj4Catalog + ':' + String(this.proj4DestWkid);
+    // eslint-disable-next-line max-len
+    proj4DestWKT='PROJCS["WGS_1984_UTM_Zone_17S",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-81],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["Meter",1]]';
     reader: any;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     TITLE_DESCARGA= 'Arancel';
@@ -427,6 +429,7 @@ export class MapComponent implements OnInit,AfterViewInit {
             title: l.title,
             definitionExpression:l.definitionExpression,
             outFields: ['*'],
+
             //popupTemplate:popupTemp
           });
 
@@ -544,6 +547,11 @@ console.log('params',params);
 
 async descargar(params: any): Promise<void>{
   /*console.log(params);*/
+  const [
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    FeatureLayer,
+  ] = await loadModules(['esri/layers/FeatureLayer',]);
+
   this.proj4DestWkid=params.projection;
   this.proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
   this.nameZip =`${params.namedistrict}.zip`;
@@ -554,12 +562,22 @@ async descargar(params: any): Promise<void>{
           'polyline': 'polylines',
           'line': 'lines'
       },
-      wkt :4326
+      wkt :this.proj4DestWKT
   };
   /*console.log(this.layersInfo.find(e=> e.title.includes( this.TITLE_DESCARGA) && e.projection===params.projection ));*/
-  const featureLayer = this.layersInfo.find(e=> e.idServer===0 && e.projection===params.projection ).featureLayer;
-  console.log('this.featureLayer>>>',featureLayer);
-  const query = featureLayer.createQuery();
+  const _layer = this.layersInfo.find(e=> e.idServer===0 && e.projection===params.projection );
+  const _featureLayer = new FeatureLayer(_layer.urlBase+'/'+_layer.idServer);
+  /*l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.idServer}`, {
+    title: l.title,
+    definitionExpression:l.definitionExpression,
+    outFields: ['*'],
+
+    //popupTemplate:popupTemp
+  });*/
+
+
+  console.log('this.featureLayer>>>',_featureLayer);
+  const query = _featureLayer.createQuery();
   const ubigeo=params.district;
    /*query.outSpatialReference = 4326;*/
    query.where =`UBIGEO='${ubigeo}'`;
@@ -568,7 +586,7 @@ async descargar(params: any): Promise<void>{
    //query.outFields = '*';
    query.returnGeometry = true;
    //query.returnDistinctValues = true;
-   const features = await MapUtils.queryFeaturesInLayer(featureLayer,query);
+   const features = await MapUtils.queryFeaturesInLayer(_featureLayer,query);
    console.log('features>>',features);
    this._fuseSplashScreenService.show(0);
    this.createGeoJSON(features).then((data)=>{
