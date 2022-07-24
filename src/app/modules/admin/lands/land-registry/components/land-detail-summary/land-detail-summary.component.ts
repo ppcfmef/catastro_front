@@ -1,27 +1,28 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
-import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
 @Component({
   selector: 'app-land-detail-summary',
   templateUrl: './land-detail-summary.component.html',
   styleUrls: ['./land-detail-summary.component.scss']
 })
-export class LandDetailSummaryComponent implements OnInit {
+export class LandDetailSummaryComponent implements OnInit, OnChanges, OnDestroy {
   @Output() showFormEdit = new EventEmitter<boolean>();
-  landRecord: LandRegistryMap;
+  @Input() landRecord: LandRegistryMap;
 
-  constructor(
-    private landRegistryMapService: LandRegistryMapService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.landRegistryMapService.landIn$
-    .subscribe(result => this.landRecord = result);
   }
 
   emitShowFormEdit(): void{
-    this.showFormEdit.emit(false);
+    this.showFormEdit.emit(true);
   }
 
+  ngOnDestroy(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('>>>>app-land-detail-summary', this.landRecord);
+  }
 }

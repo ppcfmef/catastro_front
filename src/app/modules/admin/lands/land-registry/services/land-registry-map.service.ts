@@ -1,8 +1,6 @@
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
-import { LandMapIn } from '../interfaces/land-map-in.interface';
 
 
 
@@ -11,8 +9,8 @@ import { LandMapIn } from '../interfaces/land-map-in.interface';
 })
 export class LandRegistryMapService {
 
-  public _landIn = new BehaviorSubject<LandRegistryMap>(null);
-  public _landOut: Subject<LandRegistryMap> = new Subject();
+  public _landIn = new Subject<LandRegistryMap>();
+  public _landOut = new Subject<LandRegistryMap>();
   public _ubigeo: Subject<string> = new Subject();
 
   public _gestionPredios: Subject<LandRegistryMap> = new Subject();
@@ -26,7 +24,7 @@ export class LandRegistryMapService {
     }
 
     get landIn$(): Observable<LandRegistryMap>{
-        return this._landIn;
+        return this._landIn.asObservable();
     }
 
 

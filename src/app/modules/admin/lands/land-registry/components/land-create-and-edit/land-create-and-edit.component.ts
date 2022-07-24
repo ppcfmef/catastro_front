@@ -1,54 +1,62 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
-import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
 @Component({
   selector: 'app-land-create-and-edit',
   templateUrl: './land-create-and-edit.component.html',
   styleUrls: ['./land-create-and-edit.component.scss']
 })
-export class LandCreateAndEditComponent implements OnInit {
+export class LandCreateAndEditComponent implements OnChanges {
 
+  @Input() landRecord: LandRegistryMap;
+  @Input() landMapRecord: LandRegistryMap;
   @Output() showFormEdit = new EventEmitter<boolean>();
+  landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
-  landRecord: LandRegistryMap;
 
   constructor(
-    private readonly fb: FormBuilder,
-    private landRegistryMapService: LandRegistryMapService,
+    private readonly fb: FormBuilder
   ) { }
 
-  ngOnInit(): void {
-    this.landRegistryMapService.landIn$
-    .subscribe((result) => {
-      this.landRecord = result;
-      this.createFormEdit();
-    });
-  }
-
   emitShowFormEdit(): void{
-    this.showFormEdit.emit(true);
+    this.showFormEdit.emit(false);
   }
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
-      ubigeo: [this.landRecord?.ubigeo],
-      uuType: [this.landRecord?.uuType],
-      codUu: [this.landRecord?.codUu],
-      habilitacionName: [this.landRecord?.habilitacionName],
-      codStreet: [this.landRecord?.codStreet],
-      streetType: [this.landRecord?.streetType],
-      streetName: [this.landRecord?.streetName],
-      urbanMza: [this.landRecord?.urbanMza],
-      urbanLotNumber: [this.landRecord?.urbanLotNumber],
-      block: [this.landRecord?.block],
-      indoor: [this.landRecord?.indoor],
-      floor: [this.landRecord?.floor],
-      km: [this.landRecord?.km],
-      latitude: [this.landRecord?.latitude],
-      longitude: [this.landRecord?.longitude],
+      ubigeo: [this.landMergeRecord?.ubigeo],
+      uuType: [this.landMergeRecord?.uuType],
+      codUu: [this.landMergeRecord?.codUu],
+      habilitacionName: [this.landMergeRecord?.habilitacionName],
+      codStreet: [this.landMergeRecord?.codStreet],
+      streetType: [this.landMergeRecord?.streetType],
+      streetName: [this.landMergeRecord?.streetName],
+      urbanMza: [this.landMergeRecord?.urbanMza],
+      urbanLotNumber: [this.landMergeRecord?.urbanLotNumber],
+      block: [this.landMergeRecord?.block],
+      indoor: [this.landMergeRecord?.indoor],
+      floor: [this.landMergeRecord?.floor],
+      km: [this.landMergeRecord?.km],
+      latitude: [this.landMergeRecord?.latitude],
+      longitude: [this.landMergeRecord?.longitude],
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.landMapRecord?.currentValue) {
+      // mergear los valores aceptando
+      this.landMergeRecord = this.landRecord;
+      for (const key in this.landMapRecord) {
+        if (this.landMapRecord[key]) {
+          this.landMergeRecord[key] = this.landMapRecord[key];
+        }
+      }
+      this.landMergeRecord = this.landMapRecord;
+    }else {
+      this.landMergeRecord = this.landRecord;
+    }
+    this.createFormEdit();
   }
 
 }
