@@ -14,6 +14,7 @@ export interface LandRegistryMap {
     referenceName: string;
     urbanMza: string;
     urbanLotNumber: number;
+    codStreet?: string;
     streetType: string;
     streetName: string;
     streetNameAlt: string;
