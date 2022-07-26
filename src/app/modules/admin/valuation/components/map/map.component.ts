@@ -13,6 +13,7 @@ declare let shpwrite: any;
 import { saveAs } from 'file-saver';
 import * as shp from 'shpjs';
 
+
 import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -39,7 +40,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     proj4Catalog= 'EPSG';
 
-    proj4DestWkid=32718;
+    proj4DestWkid=32717;
     proj4ScrWkid=4326;
     proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
     proj4DestKey=this.proj4Catalog + ':' + String(this.proj4DestWkid);
@@ -550,20 +551,28 @@ async descargar(params: any): Promise<void>{
   const [
     // eslint-disable-next-line @typescript-eslint/naming-convention
     FeatureLayer,
-  ] = await loadModules(['esri/layers/FeatureLayer',]);
+    proj4DestWKT,
+    shpWrite
+  ] = await loadModules(['esri/layers/FeatureLayer','dojo/text!https://epsg.io/32718.esriwkt','http://sigrid.cenepred.gob.pe/sigridv3/js/gis/dijit/Export/lib/shpwrite-0.2.6.min.js']);
 
   this.proj4DestWkid=params.projection;
   this.proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
   this.nameZip =`${params.namedistrict}.zip`;
-  const options = {
+  var options = {
       types: {
           'point': 'points',
           'polygon': 'polygons',
-          'polyline': 'polylines',
-          'line': 'lines'
+          'polyline': 'polylines'
+          //'line': 'lines',
+         // wkt :proj4DestWKT
       },
-      wkt :this.proj4DestWKT
+      wkt :proj4DestWKT
   };
+
+  options.wkt=proj4DestWKT;
+
+
+
   /*console.log(this.layersInfo.find(e=> e.title.includes( this.TITLE_DESCARGA) && e.projection===params.projection ));*/
   const _layer = this.layersInfo.find(e=> e.idServer===0 && e.projection===params.projection );
   const _featureLayer = new FeatureLayer(_layer.urlBase+'/'+_layer.idServer);
@@ -587,11 +596,30 @@ async descargar(params: any): Promise<void>{
    query.returnGeometry = true;
    //query.returnDistinctValues = true;
    const features = await MapUtils.queryFeaturesInLayer(_featureLayer,query);
-   console.log('features>>',features);
-   this._fuseSplashScreenService.show(0);
-   this.createGeoJSON(features).then((data)=>{
-    shpwrite.zip(data, options).then((content) =>{
+  
+  // this._fuseSplashScreenService.show(0);
 
+ 
+   this.createGeoJSON(features).then((geojson)=>{
+/*
+    console.log('createGeoJSON data final>>',geojson);
+    console.log('options>>',options);
+
+    var zipFile = shpWrite.zip(geojson, options);
+    if (!zipFile) {
+       
+        return;
+    }
+
+    zipFile.then( (content)=> {
+      console.log('content>>',content);
+
+  });*/
+
+
+  console.log('geojson>>',geojson);
+  shpwrite.zip(geojson, options).then((content) =>{
+      console.log('content>>',content);
             saveAs(content, this.nameZip);
             this._fuseSplashScreenService.hide();
       });
@@ -647,7 +675,7 @@ const geojson = {
 const type= 'shapefile';
 let featureID = 1;
 
-features.forEach((feature)=>{
+features.forEach( async (feature)=>{
   const attr = feature.attributes;
   if (typeof attr.feature === 'object') {
     delete attr.feature;
@@ -665,12 +693,26 @@ features.forEach((feature)=>{
   }
 
   if (feature.geometry) {
+   /* const g= await this.projectGeometry(feature.geometry);
+    feature.geometry=g;*/
 
-      const geoFeature = arcgisToGeoJSON(feature);
+/*
+    const g= await this.projectGeometry(feature.geometry);
+    feature.geometry=g;*/
 
+    //console.log('g>>',g);
 
-    const geom = geoFeature.geometry;
-    // split multi-polygon/linestrings geojson into multiple single polygons/linstrings
+  //  let g= await this.projectGeometry(feature.geometry);
+   // console.log('g>>',g);
+    //feature.geometry = g
+    let geoFeature = arcgisToGeoJSON(feature);
+
+   // console.log('geoFeature>>',geoFeature);
+
+    //geoFeature.geometry =g;
+    //const geom = geoFeature.geometry;
+    let geom = geoFeature.geometry;
+
     if ((type === 'shapefile') && (geom.type === 'MultiPolygon' || geom.type === 'MultiLineString')) {
         const props = feature.properties;
         for (let i = 0, len = geom.coordinates.length; i < len; i++) {
@@ -685,7 +727,6 @@ features.forEach((feature)=>{
             };
             geojson.features.push(feat);
         }
-
         // not a multi-polygon, so just push it
     } else {
        geoFeature.id = featureID++;
@@ -722,6 +763,7 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
   /* eslint-enable @typescript-eslint/naming-convention */
 
   const outSpatialReference= new SpatialReference(this.proj4DestWkid);
+
   return projection.load().then(()=>{
     features.forEach((feature)=>{
       const attr = feature.properties;
@@ -738,8 +780,6 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
           const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
           geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
           arcgisJson.push(geoFeature);
-
-
 
     }
 
@@ -806,12 +846,32 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
       // eslint-disable-next-line @typescript-eslint/naming-convention
       SpatialReference,
        // eslint-disable-next-line @typescript-eslint/naming-convention
-       Point
+       Point,
+       // eslint-disable-next-line @typescript-eslint/naming-convention
+       projection,
     ] = await loadModules([
 
       'esri/geometry/SpatialReference',
       'esri/geometry/Point',
+      'esri/geometry/projection',
     ]);
+
+
+/*
+  const outSpatialReference= new SpatialReference(this.proj4DestWkid);
+  await projection.load();
+  const point = projection.project(geometry, outSpatialReference);
+
+  return point;
+
+ 
+*/
+
+
+
+
+
+
 
     let pt = null;
         let newPt = null;
@@ -822,7 +882,10 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
         }
     switch (type) {
     case 'point':
+
         newPt = this.projectPoint(geometry);
+
+
         geometry = new Point({
             x: newPt.x,
             y: newPt.y,
@@ -838,7 +901,9 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
             const len2 = paths[k].length;
             for (let j = 0; j < len2; j++) {
                 pt = geometry.getPoint(k, j);
+                //console.log('oldPt',pt)
                 newPt = this.projectPoint(pt);
+                //console.log('newPt',newPt)
                 geometry.setPoint(k, j, new Point({
                     x: newPt.x,
                     y: newPt.y,
@@ -857,8 +922,20 @@ async createArcgisJSON(features: any[]): Promise<any[]>{
 }
 
 
+
+
+
+
 projectPoint(point: any ): any{
- return proj4(proj4.defs[this.proj4SrcKey],proj4.defs[this.proj4DestKey] ).forward(point);
+
+  /*console.log('this.proj4SrcKey>>',this.proj4SrcKey)
+  console.log('proj4.defs[this.proj4SrcKey]>>', proj4.defs[this.proj4SrcKey])
+
+  console.log('this.proj4SrcKey>>',this.proj4DestKey)*/
+ // console.log('proj4.defs[this.proj4DestKey]>>', proj4.defs['EPSG:32718','+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs'])
+  /*proj4.defs("EPSG:32717","+proj=utm +zone=17 +south +datum=WGS84 +units=m +no_defs");*/
+ //const l= proj4.defs("EPSG:32718","+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs");
+ return proj4(proj4.defs[this.proj4SrcKey], '+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs').forward(point);
 }
 
 
