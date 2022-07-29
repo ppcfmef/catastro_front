@@ -535,7 +535,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         let latitude=graphic.latitude;
 
 
-        this.addPoint(latitude,longitude,this.simpleMarkerSymbolUndefined);
+
         const point = { //Create a point
             type: 'point',
             longitude : longitude,
@@ -552,7 +552,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
                 landRegistryMapModel.latitude = latitude;
                 landRegistryMapModel.longitude = longitude;
                 landRegistryMapModel.ubigeo = ubigeo;
-                this._landRegistryMapService.landOut=landRegistryMapModel;
+                //this._landRegistryMapService.landOut=landRegistryMapModel;
                   this.view.hitTest(event).then((response) => {
 
                     /*console.log('response.results>>>',response.results);*/
@@ -572,29 +572,38 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
     graphic = results[resultsLen].graphic;
     //console.log('graphic>>', graphic);
 
-    if(graphic   && graphic.attributes && graphic.attributes['ID_LOTE']  ){
-      //  console.log('graphic.attributes>>', graphic.attributes);
-        latitude=graphic.geometry.latitude;
-      longitude=graphic.geometry.longitude;
+            if(graphic   && graphic.attributes && graphic.attributes['ID_LOTE']  ){
+            //  console.log('graphic.attributes>>', graphic.attributes);
+                latitude=graphic.geometry.latitude;
+            longitude=graphic.geometry.longitude;
 
-      latitude=graphic.attributes['COOR_Y'];
-      longitude=graphic.attributes['COOR_X'];
-      const lote =graphic.attributes;
-      const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
-      _landRegistryMapModel.loteToLandRegistryMapModel(lote);
-      this._landRegistryMapService.landOut=landRegistryMapModel;
-      const _gestionPredio=_landRegistryMapModel.getGestionPredios();
-      this.addPoint(latitude,longitude,this.simpleMarkerSymbol);
-    }
-}
+            latitude=graphic.attributes['COOR_Y'];
+            longitude=graphic.attributes['COOR_X'];
+            const lote =graphic.attributes;
+            const _landRegistryMapModel: LandRegistryMapModel = new LandRegistryMapModel();
+            _landRegistryMapModel.loteToLandRegistryMapModel(lote);
+
+            const _gestionPredio=_landRegistryMapModel.getGestionPredios();
+            this._landRegistryMapService.landOut=_landRegistryMapModel;
+            this.addPoint(latitude,longitude,this.simpleMarkerSymbol);
+            }
+
+
+        }
 
 
 
+                    }
+
+                    else{
+                        this._landRegistryMapService.landOut=landRegistryMapModel;
+                        this.addPoint(latitude,longitude,this.simpleMarkerSymbolUndefined);
                     }
                   });
 
 
             }
+
 
 
 
