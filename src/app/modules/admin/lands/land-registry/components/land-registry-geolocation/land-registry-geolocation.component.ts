@@ -90,7 +90,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
           title: 'Lotes Zona 17',
           id: 0,
           idServer:1,
-          /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
           urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
           order: 0,
           featureLayer: null,
@@ -103,7 +102,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             title: 'Lotes Poligono Zona 17',
             id: 1,
             idServer:5,
-            /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             order: 0,
             featureLayer: null,
@@ -130,7 +128,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             title: 'Lotes Zona 18',
             id: 3,
             idServer:1,
-            /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
             featureLayer: null,
@@ -143,7 +140,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             title: 'Lotes Poligono Zona 18',
             id: 4,
             idServer:5,
-            /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
             featureLayer: null,
@@ -168,7 +164,6 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
             title: 'Lotes Zona 19',
             id: 6,
             idServer:1,
-            /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
             featureLayer: null,
@@ -453,15 +448,11 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         if (l.title.includes('Via'))
         {   options['labelingInfo'] = [labelClassVias];
         }
-        console.log(options);
+        //console.log(options);
         l.featureLayer = new FeatureLayer(
           options
 
         );
-
-
-
-
         //this.map.add(l.featureLayer);
       });
 
@@ -470,23 +461,10 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         const demographicGroupLayer = new GroupLayer({
             title: g.title,
-           /* visible: true,*/
             layers: fs,
-
           });
           this.map.add( demographicGroupLayer);
-
-       /* if (l.title.includes('Via'))
-        {   options['labelingInfo'] = [labelClassVias];
-        }
-        console.log(options);
-        l.featureLayer = new FeatureLayer(
-          options
-
-        );*/
-
       });
-
 
 
 

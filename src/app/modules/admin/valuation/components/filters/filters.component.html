@@ -30,7 +30,7 @@
     <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
         <mat-label >Distrito</mat-label>
 
-        <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDist($event)" >
+        <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDist()" >
             <ng-container *ngFor="let district of districts$ | async">
                 <mat-option [value]="district.code">{{ district.name }}</mat-option>
             </ng-container>
@@ -52,39 +52,7 @@
     <h2 class="mt-6">Carga / Descarga</h2>
 
     <div class="w-full flex flex-row justify-between">
-        <div class="flex flex-col w-6/12 items-center p-3">
-            <label for="uploadfile"
-                   class="flex flex-col w-48 sm:w-30  m-1 p-2 shadow-md rounded-2xl cursor-pointer bg-card justify-center">
-                <div class="aspect-w-9 aspect-h-6 ">
-                    <div class="flex items-center justify-center">
-                        <div class="relative">
-                            <mat-icon *ngIf="fileName === null" class="notranslate icon-size-14 text-hint"
-                                      svgIcon="iconsmind:file_upload"></mat-icon>
-                            
-                                      <mat-icon *ngIf="fileName" class="notranslate icon-size-14 text-hint"
-                                      svgIcon="iconsmind:file"></mat-icon>          
-    
-    
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                    <div class="mat-tooltip-trigger truncate c-confirm">{{ fileName ? fileName : "Seleccionar"}}</div>
-    
-                </div>
-    
-                <input accept=".zip" type="file" (change)="uploadFile($event)" hidden name="uploadfile"
-                       id="uploadfile" #uploadfile>
-    
-            </label>
-            <button class=" w-full mat-focus-indicator mat-flat-button mat-button-base bg-confirm "
-                    (click)="subirDato()" [disabled]="isDisabled" >
-                
-                <span class="ml-2 mr-1 w-full c-white">Cargar</span>
-            </button>
-        </div>
-    
+
         <div class="flex flex-col w-6/12 items-center p-3">
             <div class="flex flex-col w-48 sm:w-30  m-1 p-2 shadow-md rounded-2xl  bg-card justify-center">
                 <div class="aspect-w-9 aspect-h-6 ">
@@ -92,29 +60,64 @@
                         <div class="relative">
                             <mat-icon class="notranslate icon-size-14 text-hint"
                                       svgIcon="iconsmind:file_download"></mat-icon>
-    
-    
+
+
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                     <div class="mat-tooltip-trigger truncate text-primary-500"> &nbsp;</div>
-    
+
                 </div>
             </div>
-            <div class="flex flex-col items-center justify-between">           
+            <div class="flex flex-col items-center justify-between">
                 <div>
                     <button class="mat-focus-indicator mat-flat-button mat-button-base bg-success"
-                        (click)="descargar()" [disabled]="isDisabledDescargar" >                        
+                        (click)="descargar()" [disabled]="isDisabledDescargar" >
                         <span class="ml-2 mr-1 w-full c-white">Descargar</span>
                     </button>
                 </div>
             </div>
         </div>
+
+        <div class="flex flex-col w-6/12 items-center p-3">
+            <label for="uploadfile"
+                   class="flex flex-col w-48 sm:w-30  m-1 p-2 shadow-md rounded-2xl cursor-pointer bg-card justify-center">
+                <div class="aspect-w-9 aspect-h-6 ">
+                    <div class="flex items-center justify-center">
+                        <div class="relative">
+                            <mat-icon *ngIf="!fileName " class="notranslate icon-size-14 text-hint"
+                                      svgIcon="iconsmind:file_upload"></mat-icon>
+
+                                      <mat-icon *ngIf="fileName" class="notranslate icon-size-14 text-hint"
+                                      svgIcon="iconsmind:file"></mat-icon>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                    <div class="mat-tooltip-trigger truncate c-confirm">{{ fileName ? fileName : "Seleccionar"}}</div>
+
+                </div>
+
+                <input accept=".zip" type="file" (change)="uploadFile($event)" hidden name="uploadfile"
+                       id="uploadfile"  #uploadfile>
+
+            </label>
+            <button class=" w-full mat-focus-indicator mat-flat-button mat-button-base bg-confirm "
+                    (click)="subirDato()" [disabled]="isDisabled" >
+
+                <span class="ml-2 mr-1 w-full c-white">Cargar</span>
+            </button>
+        </div>
+
+
     </div>
 
 
-    
+
 
 
 </div>

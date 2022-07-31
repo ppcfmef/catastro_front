@@ -17776,6 +17776,8 @@ module.exports = function(gj, options) {
         var zip = new JSZip(),
             layers = zip.folder(options && options.folder ? options.folder : 'layers');
 
+            s = options && options.wkt ? options.wkt : prj;
+
         [geojson.point(gj), geojson.line(gj), geojson.polygon(gj)]
             .forEach(function(l) {
             if (l.geometries.length && l.geometries[0].length) {
@@ -17791,7 +17793,7 @@ module.exports = function(gj, options) {
                         layers.file(fileName + '.shp', files.shp.buffer, { binary: true });
                         layers.file(fileName + '.shx', files.shx.buffer, { binary: true });
                         layers.file(fileName + '.dbf', files.dbf.buffer, { binary: true });
-                        layers.file(fileName + '.prj', prj);
+                        layers.file(fileName + '.prj', s);
                     });
             }
         });

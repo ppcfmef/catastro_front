@@ -2,7 +2,12 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 //const host = 'https://813a-161-132-234-232.ngrok.io/';
-const host ='http://localhost:8001/';
+//const host = 'http://54.83.44.96/';const host ='http://localhost:8001/';
+
+/*const host = 'https://c37b-38-25-18-121.ngrok.io/';*/
+
+const host = 'http://54.83.44.96/';
+
 export const environment = {
     production: false,
     url: host,
