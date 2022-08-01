@@ -19,6 +19,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     {val: '06', name:'RUC'},
   ];
 
+  showAddres = false;
+
   constructor(
     private fb: FormBuilder,
     private alert: MessageProviderService,

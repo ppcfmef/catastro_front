@@ -1,7 +1,15 @@
-<section class="container">
-    <app-land-summary-table *ngIf="landRecords"
-    [dataSource]="landRecords"
-    [length]="tableLength"
-    (seledRecord)="seledRecord($event)"
-    ></app-land-summary-table>
+<section *ngIf="!landRecords" class="mt-4 flex justify-center">
+    <button class="btn-success box-shadow-z1"> Nuevo predio
+            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        </button>
+</section>
+<section *ngIf="landRecords" class="container">
+        <button  class="add-container" >
+            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        </button>
+        <app-land-summary-table
+        [dataSource]="landRecords"
+        [length]="tableLength"
+        (seledRecord)="seledRecord($event)"
+        ></app-land-summary-table>
 </section>

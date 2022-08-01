@@ -14,6 +14,8 @@ export class LandCreateAndEditComponent implements OnChanges {
   @Output() showFormEdit = new EventEmitter<boolean>();
   landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
+  title: string;
+  isEdit = false; //evalua si es para editar o añadir predio
 
   constructor(
     private readonly fb: FormBuilder
@@ -56,6 +58,13 @@ export class LandCreateAndEditComponent implements OnChanges {
     }else {
       this.landMergeRecord = this.landRecord;
     }
+    // Generar el texto del titulo e icono en funcion de evento
+    if(this.isEdit){
+      this.title = 'Editar Predio';
+    }else{
+      this.title = 'Añadir Predio';
+    }
+    
     this.createFormEdit();
   }
 
