@@ -150,6 +150,7 @@ export class FiltersComponent implements OnInit {
     subirDato(): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.params.fileToUpload = this.fileToUpload;
+        console.log(this.params.fileToUpload);
         this.cargarEventEmmiterr.emit(this.params);
     }
 }

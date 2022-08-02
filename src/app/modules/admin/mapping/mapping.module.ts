@@ -5,7 +5,11 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
-    {path: '', component: MappingComponent}
+    {path: '', component: MappingComponent},
+    {
+        path: 'geovisor',
+        loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
+    }
 ];
 
 @NgModule({

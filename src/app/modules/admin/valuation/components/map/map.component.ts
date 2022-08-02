@@ -510,18 +510,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             MapUtils.zoomToFeature(this.view, layerDistrito, where);
 
             this._fuseSplashScreenService.hide();
-            /*
-         const query = this.featureLayer.createQuery();
-          query.where = where;
-          query.outSpatialReference = this.view.spatialReference;
 
-          this.featureLayer.queryExtent(query).then( (response) => {
-              this._fuseSplashScreenService.hide();
-            this.view.goTo(response.extent ).catch( (error)=> {
-               //console.error(error);
-
-            });
-          });*/
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -788,7 +777,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
         });
     }
-
 
 
 }
