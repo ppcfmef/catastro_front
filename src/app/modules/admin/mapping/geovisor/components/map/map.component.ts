@@ -116,7 +116,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                 FeatureTable,
                 Popup,
                 GroupLayer,
-                Home
+                Home,
+                Print
+
+
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -140,14 +143,20 @@ export class MapComponent implements OnInit, AfterViewInit {
                 'esri/widgets/Popup',
                 'esri/layers/GroupLayer',
                 'esri/widgets/Home',
+
+                'esri/widgets/Print',
             ]);
             /* eslint-enable @typescript-eslint/naming-convention */
+
+            const screenshotDiv=document.getElementById('screenshotDiv');
 
             const mapProperties = {
                 basemap: 'streets-vector',
             };
 
             this.map = new Map(mapProperties);
+
+
 
             const mapViewProperties = {
                 container: this.mapViewEl.nativeElement,
@@ -158,8 +167,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
             this.view = new MapView(mapViewProperties);
 
+ 
+
+
             const searchWidget = new Search({
                 view: this.view,
+                container:'searchWidget'
             });
 
             const filterElement = document.getElementById('filterElement');
@@ -185,17 +198,36 @@ export class MapComponent implements OnInit, AfterViewInit {
 
             const layerList = new LayerList({
                 view: this.view,
+                id:'layerList',
+              
             });
 
             const layerListExpand = new Expand({
                 view: this.view,
                 content: layerList,
-                id: 'maplayerList',
+                id: 'maplayerListExpand',
+                container: "layerListExpand",
                 group: 'bottom-right',
             });
 
             const basemapGallery = new BasemapGallery({
                 view: this.view,
+                id:'basemapGallery',
+            });
+
+
+            const legend = new Legend({
+                view: this.view
+              });
+              
+
+
+            const legendExpand = new Expand({
+                view: this.view,
+                content: legend,
+                id: 'legendExpand',
+                container: "legendExpand",
+                group: 'bottom-right',
             });
 
             basemapGallery.activeBasemap = 'satellite';
@@ -203,28 +235,28 @@ export class MapComponent implements OnInit, AfterViewInit {
             const baseMapGalleryExpand = new Expand({
                 view: this.view,
                 content: basemapGallery,
-                id: 'mapGalleryBase',
+                container: 'baseMapGalleryExpand',
                 group: 'bottom-right',
             });
 
             const loadElement = document.getElementById('loadElement');
 
-          /*  this.view.ui.add(searchWidget, {
-                position: 'top-left',
-                index: 2,
-            });*/
-
 
             const homeBtn = new Home({
                 view: this.view
               });
-
-            this.view.ui.add([baseMapGalleryExpand, layerListExpand,homeBtn,searchWidget], {
-                position: 'top-trailing',
+              
+             // this.view.ui.add( [baseMapGalleryExpand],{})
+            this.view.ui.add([baseMapGalleryExpand, layerListExpand,legendExpand], {
+                position: 'top-right',
             });
-           /* this.view.ui.add(, {
+            this.view.ui.add([homeBtn], {
                 position: 'top-left',
-            });*/
+            });
+            
+            this.view.ui.add(searchWidget,{position:'manual'})
+
+          
 
             //this.view.ui.remove('zoom'); // Remover el boton Zoom;
 /*
@@ -315,23 +347,28 @@ export class MapComponent implements OnInit, AfterViewInit {
                 };
 
                 this.buscar(params);
+
+
+                const  print = new Print({
+                    view: this.view,
+                    // specify your own print service
+                    printServiceUrl:
+                      "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                  });
+
+
+                  //this.view.ui.add(print, "top-right");
+
+                 // this.view.ui.add(screenshotDiv, "top-right");
+
+
+         
+
             });
 
-            /* const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
+          
 
-            const searchElement = document.getElementById('searchElement');
-
-            const searchExpand = new Expand({
-                view: this.view,
-                content: searchElement,
-                declaredClass: 'search',
-            });
-
-            this.view.ui.add(layerListExpand, {
-                position: 'top-right',
-            });
-
-            /*return this.view;*/
+           
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -343,6 +380,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         const where = `UBIGEO='${ubigeo}'`;
         this.zoomToUbigeo(where);
     }
+
 
 
     async zoomToUbigeo(where: string): Promise<any> {
@@ -369,4 +407,13 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
     }
 
+    
+    takeFhoto(){
+
+        this.view.takeScreenshot().then((screenshot)=> {
+            let imageElement:any = document.getElementById("screenshotImage");
+            console.log('screenshot.dataUrl>>',screenshot.dataUrl)
+            imageElement.src = screenshot.dataUrl;
+        });
+    }
 }
