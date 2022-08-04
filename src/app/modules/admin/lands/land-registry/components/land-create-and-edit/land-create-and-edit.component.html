@@ -1,5 +1,7 @@
 <section class="container" *ngIf="formEdit" [formGroup]="formEdit">
-    <h3 class="subtitle-card mb-2">Predio</h3>
+    <h3 class="subtitle-card mb-2">
+            {{title}} <mat-icon [svgIcon]="isEdit? 'mat_solid:edit':'mat_solid:library_add'">
+        </mat-icon></h3>
     
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
         <mat-label>Ubigeo</mat-label>

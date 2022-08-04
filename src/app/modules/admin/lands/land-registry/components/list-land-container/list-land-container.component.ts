@@ -48,6 +48,12 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
   seledRecord(landRecord: LandRegistryMap): void {
     this.landRegistryMapService.landIn = landRecord;
   }
+
+  createLandRecord(): void {
+    console.log('>>> createLandRecord');
+    this.landRegistryService.setLandCreate(true);
+  }
+
   onChangePage(paginator: MatPaginator): void {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
