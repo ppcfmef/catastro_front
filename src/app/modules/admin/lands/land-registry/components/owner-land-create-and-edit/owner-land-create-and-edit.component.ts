@@ -1,4 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -9,7 +11,7 @@ import { LandOwnerModel } from '../../models/land-owner.model';
   templateUrl: './owner-land-create-and-edit.component.html',
   styleUrls: ['./owner-land-create-and-edit.component.scss']
 })
-export class OwnerLandCreateAndEditComponent implements OnInit {
+export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
 
   @Output() showFormEdit = new EventEmitter<boolean>();
   landOwner: LandOwnerModel = new LandOwnerModel();
@@ -21,6 +23,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
 
   showAddres = false;
 
+  private unsubscribeAll: Subject<any> = new Subject<any>();
+
   constructor(
     private fb: FormBuilder,
     private alert: MessageProviderService,
@@ -29,12 +33,22 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.landRegistryService.getLandOwner()
+    .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
       (result) => {
         this.landOwner.setValue(result);
         this.createFormEdit();
       }
     );
+
+    this.landRegistryService.getLandCreate()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) => {
+      console.log('limpiar componente al crear');
+      if (result) {
+        this.resetForm();
+      }
+    });
   }
 
   createFormEdit(): void{
@@ -70,6 +84,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     if (this.formEdit.valid){
       this.landOwner.setValue(this.formEdit.value);
       this.landRegistryService.saveOwner(this.landOwner.toJson())
+      .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(
         (result) => {
           this.landOwner.setId(result.id);
@@ -94,11 +109,22 @@ export class OwnerLandCreateAndEditComponent implements OnInit {
     }
   }
 
+  resetForm(): void {
+    if (this.formEdit) {
+      this.formEdit.reset();
+    }
+  }
+
   get typeDocSelectValue(): string {
     return this.formEdit.get('documentType').value;
   }
 
   get isCreate(): boolean {
     return !this.landOwner.id;
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 }
