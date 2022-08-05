@@ -3,6 +3,7 @@
         <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
             <!-- Logo -->
             <div>
+                <img class="mb-8" src="assets/images/logo/logo_mef.jpg">
                 <img src="assets/images/logo/logoCatastroFiscal.png">
             </div>
 
@@ -66,13 +67,17 @@
                     </mat-error>
                 </mat-form-field>
 
+                <!-- Recapcha -->
+                <div class="inline-flex items-end justify-center w-full mt-1.5">
+                    
+                   <div>
+                        recapcha
+                   </div>
+                </div>
+
                 <!-- Actions -->
-                <div class="inline-flex items-end justify-between w-full mt-1.5">
-                    <mat-checkbox
-                        [color]="'primary'"
-                        [formControlName]="'rememberMe'">
-                        Recordarme
-                    </mat-checkbox>
+                <div class="inline-flex items-end justify-center w-full mt-1.5">
+                    
                     <a
                         class="text-md font-medium  hover:underline c-purple-mef"
                         [routerLink]="['/forgot-password']">Olvidaste contraseña?
@@ -103,7 +108,7 @@
         <!-- Background - @formatter:off -->
         <!-- Rings -->
         <img class="bg-cover" src="assets/images/bg-index.jpg">
-        <img class="logo-mef" src="assets/images/logo/logo_mef.jpg">
+        
         <!-- @formatter:on -->
         <!-- Content -->
         <div class="z-10 relative w-full max-w-2xl">
