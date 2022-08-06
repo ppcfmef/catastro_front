@@ -82,7 +82,7 @@
                 <div class="mt-3">
                     <div class="space-y-4">
                         <div class="flex">
-                            <mat-slide-toggle [formControlName]="'isActive'">Activo</mat-slide-toggle>
+                            <mat-slide-toggle class="mat-toggle-confirm" [formControlName]="'isActive'">Activo</mat-slide-toggle>
                         </div>
                     </div>
                 </div>
@@ -102,15 +102,16 @@
                     </ng-container>
                     <!-- Cancel -->
                     <button
-                        class="ml-auto"
-                        mat-button
+                        class="ml-auto btn-confirm "
+                        mat-flat-button
+                        [color]="'primary'"
                         [matTooltip]="'Cancelar'"
                         [routerLink]="['../']">
                         Cancelar
                     </button>
                     <!-- Save -->
                     <button
-                        class="ml-2"
+                        class="ml-2 btn-green"
                         mat-flat-button
                         (click)="updateRole()"
                         [color]="'primary'"
