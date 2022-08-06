@@ -7,8 +7,8 @@
     --mef-c-red: #db4b4b;
     --mef-c-purple: #62626b;
     --mef-c-grey: #656364;
-    --mef-c-confirm: #4a68b3;
-    --mef-c-success: #488b55;
+    --mef-c-confirm: #45B1FF;
+    --mef-c-success: #66bb6a;
     --mef-c-danger: #ad4c4c;
   }
 
@@ -17,7 +17,7 @@
 }
 
 .bg-success{
-    background-color: #488b55 !important;
+    background-color: #66bb6a !important;
 }
 
 .bg-danger{
@@ -40,7 +40,7 @@
 }
 
 .c-success{
-    color: #488b55 !important;
+    color: #66bb6a !important;
 }
 
 .c-danger{
@@ -48,7 +48,7 @@
 }
 
 .c-confirm{
-    color: #4a68b3 !important;
+    color: #45B1FF !important;
 }
 
 .c-white{
@@ -73,7 +73,7 @@ Personalizacion
 *******************/
 
 button.mat-flat-button.mat-primary{
-    background-color: var(--mef-c-purple) !important;
+    //background-color: var(--mef-c-purple) !important;
 }
 
 .separador-footer{
