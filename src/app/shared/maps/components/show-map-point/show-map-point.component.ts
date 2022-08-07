@@ -3,6 +3,8 @@
 import { Coordinates } from '../../maps.type';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild,OnChanges  } from '@angular/core';
 import { loadModules } from 'esri-loader';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas'; // Todavía no lo usamos
 @Component({
   selector: 'app-show-map-point',
   templateUrl: './show-map-point.component.html',
@@ -81,7 +83,7 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     }
 
     }
-
+ /* eslint-disable @typescript-eslint/naming-convention */
   async initializeMap( ): Promise<void> {
     try {
       const container = this.mapViewEl.nativeElement;
@@ -96,13 +98,17 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         GraphicsLayer,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        MapImageLayer
+        MapImageLayer,
+        Expand,
+        BasemapGallery
       ] = await loadModules([
         'esri/Map',
         'esri/views/MapView',
         'esri/Graphic',
         'esri/layers/GraphicsLayer',
-        'esri/layers/MapImageLayer'
+        'esri/layers/MapImageLayer',
+        'esri/widgets/Expand',
+        'esri/widgets/BasemapGallery',
       ]);
 
       const mapProperties = {
@@ -113,13 +119,26 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
 
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
-        zoom: 15,
+        zoom: 18,
 
         map: this.map,
       };
 
       this.view = new MapView(mapViewProperties);
 
+      const basemapGallery = new BasemapGallery({
+        view: this.view,
+      });
+
+      basemapGallery.activeBasemap ='satellite';
+
+
+      const baseMapGalleryExpand = new Expand({
+        view: this.view,
+        content: basemapGallery,
+        id: 'mapGalleryBase',
+        group: 'bottom-right'
+      });
 
       this.layersInfo.forEach((l)=>{
         const layer = new MapImageLayer({
@@ -127,39 +146,20 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
           });
         this.map.add(layer);
       });
-/*
-      const layer = new MapImageLayer({
-        url: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer'
-      });
-
-      const layer = new MapImageLayer({
-        url: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer'
-      });
-*/
 
 
-      this.addPoints(this.points);
-/*
-if(inputPoints.length>0){
 
-        const x=inputPoints[0].longitude;
-        const y=inputPoints[0].latitude;
-        this.view.center = [x,y];
-        inputPoints.forEach((inputPoint: Coordinates)=>{
+    const screenshotDiv=document.getElementById('screenshotDiv');
 
-            const point = { //Create a point
-                type: 'point',
-                longitude : inputPoint.longitude,
-                latitude: inputPoint.latitude
-            };
-            const pointGraphic = new Graphic({
-                geometry: point,
-                symbol: thosimpleMarkerSymbol
-            });
-            this.view.graphics.addMany([pointGraphic]);
-        });
-    }
-*/
+    this.view.when(() => {
+        this.addPoints(this.points);
+                         //this.view.ui.add(print, "top-right");
+
+                         this.view.ui.add([baseMapGalleryExpand,screenshotDiv], {
+                            position: 'top-right',
+                        });
+
+    });
 
     } catch (error) {
       console.error('EsriLoader: ', error);
@@ -212,4 +212,44 @@ if(inputPoints.length>0){
     }
   }
 
+  downloadPDF(): void{
+    const doc = new jsPDF();
+    const data: any = document.getElementById('divDownloadPDF');
+    const options = {
+        background: 'white',
+        scale: 3
+      };
+      html2canvas(data, options).then((canvas) => {
+
+        const img = canvas.toDataURL('image/PNG');
+
+        // Add image Canvas to PDF
+        const bufferX = 15;
+        const bufferY = 15;
+        const imgProps = (doc as any).getImageProperties(img);
+        const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
+        return doc;
+      }).then((docResult) => {
+        docResult.save(`${new Date().toISOString()}_tutorial.pdf`);
+      });
+    }
+
+
+    //doc.text('Hello world!', 10, 10);
+    /*const width = doc.internal.pageSize.getWidth();
+    doc.text('Hello JS', 20, 20, { align: 'center' });*/
+    //doc.save('hello-world.pdf');
+
+
+
+  takeFhoto(): void{
+
+    this.view.takeScreenshot().then((screenshot)=> {
+        const imageElement: any = document.getElementById('screenshotImage');
+        console.log('screenshot.dataUrl>>',screenshot.dataUrl);
+        imageElement.src = screenshot.dataUrl;
+    });
+    }
 }

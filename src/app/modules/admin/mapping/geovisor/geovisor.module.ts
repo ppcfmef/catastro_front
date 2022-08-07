@@ -5,6 +5,11 @@ import { GeovisorRoutingModule } from './geovisor-routing.module';
 import { MapComponent } from './components/map/map.component';
 import { GeovisorComponent } from './pages/geovisor/geovisor.component';
 import { FiltersComponent } from './components/filters/filters.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -15,7 +20,12 @@ import { FiltersComponent } from './components/filters/filters.component';
   ],
   imports: [
     CommonModule,
-    GeovisorRoutingModule
+    GeovisorRoutingModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatIconModule,
+    MatTableModule,
+    MatButtonModule,
   ]
 })
 export class GeovisorModule { }

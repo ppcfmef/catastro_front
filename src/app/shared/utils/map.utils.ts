@@ -1,7 +1,82 @@
 
 import { loadModules } from 'esri-loader';
 import proj4 from 'proj4';
+import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
+import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
+
 export class MapUtils {
+
+
+    static async createGeoJSON(
+        features: any[],
+        proj4DestWkid: number =4326,
+        isProject: boolean = false,
+    ): Promise<any> {
+        if (features.length < 1) {
+            return null;
+        }
+
+        const geojson = {
+            type: 'FeatureCollection',
+            features: [],
+        };
+        const type = 'shapefile';
+        let featureID = 1;
+
+        await features.forEach(async (feature) => {
+            const attr = feature.attributes;
+            if (typeof attr.feature === 'object') {
+                delete attr.feature;
+            }
+
+            for (const key in attr) {
+                if (key.includes('.')) {
+                    delete attr[key];
+                }
+            }
+
+            if (feature.geometry) {
+                if (isProject) {
+                    const g = MapUtils.projectGeometry(feature.geometry,proj4DestWkid);
+                    feature.geometry = g;
+                }
+
+                const geoFeature = arcgisToGeoJSON(feature);
+                const geom = geoFeature.geometry;
+
+                if (
+                    type === 'shapefile' &&
+                    (geom.type === 'MultiPolygon' ||
+                        geom.type === 'MultiLineString')
+                ) {
+                    const props = feature.properties;
+                    for (
+                        let i = 0, len = geom.coordinates.length;
+                        i < len;
+                        i++
+                    ) {
+                        const feat = {
+                            geometry: {
+                                type: geom.type.replace('Multi', ''),
+                                coordinates: geom.coordinates[i],
+                            },
+                            id: featureID++,
+                            properties: props,
+                            type: 'Feature',
+                        };
+                        geojson.features.push(feat);
+                    }
+                } else {
+                    geoFeature.id = featureID++;
+                    geojson.features.push(geoFeature);
+                }
+            } else {
+            }
+        });
+
+        return geojson;
+    }
+
 
     static async zoomToFeature(view: any, layer: any, query: string): Promise<any> {
 

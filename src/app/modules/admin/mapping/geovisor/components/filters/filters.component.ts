@@ -1,18 +1,20 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { Department, District, DistrictResource, Province } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { ServiceLayer } from 'app/shared/models/image-layer.interface';
 import { Observable, Subject } from 'rxjs';
-
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
-
+  @Input() listImageLayers: ServiceLayer[] = [];
   user: User;
   _unsubscribeAll: Subject<any> = new Subject<any>();
   departments$: Observable<Department[]>;
@@ -22,6 +24,8 @@ export class FiltersComponent implements OnInit {
   fileName: string;
   isDisabled = true;
   isDisabledDescargar = true;
+
+  layers:any[]=[];
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output()
   buscarEventEmitter = new EventEmitter<any>();
@@ -42,6 +46,8 @@ export class FiltersComponent implements OnInit {
       district: '',
       namedistrict: '',
       projection: 0,
+      serviceId:0,
+      featureId:0,
       fileToUpload:null,
   };
 
@@ -51,7 +57,6 @@ export class FiltersComponent implements OnInit {
   constructor(
       private _commonService: CommonService,
       private _userService: UserService,
-      
       private _fuseSplashScreenService: FuseSplashScreenService
   ) {}
 
@@ -77,15 +82,17 @@ export class FiltersComponent implements OnInit {
           });
   }
 
+  selectService(): void{
+    const imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===this.params.serviceId);
+    this.layers=(imageLayer )?imageLayer.layers:[];
+
+  }
   initParams(): void {
       this.departments$ = this._commonService.getDepartments();
 
       this.params.department ? this.selectDep() : false;
       this.params.province ? this.selectProv() : false;
       this.params.district ? this.selectDist() : false;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      //(this.params.department)? this.selectDep():false;
-      //(this.params.province)? this.selectProv():false;
   }
 
   selectDep(): void {
@@ -113,8 +120,7 @@ export class FiltersComponent implements OnInit {
                       '327' + this.dataSearch.resources[0].utm,
                       10
                   );
-                  /*this.params.department= data.department;
-         this.params.province= data.province;*/
+
                   this.params.namedistrict = data.name;
               });
       }
@@ -128,23 +134,4 @@ export class FiltersComponent implements OnInit {
       this.descargarEventEmmiterr.emit(this.params);
   }
 
-  uploadFile(event: any): void {
-      //this._fuseSplashScreenService.show(0);
-      console.log('holass');
-      this.fileToUpload = event.target.files[0];
-      this.fileName = event.target.value;
-      this.fileName = this.fileName.split(/(\\|\/)/g).pop();
-      this.fileName = this.fileName.toString();
-      const ext = this.fileName.split('.').pop();
-      console.log('ext>>',ext);
-      this.isDisabled = false;
-      //this._fuseSplashScreenService.hide();
-  }
-
-  subirDato(): void {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this.params.fileToUpload = this.fileToUpload;
-      console.log(this.params.fileToUpload);
-      this.cargarEventEmmiterr.emit(this.params);
-  }
 }

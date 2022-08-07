@@ -1,10 +1,16 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { arcgisToGeoJSON  } from '@esri/arcgis-to-geojson-utils';
+import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
@@ -13,20 +19,21 @@ declare let shpwrite: any;
 import { saveAs } from 'file-saver';
 import * as shp from 'shpjs';
 
-
 import proj4 from 'proj4';
 /*declare var Terraformer : any;*/
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DistrictResource, Extension } from 'app/core/common/interfaces/common.interface';
+import {
+    DistrictResource,
+    Extension,
+} from 'app/core/common/interfaces/common.interface';
 import { MapUtils } from 'app/shared/utils/map.utils';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+    selector: 'app-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit,AfterViewInit {
-
+export class MapComponent implements OnInit, AfterViewInit {
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
     drawerMode: 'side' | 'over';
     title = 'Gestor Cartográfico';
@@ -38,905 +45,736 @@ export class MapComponent implements OnInit,AfterViewInit {
     link: any;
     user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    proj4Catalog= 'EPSG';
+    proj4Catalog = 'EPSG';
 
-    proj4DestWkid=32717;
-    proj4ScrWkid=4326;
-    proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
-    proj4DestKey=this.proj4Catalog + ':' + String(this.proj4DestWkid);
+    proj4DestWkid = 32717;
+    proj4ScrWkid = 4326;
+    proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4ScrWkid);
+    proj4DestKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
     // eslint-disable-next-line max-len
-    proj4DestWKT='PROJCS["WGS_1984_UTM_Zone_17S",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-81],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["Meter",1]]';
+    proj4DestWKT ='';
     reader: any;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    TITLE_DESCARGA= 'Arancel';
+    TITLE_DESCARGA = 'Arancel';
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    TITLE_CARGA= 'Arancel Carga';
-    displayTable ='none';
-    layersInfo = [
+    TITLE_CARGA = 'Arancel Carga';
+    displayTable = 'none';
 
 
-      {idServer:0,
-        title: this.TITLE_DESCARGA + ' Zona 17',
-        id: 0,
-        urlBase:
-          'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
-        order: 0,
-        featureLayer: null,
-        definitionExpression:'1=1',
-        featureTable:null,
-        popupTemplate:null,
-        projection:32717
-      },
-
-      {idServer:1,
-        title: this.TITLE_CARGA + ' Zona 17',
-        id: 1,
-        urlBase:
-          'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
-        order: 0,
-        featureLayer: null,
-        definitionExpression:'1=1',
-        featureTable:null,
-        popupTemplate:null,
-        projection:32717
-      },
-
-
-
-
-        {idServer:0,
-          title: this.TITLE_DESCARGA + ' Zona 18',
-          id: 0,
-          urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
-          order: 0,
-          featureLayer: null,
-          definitionExpression:'1=1',
-          featureTable:null,
-          popupTemplate:null,
-          projection:32718
+    groupLayers=[
+        {
+            id:0,
+            title:'Zona 17',
+            children:[0,1]
         },
 
+        {
+            id:1,
+            title:'Zona 18',
+            children:[2,3]
+        },
 
+        {
+            id:2,
+            title:'Zona 19',
+            children:[4,5]
+        },
 
+        {
+            id:3,
+            title:'Cartografia Tematica Inei',
+            children:[6]
+        },
 
-
-        {idServer:1,
-            title: this.TITLE_CARGA+ ' Zona 18',
-            id: 1,
+    ];
+    layersInfo = [
+        {
+            idServer: 0,
+            title: this.TITLE_DESCARGA + ' Zona 17',
+            id: 0,
             urlBase:
-              'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression:'1=1',
-            featureTable:null,
-            popupTemplate:null,
-            projection:32718
-          },
-
-
-
-        {idServer:0,
-          title: this.TITLE_DESCARGA + ' Zona 19',
-          id: 1,
-          urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
-          order: 0,
-          featureLayer: null,
-          definitionExpression:'1=1',
-          featureTable:null,
-          popupTemplate:null,
-          projection:32719
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32717,
         },
 
-        {idServer:1,
-          title: this.TITLE_CARGA + ' Zona 19',
-          id: 1,
-          urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
-          order: 0,
-          featureLayer: null,
-          definitionExpression:'1=1',
-          featureTable:null,
-          popupTemplate:null,
-          projection:32719
+        {
+            idServer: 1,
+            title: this.TITLE_CARGA + ' Zona 17',
+            id: 1,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32717,
         },
 
+        {
+            idServer: 0,
+            title: this.TITLE_DESCARGA + ' Zona 18',
+            id: 2,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32718,
+        },
 
-/*
-
-        {   idServer:7,
-            title: 'Sectores',
+        {
+            idServer: 1,
+            title: this.TITLE_CARGA + ' Zona 18',
             id: 3,
             urlBase:
-              'https://ws.mineco.gob.pe/serverdf/rest/services/Pruebas/CARTO_FISCAL_19/MapServer',
-            order: 1,
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_18/MapServer',
+            order: 0,
             featureLayer: null,
-            definitionExpression:'1=1',
-            featureTable:null,
-            popupTemplate:null
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32718,
+        },
 
-            https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/6
-          },*/
-        {   idServer:7,
-            title: 'Distritos',
+        {
+            idServer: 0,
+            title: this.TITLE_DESCARGA + ' Zona 19',
             id: 4,
             urlBase:
-              'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32719,
+        },
+
+        {
+            idServer: 1,
+            title: this.TITLE_CARGA + ' Zona 19',
+            id: 5,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/VALORIZACION/CARTO_VALORIZACION_19/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            projection: 32719,
+        },
+
+
+        {
+            idServer: 7,
+            title: 'Distritos',
+            id: 6,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer',
             order: 2,
             featureLayer: null,
-            definitionExpression:'1=1',
-            featureTable:null,
-            popupTemplate:null
-          },
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+        },
     ];
 
-    mzsSeleccion =  {
-    type: 'simple-fill',  // autocasts as new SimpleFillSymbol()
-    //color: "green",
-    outline: {  // autocasts as new SimpleLineSymbol()
-      color: 'green',
-      width: '3px'
-      }
-    };
-
-    mzsNotSeleccion =  {
-      type: 'simple-fill',  // autocasts as new SimpleFillSymbol()
-      //color: "green",
-      outline: {  // autocasts as new SimpleLineSymbol()
-        color: 'red',
-        width: '1px'
-      }
-    };
-
-    /*rendererUniqueValue = {
-      type: 'unique-value',
-      field: 'EST_NOMBRE',
-
-      uniqueValueInfos: [
-        {
-          value: 'ABIERTO',
-          symbol: this.markerSymbolAbierto,
+    mzsSeleccion = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        //color: "green",
+        outline: {
+            // autocasts as new SimpleLineSymbol()
+            color: 'green',
+            width: '3px',
         },
-        { value: 'CERRADO', symbol: this.markerSymbolCerrado },
-      ],
-      legendOptions: { title: 'Estado' },
-    };*/
-    where ='';
-    nameZip='';
+    };
+
+    mzsNotSeleccion = {
+        type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+        //color: "green",
+        outline: {
+            // autocasts as new SimpleLineSymbol()
+            color: 'red',
+            width: '1px',
+        },
+    };
+
+
+    where = '';
+    nameZip = '';
     constructor(
         protected _ngxSpinner: NgxSpinnerService,
         private _userService: UserService,
         protected _messageProviderService: MessageProviderService,
-        protected _fuseSplashScreenService: FuseSplashScreenService
-        ) {
-            this._userService.user$
+        protected _fuseSplashScreenService: FuseSplashScreenService,
+
+    ) {
+        this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this.user = user;
                 // Mark for check
                 /*this._changeDetectorRef.markForCheck();
-            */
+                 */
             });
-
-
-        }
-
-
+    }
 
     ngAfterViewInit(): void {
         this._fuseSplashScreenService.show(0);
-        setTimeout(() => { this.initializeMap(); }, 1000);
-
+        setTimeout(() => {
+            this.initializeMap();
+        }, 1000);
     }
 
-    ngOnInit(): void {
-
-    }
+    ngOnInit(): void {}
     /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
-      try {
-        const container = this.mapViewEl.nativeElement;
-        const [
-          Map,
-          MapView,
-          BasemapGallery,
-          Track,
-          GraphicsLayer,
-          Locate,
-          Graphic,
-          Expand,
-          FeatureLayer,
-          LayerList,
-          Legend,
-          MapImageLayer,
-          Query,
-          Draw,
-          projection,
-          SpatialReference,
-          Point,
-          Search,
-          FeatureTable,
-          Popup
-        ] = await loadModules([
-          'esri/Map',
-          'esri/views/MapView',
-          'esri/widgets/BasemapGallery',
-          'esri/widgets/Track',
-          'esri/layers/GraphicsLayer',
-          'esri/widgets/Locate',
-          'esri/Graphic',
-          'esri/widgets/Expand',
-          'esri/layers/FeatureLayer',
-          'esri/widgets/LayerList',
-          'esri/widgets/Legend',
-          'esri/layers/MapImageLayer',
-          'esri/tasks/support/Query',
-          'esri/views/draw/Draw',
-          'esri/geometry/projection',
-          'esri/geometry/SpatialReference',
-          'esri/geometry/Point',
-          'esri/widgets/Search',
-          'esri/widgets/FeatureTable',
-          'esri/widgets/Popup'
-        ]);
-        /* eslint-enable @typescript-eslint/naming-convention */
-
-        const mapProperties = {
-          basemap: 'streets-vector',
-        };
-
-        this.map = new Map(mapProperties);
-
-        const mapViewProperties = {
-          container: this.mapViewEl.nativeElement,
-          zoom: 13,
-          center: [-71.955921, -13.53063],
-          map: this.map,
-        };
-
-        this.view = new MapView(mapViewProperties);
-
-
-        this.layerList = new LayerList({
-          view: this.view,
-
-        });
-
-        const basemapGallery = new BasemapGallery({
-          view: this.view,
-        });
-
-        const searchWidget = new Search({
-          view: this.view,
-        });
-
-        const filterElement = document.getElementById(
-          'filterElement'
-        );
-
-
-        const incidenteSearchExpand = new Expand({
-          view: this.view,
-          content: filterElement,
-          expandIconClass: 'esri-icon-globe',
-          id: 'ubigeoSearch'
-        });
-
-
-        const baseMapGalleryExpand = new Expand({
-          view: this.view,
-          content: basemapGallery,
-          id: 'mapGalleryBase'
-        });
-
-        const layerListExpand = new Expand({
-          view: this.view,
-          content: this.layerList,
-          id: 'maplayerList'
-        });
-
-        const loadElement = document.getElementById('loadElement');
-        this.view.ui.add(searchWidget, {
-          position: 'top-left',
-          index: 2
-        });
-
-        this.view.ui.add(incidenteSearchExpand, {
-          position: 'top-left',
-        });
-        this.view.ui.add(baseMapGalleryExpand, {
-          position: 'top-right',
-        });
-
-
-        this.view.ui.remove('zoom'); // Remover el boton Zoom;
-
-
-        const fieldInfos=[
-          {
-              fieldName: 'ID_ARAN',
-              label: 'ID_ARAN',
-            },
-
-            {
-              fieldName: 'UBIGEO',
-              label: 'UBIGEO',
-            },
-
-            {
-              fieldName: 'COD_SECT',
-              label: 'COD_SECT',
-            },
-
-            {
-              fieldName: 'COD_MZN',
-              label: 'COD_MZN',
-            },
-            {
-              fieldName: 'FREN_MZN',
-              label: 'FREN_MZN',
-            },
-
-            {
-              fieldName: 'COD_FREN',
-              label: 'COD_FREN',
-            },
-
-            {
-              fieldName: 'COD_VIA',
-              label: 'COD_VIA',
-            },
-            {
-              fieldName: 'TIP_VIA',
-              label: 'TIP_VIA',
-            },
-
-            {
-              fieldName: 'NOM_VIA',
-              label: 'NOM_VIA',
-            },
-
-            {
-              fieldName: 'CUADRA',
-              label: 'CUADRA',
-            },
-
-            {
-              fieldName: 'VAL_ACT',
-              label: 'VAL_ACT',
-            },
-            {
-              fieldName: 'FUENTE',
-              label: 'FUENTE',
-            },
-
-        ];
-        const fieldConfigs = fieldInfos.map((e: any)=> ({ name:e.fieldName,label:e.label}));
-
-        const popupTemp = {
-
-          title: 'Arancel',
-          content: [
-            {
-              type: 'fields',
-              fieldInfos: fieldInfos,
-            },
-          ],
-        };
-
-       this.layersInfo.reverse().map((l) => {
-          l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.idServer}`, {
-            title: l.title,
-            definitionExpression:l.definitionExpression,
-            outFields: ['*'],
-
-            //popupTemplate:popupTemp
-          });
-
-          if([0,1].includes(l.id)){
-            popupTemp.title = l.title;
-            l.featureLayer.popupTemplate=popupTemp;
-            const featureTable = new FeatureTable({
-                layer: l.featureLayer,
-                multiSortEnabled: true,
-               /* visibleElements: { selectionColumn: false },*/
-                fieldConfigs: fieldConfigs,
-                container:document.getElementById('tableDiv')
-            });
-          }
-          this.map.add(l.featureLayer);
-        });
-
-
-        this.view.when(() => {
-          this.visibility = 'visible';
-
-          this._fuseSplashScreenService.hide();
-
-          const params ={
-            district:'150101',
-            namedistrict:'LIMA'
-          };
-
-          this.buscar(params);
-      });
-
-
-
-     /* const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
-
-      const searchElement = document.getElementById(
-          'searchElement'
-        );
-
-        const searchExpand = new Expand({
-          view: this.view,
-          content: searchElement,
-          declaredClass: 'search',
-        });
-
-
-
-        this.view.ui.add(layerListExpand, {
-          position: 'top-right',
-        });
-
-        /*return this.view;*/
-      } catch (error) {
-        console.error('EsriLoader: ', error);
-      }
-    }
-     /* eslint-enable @typescript-eslint/naming-convention */
-
-
-
-
-async    zoomToUbigeo(where: string): Promise<any> {
-  try {
-
-        console.log('where>>',where);
-      const layerDistrito = this.layersInfo.find(e=> e.title==='Distritos').featureLayer;
-
-
-      this._fuseSplashScreenService.show(0);
-      MapUtils.zoomToFeature(this.view,layerDistrito,where);
-
-      this._fuseSplashScreenService.hide();
-/*
-         const query = this.featureLayer.createQuery();
-          query.where = where;
-          query.outSpatialReference = this.view.spatialReference;
-
-          this.featureLayer.queryExtent(query).then( (response) => {
-              this._fuseSplashScreenService.hide();
-            this.view.goTo(response.extent ).catch( (error)=> {
-               //console.error(error);
-
-            });
-          });*/
-
-
-  }
-      catch (error) {
-          console.error('EsriLoader: ', error);
-        }
-
-
-}
-
-
-buscar(params: any): void{
-
-console.log('params',params);
-  const ubigeo=params.district;
-  this.where = `UBIGEO='${ubigeo}'`;
-  /*this.nameZip = `${params.namedistrict}.zip`;*/
-  this.zoomToUbigeo(this.where);
-  this.layersInfo.forEach(l=>{
-    const featureLayer= l.featureLayer;
-    featureLayer.definitionExpression = this.where;
-  });
-
-  /*const layer1 = this.layersInfo.find(e=> e.title.includes(this.TITLE_DESCARGA)).featureLayer;
-  const layer2 = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA)).featureLayer;
-  layer1.definitionExpression = this.where;
-  layer2.definitionExpression = this.where;*/
-
-
-}
-
-async descargar(params: any): Promise<void>{
-  /*console.log(params);*/
-  const [
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    FeatureLayer,
-    proj4DestWKT,
-    shpWrite
-  ] = await loadModules(['esri/layers/FeatureLayer','dojo/text!https://epsg.io/32718.esriwkt','http://sigrid.cenepred.gob.pe/sigridv3/js/gis/dijit/Export/lib/shpwrite-0.2.6.min.js']);
-
-  this.proj4DestWkid=params.projection;
-  this.proj4SrcKey =this.proj4Catalog + ':' + String(this.proj4ScrWkid);
-  this.nameZip =`${params.namedistrict}.zip`;
-  var options = {
-      types: {
-          'point': 'points',
-          'polygon': 'polygons',
-          'polyline': 'polylines'
-          //'line': 'lines',
-         // wkt :proj4DestWKT
-      },
-      wkt :proj4DestWKT
-  };
-
-  options.wkt=proj4DestWKT;
-
-
-
-  /*console.log(this.layersInfo.find(e=> e.title.includes( this.TITLE_DESCARGA) && e.projection===params.projection ));*/
-  const _layer = this.layersInfo.find(e=> e.idServer===0 && e.projection===params.projection );
-  const _featureLayer = new FeatureLayer(_layer.urlBase+'/'+_layer.idServer);
-  /*l.featureLayer = new FeatureLayer(`${l.urlBase}/${l.idServer}`, {
-    title: l.title,
-    definitionExpression:l.definitionExpression,
-    outFields: ['*'],
-
-    //popupTemplate:popupTemp
-  });*/
-
-
-  console.log('this.featureLayer>>>',_featureLayer);
-  const query = _featureLayer.createQuery();
-  const ubigeo=params.district;
-   /*query.outSpatialReference = 4326;*/
-   query.where =`UBIGEO='${ubigeo}'`;
-
-   query.outSpatialReference = 4326;
-   //query.outFields = '*';
-   query.returnGeometry = true;
-   //query.returnDistinctValues = true;
-   const features = await MapUtils.queryFeaturesInLayer(_featureLayer,query);
-  
-  // this._fuseSplashScreenService.show(0);
-
- 
-   this.createGeoJSON(features).then((geojson)=>{
-/*
-    console.log('createGeoJSON data final>>',geojson);
-    console.log('options>>',options);
-
-    var zipFile = shpWrite.zip(geojson, options);
-    if (!zipFile) {
-       
-        return;
-    }
-
-    zipFile.then( (content)=> {
-      console.log('content>>',content);
-
-  });*/
-
-
-  console.log('geojson>>',geojson);
-  shpwrite.zip(geojson, options).then((content) =>{
-      console.log('content>>',content);
-            saveAs(content, this.nameZip);
-            this._fuseSplashScreenService.hide();
-      });
-  });
-
-
-/*
-   featureLayer.queryFeatures(query).then( (response) => {
-
-    const features: any[] = response.features;
-
-
-    console.log('features>>>',features);
-    this.createGeoJSON(features).then((data)=>{
-      shpwrite.zip(data, options).then((content) =>{
-
-              saveAs(content, this.nameZip);
-        });
-    });
-   });*/
-}
-
-downloadFile(content, mimeType, fileName, useBlob): any{
-  mimeType = mimeType || 'application/octet-stream';
-  const url = null;
-  const dataURI = 'data:' + mimeType + ',' + content;
-  this.link = document.createElement('a');
-  const blob = new Blob([content], {
-      'type': mimeType
-  });
-
-
-const a = document.createElement('a');
-const objectUrl = URL.createObjectURL(blob);
-a.href = objectUrl;
-a.download = 'archive.zip';
-a.click();
-
-  window.focus();
-
-}
-
-async createGeoJSON(features: any[]): Promise<any>{
-if(features.length<1){
-  return null;
-}
-
-const geojson = {
-  type: 'FeatureCollection',
-  features: [],
-
-};
-const type= 'shapefile';
-let featureID = 1;
-
-features.forEach( async (feature)=>{
-  const attr = feature.attributes;
-  if (typeof attr.feature === 'object') {
-    delete attr.feature;
-  }
-  // eslint-disable-next-line guard-for-in
-  for (const key in attr) {
-    //console.log(key);
-    /*if (!attr[key] || key.includes('.') ) {
-        delete attr[key];
-    }*/
-
-    if ( key.includes('.') ) {
-      delete attr[key];
-  }
-  }
-
-  if (feature.geometry) {
-   /* const g= await this.projectGeometry(feature.geometry);
-    feature.geometry=g;*/
-
-/*
-    const g= await this.projectGeometry(feature.geometry);
-    feature.geometry=g;*/
-
-    //console.log('g>>',g);
-
-  //  let g= await this.projectGeometry(feature.geometry);
-   // console.log('g>>',g);
-    //feature.geometry = g
-    let geoFeature = arcgisToGeoJSON(feature);
-
-   // console.log('geoFeature>>',geoFeature);
-
-    //geoFeature.geometry =g;
-    //const geom = geoFeature.geometry;
-    let geom = geoFeature.geometry;
-
-    if ((type === 'shapefile') && (geom.type === 'MultiPolygon' || geom.type === 'MultiLineString')) {
-        const props = feature.properties;
-        for (let i = 0, len = geom.coordinates.length; i < len; i++) {
-            const feat = {
-                geometry: {
-                    type: geom.type.replace('Multi', ''),
-                    coordinates: geom.coordinates[i]
-                },
-                id: featureID++,
-                properties: props,
-                type: 'Feature'
+        try {
+            const container = this.mapViewEl.nativeElement;
+            const [
+                Map,
+                MapView,
+                BasemapGallery,
+                Track,
+                GraphicsLayer,
+                Locate,
+                Graphic,
+                Expand,
+                FeatureLayer,
+                LayerList,
+                Legend,
+                MapImageLayer,
+                Query,
+                Draw,
+                projection,
+                SpatialReference,
+                Point,
+                Search,
+                FeatureTable,
+                Popup,
+                GroupLayer,
+            ] = await loadModules([
+                'esri/Map',
+                'esri/views/MapView',
+                'esri/widgets/BasemapGallery',
+                'esri/widgets/Track',
+                'esri/layers/GraphicsLayer',
+                'esri/widgets/Locate',
+                'esri/Graphic',
+                'esri/widgets/Expand',
+                'esri/layers/FeatureLayer',
+                'esri/widgets/LayerList',
+                'esri/widgets/Legend',
+                'esri/layers/MapImageLayer',
+                'esri/tasks/support/Query',
+                'esri/views/draw/Draw',
+                'esri/geometry/projection',
+                'esri/geometry/SpatialReference',
+                'esri/geometry/Point',
+                'esri/widgets/Search',
+                'esri/widgets/FeatureTable',
+                'esri/widgets/Popup',
+                'esri/layers/GroupLayer',
+            ]);
+            /* eslint-enable @typescript-eslint/naming-convention */
+
+            const mapProperties = {
+                basemap: 'streets-vector',
             };
-            geojson.features.push(feat);
-        }
-        // not a multi-polygon, so just push it
-    } else {
-       geoFeature.id = featureID++;
-        geojson.features.push(geoFeature);
-    }
 
-} else {
-    /*topic.publish('viewer/handleError', 'feature has no geometry');*/
-}
+            this.map = new Map(mapProperties);
 
+            const mapViewProperties = {
+                container: this.mapViewEl.nativeElement,
+                zoom: 13,
+                center: [-71.955921, -13.53063],
+                map: this.map,
+            };
 
+            this.view = new MapView(mapViewProperties);
 
+            const searchWidget = new Search({
+                view: this.view,
+            });
 
-});
+            const filterElement = document.getElementById('filterElement');
 
-return geojson;
-}
-/*/FeatureServer/0*/
-async createArcgisJSON(features: any[]): Promise<any[]>{
-  const arcgisJson =[];
-  /* eslint-disable @typescript-eslint/naming-convention */
-  const [
-    Graphic,
-    Polyline,
-    projection,
-    SpatialReference,
-  ] = await loadModules([
+            const incidenteSearchExpand = new Expand({
+                view: this.view,
+                content: filterElement,
+                expandIconClass: 'esri-icon-globe',
+                id: 'ubigeoSearch',
+                group: 'bottom-right'
+            });
 
-    'esri/Graphic',
-    'esri/geometry/Polyline',
-    'esri/geometry/projection',
-    'esri/geometry/SpatialReference',
-  ]);
-  /* eslint-enable @typescript-eslint/naming-convention */
+            const layerList = new LayerList({
+                view: this.view,
+            });
 
-  const outSpatialReference= new SpatialReference(this.proj4DestWkid);
+            const layerListExpand = new Expand({
+              view: this.view,
+              content: layerList,
+              id: 'maplayerList',
+              group: 'bottom-right',
+            });
 
-  return projection.load().then(()=>{
-    features.forEach((feature)=>{
-      const attr = feature.properties;
+            const basemapGallery = new BasemapGallery({
+              view: this.view,
+            });
 
-      for (const key in attr) {
-        if (!attr[key] || key ==='OBJECTID' ) {
-            delete attr[key];
-        }
-      }
-
-      if (feature.geometry) {
-
-          const geoFeature = geojsonToArcGIS(feature);
-          const newGeometry = projection.project(geoFeature.geometry, outSpatialReference);
-          geoFeature.geometry= {paths:newGeometry.paths, spatialReference:{wkid: newGeometry.spatialReference.wkid}};
-          arcgisJson.push(geoFeature);
-
-    }
+            basemapGallery.activeBasemap ='satellite';
 
 
-    });
-    return Promise.all(arcgisJson);
-  //  return arcgisJson;
-  });
+            const baseMapGalleryExpand = new Expand({
+              view: this.view,
+              content: basemapGallery,
+              id: 'mapGalleryBase',
+              group: 'bottom-right'
+            });
 
+            const loadElement = document.getElementById('loadElement');
 
-  //return arcgisJson;
+            this.view.ui.add(searchWidget, {
+                position: 'top-left',
+                index: 2,
+            });
 
-};
-  cargar(params: any): void{
-      /*console.log(params);*/
-      const file = params;
-      const reader = new FileReader();
-      this._fuseSplashScreenService.show(0);
-      reader.onloadend = (e): void => {
-          //console.log(reader.result);
-          this.shapeToGeoJson(reader.result);
-          //this.fileString = reader.result as string;
-       };
-      /*reader.readAsArrayBuffer(file);*/
-  }
+            this.view.ui.add(incidenteSearchExpand, {
+                position: 'top-left',
+            });
 
-   shapeToGeoJson(data: any): void{
+            this.view.ui.add([baseMapGalleryExpand,layerListExpand], {
+                position: 'top-right',
+            });
 
-      shp(data).then((geojson: any) =>{
-          this.createArcgisJSON(geojson.features).then((json)=>{
-            const layerInfo = this.layersInfo.find(e=> e.title.includes(this.TITLE_CARGA));
+            this.view.ui.remove('zoom'); // Remover el boton Zoom;
 
-            const  url=`${layerInfo.urlBase}/${layerInfo.id}/addFeatures`.replace('MapServer','FeatureServer');
-            const body ={features:json};
+            const fieldInfos = [
+                {
+                    fieldName: 'ID_ARAN',
+                    label: 'ID_ARAN',
+                },
 
-            const formData = new FormData();
-            formData.append('features', JSON.stringify(json));
+                {
+                    fieldName: 'UBIGEO',
+                    label: 'UBIGEO',
+                },
 
-            fetch(`${url}`, {
-              method: 'POST',
-              body: formData
-          }).then((resObj) => {
-                  this._fuseSplashScreenService.hide();
-                  this._messageProviderService.showSnack('Registrados cargados correctamente');
-              })
-              .catch((error) => {
-                  this._messageProviderService.showSnackError('Registrados no cargados');
+                {
+                    fieldName: 'COD_SECT',
+                    label: 'COD_SECT',
+                },
+
+                {
+                    fieldName: 'COD_MZN',
+                    label: 'COD_MZN',
+                },
+                {
+                    fieldName: 'FREN_MZN',
+                    label: 'FREN_MZN',
+                },
+
+                {
+                    fieldName: 'COD_FREN',
+                    label: 'COD_FREN',
+                },
+
+                {
+                    fieldName: 'COD_VIA',
+                    label: 'COD_VIA',
+                },
+                {
+                    fieldName: 'TIP_VIA',
+                    label: 'TIP_VIA',
+                },
+
+                {
+                    fieldName: 'NOM_VIA',
+                    label: 'NOM_VIA',
+                },
+
+                {
+                    fieldName: 'CUADRA',
+                    label: 'CUADRA',
+                },
+
+                {
+                    fieldName: 'VAL_ACT',
+                    label: 'VAL_ACT',
+                },
+                {
+                    fieldName: 'FUENTE',
+                    label: 'FUENTE',
+                },
+            ];
+            const fieldConfigs = fieldInfos.map((e: any) => ({
+                name: e.fieldName,
+                label: e.label,
+            }));
+
+            const popupTemp = {
+                title: 'Arancel',
+                content: [
+                    {
+                        type: 'fields',
+                        fieldInfos: fieldInfos,
+                    },
+                ],
+            };
+
+            this.layersInfo.reverse().map((l) => {
+
+                const options = {
+                    url: `${l.urlBase}/${l.idServer}`,
+                    title: l.title,
+                    outFields: ['*'],
+                    definitionExpression: l.definitionExpression,
+                };
+
+                l.featureLayer = new FeatureLayer(options);
+
+                if ([0, 1].includes(l.idServer)) {
+                    popupTemp.title = l.title;
+                    l.featureLayer.popupTemplate = popupTemp;
+                    const featureTable = new FeatureTable({
+                        layer: l.featureLayer,
+                        multiSortEnabled: true,
+                        /* visibleElements: { selectionColumn: false },*/
+                        fieldConfigs: fieldConfigs,
+                        container: document.getElementById('tableDiv'),
+                    });
+                }
+                //this.map.add(l.featureLayer);
+            });
+
+            this.groupLayers.reverse().map((g) => {
+                const fs=g.children.map(c=>   this.layersInfo.find(l=>l.id===c)?.featureLayer );
+                const demographicGroupLayer = new GroupLayer({
+                    title: g.title,
+                    layers: fs,
+                  });
+                  this.map.add(demographicGroupLayer);
               });
 
-          });
 
+            this.view.when(() => {
+                this.visibility = 'visible';
 
+                this._fuseSplashScreenService.hide();
 
-        });
+                const params = {
+                    district: '150101',
+                    namedistrict: 'LIMA',
+                };
 
-  }
+                this.buscar(params);
+            });
 
+            /* const layer = this.layersInfo.find(e=> e.title===this.TITLE_DESCARGA).featureLayer;*/
 
-  async projectGeometry(geometry: any): Promise<any> {
+            const searchElement = document.getElementById('searchElement');
 
+            const searchExpand = new Expand({
+                view: this.view,
+                content: searchElement,
+                declaredClass: 'search',
+            });
 
-    const [
+            this.view.ui.add(layerListExpand, {
+                position: 'top-right',
+            });
 
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      SpatialReference,
-       // eslint-disable-next-line @typescript-eslint/naming-convention
-       Point,
-       // eslint-disable-next-line @typescript-eslint/naming-convention
-       projection,
-    ] = await loadModules([
-
-      'esri/geometry/SpatialReference',
-      'esri/geometry/Point',
-      'esri/geometry/projection',
-    ]);
-
-
-/*
-  const outSpatialReference= new SpatialReference(this.proj4DestWkid);
-  await projection.load();
-  const point = projection.project(geometry, outSpatialReference);
-
-  return point;
-
- 
-*/
-
-
-
-
-
-
-
-    let pt = null;
-        let newPt = null;
-    let type ='point';
-        if (geometry.paths || geometry.rings) {
-          type ='polyline';
-
+            /*return this.view;*/
+        } catch (error) {
+            console.error('EsriLoader: ', error);
         }
-    switch (type) {
-    case 'point':
+    }
+    /* eslint-enable @typescript-eslint/naming-convention */
 
-        newPt = this.projectPoint(geometry);
+    async zoomToUbigeo(where: string): Promise<any> {
+        try {
+            console.log('where>>', where);
+            const layerDistrito = this.layersInfo.find(
+                (e) => e.title === 'Distritos'
+            ).featureLayer;
 
+            this._fuseSplashScreenService.show(0);
+            MapUtils.zoomToFeature(this.view, layerDistrito, where);
 
-        geometry = new Point({
-            x: newPt.x,
-            y: newPt.y,
-            spatialReference: new SpatialReference(this.proj4DestWkid)
-        });
-        break;
+            this._fuseSplashScreenService.hide();
 
-    case 'polyline':
-    case 'polygon':
-        const paths = geometry.paths || geometry.rings;
-        const len = paths.length;
-        for (let k = 0; k < len; k++) {
-            const len2 = paths[k].length;
-            for (let j = 0; j < len2; j++) {
-                pt = geometry.getPoint(k, j);
-                //console.log('oldPt',pt)
-                newPt = this.projectPoint(pt);
-                //console.log('newPt',newPt)
-                geometry.setPoint(k, j, new Point({
-                    x: newPt.x,
-                    y: newPt.y,
-                    spatialReference: new SpatialReference(this.proj4DestWkid)
-                }));
-            }
+        } catch (error) {
+            console.error('EsriLoader: ', error);
         }
-        geometry.spatialReference=new SpatialReference(this.proj4DestWkid);
-        break;
-
-    default:
-        break;
     }
 
-    return geometry;
-}
+    buscar(params: any): void {
+        console.log('params', params);
+        const ubigeo = params.district;
+        this.where = `UBIGEO='${ubigeo}'`;
+        this.zoomToUbigeo(this.where);
+        this.layersInfo.forEach((l) => {
+            const featureLayer = l.featureLayer;
+            featureLayer.definitionExpression = this.where;
+        });
 
 
+    }
+
+    async descargar(params: any): Promise<void> {
+        console.log('params>>>',params);
+        this._fuseSplashScreenService.show();
+        this.proj4DestWkid = params.projection;
+        this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
+        this.nameZip = `${params.namedistrict}.zip`;
+        console.log('this.proj4DestWkid', this.proj4DestWkid);
+        const [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            FeatureLayer,
+            proj4DestWKT,
+            shpWrite,
+        ] = await loadModules([
+            'esri/layers/FeatureLayer',
+            'dojo/text!https://epsg.io/' + this.proj4DestWkid + '.esriwkt',
+        ]);
 
 
+        const _layer = this.layersInfo.find(
+            (e) => e.idServer === 0 && e.projection === params.projection
+        );
+        const _featureLayer = new FeatureLayer(
+            _layer.urlBase + '/' + _layer.idServer
+        );
 
+        const query = _featureLayer.createQuery();
+        const ubigeo = params.district;
+        query.where = `UBIGEO='${ubigeo}'`;
+        query.outSpatialReference = this.proj4DestWkid;
+        query.returnGeometry = true;
+        const features = await MapUtils.queryFeaturesInLayer(
+            _featureLayer,
+            query
+        );
 
-projectPoint(point: any ): any{
+        const geojson = await MapUtils.createGeoJSON(features);
 
-  /*console.log('this.proj4SrcKey>>',this.proj4SrcKey)
-  console.log('proj4.defs[this.proj4SrcKey]>>', proj4.defs[this.proj4SrcKey])
+        const options = {
+            types: {
+                point: 'points',
+                polygon: 'polygons',
+                polyline: 'polylines',
+            },
+            wkt: proj4DestWKT,
+        };
 
-  console.log('this.proj4SrcKey>>',this.proj4DestKey)*/
- // console.log('proj4.defs[this.proj4DestKey]>>', proj4.defs['EPSG:32718','+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs'])
-  /*proj4.defs("EPSG:32717","+proj=utm +zone=17 +south +datum=WGS84 +units=m +no_defs");*/
- //const l= proj4.defs("EPSG:32718","+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs");
- return proj4(proj4.defs[this.proj4SrcKey], '+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs').forward(point);
-}
+        shpwrite.zip(geojson, options).then((content) => {
+            saveAs(content, this.nameZip);
+            this._fuseSplashScreenService.hide();
+            this._messageProviderService.showAlert(
+                'Descarga Exitosa'
+            );
+        });
+    }
+
+    downloadFile(content, mimeType, fileName, useBlob): any {
+        mimeType = mimeType || 'application/octet-stream';
+        const url = null;
+        const dataURI = 'data:' + mimeType + ',' + content;
+        this.link = document.createElement('a');
+        const blob = new Blob([content], {
+            type: mimeType,
+        });
+
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = 'archive.zip';
+        a.click();
+
+        window.focus();
+    }
+/*
+    async createGeoJSON(
+        features: any[],
+        isProject: boolean = false
+    ): Promise<any> {
+        if (features.length < 1) {
+            return null;
+        }
+
+        const geojson = {
+            type: 'FeatureCollection',
+            features: [],
+        };
+        const type = 'shapefile';
+        let featureID = 1;
+
+        await features.forEach(async (feature) => {
+            const attr = feature.attributes;
+            if (typeof attr.feature === 'object') {
+                delete attr.feature;
+            }
+
+            for (const key in attr) {
+                if (key.includes('.')) {
+                    delete attr[key];
+                }
+            }
+
+            if (feature.geometry) {
+                if (isProject) {
+                    const g = MapUtils.projectGeometry(feature.geometry,this.proj4DestWkid);
+                    feature.geometry = g;
+                }
+
+                const geoFeature = arcgisToGeoJSON(feature);
+                const geom = geoFeature.geometry;
+
+                if (
+                    type === 'shapefile' &&
+                    (geom.type === 'MultiPolygon' ||
+                        geom.type === 'MultiLineString')
+                ) {
+                    const props = feature.properties;
+                    for (
+                        let i = 0, len = geom.coordinates.length;
+                        i < len;
+                        i++
+                    ) {
+                        const feat = {
+                            geometry: {
+                                type: geom.type.replace('Multi', ''),
+                                coordinates: geom.coordinates[i],
+                            },
+                            id: featureID++,
+                            properties: props,
+                            type: 'Feature',
+                        };
+                        geojson.features.push(feat);
+                    }
+                } else {
+                    geoFeature.id = featureID++;
+                    geojson.features.push(geoFeature);
+                }
+            } else {
+            }
+        });
+
+        return geojson;
+    }
+*/
+    /*/FeatureServer/0*/
+    async createArcgisJSON(features: any[]): Promise<any[]> {
+        const arcgisJson = [];
+        /* eslint-disable @typescript-eslint/naming-convention */
+        const [Graphic, Polyline, projection, SpatialReference] =
+            await loadModules([
+                'esri/Graphic',
+                'esri/geometry/Polyline',
+                'esri/geometry/projection',
+                'esri/geometry/SpatialReference',
+            ]);
+        /* eslint-enable @typescript-eslint/naming-convention */
+
+        const outSpatialReference = new SpatialReference(this.proj4DestWkid);
+
+        return projection.load().then(() => {
+            features.forEach((feature) => {
+                const attr = feature.properties;
+
+                for (const key in attr) {
+                    if (!attr[key] || key === 'OBJECTID') {
+                        delete attr[key];
+                    }
+                }
+
+                if (feature.geometry) {
+                    const geoFeature = geojsonToArcGIS(feature);
+                    const newGeometry = projection.project(
+                        geoFeature.geometry,
+                        outSpatialReference
+                    );
+                    geoFeature.geometry = {
+                        paths: newGeometry.paths,
+                        spatialReference: {
+                            wkid: newGeometry.spatialReference.wkid,
+                        },
+                    };
+                    arcgisJson.push(geoFeature);
+                }
+            });
+            return Promise.all(arcgisJson);
+            //  return arcgisJson;
+        });
+
+        //return arcgisJson;
+    }
+
+    cargar(params: any): void {
+        /*console.log(params);*/
+        const file = params.fileToUpload;
+
+        this.proj4DestWkid = params.projection;
+        const reader = new FileReader();
+        this._fuseSplashScreenService.show(0);
+        reader.onloadend = (e): void => {
+            //console.log(reader.result);
+            this.shapeToGeoJson(reader.result);
+            //this.fileString = reader.result as string;
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    shapeToGeoJson(data: any): void {
+        shp(data).then((geojson: any) => {
+            this.createArcgisJSON(geojson.features).then((json) => {
+               /* const layerInfo = this.layersInfo.find((e) =>
+                    e.title.includes(this.TITLE_CARGA)
+                );*/
+
+                const _layer = this.layersInfo.find(
+                    (e) => e.idServer === 1 && e.projection === this.proj4DestWkid
+                );
+                const url =
+                    `${_layer.urlBase}/${_layer.idServer}/addFeatures`.replace(
+                        'MapServer',
+                        'FeatureServer'
+                    );
+                const body = { features: json };
+
+                const formData = new FormData();
+                formData.append('features', JSON.stringify(json));
+
+                fetch(`${url}`, {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then((resObj) => {
+                        this._fuseSplashScreenService.hide();
+                       /* this._messageProviderService.showConfirm(
+                            'Descarga Exitosa'
+                        );*/
+                        this._messageProviderService.showAlert(
+                            'Carga Exitosa'
+                        );
+                    })
+                    .catch((error) => {
+                        this._messageProviderService.showAlert(
+                            'Registrados no cargados'
+                        );
+                    });
+            });
+        });
+    }
+
 
 
 }

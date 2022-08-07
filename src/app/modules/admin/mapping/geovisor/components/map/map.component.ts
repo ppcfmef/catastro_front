@@ -7,7 +7,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
 import { loadModules } from 'esri-loader';
 import { MapUtils } from 'app/shared/utils/map.utils';
-
+import { ServiceLayer } from 'app/shared/models/image-layer.interface';
+declare let shpwrite: any;
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -21,7 +23,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     view: any = null;
     map: any;
     layerList: any;
-    visibility = 'hidden';
+    //visibility = 'hidden';
     featureLayer: any;
     link: any;
     user: User;
@@ -33,43 +35,49 @@ export class MapComponent implements OnInit, AfterViewInit {
     proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4ScrWkid);
     proj4DestKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
 
-    listImageLayers=[
+    listImageLayers: ServiceLayer[]=[
         {
             id:0,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             title:'CARTO_FISCAL_17',
             visible:false,
+            layers:[]
         },
         {
             id:1,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             title:'CARTO_FISCAL_18',
             visible:false,
+            layers:[]
         },
         {
             id:2,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             title:'CARTO_FISCAL_19',
             visible:false,
+            layers:[]
         },
         {
             id:3,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer',
             title:'CARTO_TEMATICA_INEI',
             visible:false,
+            layers:[]
         },
-
+/*
         {
             id:4,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_COFOPRI_TOTAL/MapServer',
             title:'CARTO_COFOPRI_TOTAL',
             visible:true,
-        },
+        },*/
         {
             id:5,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/limites_nacional/MapServer',
             title:'LIMITES NACIONALES',
             visible:true,
+            layers:[]
+
         },
 
     ];
@@ -167,7 +175,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
             this.view = new MapView(mapViewProperties);
 
- 
+
 
 
             const searchWidget = new Search({
@@ -175,38 +183,34 @@ export class MapComponent implements OnInit, AfterViewInit {
                 container:'searchWidget'
             });
 
-            const filterElement = document.getElementById('filterElement');
 
-            const incidenteSearchExpand = new Expand({
-                view: this.view,
-                content: filterElement,
-                expandIconClass: 'esri-icon-globe',
-                id: 'ubigeoSearch',
-                group: 'bottom-right',
-            });
 
-            this.listImageLayers.reverse().map( (l: any)=>{
+            this.listImageLayers.reverse().map( async (l: ServiceLayer)=>{
                 const options = {
                     url:l.url,
                     title:l.title,
                     visible:l.visible
                 };
                 const imageLayer = new MapImageLayer(options);
-
+                const urlLayers=l.url + '/layers?f=pjson';
+                const response = await fetch(urlLayers);
+                const infoLayers: any = await response.json();
+                const layers: any[]=infoLayers.layers;
+                l.layers=layers.map( (layer: any)=> ({id:layer.id, name: layer.name}));
                 this.map.add(imageLayer);
             });
 
             const layerList = new LayerList({
                 view: this.view,
                 id:'layerList',
-              
+
             });
 
             const layerListExpand = new Expand({
                 view: this.view,
                 content: layerList,
                 id: 'maplayerListExpand',
-                container: "layerListExpand",
+                container: 'layerListExpand',
                 group: 'bottom-right',
             });
 
@@ -219,14 +223,14 @@ export class MapComponent implements OnInit, AfterViewInit {
             const legend = new Legend({
                 view: this.view
               });
-              
+
 
 
             const legendExpand = new Expand({
                 view: this.view,
                 content: legend,
                 id: 'legendExpand',
-                container: "legendExpand",
+                container: 'legendExpand',
                 group: 'bottom-right',
             });
 
@@ -239,24 +243,32 @@ export class MapComponent implements OnInit, AfterViewInit {
                 group: 'bottom-right',
             });
 
+
+
+            const filterElement = document.getElementById('filterElement');
+
+            const filterExpand = new Expand({
+                view: this.view,
+                content: filterElement,
+                expandIconClass: 'esri-icon-globe',
+                container: 'filterExpand',
+                group: 'bottom-right',
+            });
+
+
             const loadElement = document.getElementById('loadElement');
 
 
             const homeBtn = new Home({
                 view: this.view
               });
-              
-             // this.view.ui.add( [baseMapGalleryExpand],{})
-            this.view.ui.add([baseMapGalleryExpand, layerListExpand,legendExpand], {
-                position: 'top-right',
-            });
-            this.view.ui.add([homeBtn], {
-                position: 'top-left',
-            });
-            
-            this.view.ui.add(searchWidget,{position:'manual'})
 
-          
+             // this.view.ui.add( [baseMapGalleryExpand],{})
+
+
+
+
+
 
             //this.view.ui.remove('zoom'); // Remover el boton Zoom;
 /*
@@ -337,7 +349,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 */
 
             this.view.when(() => {
-                this.visibility = 'visible';
+                //this.visibility = 'visible';
 
                 this._fuseSplashScreenService.hide();
 
@@ -353,22 +365,30 @@ export class MapComponent implements OnInit, AfterViewInit {
                     view: this.view,
                     // specify your own print service
                     printServiceUrl:
-                      "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                      'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
                   });
+                  this.view.ui.add([baseMapGalleryExpand, layerListExpand,legendExpand], {
+                    position: 'top-right',
+                 });
+                this.view.ui.add([homeBtn,filterExpand], {
+                    position: 'top-left',
+                 });
 
+                 this.view.ui.add(searchWidget,{position:'manual'});
+                  //this.view.ui.add( ,'top-left');
 
                   //this.view.ui.add(print, "top-right");
 
                  // this.view.ui.add(screenshotDiv, "top-right");
 
 
-         
+
 
             });
 
-          
 
-           
+
+
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -407,13 +427,74 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
     }
 
-    
-    takeFhoto(){
+
+    takeFhoto(): void{
 
         this.view.takeScreenshot().then((screenshot)=> {
-            let imageElement:any = document.getElementById("screenshotImage");
-            console.log('screenshot.dataUrl>>',screenshot.dataUrl)
+            const imageElement: any = document.getElementById('screenshotImage');
+            console.log('screenshot.dataUrl>>',screenshot.dataUrl);
             imageElement.src = screenshot.dataUrl;
         });
+    }
+
+    async  descargar(params: any): Promise<void> {
+
+        //this.listImageLayers.find()
+        const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
+        const _layers=(_imageLayer )?_imageLayer.layers:[];
+        const _layer= _layers.find((l: any)=> l.id===params.featureId);
+        this.proj4DestWkid = params.projection;
+        this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
+        const nameZip = `${_imageLayer.title}_${_layer.name}_${params.namedistrict}.zip`;
+
+        const [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            FeatureLayer,
+            proj4DestWKT,
+            shpWrite,
+        ] = await loadModules([
+            'esri/layers/FeatureLayer',
+            'dojo/text!https://epsg.io/' + this.proj4DestWkid + '.esriwkt',
+        ]);
+
+        this._fuseSplashScreenService.show();
+        console.log('url',_imageLayer.url + '/' + _layer.id);
+        const _featureLayer = new FeatureLayer(
+            _imageLayer.url + '/' + _layer.id
+        );
+
+
+
+
+        const query = _featureLayer.createQuery();
+        const ubigeo = params.district;
+        query.where = `UBIGEO='${ubigeo}'`;
+        query.outSpatialReference = this.proj4DestWkid;
+        query.returnGeometry = true;
+        const features = await MapUtils.queryFeaturesInLayer(
+            _featureLayer,
+            query
+        );
+
+        const geojson = await MapUtils.createGeoJSON(features);
+
+        const options = {
+            types: {
+                point: 'points',
+                polygon: 'polygons',
+                polyline: 'polylines',
+            },
+            wkt: proj4DestWKT,
+        };
+
+        shpwrite.zip(geojson, options).then((content) => {
+            saveAs(content, nameZip);
+            this._fuseSplashScreenService.hide();
+            this._messageProviderService.showAlert(
+                'Descarga Exitosa'
+            );
+        });
+
+
     }
 }

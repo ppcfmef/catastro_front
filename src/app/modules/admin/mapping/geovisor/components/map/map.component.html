@@ -1,18 +1,27 @@
 <div id="mapViewNode"  #mapViewNode ></div>
 
+
+<div #filterElement id="filterElement" >
+
+    <app-filters  [listImageLayers]="listImageLayers" (buscarEventEmitter)="buscar($event)" (descargarEventEmmiterr)="descargar($event)"   >
+
+    </app-filters>
+</div>
+<div id="filterExpand"></div>
+
 <div id="baseMapGalleryExpand"></div>
 <div id="layerListExpand"></div>
 <div id="searchWidget"> </div>
 
 
-
+<!--
 <div id="screenshotDiv">
   <button id="screenshotBtn" class="action-button esri-widget" (click)="takeFhoto()">
     Take Screenshot
-</button>  
+</button>
 <img  id="screenshotImage"  src="" alt="Girl in a jacket" width="500" height="600">
 </div>
-
+-->
 
 <link
   rel="stylesheet"
