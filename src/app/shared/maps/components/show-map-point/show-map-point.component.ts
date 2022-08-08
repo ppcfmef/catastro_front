@@ -4,6 +4,7 @@ import { Coordinates } from '../../maps.type';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild,OnChanges  } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas'; // Todavía no lo usamos
 @Component({
   selector: 'app-show-map-point',
@@ -212,13 +213,68 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     }
   }
 
-  downloadPDF(): void{
+  async downloadPDF(): Promise<void>{
     const doc = new jsPDF();
     const data: any = document.getElementById('divDownloadPDF');
     const options = {
         background: 'white',
         scale: 3
       };
+
+      autoTable(doc, {
+        body: [
+          [{ content: 'FICHA DE PREDIO - CATASTRO FISCAL', colSpan: 2, styles: { halign: 'center' } },
+        
+        ],
+
+        [  { content: 'MUNICIPALIDAD DE UBIGEO', colSpan: 2, styles: { halign: 'center' } }],
+
+        [  { content: 'Fecha' }, { content: 'Usuario' }],
+
+        [{ content: 'Código Predial Único: ' , colSpan: 2}],
+        [{ content: 'Código de Predio Municipal: ' , colSpan: 2}],
+       [ { content: 'Identificador geográfico: ' , colSpan: 2}],
+       [ { content: 'Contribuyente: ' , colSpan: 2}],
+       [ { content: 'RUC / DNI: ' , colSpan: 2}],
+        [{ content: 'Área terreno: ' , colSpan: 2}],
+       [ { content: 'Área Construida: ' , colSpan: 2},]
+
+        ],
+
+
+      })
+
+
+    const  screenshot=await  this.view.takeScreenshot({
+      format: "jpg",
+      quality: 100,
+      /*with:1000,
+      height:600*/
+    })/*.then((screenshot)=> {
+        const imageElement: any = document.getElementById('screenshotImage');
+        console.log('screenshot.dataUrl>>',screenshot.dataUrl);
+        imageElement.src = screenshot.dataUrl;
+    });*/
+    doc.addImage(screenshot.dataUrl, 'JPEG', 35, 100,135 , 75);
+ 
+      /*autoTable(doc, { html: '#my-table' })*/
+
+      // Or use javascript directly:
+
+/*
+      autoTable(doc, {
+        head: [['Name', 'Email', 'Country']],
+        body: [
+          ['David', 'david@example.com', 'Sweden'],
+          ['Castille', 'castille@example.com', 'Spain'],
+          // ...
+        ],
+      });*/
+
+      doc.save('documneto.pdf');
+
+      /*
+
       html2canvas(data, options).then((canvas) => {
 
         const img = canvas.toDataURL('image/PNG');
@@ -234,6 +290,11 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
       }).then((docResult) => {
         docResult.save(`${new Date().toISOString()}_tutorial.pdf`);
       });
+      
+      */
+
+
+
     }
 
 
