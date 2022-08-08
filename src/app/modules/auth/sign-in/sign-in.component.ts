@@ -1,10 +1,9 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
-import {ReCaptchaV3Service} from 'ng-recaptcha';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -28,7 +27,6 @@ export class AuthSignInComponent implements OnInit
      * Constructor
      */
     constructor(
-        private recaptchaV3Service: ReCaptchaV3Service,
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
@@ -48,9 +46,10 @@ export class AuthSignInComponent implements OnInit
     {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username     : ['', [Validators.required]],
+            username  : ['', [Validators.required]],
             password  : ['', Validators.required],
-            rememberMe: ['']
+            captcha : [ null, Validators.required],
+            rememberMe: [''],
         });
     }
 
@@ -114,10 +113,10 @@ export class AuthSignInComponent implements OnInit
     }
 
     async getTokenByCaptcha(): Promise<string> {
-        try {
-            return await this.recaptchaV3Service.execute('importantAction').toPromise();
-        } catch (err) {
-            return null;
-        }
+        return;
+    }
+
+    get f(): {[key: string]: AbstractControl} {
+        return this.signInForm.controls;
     }
 }

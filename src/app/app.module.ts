@@ -14,7 +14,7 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
-import {RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaV3Module} from 'ng-recaptcha';
+import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
 const routerConfig: ExtraOptions = {
@@ -22,7 +22,7 @@ const routerConfig: ExtraOptions = {
     scrollPositionRestoration: 'enabled'
 };
 
-const RECAPTCHA_V3_KEY = environment.captcha;
+const RECAPTCHA_V2_KEY = environment.captcha;
 
 const MY_DATE_FORMAT = {
     parse: {
@@ -58,7 +58,6 @@ const MY_DATE_FORMAT = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        RecaptchaV3Module,
         NgxSpinnerModule
     ],
     bootstrap   : [
@@ -67,7 +66,12 @@ const MY_DATE_FORMAT = {
     providers: [
         {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
         {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT},
-        [{ provide: RECAPTCHA_V3_SITE_KEY, useValue: RECAPTCHA_V3_KEY }],
+        {
+            provide: RECAPTCHA_SETTINGS,
+            useValue: {
+              siteKey: RECAPTCHA_V2_KEY,
+            } as RecaptchaSettings,
+        },
     ]
 })
 export class AppModule
