@@ -31,7 +31,7 @@
                     <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
                         <!-- Add contact button -->
                         <button
-                            class="ml-4"
+                            class="ml-4 btn-green"
                             mat-flat-button
                             (click)="redirectPage()"
                             [color]="'primary'">
@@ -140,7 +140,7 @@
                             <ng-container matColumnDef="status">
                                 <th mat-header-cell *matHeaderCellDef> Estado</th>
                                 <td mat-cell *matCellDef="let element">
-                                    <mat-icon [color]="element?.isActive ? 'primary' : 'warn'"
+                                    <mat-icon [ngClass]="element?.isActive ? 'c-success' : 'c-danger'"
                                               [svgIcon]="element?.isActive ?
                                               'heroicons_solid:check-circle'
                                               : 'heroicons_solid:x-circle'">
@@ -158,10 +158,10 @@
                             <ng-container matColumnDef="actions">
                                 <th mat-header-cell *matHeaderCellDef>*</th>
                                 <td mat-cell *matCellDef="let element; let i = index">
-                                    <button mat-icon-button class="mat-primary"
+                                    <button mat-icon-button
                                             (click)="redirectPage(element.id)"
                                             matTooltip="ver detalle">
-                                        <mat-icon [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                        <mat-icon class="c-confirm" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
                                     </button>
 
                                     <button mat-icon-button class="mat-warn"

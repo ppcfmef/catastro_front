@@ -47,8 +47,15 @@
     </mat-form-field>
 
 
-    <h3 class="subtitle-card mb-2 mt-6">Domicilio Fiscal</h3>
-    <ng-container formGroupName="address">
+    <h3 class="subtitle-card mb-2 mt-6">
+        <div (click)="showAddres = !showAddres" class="cursor-pointer flex items-center w-max">
+            Domicilio Fiscal
+            <mat-icon [svgIcon]="showAddres? 'heroicons_solid:chevron-up':'heroicons_solid:chevron-down'">
+            </mat-icon>
+        </div>
+       
+    </h3>
+    <ng-container *ngIf="showAddres" formGroupName="address">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
             <mat-label>Ubigeo</mat-label>
             <input matInput type="text" formControlName="ubigeo">

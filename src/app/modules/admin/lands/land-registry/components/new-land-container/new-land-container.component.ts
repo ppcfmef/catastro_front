@@ -2,6 +2,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 
 @Component({
@@ -18,7 +19,8 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   private unsubscribeAll = new Subject<any>();
 
   constructor(
-    private landRegistryMapService: LandRegistryMapService
+    private landRegistryMapService: LandRegistryMapService,
+    private landRegistryService: LandRegistryService,
   ) { }
 
   ngOnInit(): void {
@@ -31,9 +33,16 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if(result) {
-        console.log('>>>>> landOut$', result);
         this.landRecordOut = result;
         this.showEditForm = true;
+      }
+    });
+
+    this.landRegistryService.getLandCreate()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) => {
+      if (result) {
+        this.showEditForm = result;
       }
     });
   }

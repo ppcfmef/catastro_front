@@ -1,3 +1,37 @@
+@mixin btn-styles(){
+  button.btn-green{
+    background-color: var(--mef-c-success) !important;  
+  }
+
+  button.btn-confirm{
+    background-color: var(--mef-c-confirm) !important;  
+  }
+  
+}
+
+@mixin mat-toggle-styles(){
+  
+  mat-slide-toggle.mat-toggle-green.mat-slide-toggle.mat-checked{
+    .mat-slide-toggle-bar{ 
+      background-color: #66bb6a87 !important;
+    }
+   .mat-slide-toggle-thumb{
+      background-color: var(--mef-c-success) !important;
+    }
+  }
+
+  mat-slide-toggle.mat-toggle-confirm.mat-slide-toggle.mat-checked{
+    .mat-slide-toggle-bar{ 
+      background-color: #45b2ff7a !important;
+    }
+   .mat-slide-toggle-thumb{
+      background-color: var(--mef-c-confirm) !important;
+    }
+  }
+  
+}
+
+
 @mixin  titlePanel(){
     font-size: 20px;
     font-family: "Inter var";
