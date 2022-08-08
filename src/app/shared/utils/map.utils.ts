@@ -84,12 +84,17 @@ export class MapUtils {
         queryLayer.where = query;
         queryLayer.outSpatialReference = view.spatialReference;
 
-        layer.queryExtent(queryLayer).then( (response) => {
+        const res=await layer.queryExtent(queryLayer);
+        view.extent=res.extent;
+        return res
+      /* return  layer.queryExtent(queryLayer).then( (response) => {
+        
           view.goTo(response.extent).catch( (error)=> {
              console.error(error);
-
+             return response
           });
-        });
+        });*/
+
     }
 
   static async queryFeaturesInLayer(layer, query): Promise<any[]> {

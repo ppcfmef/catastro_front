@@ -18,11 +18,22 @@
 
 <div class="container-panel flex w-full" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
   <div class="map-container" *ngIf="showLandsMap">
-    <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" ></app-show-map-point>
+    <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner"  ></app-show-map-point>
   </div>
 
   <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
+
   </div>
+
+  <!--<button (click) >CROQUIS</button>
+       <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+                (click)="buscar()"  >
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+            <span class="ml-2 mr-1">Buscar</span>
+        </button>
+  
+  
+  -->
   
 </div>

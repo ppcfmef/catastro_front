@@ -104,4 +104,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     });
   }
 
+  onDowloandCroquis():void{
+    this.landRecordService.setLandRecordDownloadCroquis(true);
+  }
+
 }

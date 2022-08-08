@@ -16,7 +16,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-
+    iniExtent:any;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
     drawerMode: 'side' | 'over';
     title = 'Gestor Cartográfico';
@@ -125,8 +125,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                 Popup,
                 GroupLayer,
                 Home,
-                Print
-
+                Print,
+                
+                reactiveUtils,
+                watchUtils
 
             ] = await loadModules([
                 'esri/Map',
@@ -153,6 +155,8 @@ export class MapComponent implements OnInit, AfterViewInit {
                 'esri/widgets/Home',
 
                 'esri/widgets/Print',
+                'esri/core/reactiveUtils',
+                'esri/core/watchUtils'
             ]);
             /* eslint-enable @typescript-eslint/naming-convention */
 
@@ -375,6 +379,9 @@ export class MapComponent implements OnInit, AfterViewInit {
                  });
 
                  this.view.ui.add(searchWidget,{position:'manual'});
+
+                 this.iniExtent =  this.view.extent;
+                 
                   //this.view.ui.add( ,'top-left');
 
                   //this.view.ui.add(print, "top-right");
@@ -384,9 +391,49 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
 
-            });
+            
+            
+            
+                });
+/*
+            reactiveUtils.watch(
+                () => this.view?.extent?.xmin,
+                (xmin) => {
+                  console.log(`Extent change xmin = ${xmin}`)
+                });
 
 
+*/
+
+
+
+watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
+    if(!this.view.stationary){
+      watchUtils.whenTrueOnce(this.view, 'stationary', (evt)=>{
+        
+        console.log('this.view.extent>>',this.view.extent);
+        console.log('this.iniExtent.extent>>' , this.iniExtent);
+        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin) 
+      
+         {
+           
+           
+            console.log('stationary>>');
+            console.log(this.view.extent);
+
+            this.view.extent = this.iniExtent;
+        console.log("max extent reached, rolling back to previous extent");
+         }
+
+      });
+    }else{
+
+      watchUtils.whenFalseOnce(this.view, 'interacting', (evt)=>{
+        console.log('interacting>>');
+        console.log(this.view.extent);
+      });
+    }
+  })
 
 
         } catch (error) {
@@ -418,9 +465,11 @@ export class MapComponent implements OnInit, AfterViewInit {
             ).featureLayer;*/
 
             this._fuseSplashScreenService.show(0);
-            MapUtils.zoomToFeature(this.view, layerDistrito, where);
-
+            const res=await MapUtils.zoomToFeature(this.view, layerDistrito, where);
+            console.log('res>>',res);
             this._fuseSplashScreenService.hide();
+            this.iniExtent =  this.view.extent;
+            /*this.iniExtent =  this.view.extent;*/
 
         } catch (error) {
             console.error('EsriLoader: ', error);

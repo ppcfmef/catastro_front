@@ -76,8 +76,7 @@ export class FiltersComponent implements OnInit {
                         this.params.department = data.department;
                         this.params.province = data.province;
                         this.params.district = ubigeo;
-                        /*this.params.projection= parseInt('327'+data.resources[0].utm, 10);
-            this.params.namedistrict=data.name;*/
+                   
                         this.initParams();
                     });
             });

@@ -6,6 +6,16 @@ import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas'; // Todavía no lo usamos
+import { LandRecordService } from 'app/modules/admin/lands/land-registry/services/land-record.service';
+import { LandRecord } from 'app/modules/admin/lands/land-registry/interfaces/land-record.interface';
+import moment from 'moment';
+import { CommonService } from 'app/core/common/services/common.service';
+import { UserService } from 'app/core/user/user.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { User } from 'app/core/user/user.types';
+import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land-owner.interface';
 @Component({
   selector: 'app-show-map-point',
   templateUrl: './show-map-point.component.html',
@@ -14,11 +24,15 @@ import html2canvas from 'html2canvas'; // Todavía no lo usamos
 export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     @Input() points: Coordinates[]=[{latitude: -13.53063, longitude: -71.955921},{latitude: -13.54, longitude: -71.955921}];
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+
+    @Input()landOwner: LandOwner;
+    @Input()landRecord: LandRecord;
+    
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
-
-
+    user: User;
+    _unsubscribeAll: Subject<any> = new Subject<any>();
     simpleMarkerSymbol = {
         type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
@@ -67,10 +81,43 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
           }
         ];
 
-  constructor() { }
+  constructor( 
+    
+    private _landRecordService: LandRecordService,
+    private _commonService: CommonService,
+    private _userService: UserService,
+    
+    ) { 
+
+
+
+  }
 
   ngOnInit(): void {
-    console.log(this.points);
+    
+    this._landRecordService.getLandRecordDownloadCroquis().subscribe((res :boolean)=>{
+      if(res){
+        this.downloadPDF();
+      }
+    });
+   
+
+    this._userService.user$
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user: User) => {
+        this.user = user;
+        const ubigeo =
+            this.user.placeScope && this.user.placeScope.ubigeo
+                ? this.user.placeScope.ubigeo
+                : '150101';
+       /* this._commonService
+            .getDistrictResource(ubigeo)
+            .subscribe((data: DistrictResource) => {
+
+           
+           
+            });*/
+    });
   }
 
   ngAfterViewInit(): void {
@@ -213,7 +260,14 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     }
   }
 
+
+
   async downloadPDF(): Promise<void>{
+
+    const _districtResource: DistrictResource= await this._commonService.getDistrictResource(this.landRecord.ubigeo).toPromise();
+    
+
+
     const doc = new jsPDF();
     const data: any = document.getElementById('divDownloadPDF');
     const options = {
@@ -226,19 +280,19 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
           [{ content: 'FICHA DE PREDIO - CATASTRO FISCAL', colSpan: 2, styles: { halign: 'center' } },
         
         ],
+        //`${l.urlBase}/${l.idServer}`
+        [  { content: `MUNICIPALIDAD DE ${_districtResource.name} UBIGEO  ${this.landRecord.ubigeo}`, colSpan: 2, styles: { halign: 'center' } }],
 
-        [  { content: 'MUNICIPALIDAD DE UBIGEO', colSpan: 2, styles: { halign: 'center' } }],
+        [  { content: `Fecha ${moment().format("DD/MM/YYYY")}` }, { content: `Usuario ${this.user.name}` }],
 
-        [  { content: 'Fecha' }, { content: 'Usuario' }],
-
-        [{ content: 'Código Predial Único: ' , colSpan: 2}],
-        [{ content: 'Código de Predio Municipal: ' , colSpan: 2}],
-       [ { content: 'Identificador geográfico: ' , colSpan: 2}],
-       [ { content: 'Contribuyente: ' , colSpan: 2}],
-       [ { content: 'RUC / DNI: ' , colSpan: 2}],
-        [{ content: 'Área terreno: ' , colSpan: 2}],
-       [ { content: 'Área Construida: ' , colSpan: 2},]
-
+        [{ content: `Código Predial Único: ${this.landRecord.cup}` , colSpan: 2}],
+        [{ content: `Código de Predio Municipal: ${this.landRecord.cpm}` , colSpan: 2}],
+       [ { content: `Identificador geográfico: ${this.landRecord.municipalNumber }` , colSpan: 2}],
+       [ { content: `Contribuyente: ${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}` , colSpan: 2}],
+       [ { content: `RUC / DNI: ${this.landOwner?.dni }` , colSpan: 2}],
+        [{ content: `Área terreno: ${ this.landRecord?.landArea } mt2  ` , colSpan: 2}],
+       [ { content: `Área Construida:  mt2` , colSpan: 2},]
+       //landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname 
         ],
 
 
@@ -248,60 +302,21 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     const  screenshot=await  this.view.takeScreenshot({
       format: "jpg",
       quality: 100,
-      /*with:1000,
-      height:600*/
-    })/*.then((screenshot)=> {
-        const imageElement: any = document.getElementById('screenshotImage');
-        console.log('screenshot.dataUrl>>',screenshot.dataUrl);
-        imageElement.src = screenshot.dataUrl;
-    });*/
+      
+    })
     doc.addImage(screenshot.dataUrl, 'JPEG', 35, 100,135 , 75);
  
-      /*autoTable(doc, { html: '#my-table' })*/
-
-      // Or use javascript directly:
-
-/*
-      autoTable(doc, {
-        head: [['Name', 'Email', 'Country']],
-        body: [
-          ['David', 'david@example.com', 'Sweden'],
-          ['Castille', 'castille@example.com', 'Spain'],
-          // ...
-        ],
-      });*/
+    
 
       doc.save('documneto.pdf');
 
-      /*
-
-      html2canvas(data, options).then((canvas) => {
-
-        const img = canvas.toDataURL('image/PNG');
-
-        // Add image Canvas to PDF
-        const bufferX = 15;
-        const bufferY = 15;
-        const imgProps = (doc as any).getImageProperties(img);
-        const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
-        return doc;
-      }).then((docResult) => {
-        docResult.save(`${new Date().toISOString()}_tutorial.pdf`);
-      });
-      
-      */
+     
 
 
 
     }
 
 
-    //doc.text('Hello world!', 10, 10);
-    /*const width = doc.internal.pageSize.getWidth();
-    doc.text('Hello JS', 20, 20, { align: 'center' });*/
-    //doc.save('hello-world.pdf');
 
 
 
@@ -313,4 +328,6 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
         imageElement.src = screenshot.dataUrl;
     });
     }
+
+
 }
