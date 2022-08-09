@@ -1,0 +1,114 @@
+<div class="flex flex-col  w-full gap-2 "  >
+    <div class="w-full flex flex-col justify-between">
+        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
+            <mat-label >Servicio Tematico</mat-label>
+
+            <mat-select  [(value)]="params.serviceId" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectService()">
+                <ng-container *ngFor="let imageLayer of listImageLayers ">
+                    <mat-option [value]="imageLayer.id">{{ imageLayer.title }}</mat-option>
+                </ng-container>
+
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/12">
+            <mat-label >Capa</mat-label>
+
+            <mat-select  [(value)]="params.featureId" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectService()">
+                <ng-container *ngFor="let layer of layers ">
+                    <mat-option [value]="layer.id">{{ layer.name }}</mat-option>
+                </ng-container>
+
+            </mat-select>
+        </mat-form-field>
+
+
+
+    </div>
+
+
+    <h2>Búsqueda de Ubigeo</h2>
+    <div class="w-full flex flex-row justify-between">
+
+
+        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/4">
+            <mat-label >Departamento</mat-label>
+
+            <mat-select  [(value)]="params.department" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDep()">
+                <ng-container *ngFor="let department of departments$ | async">
+                    <mat-option [value]="department.code">{{ department.name }}</mat-option>
+                </ng-container>
+
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/4">
+            <mat-label >Provincia</mat-label>
+
+            <mat-select  [(value)]="params.province" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectProv()">
+                <ng-container *ngFor="let province of provinces$ | async">
+                    <mat-option [value]="province.code">{{ province.name }}</mat-option>
+                </ng-container>
+
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-12/4">
+            <mat-label >Distrito</mat-label>
+
+            <mat-select  [(value)]="params.district" placeholder="Elegir" [disabled]="isReadOnly"  (selectionChange)="selectDist()" >
+                <ng-container *ngFor="let district of districts$ | async">
+                    <mat-option [value]="district.code">{{ district.name }}</mat-option>
+                </ng-container>
+
+            </mat-select>
+        </mat-form-field>
+
+
+    </div>
+
+    <div class="w-full flex flex-row justify-between">
+
+        <div class="flex flex-col w-6/12 items-center p-3">
+            <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+            (click)="buscar()"  >
+                <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+                <span class="ml-2 mr-1 c-white">Buscar</span>
+            </button>
+        </div>
+
+        <div class="flex flex-col w-6/12 items-center p-3">
+            <button class="mat-focus-indicator mat-flat-button mat-button-base bg-success"
+            (click)="descargar()" [disabled]="isDisabledDescargar" >
+            <mat-icon svgIcon="heroicons_outline:download"></mat-icon>
+            <span class="ml-2 mr-1  c-white">Descargar</span>
+            </button>
+        </div>
+
+
+    </div>
+
+
+
+
+<!--
+    <div class="w-full flex flex-row justify-between">
+
+
+
+            <div class="flex flex-col items-center justify-between">
+                <div>
+                    <button class="mat-focus-indicator mat-flat-button mat-button-base bg-success"
+                        (click)="descargar()" [disabled]="isDisabledDescargar" >
+                        <span class="ml-2 mr-1 w-full c-white">Descargar</span>
+                    </button>
+                </div>
+            </div>
+
+
+    </div>
+-->
+
+</div>

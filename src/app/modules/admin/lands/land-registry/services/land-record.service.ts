@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,6 +13,8 @@ import { LandRecord } from '../interfaces/land-record.interface';
 export class LandRecordService {
 
   apiUrl = environment.apiUrl;
+  private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
+  
 
   constructor(
     private http: HttpClient
@@ -24,5 +26,15 @@ export class LandRecordService {
 
   getAllBy(landOwnerId: number): Observable<IPagination<LandRecord>> {
     return this.getList({owner: landOwnerId});
+  }
+
+  
+
+  setLandRecordDownloadCroquis(value: boolean): void {
+    this._landRecordDownloadCroquis$.next(value);
+  }
+
+  getLandRecordDownloadCroquis(): Observable<boolean> {
+    return this._landRecordDownloadCroquis$;
   }
 }

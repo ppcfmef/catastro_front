@@ -510,18 +510,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             MapUtils.zoomToFeature(this.view, layerDistrito, where);
 
             this._fuseSplashScreenService.hide();
-            /*
-         const query = this.featureLayer.createQuery();
-          query.where = where;
-          query.outSpatialReference = this.view.spatialReference;
 
-          this.featureLayer.queryExtent(query).then( (response) => {
-              this._fuseSplashScreenService.hide();
-            this.view.goTo(response.extent ).catch( (error)=> {
-               //console.error(error);
-
-            });
-          });*/
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -557,18 +546,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             'dojo/text!https://epsg.io/' + this.proj4DestWkid + '.esriwkt',
         ]);
 
-        //this.proj4DestWkid = params.projection;
-
-        const options = {
-            types: {
-                point: 'points',
-                polygon: 'polygons',
-                polyline: 'polylines',
-            },
-            wkt: proj4DestWKT,
-        };
-
-        /*options.wkt = proj4DestWKT;*/
 
         const _layer = this.layersInfo.find(
             (e) => e.idServer === 0 && e.projection === params.projection
@@ -587,7 +564,16 @@ export class MapComponent implements OnInit, AfterViewInit {
             query
         );
 
-        const geojson = await this.createGeoJSON(features);
+        const geojson = await MapUtils.createGeoJSON(features);
+
+        const options = {
+            types: {
+                point: 'points',
+                polygon: 'polygons',
+                polyline: 'polylines',
+            },
+            wkt: proj4DestWKT,
+        };
 
         shpwrite.zip(geojson, options).then((content) => {
             saveAs(content, this.nameZip);
@@ -615,7 +601,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         window.focus();
     }
-
+/*
     async createGeoJSON(
         features: any[],
         isProject: boolean = false
@@ -684,7 +670,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         return geojson;
     }
-
+*/
     /*/FeatureServer/0*/
     async createArcgisJSON(features: any[]): Promise<any[]> {
         const arcgisJson = [];

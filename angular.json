@@ -55,7 +55,9 @@
                             "src/styles/tailwind.scss",
                             "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
                         ],
-                        "scripts": ["src/assets/js/shpwrite.js"]
+                        "scripts": ["src/assets/js/shpwrite.js"
+
+                    ]
                     },
                     "configurations": {
                         "production": {
