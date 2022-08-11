@@ -27,6 +27,10 @@ export class LandRegistryMapService {
         return this._landIn.asObservable();
     }
 
+    /*setLandIn(  ){
+
+    }*/
+
 
     set landOut(value: LandRegistryMap){
         this._landOut.next(value);

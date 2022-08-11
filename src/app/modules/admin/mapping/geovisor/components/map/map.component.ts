@@ -367,16 +367,20 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                 const  print = new Print({
                     view: this.view,
+                    printServiceUrl: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/impresionCF/GPServer/Export%20Web%20Map/'
                     // specify your own print service
-                    printServiceUrl:
-                      'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
+                    //printServiceUrl:'https://200.60.146.74/serverdf/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
+                      //'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
                   });
+
                   this.view.ui.add([baseMapGalleryExpand, layerListExpand,legendExpand], {
                     position: 'top-right',
                  });
+
                 this.view.ui.add([homeBtn,filterExpand], {
                     position: 'top-left',
                  });
+
 
                  this.view.ui.add(searchWidget,{position:'manual'});
 
@@ -406,7 +410,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 */
 
 
-
+/*
 watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     if(!this.view.stationary){
       watchUtils.whenTrueOnce(this.view, 'stationary', (evt)=>{
@@ -434,7 +438,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
       });
     }
   })
-
+*/
 
         } catch (error) {
             console.error('EsriLoader: ', error);
