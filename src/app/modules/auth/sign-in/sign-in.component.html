@@ -34,8 +34,8 @@
                         id="username"
                         matInput
                         [formControlName]="'username'">
-                    <mat-error *ngIf="signInForm.get('username').hasError('required')">
-                        Email address is required
+                    <mat-error *ngIf="f.username.hasError('required')">
+                        Email address es obligatorio
                     </mat-error>
                 </mat-form-field>
 
@@ -63,7 +63,7 @@
                             [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                     </button>
                     <mat-error>
-                        Password is required
+                        Password es obligatorio
                     </mat-error>
                 </mat-form-field>
 
@@ -71,7 +71,10 @@
                 <div class="inline-flex items-end justify-center w-full mt-1.5">
                     
                    <div>
-                        recapcha
+                    <re-captcha formControlName="captcha" errorMode="handled" required></re-captcha>
+                    <mat-error *ngIf="f.captcha.hasError('required') && signInForm.dirty">
+                        El captcha es obligatorio
+                    </mat-error>
                    </div>
                 </div>
 
@@ -99,11 +102,10 @@
                         [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
-
             </form>
         </div>
     </div>
-
+    
     <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
         <!-- Background - @formatter:off -->
         <!-- Rings -->

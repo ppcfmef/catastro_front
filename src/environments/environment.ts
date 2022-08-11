@@ -13,7 +13,7 @@ export const environment = {
     production: false,
     url: host,
     apiUrl: host + 'api/v1',
-    captcha: '6LeHBK0bAAAAAOQVTvBOWhfb08cQfUpFoSE3FsmP'
+    captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv'
 };
 
 /*
