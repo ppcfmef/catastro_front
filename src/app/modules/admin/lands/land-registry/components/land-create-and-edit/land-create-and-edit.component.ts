@@ -16,6 +16,7 @@ export class LandCreateAndEditComponent implements OnChanges {
   @Input() landRecord: LandRegistryMap;
   @Input() landMapRecord: LandRegistryMap;
   @Output() showFormEdit = new EventEmitter<boolean>();
+  @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
   title: string;
@@ -73,8 +74,11 @@ export class LandCreateAndEditComponent implements OnChanges {
     if(this.formEdit.valid) {
       const data = this.formEdit.value;
       data.owner = this.ownerId;
+      // ToDo: debe ser en el container
       this.landRegistryService.saveLand(data)
-      .subscribe(result => console.log(result));
+      .subscribe((result) => {
+        this.registerLand.emit(result);
+      });
     }else {
       this.alert.showSnackError('Error al guardar predio');
     }

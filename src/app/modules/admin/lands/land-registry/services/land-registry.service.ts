@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,7 @@ export class LandRegistryService {
   apiUrl = environment.apiUrl;
   private landOwner$ = new BehaviorSubject<LandOwner>(null);
   private landCreate$ = new BehaviorSubject<boolean>(false);
+  private landRegister$ = new BehaviorSubject<LandRegistryMap>(null);
 
   constructor(
     private readonly http: HttpClient,
@@ -33,6 +34,14 @@ export class LandRegistryService {
 
   getLandCreate(): Observable<boolean> {
     return this.landCreate$;
+  }
+
+  setLandRegister(value: LandRegistryMap): void {
+    this.landRegister$.next(value);
+  }
+
+  getLandRegister(): Observable<LandRegistryMap> {
+    return this.landRegister$;
   }
 
   searchOwnerbyDocument(document: string): Observable<LandOwner> {

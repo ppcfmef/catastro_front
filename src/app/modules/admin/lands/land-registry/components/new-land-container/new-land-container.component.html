@@ -5,6 +5,7 @@
         [ownerId]="652"
         [landRecord]="landRecordIn"
         [landMapRecord]="landRecordOut"
+        (registerLand)="registerLand($event)"
         (showFormEdit)="receivedShowFormEdit($event)"></app-land-create-and-edit>
     </ng-container>
     <ng-container *ngIf="!showEditForm">

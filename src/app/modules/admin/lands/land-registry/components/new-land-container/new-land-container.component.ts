@@ -52,6 +52,10 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     this.showEditForm = event;
   }
 
+  registerLand(landRecord: LandRegistryMap): void {
+    this.landRegistryService.setLandRegister(landRecord);
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
