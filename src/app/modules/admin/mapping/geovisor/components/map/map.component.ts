@@ -126,7 +126,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 GroupLayer,
                 Home,
                 Print,
-                
+
                 reactiveUtils,
                 watchUtils
 
@@ -381,19 +381,19 @@ export class MapComponent implements OnInit, AfterViewInit {
                  this.view.ui.add(searchWidget,{position:'manual'});
 
                  this.iniExtent =  this.view.extent;
-                 
+
                   //this.view.ui.add( ,'top-left');
 
-                  //this.view.ui.add(print, "top-right");
+                  this.view.ui.add(print, 'top-right');
 
                  // this.view.ui.add(screenshotDiv, "top-right");
 
 
 
 
-            
-            
-            
+
+
+
                 });
 /*
             reactiveUtils.watch(
@@ -410,14 +410,14 @@ export class MapComponent implements OnInit, AfterViewInit {
 watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     if(!this.view.stationary){
       watchUtils.whenTrueOnce(this.view, 'stationary', (evt)=>{
-        
+
         console.log('this.view.extent>>',this.view.extent);
         console.log('this.iniExtent.extent>>' , this.iniExtent);
-        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin) 
-      
+        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin)
+
          {
-           
-           
+
+
             console.log('stationary>>');
             console.log(this.view.extent);
 
