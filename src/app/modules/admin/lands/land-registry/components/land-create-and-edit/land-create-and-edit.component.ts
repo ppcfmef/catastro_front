@@ -56,26 +56,31 @@ export class LandCreateAndEditComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const landCurentValue = changes?.landMapRecord?.currentValue;
     if (landCurentValue) {
-      const dialogRef = this.confirmationService.info(
-        'Obtener datos',
-        'Desea obtener los datos del mapa base'
-      );
+      if (this.isEdit) {
+        const dialogRef = this.confirmationService.info(
+          'Obtener datos',
+          'Desea obtener los datos del mapa base'
+        );
 
-      dialogRef.afterClosed().toPromise().then((option) => {
-        if (option === 'confirmed') {
-          this.mergeRecords(landCurentValue);
-        }
-      });
+        dialogRef.afterClosed().toPromise().then((option) => {
+          if (option === 'confirmed') {
+            this.mergeRecords(landCurentValue);
+          }
+        });
+      }else {
+        this.mergeRecords(landCurentValue);
+      }
     }else {
       this.landMergeRecord = this.landRecord;
+      if (this.landMergeRecord) {
+        this.isEdit = true;
+      }else {
+        this.isEdit = false;
+      }
       this.createFormEdit();
     }
-    // Generar el texto del titulo e icono en funcion de evento
-    if(this.isEdit){
-      this.title = 'Editar Predio';
-    }else{
-      this.title = 'Añadir Predio';
-    }
+
+    this.setTitle();
   }
 
   saveLand(): void {
@@ -90,8 +95,8 @@ export class LandCreateAndEditComponent implements OnChanges {
             'Registro de predio',
             'Se registro el predio correctamente'
           );
-          this.registerLand.emit(result);
           this.formEdit.reset();
+          this.registerLand.emit(result);
         },
         (error) => {
           this.confirmationService.error(
@@ -122,6 +127,15 @@ export class LandCreateAndEditComponent implements OnChanges {
     }
 
     this.createFormEdit();
+  }
+
+  private setTitle(): void {
+    // Generar el texto del titulo e icono en funcion de evento
+    if(this.isEdit){
+      this.title = 'Editar Predio';
+    }else{
+      this.title = 'Añadir Predio';
+    }
   }
 
 }

@@ -44,7 +44,8 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
         if (this.landOwnerId) {
           this.landRegistryService
           .getLandList({ limit: this.defaultTableLimit, owner: this.landOwnerId })
-          .subscribe(
+          .toPromise()
+          .then(
             (landResult) => {
               this.landRecords = landResult.results;
               this.tableLength = landResult.count;
