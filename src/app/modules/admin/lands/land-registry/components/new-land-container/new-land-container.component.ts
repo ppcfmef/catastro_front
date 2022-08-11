@@ -53,6 +53,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   }
 
   registerLand(landRecord: LandRegistryMap): void {
+    this.landRegistryMapService.landOut = landRecord;
     this.landRegistryService.setLandRegister(landRecord);
   }
 
