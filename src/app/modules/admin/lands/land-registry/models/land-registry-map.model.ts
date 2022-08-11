@@ -191,9 +191,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
             // eslint-disable-next-line @typescript-eslint/naming-convention
             REFERENCIA: this.landmark,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            COOR_X: this.latitude,
+            COOR_X: this.longitude,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            COOR_Y: this.longitude,
+            COOR_Y: this.latitude,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FUENTE: this.sourceInformation,
             // eslint-disable-next-line @typescript-eslint/naming-convention
