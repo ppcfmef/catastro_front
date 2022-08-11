@@ -149,8 +149,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.floor = lote.PISO;
         this.km =lote.KM;
         this.landmark =lote.REFEREN;
-        this.latitude = lote.COOR_X;
-        this.longitude = lote.COOR_Y;
+        this.latitude = lote.COOR_Y;
+        this.longitude = lote.COOR_X;
         this.sourceInformation=lote.FUENTE;
         this.idAranc =lote.ID_ARANC;
         this.idLote= lote.ID_LOTE;
