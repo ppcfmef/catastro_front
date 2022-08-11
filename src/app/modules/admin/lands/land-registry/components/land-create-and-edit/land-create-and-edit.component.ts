@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -25,7 +25,7 @@ export class LandCreateAndEditComponent implements OnChanges {
   constructor(
     private readonly fb: FormBuilder,
     private landRegistryService: LandRegistryService,
-    private alert: MessageProviderService,
+    private confirmationService: CustomConfirmationService,
   ) { }
 
   emitShowFormEdit(): void{
@@ -56,9 +56,19 @@ export class LandCreateAndEditComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const landCurentValue = changes?.landMapRecord?.currentValue;
     if (landCurentValue) {
-      this.mergeRecords(landCurentValue);
+      const dialogRef = this.confirmationService.info(
+        'Obtener datos',
+        'Desea obtener los datos del mapa base'
+      );
+
+      dialogRef.afterClosed().toPromise().then((option) => {
+        if (option === 'confirmed') {
+          this.mergeRecords(landCurentValue);
+        }
+      });
     }else {
       this.landMergeRecord = this.landRecord;
+      this.createFormEdit();
     }
     // Generar el texto del titulo e icono en funcion de evento
     if(this.isEdit){
@@ -66,8 +76,6 @@ export class LandCreateAndEditComponent implements OnChanges {
     }else{
       this.title = 'Añadir Predio';
     }
-
-    this.createFormEdit();
   }
 
   saveLand(): void {
@@ -76,11 +84,27 @@ export class LandCreateAndEditComponent implements OnChanges {
       data.owner = this.ownerId;
       // ToDo: debe ser en el container
       this.landRegistryService.saveLand(data)
-      .subscribe((result) => {
-        this.registerLand.emit(result);
-      });
+      .subscribe(
+        (result) => {
+          this.confirmationService.success(
+            'Registro de predio',
+            'Se registro el predio correctamente'
+          );
+          this.registerLand.emit(result);
+          this.formEdit.reset();
+        },
+        (error) => {
+          this.confirmationService.error(
+            'Registro de predio',
+            'Error al registrar el predio, intente nuevamente'
+          );
+        }
+      );
     }else {
-      this.alert.showSnackError('Error al guardar predio');
+      this.confirmationService.error(
+        'Registro de predio',
+        'Error al registrar el predio, intente nuevamente'
+      );
     }
   }
 
@@ -96,6 +120,8 @@ export class LandCreateAndEditComponent implements OnChanges {
     }else {
       this.landMergeRecord = landCurentValue;
     }
+
+    this.createFormEdit();
   }
 
 }
