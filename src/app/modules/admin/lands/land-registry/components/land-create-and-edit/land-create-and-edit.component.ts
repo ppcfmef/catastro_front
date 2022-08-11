@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandRegistryMapModel } from '../../models/land-registry-map.model';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -9,16 +12,20 @@ import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 })
 export class LandCreateAndEditComponent implements OnChanges {
 
+  @Input() ownerId: number;
   @Input() landRecord: LandRegistryMap;
   @Input() landMapRecord: LandRegistryMap;
   @Output() showFormEdit = new EventEmitter<boolean>();
+  @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
   title: string;
   isEdit = false; //evalua si es para editar o añadir predio
 
   constructor(
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private landRegistryService: LandRegistryService,
+    private confirmationService: CustomConfirmationService,
   ) { }
 
   emitShowFormEdit(): void{
@@ -27,6 +34,7 @@ export class LandCreateAndEditComponent implements OnChanges {
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
+      id: [this.landMergeRecord?.id],
       ubigeo: [this.landMergeRecord?.ubigeo],
       uuType: [this.landMergeRecord?.uuType],
       codUu: [this.landMergeRecord?.codUu],
@@ -46,26 +54,88 @@ export class LandCreateAndEditComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.landMapRecord?.currentValue) {
-      // mergear los valores aceptando
+    const landCurentValue = changes?.landMapRecord?.currentValue;
+    if (landCurentValue) {
+      if (this.isEdit) {
+        const dialogRef = this.confirmationService.info(
+          'Obtener datos',
+          'Desea obtener los datos del mapa base'
+        );
+
+        dialogRef.afterClosed().toPromise().then((option) => {
+          if (option === 'confirmed') {
+            this.mergeRecords(landCurentValue);
+          }
+        });
+      }else {
+        this.mergeRecords(landCurentValue);
+      }
+    }else {
       this.landMergeRecord = this.landRecord;
+      if (this.landMergeRecord) {
+        this.isEdit = true;
+      }else {
+        this.isEdit = false;
+      }
+      this.createFormEdit();
+    }
+
+    this.setTitle();
+  }
+
+  saveLand(): void {
+    if(this.formEdit.valid) {
+      const data = this.formEdit.value;
+      data.owner = this.ownerId;
+      // ToDo: debe ser en el container
+      this.landRegistryService.saveLand(data)
+      .subscribe(
+        (result) => {
+          this.confirmationService.success(
+            'Registro de predio',
+            'Se registro el predio correctamente'
+          );
+          this.formEdit.reset();
+          this.registerLand.emit(result);
+        },
+        (error) => {
+          this.confirmationService.error(
+            'Registro de predio',
+            'Error al registrar el predio, intente nuevamente'
+          );
+        }
+      );
+    }else {
+      this.confirmationService.error(
+        'Registro de predio',
+        'Error al registrar el predio, intente nuevamente'
+      );
+    }
+  }
+
+  private mergeRecords(landCurentValue: LandRegistryMapModel): void {
+    if (this.landRecord) {
+      this.landMergeRecord = this.landRecord;
+      this.landMapRecord = landCurentValue;
       for (const key in this.landMapRecord) {
         if (this.landMapRecord[key]) {
           this.landMergeRecord[key] = this.landMapRecord[key];
         }
       }
-      this.landMergeRecord = this.landMapRecord;
     }else {
-      this.landMergeRecord = this.landRecord;
+      this.landMergeRecord = landCurentValue;
     }
+
+    this.createFormEdit();
+  }
+
+  private setTitle(): void {
     // Generar el texto del titulo e icono en funcion de evento
     if(this.isEdit){
       this.title = 'Editar Predio';
     }else{
       this.title = 'Añadir Predio';
     }
-
-    this.createFormEdit();
   }
 
 }

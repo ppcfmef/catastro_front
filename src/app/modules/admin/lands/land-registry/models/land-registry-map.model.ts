@@ -149,8 +149,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.floor = lote.PISO;
         this.km =lote.KM;
         this.landmark =lote.REFEREN;
-        this.latitude = lote.COOR_X;
-        this.longitude = lote.COOR_Y;
+        this.latitude = lote.COOR_Y;
+        this.longitude = lote.COOR_X;
         this.sourceInformation=lote.FUENTE;
         this.idAranc =lote.ID_ARANC;
         this.idLote= lote.ID_LOTE;
@@ -191,9 +191,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
             // eslint-disable-next-line @typescript-eslint/naming-convention
             REFERENCIA: this.landmark,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            COOR_X: this.latitude,
+            COOR_X: this.longitude,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            COOR_Y: this.longitude,
+            COOR_Y: this.latitude,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FUENTE: this.sourceInformation,
             // eslint-disable-next-line @typescript-eslint/naming-convention

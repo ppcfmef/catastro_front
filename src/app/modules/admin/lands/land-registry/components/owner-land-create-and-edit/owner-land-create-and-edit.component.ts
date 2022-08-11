@@ -2,7 +2,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
 
@@ -27,8 +27,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private alert: MessageProviderService,
     private landRegistryService: LandRegistryService,
+    private confirmationService: CustomConfirmationService,
   ) {}
 
   ngOnInit(): void {
@@ -90,14 +90,23 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
           this.landOwner.setId(result.id);
           this.landRegistryService.setLandOwner(this.landOwner.toJson());
           this.emitShowFormEdit(false);
-          this.alert.showSnack('Propietario registrado correctamente');
+          this.confirmationService.success(
+            'Registro de propietario',
+            'Propietario registrado correctamente'
+          );
         },
         (error) => {
-          this.alert.showSnackError(`Error al registrar propietario - ${JSON.stringify(error?.error)}`);
+          this.confirmationService.success(
+            'Registro de propietario',
+            `Error al registrar propietario - ${JSON.stringify(error?.error)}`
+          );
         }
       );
     }else {
-      this.alert.showSnackError('Error al registrar propietario');
+      this.confirmationService.success(
+        'Registro de propietario',
+        'Error al registrar propietario'
+      );
     }
   }
 
