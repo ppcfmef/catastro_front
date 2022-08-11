@@ -43,6 +43,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .subscribe((result) => {
       if (result) {
         this.showEditForm = result;
+        this.landRecordIn = null;
       }
     });
   }

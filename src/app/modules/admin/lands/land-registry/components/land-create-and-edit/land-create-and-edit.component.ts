@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandRegistryMapModel } from '../../models/land-registry-map.model';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -9,6 +12,7 @@ import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 })
 export class LandCreateAndEditComponent implements OnChanges {
 
+  @Input() ownerId: number;
   @Input() landRecord: LandRegistryMap;
   @Input() landMapRecord: LandRegistryMap;
   @Output() showFormEdit = new EventEmitter<boolean>();
@@ -18,7 +22,9 @@ export class LandCreateAndEditComponent implements OnChanges {
   isEdit = false; //evalua si es para editar o añadir predio
 
   constructor(
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private landRegistryService: LandRegistryService,
+    private alert: MessageProviderService,
   ) { }
 
   emitShowFormEdit(): void{
@@ -27,6 +33,7 @@ export class LandCreateAndEditComponent implements OnChanges {
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
+      id: [this.landMergeRecord?.id],
       ubigeo: [this.landMergeRecord?.ubigeo],
       uuType: [this.landMergeRecord?.uuType],
       codUu: [this.landMergeRecord?.codUu],
@@ -46,15 +53,9 @@ export class LandCreateAndEditComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.landMapRecord?.currentValue) {
-      // mergear los valores aceptando
-      this.landMergeRecord = this.landRecord;
-      for (const key in this.landMapRecord) {
-        if (this.landMapRecord[key]) {
-          this.landMergeRecord[key] = this.landMapRecord[key];
-        }
-      }
-      this.landMergeRecord = this.landMapRecord;
+    const landCurentValue = changes?.landMapRecord?.currentValue;
+    if (landCurentValue) {
+      this.mergeRecords(landCurentValue);
     }else {
       this.landMergeRecord = this.landRecord;
     }
@@ -66,6 +67,31 @@ export class LandCreateAndEditComponent implements OnChanges {
     }
 
     this.createFormEdit();
+  }
+
+  saveLand(): void {
+    if(this.formEdit.valid) {
+      const data = this.formEdit.value;
+      data.owner = this.ownerId;
+      this.landRegistryService.saveLand(data)
+      .subscribe(result => console.log(result));
+    }else {
+      this.alert.showSnackError('Error al guardar predio');
+    }
+  }
+
+  private mergeRecords(landCurentValue: LandRegistryMapModel): void {
+    if (this.landRecord) {
+      this.landMergeRecord = this.landRecord;
+      this.landMapRecord = landCurentValue;
+      for (const key in this.landMapRecord) {
+        if (this.landMapRecord[key]) {
+          this.landMergeRecord[key] = this.landMapRecord[key];
+        }
+      }
+    }else {
+      this.landMergeRecord = landCurentValue;
+    }
   }
 
 }

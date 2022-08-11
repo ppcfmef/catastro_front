@@ -2,6 +2,7 @@
     <app-land-registry-geolocation></app-land-registry-geolocation>
     <ng-container *ngIf="showEditForm" >
         <app-land-create-and-edit
+        [ownerId]="652"
         [landRecord]="landRecordIn"
         [landMapRecord]="landRecordOut"
         (showFormEdit)="receivedShowFormEdit($event)"></app-land-create-and-edit>

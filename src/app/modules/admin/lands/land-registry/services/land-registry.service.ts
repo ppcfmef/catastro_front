@@ -61,4 +61,22 @@ export class LandRegistryService {
   getLandList(queryParams): Observable<IPagination<LandRegistryMap>> {
     return this.http.get<IPagination<LandRegistryMap>>(`${this.apiUrl}/lands/records/`, {params: queryParams});
   }
+
+  saveLand(data: LandRegistryMap): Observable<LandRegistryMap> {
+    if (data.id) {
+      return this.editLandRecord(data.id, data);
+    }else {
+      return this.createLandRecord(data);
+    }
+  }
+
+  createLandRecord(data: LandRegistryMap): Observable<LandRegistryMap> {
+    return this.http.post<LandRegistryMap>(`${this.apiUrl}/lands/register/`, data);
+  }
+
+  editLandRecord(id: number, data: LandRegistryMap): Observable<LandRegistryMap> {
+    // Eliminando registros que el backend no modifica
+    // delete data['<key>'];
+    return this.http.patch<LandRegistryMap>(`${this.apiUrl}/lands/register/${id}/`, data);
+  }
 }
