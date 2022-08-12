@@ -6,6 +6,8 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
@@ -24,6 +26,8 @@ import { LandRegistryMapService } from '../../services/land-registry-map.service
 import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { FormUtils } from 'app/shared/utils/form.utils';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { Role } from 'app/shared/enums/role.enum';
 
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -41,7 +45,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     user: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    ubigeo: string = '010101';
+    userUbigeo: string = '010101';
     /*projection: number=32717;*/
     proj4Catalog = 'EPSG';
     idCargo = 1;
@@ -99,6 +103,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 17,
+            projection: 32717,
         },
 
         {
@@ -112,6 +118,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 17,
+            projection: 32717,
         },
 
         {
@@ -126,6 +134,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 17,
+            projection: 32717,
         },
 
         {
@@ -139,6 +149,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 18,
+            projection: 32718,
         },
 
         {
@@ -152,6 +164,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 18,
+            projection: 32718,
         },
 
         {
@@ -165,6 +179,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 18,
+            projection: 32718,
         },
 
         {
@@ -178,13 +194,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 19,
+            projection: 32719,
         },
 
         {
             title: 'Lotes Poligono Zona 19',
             id: 7,
             idServer: 5,
-            /*'urlBase:'https://ws.mineco.gob.pe/portaldf/rest/services/VALORIZACION/CARTO_VALORIZACION_17/FeatureServer','*/
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
@@ -192,6 +209,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 19,
+            projection: 32719,
         },
 
         {
@@ -205,6 +224,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             definitionExpression: '1<>1',
             featureTable: null,
             popupTemplate: null,
+            utm: 19,
+            projection: 32719,
         },
     ];
 
@@ -213,6 +234,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
+
     urlGestionPredios =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';
 
@@ -223,31 +245,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     constructor(
         private _userService: UserService,
         private commonService: CommonService,
-        private _landRegistryMapService: LandRegistryMapService
-    ) {
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: any) => {
-                this.user = user;
-                console.log('this.user>>', this.user);
-                this.ubigeo =
-                    this.user.ubigeo && this.user.ubigeo
-                        ? this.user.ubigeo
-                        : '010101';
-                this.idCargo = this.user.placeScope.id;
-
-                this.commonService
-                    .getDistrictResource(this.ubigeo)
-                    .subscribe((data: DistrictResource) => {
-                        //console.log('data>>>',data);
-                        this.proj4Wkid = parseInt(
-                            '327' + data.resources[0].utm
-                        );
-                        /*this.projection= parseInt('327'+data.resources[0].utm);
-          console.log('this.user>>>',this.projection);*/
-                    });
-            });
-    }
+        private _landRegistryMapService: LandRegistryMapService,
+        protected _messageProviderService: MessageProviderService
+    ) {}
 
     ngOnInit(): void {
         this._landRegistryMapService.landIn$
@@ -256,8 +256,6 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 console.log(data);
 
                 if (data?.latitude && data?.longitude) {
-                    /*this.proj4Wkid;*/
-
                     this.addPoint(
                         data.latitude,
                         data.longitude,
@@ -277,9 +275,26 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     }
     ngAfterViewInit(): void {
         /*this.points=[{latitude: -13.53063, longitude: -71.955921}] ;*/
-        setTimeout(() => {
-            this.initializeMap(this.points);
-        }, 1000);
+        this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: any) => {
+                this.user = user;
+                console.log('this.user>>', this.user);
+                this.userUbigeo =
+                    this.user.ubigeo && this.user.ubigeo
+                        ? this.user.ubigeo
+                        : '010101';
+                //this.idCargo = this.user.placeScope.id;
+                this.idCargo = this.user.placeScope.id;
+                setTimeout(() => {
+                    this.initializeMap(this.points);
+                }, 1000);
+                /*this.commonService
+                .getDistrictResource(this.userUbigeo)
+                .subscribe((data: DistrictResource) => {
+                    this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
+                });*/
+            });
     }
 
     async initializeMap(inputPoints: any[] = []): Promise<void> {
@@ -340,6 +355,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             const mapViewProperties = {
                 container: this.mapViewEl.nativeElement,
                 zoom: 17,
+                //center: [0,0],
                 center: [-71.955921, -13.53063],
                 map: this.map,
             };
@@ -374,13 +390,6 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             //const graphicsLayer = new GraphicsLayer();
 
             const toolbar = document.getElementById('toolbar');
-            this.view.ui.add([toolbar], {
-                position: 'top-right',
-            });
-
-            this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
-                position: 'top-right',
-            });
 
             this.featureZonaUrbana = new FeatureLayer(this.urlSearchZonaUrbana);
             this.featureDistrito = new FeatureLayer(this.urlSearchDistrito);
@@ -412,20 +421,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 ],
             });
 
-            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-            /*searchWidget.goToOverride = (view, goToParams) => {
-        console.log('goToParams',goToParams);
-        goToParams.scale = 2000;
-        return view.goTo(goToParams.target, goToParams.options);
-      };*/
             searchWidget.on('select-result', (event) => {
                 console.log('The selected search result: ', event);
                 this.view.zoom = 16;
-            });
-
-            this.view.ui.add(searchWidget, {
-                position: 'top-left',
-                index: 1,
             });
 
             const labelClassVias = {
@@ -526,6 +524,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                     this.featureDistrito,
                     point
                 );
+
                 intersect.then((data: any) => {
                     if (data && data.attributes) {
                         const ubigeo = data.attributes['UBIGEO'];
@@ -536,92 +535,131 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                 ? this.user.placeScope.ubigeo
                                 : '010101';
                         console.log('this.user>>', this.user);*/
-                        const idCargo=this.user.placeScope.id;
-                        if(idCargo === 3){
 
-                        }
+                        if (
+                            this.idCargo === Role.DISTRITAL &&
+                            this.userUbigeo !== ubigeo
+                        ) {
+                            this._messageProviderService.showAlert(
+                                'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
+                            );
+                        } else {
+                            const landRegistryMapModel: LandRegistryMapModel =
+                                new LandRegistryMapModel();
+                            landRegistryMapModel.latitude = latitude;
+                            landRegistryMapModel.longitude = longitude;
+                            landRegistryMapModel.ubigeo = ubigeo;
 
+                            this.view.hitTest(event).then((response) => {
+                                /*console.log('response.results>>>',response.results);*/
+                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                const results = response.results.filter((r) => {
+                                    console.log(
+                                        r,
+                                        r.graphic,
+                                        r.graphic.layer,
+                                        r.graphic.layer.layerId
+                                    );
+                                    if (
+                                        r &&
+                                        r.graphic &&
+                                        r.graphic.layer &&
+                                        r.graphic.layer.layerId === 1
+                                    ) {
+                                        return r;
+                                    }
+                                });
+                                console.log(results);
 
-                        const landRegistryMapModel: LandRegistryMapModel =
-                            new LandRegistryMapModel();
-                        landRegistryMapModel.latitude = latitude;
-                        landRegistryMapModel.longitude = longitude;
-                        landRegistryMapModel.ubigeo = ubigeo;
-                        //this._landRegistryMapService.landOut=landRegistryMapModel;
-                        this.view.hitTest(event).then((response) => {
-                            /*console.log('response.results>>>',response.results);*/
-                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                            const results = response.results.filter((r) => {
-                                console.log(
-                                    r,
-                                    r.graphic,
-                                    r.graphic.layer,
-                                    r.graphic.layer.layerId
-                                );
-                                if (
-                                    r &&
-                                    r.graphic &&
-                                    r.graphic.layer &&
-                                    r.graphic.layer.layerId === 1
-                                ) {
-                                    return r;
-                                }
-                            });
-                            console.log(results);
-
-                            if (results.length > 0) {
-                                const resultsLen = results.length - 1;
-
-                                if (
-                                    results[resultsLen] &&
-                                    results[resultsLen].graphic &&
-                                    results[resultsLen].graphic.geometry
-                                ) {
-                                    graphic = results[resultsLen].graphic;
-                                    //console.log('graphic>>', graphic);
+                                if (results.length > 0) {
+                                    const resultsLen = results.length - 1;
 
                                     if (
-                                        graphic &&
-                                        graphic.attributes &&
-                                        graphic.attributes['ID_LOTE']
+                                        results[resultsLen] &&
+                                        results[resultsLen].graphic &&
+                                        results[resultsLen].graphic.geometry
                                     ) {
-                                        //  console.log('graphic.attributes>>', graphic.attributes);
-                                        latitude = graphic.geometry.latitude;
-                                        longitude = graphic.geometry.longitude;
+                                        graphic = results[resultsLen].graphic;
+                                        //console.log('graphic>>', graphic);
 
-                                        latitude = graphic.attributes['COOR_Y'];
-                                        longitude =
-                                            graphic.attributes['COOR_X'];
-                                        const lote = graphic.attributes;
-                                        const _landRegistryMapModel: LandRegistryMapModel =
-                                            new LandRegistryMapModel();
-                                        _landRegistryMapModel.loteToLandRegistryMapModel(
-                                            lote
-                                        );
+                                        if (
+                                            graphic &&
+                                            graphic.attributes &&
+                                            graphic.attributes['ID_LOTE']
+                                        ) {
+                                            //  console.log('graphic.attributes>>', graphic.attributes);
+                                            latitude =
+                                                graphic.geometry.latitude;
+                                            longitude =
+                                                graphic.geometry.longitude;
 
-                                        const _gestionPredio =
+                                            latitude =
+                                                graphic.attributes['COOR_Y'];
+                                            longitude =
+                                                graphic.attributes['COOR_X'];
+                                            const lote = graphic.attributes;
+                                            const _landRegistryMapModel: LandRegistryMapModel =
+                                                new LandRegistryMapModel();
+                                            _landRegistryMapModel.loteToLandRegistryMapModel(
+                                                lote
+                                            );
+                                            this._landRegistryMapService.landOut =
+                                            _landRegistryMapModel;
+                                            /*const _gestionPredio =
                                             _landRegistryMapModel.getGestionPredios();
                                         this._landRegistryMapService.landOut =
                                             _landRegistryMapModel;
-                                        this.addPoint(
-                                            latitude,
-                                            longitude,
-                                            this.simpleMarkerSymbol
-                                        );
+*/
+
+                                            this.addPoint(
+                                                latitude,
+                                                longitude,
+                                                this.simpleMarkerSymbol
+                                            );
+                                        }
                                     }
+                                } else {
+
+                                    this._landRegistryMapService.landOut =
+                                        landRegistryMapModel;
+                                    this.addPoint(
+                                        latitude,
+                                        longitude,
+                                        this.simpleMarkerSymbolUndefined
+                                    );
                                 }
-                            } else {
-                                this._landRegistryMapService.landOut =
-                                    landRegistryMapModel;
-                                this.addPoint(
-                                    latitude,
-                                    longitude,
-                                    this.simpleMarkerSymbolUndefined
-                                );
-                            }
-                        });
+                            });
+                        }
                     }
                 });
+            });
+
+            const screenshotDiv = document.getElementById('screenshotDiv');
+
+            this.view.when(() => {
+                if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
+                    const where = `UBIGEO='${this.userUbigeo}'`;
+                    this.zoomToUbigeo(where);
+                }
+
+                this.view.ui.add(searchWidget, {
+                    position: 'top-left',
+                    index: 1,
+                });
+
+                this.view.ui.add([toolbar], {
+                    position: 'top-right',
+                });
+
+                this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
+                    position: 'top-right',
+                });
+
+                this.view.ui.add([baseMapGalleryExpand, screenshotDiv], {
+                    position: 'top-right',
+                });
+                /*const where = '\'UBIGEO = '
+                zoomToUbigeo(where: string)*/
             });
         } catch (error) {
             console.error('EsriLoader: ', error);
@@ -636,6 +674,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             ] = await loadModules(['esri/Graphic']);
 
             this.view.graphics.removeAll();
+
+            console.log('latitude,longitude>>>', latitude, longitude);
             const point = {
                 //Create a point
                 type: 'point',
@@ -656,13 +696,230 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     async zoomToUbigeo(where: string): Promise<any> {
         try {
             console.log('where>>>', where);
+            console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);
             MapUtils.zoomToFeature(this.view, this.featureZonaUrbana, where);
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
     }
 
-    //async saveGestionPredios(_landRegistryMap: LandRegistryMap): Promise<void>{
+    async downloadPDF(): Promise<void> {
+
+        const doc = new jsPDF();
+
+
+        const screenshot = await this.view.takeScreenshot({
+            format: 'jpg',
+            quality: 100,
+        });
+
+        autoTable(doc, {
+            theme: 'grid',
+            styles: {
+                lineWidth: 0,
+                overflow: 'linebreak',
+            },
+            body: [
+                [
+                    {
+                        content:
+                            'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO - CATASTRO FISCAL',
+                        colSpan: 2,
+                        styles: {
+                            halign: 'center',
+                            fontStyle: 'bold',
+                            fontSize: 16,
+                        },
+                    },
+
+                    {
+                        content: '',
+
+                    },
+                ],
+
+                [
+                    {
+                        content: 'MUNICIPALIDAD DE  UBIGEO',
+                        colSpan: 2,
+                        styles: { halign: 'center', fontSize: 14 },
+                    },
+                    {
+                        content: '',
+
+                    },
+                ],
+
+                [
+                    {
+                        content:
+                            'Yo,(CONTRIBUYENTE),  identificado(a) con DNI/RUC Nº (RUC/DNI), con datos de contacto (TELEFONO),(EMAIL), en pleno ejercicio de mis derechos ciudadanos ',
+                            colSpan: 2,
+                    },
+
+                ],
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content:
+                            'DECLARO BAJO JURAMENTO: Que el predio con dirección (TIPO HABILITACIÓN, NOMBRE HABILITACIÓN, TIPO VIA, NOMBRE VIA, MANZANA, LOTE, N° ALTERNO, BLOQUE, INTERIOR, PISO, N° DEPARTAMENTO, KILOMETRO), se encuentra ubicado tal cual se muestra en el siguiente croquis:',
+                            colSpan: 2,
+                    },
+
+                ],
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content: 'CROQUIS DE UBICACIÓN',
+                        colSpan: 2,
+                        styles: {
+                            halign: 'center',
+                            fontStyle: 'bold',
+                            fontSize: 14,
+                        },
+                    },
+                    {
+                        content: '',
+
+                    },
+                ],
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content: '',
+                        colSpan: 2,
+                        styles: {
+                            halign: 'center',
+                            minCellHeight: 105
+                            //fontStyle: 'bold',
+                            //fontSize: 14,
+                        },
+                    },
+                    {
+                        content: '',
+
+                    },
+                ],
+
+
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content: ' UBICACIÓN GEOGRÁFIA: (LATITUD/LONGITUD)',
+                        colSpan: 2,
+                        styles: {
+                            halign: 'center',
+                            fontStyle: 'bold',
+                            //fontSize: 14,
+                        },
+                    },
+
+                ],
+
+
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedaden la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).',
+                        colSpan: 2,
+                    },
+
+                ],
+
+                [
+                    // eslint-disable-next-line max-len
+                    {
+                        content: 'En señal de conformidad firmo el presente documento.',
+                        colSpan: 2,
+
+                    },
+
+                    {
+                        content: '',
+
+                    },
+                ],
+                [
+                    {
+                        content: '',
+                        styles: {
+                            minCellWidth: 100
+                        },
+                    },
+
+                    {
+                        content: 'Distrito,(DIA) de (MES) del (AÑO)',
+
+                    },
+                ],
+
+                [
+                    {
+                        content: '',
+                        styles: {
+                            minCellWidth: 100
+                        },
+                    },
+                    // eslint-disable-next-line max-len
+                    {
+                        content: 'Firma : ____________________',
+
+                    },
+                ],
+
+                [
+                    {
+                        content: '',
+                        styles: {
+                            minCellWidth: 100
+                        },
+
+                    },
+                    // eslint-disable-next-line max-len
+                    {
+                        content: 'Huella : ____________________',
+
+                    },
+                ],
+
+                [
+                    {
+                        content: 'Operador Plataforma: Jose Carlos Ramirez Tello',
+                       colSpan:2,
+
+                    },
+
+                ],
+
+            ],
+
+            didDrawCell: (data: any) => {
+
+                if (data.section === 'body' && data.column.index ===0 && data.row.index ===5){
+                    console.log('data>>',data);
+                    /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
+                    doc.addImage(
+                        screenshot.dataUrl,
+                        'JPEG',
+                        data.cell.x + 40,
+                        data.cell.y ,
+                        100,
+                        100
+                    );
+                }
+
+            },
+
+        });
+
+
+        doc.save('Declaración Jurada de Ubicación de Predio.pdf');
+    }
 
     async saveGestionPredios(_gestionPredios: GestionPredios): Promise<void> {
         if (_gestionPredios.ID_LOTE) {

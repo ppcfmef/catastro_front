@@ -10,13 +10,16 @@ import { MapUtils } from 'app/shared/utils/map.utils';
 import { ServiceLayer } from 'app/shared/models/image-layer.interface';
 declare let shpwrite: any;
 import { saveAs } from 'file-saver';
+
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-    iniExtent:any;
+    iniExtent: any;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
     drawerMode: 'side' | 'over';
     title = 'Gestor Cartográfico';
