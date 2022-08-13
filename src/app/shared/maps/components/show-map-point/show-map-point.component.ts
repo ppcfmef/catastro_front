@@ -1,5 +1,3 @@
-
-
 import { Coordinates } from '../../maps.type';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild,OnChanges  } from '@angular/core';
 import { loadModules } from 'esri-loader';
@@ -23,11 +21,9 @@ import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land
 })
 export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
     @Input() points: Coordinates[]=[{latitude: -13.53063, longitude: -71.955921},{latitude: -13.54, longitude: -71.955921}];
-    @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
-
     @Input()landOwner: LandOwner;
     @Input()landRecord: LandRecord;
-    
+    @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
@@ -81,26 +77,26 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
           }
         ];
 
-  constructor( 
-    
+  constructor(
+
     private _landRecordService: LandRecordService,
     private _commonService: CommonService,
     private _userService: UserService,
-    
-    ) { 
+
+    ) {
 
 
 
   }
 
   ngOnInit(): void {
-    
-    this._landRecordService.getLandRecordDownloadCroquis().subscribe((res :boolean)=>{
+
+    this._landRecordService.getLandRecordDownloadCroquis().subscribe((res: boolean)=>{
       if(res){
         this.downloadPDF();
       }
     });
-   
+
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
@@ -114,8 +110,8 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
             .getDistrictResource(ubigeo)
             .subscribe((data: DistrictResource) => {
 
-           
-           
+
+
             });*/
     });
   }
@@ -265,7 +261,7 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
   async downloadPDF(): Promise<void>{
 
     const _districtResource: DistrictResource= await this._commonService.getDistrictResource(this.landRecord.ubigeo).toPromise();
-    
+
 
 
     const doc = new jsPDF();
@@ -278,12 +274,12 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
       autoTable(doc, {
         body: [
           [{ content: 'FICHA DE PREDIO - CATASTRO FISCAL', colSpan: 2, styles: { halign: 'center' } },
-        
+
         ],
         //`${l.urlBase}/${l.idServer}`
         [  { content: `MUNICIPALIDAD DE ${_districtResource.name} UBIGEO  ${this.landRecord.ubigeo}`, colSpan: 2, styles: { halign: 'center' } }],
 
-        [  { content: `Fecha ${moment().format("DD/MM/YYYY")}` }, { content: `Usuario ${this.user.name}` }],
+        [  { content: `Fecha ${moment().format('DD/MM/YYYY')}` }, { content: `Usuario ${this.user.name}` }],
 
         [{ content: `Código Predial Único: ${this.landRecord.cup}` , colSpan: 2}],
         [{ content: `Código de Predio Municipal: ${this.landRecord.cpm}` , colSpan: 2}],
@@ -291,26 +287,26 @@ export class ShowMapPointComponent implements OnInit,AfterViewInit, OnChanges  {
        [ { content: `Contribuyente: ${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}` , colSpan: 2}],
        [ { content: `RUC / DNI: ${this.landOwner?.dni }` , colSpan: 2}],
         [{ content: `Área terreno: ${ this.landRecord?.landArea } mt2  ` , colSpan: 2}],
-       [ { content: `Área Construida:  mt2` , colSpan: 2},]
-       //landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname 
+       [ { content: 'Área Construida:  mt2' , colSpan: 2},]
+       //landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname
         ],
 
 
-      })
+      });
 
 
     const  screenshot=await  this.view.takeScreenshot({
-      format: "jpg",
+      format: 'jpg',
       quality: 100,
-      
-    })
+
+    });
     doc.addImage(screenshot.dataUrl, 'JPEG', 35, 100,135 , 75);
- 
-    
+
+
 
       doc.save('documneto.pdf');
 
-     
+
 
 
 

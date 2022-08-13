@@ -29,7 +29,7 @@ export interface User {
     department?: Department;
     province?: Province;
     district?: District;
-    placeScope?:any;
+    placeScope?: any;
 }
 
 

@@ -16,8 +16,8 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-    iniExtent:any;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+    iniExtent: any;
     drawerMode: 'side' | 'over';
     title = 'Gestor Cartográfico';
     view: any = null;
@@ -126,7 +126,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 GroupLayer,
                 Home,
                 Print,
-                
+
                 reactiveUtils,
                 watchUtils
 
@@ -381,7 +381,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                  this.view.ui.add(searchWidget,{position:'manual'});
 
                  this.iniExtent =  this.view.extent;
-                 
+
                   //this.view.ui.add( ,'top-left');
 
                   //this.view.ui.add(print, "top-right");
@@ -391,9 +391,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
 
-            
-            
-            
+
+
+
                 });
 /*
             reactiveUtils.watch(
@@ -409,31 +409,27 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     if(!this.view.stationary){
-      watchUtils.whenTrueOnce(this.view, 'stationary', (evt)=>{
-        
+      watchUtils.whenTrueOnce(this.view, 'stationary', (evtInner)=>{
+
         console.log('this.view.extent>>',this.view.extent);
         console.log('this.iniExtent.extent>>' , this.iniExtent);
-        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin) 
-      
-         {
-           
-           
+        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin){
             console.log('stationary>>');
             console.log(this.view.extent);
 
             this.view.extent = this.iniExtent;
-        console.log("max extent reached, rolling back to previous extent");
+        console.log('max extent reached, rolling back to previous extent');
          }
 
       });
     }else{
 
-      watchUtils.whenFalseOnce(this.view, 'interacting', (evt)=>{
+      watchUtils.whenFalseOnce(this.view, 'interacting', (evtInner)=>{
         console.log('interacting>>');
         console.log(this.view.extent);
       });
     }
-  })
+  });
 
 
         } catch (error) {
@@ -453,7 +449,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     async zoomToUbigeo(where: string): Promise<any> {
         try {
             console.log('where>>', where);
-            const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7'
+            const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
 
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const [FeatureLayer]= await loadModules(['esri/layers/FeatureLayer',]);

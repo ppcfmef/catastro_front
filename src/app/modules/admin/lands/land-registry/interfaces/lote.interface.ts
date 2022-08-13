@@ -59,7 +59,7 @@ export interface Lote {
     UBIGEO: string;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-    AREA:number;
+    AREA: number;
 }
 
 

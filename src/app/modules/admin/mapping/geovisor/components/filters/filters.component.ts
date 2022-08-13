@@ -25,7 +25,7 @@ export class FiltersComponent implements OnInit {
   isDisabled = true;
   isDisabledDescargar = true;
 
-  layers:any[]=[];
+  layers: any[]=[];
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output()
   buscarEventEmitter = new EventEmitter<any>();
