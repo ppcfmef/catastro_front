@@ -219,7 +219,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
         this.commonService.getDistrictResource(this.ubigeo).subscribe((data: DistrictResource)=>{
 
             console.log('data>>>',data);
-            this.proj4Wkid =  parseInt('327'+data.resources[0].utm);
+            this.proj4Wkid =  parseInt('327'+data.resources[0].utm, 10);
           /*this.projection= parseInt('327'+data.resources[0].utm);
           console.log('this.user>>>',this.projection);*/
         });
@@ -247,7 +247,7 @@ export class LandRegistryGeolocationComponent  implements OnInit,AfterViewInit {
 
         else if(data && data.ubigeo){
 
-            const where=" UBIGEO='"+data.ubigeo+"'";
+            const where=' UBIGEO=\''+data.ubigeo+'\'';
             setTimeout(() => {this.zoomToUbigeo(where); }, 1000);
         }
     });
@@ -740,7 +740,4 @@ async createArcgisJSON(features: GestionPredios[]): Promise<any[]>{
     /*console.log('result>>',result);*/
 
   }
-
-
-
 }

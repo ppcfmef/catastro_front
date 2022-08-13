@@ -5,67 +5,67 @@ import { Lote } from '../interfaces/lote.interface';
 
 export class LandRegistryMapModel implements LandRegistryMap{
     id: number;
-    secEjec:number;
-    ubigeo:string;
+    secEjec: number;
+    ubigeo: string;
     cup: string;  // codigo unico patrimonial
-    codSect:string;
+    codSect: string;
     cpm: string;  // codigo patrimonial municipio
     codUu: string;
-    codMzn:string;
-    codLand:string;
-    codCuc:string;
-    uuType:string;
+    codMzn: string;
+    codLand: string;
+    codCuc: string;
+    uuType: string;
     habilitacionName: string;
-    referenceName:string;
+    referenceName: string;
     urbanMza: string;
     urbanLotNumber: number;
     streetType: string;
     streetName: string;
-    streetNameAlt:string;
-    municipalNumber:string;
+    streetNameAlt: string;
+    municipalNumber: string;
     block: string;
     indoor: string;
-    floor:string;
-    km:string;
+    floor: string;
+    km: string;
     site: number;
-    landmark:string;
-    municipalAddress:string;
-    urbanAddress:string;
-    assignedAddress:string;
+    landmark: string;
+    municipalAddress: string;
+    urbanAddress: string;
+    assignedAddress: string;
     latitude: number;
     longitude: number;
 
-    idAranc:string;
+    idAranc: string;
 
-    documentType:string;
-    document:string;
+    documentType: string;
+    document: string;
 
-    codOwner:string;
-    name:string;
-    paternalSurname:string;
-    maternalSurname:string;
-    descriptionOwner:string;
-    taxAddress:string;
-    status:number;
+    codOwner: string;
+    name: string;
+    paternalSurname: string;
+    maternalSurname: string;
+    descriptionOwner: string;
+    taxAddress: string;
+    status: number;
     landArea: number;
-    frontLength:number;
-    locationPark:string;
-    groupUseDesc:string;
-    numberInhabitants:number;
-    classificationLandDesc:string;
-    buildStatusDesc:string;
-    propertyType:string;
-    selfAssessmentTotal:number;
-    condominium:number;
-    deduction:number;
-    selfAssessmentAffection:number;
+    frontLength: number;
+    locationPark: string;
+    groupUseDesc: string;
+    numberInhabitants: number;
+    classificationLandDesc: string;
+    buildStatusDesc: string;
+    propertyType: string;
+    selfAssessmentTotal: number;
+    condominium: number;
+    deduction: number;
+    selfAssessmentAffection: number;
 
-    sourceInformation:string;
-    resolutionType:string;
-    resolutionDocument:string;
-    idLote:number;
+    sourceInformation: string;
+    resolutionType: string;
+    resolutionDocument: string;
+    idLote: number;
 
-    constructor(l?:LandRegistryMap){
+    constructor(l?: LandRegistryMap){
         this.id= l?.id;
         this.secEjec=l?.secEjec;
         this.ubigeo=l?.ubigeo;

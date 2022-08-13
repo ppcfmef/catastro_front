@@ -503,7 +503,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         try {
             console.log('where>>', where);
             const layerDistrito = this.layersInfo.find(
-                (e) => e.title === 'Distritos'
+                e => e.title === 'Distritos'
             ).featureLayer;
 
             this._fuseSplashScreenService.show(0);
@@ -548,7 +548,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
         const _layer = this.layersInfo.find(
-            (e) => e.idServer === 0 && e.projection === params.projection
+            e => e.idServer === 0 && e.projection === params.projection
         );
         const _featureLayer = new FeatureLayer(
             _layer.urlBase + '/' + _layer.idServer
@@ -741,7 +741,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 );*/
 
                 const _layer = this.layersInfo.find(
-                    (e) => e.idServer === 1 && e.projection === this.proj4DestWkid
+                    e => e.idServer === 1 && e.projection === this.proj4DestWkid
                 );
                 const url =
                     `${_layer.urlBase}/${_layer.idServer}/addFeatures`.replace(

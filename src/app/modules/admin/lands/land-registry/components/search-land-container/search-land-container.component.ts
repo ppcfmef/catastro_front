@@ -35,11 +35,11 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   landOwner: LandOwner;
   landRecord: LandRecord;
-  
+
   constructor(
     private _landOwnerService: LandOwnerService,
     private landRecordService: LandRecordService,
-  
+
   ) {
     this.createFormFilters();
   }
@@ -95,14 +95,13 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     );
   }
 
+  onDowloandCroquis(): void{
+    this.landRecordService.setLandRecordDownloadCroquis(true);
+  }
+
   private createFormFilters(): void {
     this.formFilters = new FormGroup({
       search: new FormControl(),
     });
   }
-
-  onDowloandCroquis():void{
-    this.landRecordService.setLandRecordDownloadCroquis(true);
-  }
-
 }

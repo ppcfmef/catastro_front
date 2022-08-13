@@ -98,14 +98,13 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     setTimeout(()=> { this.showLandsMap = true; }, 1000);
   }
 
+  onDowloandCroquis(): void{
+    this.landRecordService.setLandRecordDownloadCroquis(true);
+  }
+
   private createFormFilters(): void {
     this.formFilters = new FormGroup({
       search: new FormControl(),
     });
   }
-
-  onDowloandCroquis():void{
-    this.landRecordService.setLandRecordDownloadCroquis(true);
-  }
-
 }
