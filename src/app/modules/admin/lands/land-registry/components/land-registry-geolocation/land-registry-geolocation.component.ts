@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
 import { GestionPredios } from '../../interfaces/gestion-predios.interface';
 import { LandMapIn } from '../../interfaces/land-map-in.interface';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
-import { LandMapInModel, LandModel } from '../../models/land-map-in.model';
+import { LandMapInModel } from '../../models/land-map-in.model';
 import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
@@ -92,6 +92,21 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     };
 
     layersInfo = [
+       /* {
+            title: 'Lotes Zona 17',
+            id: 0,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: 17,
+            projection: 32717,
+        },*/
+
         {
             title: 'Lotes Zona 17',
             id: 0,
@@ -137,6 +152,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             utm: 17,
             projection: 32717,
         },
+
+
 
         {
             title: 'Lotes Zona 18',
@@ -244,7 +261,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     featureDistrito: any;
     constructor(
         private _userService: UserService,
-        private commonService: CommonService,
+        private _commonService: CommonService,
         private _landRegistryMapService: LandRegistryMapService,
         protected _messageProviderService: MessageProviderService
     ) {}
@@ -253,7 +270,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: LandRegistryMap) => {
-                console.log(data);
+                console.log('LandRegistryMap>>',data);
 
                 if (data?.latitude && data?.longitude) {
                     this.addPoint(
@@ -271,6 +288,37 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                         this.zoomToUbigeo(where);
                     }, 1000);
                 }
+            });
+
+            this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data: LandRegistryMap) => {
+                /*console.log(data);*/
+                const _landRegistryMapModel=new LandRegistryMapModel(data);
+                /*const _gestionPredio =*/
+                console.log('_landRegistryMapModel>>',_landRegistryMapModel);
+                //if (_landRegistryMapModel.idLote){
+
+                    _landRegistryMapModel.idLote =1000;
+                    this.saveGestionPredios(_landRegistryMapModel);
+                    //const =_landRegistryMapMocel.getGestionPredios();
+                //}
+                //this.saveGestionPredios
+                /*if (data?.latitude && data?.longitude) {
+                    this.addPoint(
+                        data.latitude,
+                        data.longitude,
+                        this.simpleMarkerSymbol
+                    );
+                    if (this.view) {
+                        this.view.center = [data.longitude, data.latitude];
+                        this.view.zoom = 19;
+                    }
+                } else if (data && data.ubigeo) {
+                    const where = " UBIGEO='" + data.ubigeo + "'";
+                    setTimeout(() => {
+                        this.zoomToUbigeo(where);
+                    }, 1000);
+                }*/
             });
     }
     ngAfterViewInit(): void {
@@ -550,6 +598,15 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                             landRegistryMapModel.longitude = longitude;
                             landRegistryMapModel.ubigeo = ubigeo;
 
+
+
+                                    /*.subscribe((data: DistrictResource) => {
+                                        this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
+                                    });*/
+                    /*
+                            const _layer = this.layersInfo.find(
+                                        (e) =>  e.utm === utm
+                                    );*/
                             this.view.hitTest(event).then((response) => {
                                 /*console.log('response.results>>>',response.results);*/
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -600,22 +657,37 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                             const lote = graphic.attributes;
                                             const _landRegistryMapModel: LandRegistryMapModel =
                                                 new LandRegistryMapModel();
+                                            console.log('lote>>',lote);
                                             _landRegistryMapModel.loteToLandRegistryMapModel(
                                                 lote
                                             );
-                                            this._landRegistryMapService.landOut =
-                                            _landRegistryMapModel;
+
+
                                             /*const _gestionPredio =
                                             _landRegistryMapModel.getGestionPredios();
                                         this._landRegistryMapService.landOut =
                                             _landRegistryMapModel;
-*/
+                                        */
+                                       /*
+                                       this._commonService.getDistrictResource(ubigeo).subscribe(()=>{
+                                        const utm=district.resources[0].utm;
+                                        const _layer = this.layersInfo.find(
+                                            (e) =>  e.utm === utm
+                                        );
 
+                                         const wkid = parseInt('327' + utm, 10);
+                                       });
+                                        const district: DistrictResource =await this._commonService.getDistrictResource(ubigeo).toPromise();
+                                        */
                                             this.addPoint(
                                                 latitude,
                                                 longitude,
                                                 this.simpleMarkerSymbol
                                             );
+                                            this._landRegistryMapService.landOut =
+                                            _landRegistryMapModel;
+
+
                                         }
                                     }
                                 } else {
@@ -921,47 +993,111 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         doc.save('Declaración Jurada de Ubicación de Predio.pdf');
     }
 
-    async saveGestionPredios(_gestionPredios: GestionPredios): Promise<void> {
-        if (_gestionPredios.ID_LOTE) {
-            /*const _landRegistryMapModel = new LandRegistryMapModel(_landRegistryMap);
-        const _gestionPredios: GestionPredios=_landRegistryMapModel.getGestionPredios();*/
-            const json = await this.createArcgisJSON([_gestionPredios]);
+    async saveGestionPredios(
+        data: LandRegistryMapModel
+        //_gestionPredios: GestionPredios
+
+        ): Promise<void> {
+
+        const district: DistrictResource =await this._commonService.getDistrictResource(data.ubigeo).toPromise();
+        const utm=district.resources[0].utm;
+
+                /*.subscribe((data: DistrictResource) => {
+                    this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
+                });*/
+
+        const _layer = this.layersInfo.find(
+                    (e) =>  e.utm === utm
+                );
+
+
+        const wkid = parseInt('327' + utm, 10);
+        /*const urlGestionPredios;*/
+        ///0/addFeatures
+        if (data.idLote) {
+            const _predio=data.getPredios();
+            const urlBase=`${_layer.urlBase}/0/addFeatures`;
+
+            const json = await this.createArcgisJSON([_predio],wkid);
+
             console.log('json>>>', json);
             const formData = new FormData();
             formData.append('features', JSON.stringify(json));
 
-            fetch(`${this.urlGestionPredios}`, {
+            fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
             })
                 .then((resObj) => {
+                    this._messageProviderService.showSnack('Registro guardado correctamente');
                     /*this._fuseSplashScreenService.hide();
                 this._messageProviderService.showSnack('Registrados cargados correctamente');*/
                 })
                 .catch((error) => {
+                    this._messageProviderService.showSnack('Error de guardado');
                     /*this._messageProviderService.showSnackError('Registrados no cargados');*/
                 });
+        }else{
+            const _gestionPredio=data.getGestionPredios();
+            const urlBase = this.urlGestionPredios;
+            const json = await this.createArcgisJSON([_gestionPredio],4326);
+
+            const formData = new FormData();
+            formData.append('features', JSON.stringify(json));
+
+            fetch(`${urlBase}`, {
+                method: 'POST',
+                body: formData,
+            })
+                .then((resObj) => {
+                    this._messageProviderService.showSnack('Registro guardado correctamente');
+                    /*this._fuseSplashScreenService.hide();
+                this._messageProviderService.showSnack('Registrados cargados correctamente');*/
+                })
+                .catch((error) => {
+                    this._messageProviderService.showSnack('Error de guardado');
+                    /*this._messageProviderService.showSnackError('Registrados no cargados');*/
+                });
+
         }
     }
 
     /*/FeatureServer/0*/
-    async createArcgisJSON(features: GestionPredios[]): Promise<any[]> {
+    async createArcgisJSON(features: any[],projectionWkid: number): Promise<any[]> {
         const arcgisJson = [];
         /* eslint-disable @typescript-eslint/naming-convention */
-        const [Graphic, Polyline, projection, SpatialReference] =
+        const [Graphic, Polyline,Point, projection, SpatialReference] =
             await loadModules([
                 'esri/Graphic',
                 'esri/geometry/Polyline',
+                'esri/geometry/Point',
                 'esri/geometry/projection',
                 'esri/geometry/SpatialReference',
             ]);
         /* eslint-enable @typescript-eslint/naming-convention */
         const outSpatialReference = new SpatialReference(
-            this.proj4GestionPrediosWkid
+            projectionWkid
+            //this.proj4GestionPrediosWkid
         );
 
+
         return projection.load().then(() => {
-            features.forEach((feature: GestionPredios) => {
+            features.forEach((feature: any) => {
+
+                if (projectionWkid!==4326)
+                {
+                    const geometryIni = new Point({
+                        x: feature.COOR_X,
+                        y: feature.COOR_Y,
+                        spatialReference: {
+                          wkid: 4326
+                        }
+                      });
+                      const pointProject=projection.project(geometryIni, outSpatialReference);
+                      feature.COOR_X=pointProject.x;
+                      feature.COOR_Y=pointProject.y;
+                }
+
                 const geometry = {
                     x: feature.COOR_X,
                     y: feature.COOR_Y,
@@ -976,6 +1112,38 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             });
             return Promise.all(arcgisJson);
         });
+
+/*
+        const outSpatialReference = new SpatialReference(projectionWkid);
+
+        return projection.load().then(() => {
+            features.forEach((feature) => {
+                const attr = feature.properties;
+
+                for (const key in attr) {
+                    if (!attr[key] || key === 'OBJECTID') {
+                        delete attr[key];
+                    }
+                }
+
+                if (feature.geometry) {
+                    const geoFeature = geojsonToArcGIS(feature);
+                    const newGeometry = projection.project(
+                        geoFeature.geometry,
+                        outSpatialReference
+                    );
+                    geoFeature.geometry = {
+                        paths: newGeometry.paths,
+                        spatialReference: {
+                            wkid: newGeometry.spatialReference.wkid,
+                        },
+                    };
+                    arcgisJson.push(geoFeature);
+                }
+            });
+            return Promise.all(arcgisJson);
+            //  return arcgisJson;
+        });*/
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -993,8 +1161,5 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             feature = results.features[0];
         }
         return feature;
-        //return results.features ;
-
-        /*console.log('result>>',result);*/
     }
 }

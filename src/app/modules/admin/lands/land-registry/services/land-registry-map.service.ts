@@ -16,6 +16,10 @@ export class LandRegistryMapService {
   public _gestionPredios: Subject<LandRegistryMap> = new Subject();
 
 
+  /*
+  public _landIn = new Subject<LandRegistryMap>();
+  */
+
   constructor() {
   }
 

@@ -1,3 +1,6 @@
+import { LandOwner } from './land-owner.interface';
+import { LandRegistryMap } from './land-registry-map.interface';
+
 export interface Land{
     landId: number;
     ubigeo: string;
@@ -7,6 +10,14 @@ export interface Land{
 
 export interface LandMapIn{
     ownerLandId: number;
-    land: Land;
+    //land: Land;
     control: string;
+
+    landId: number;
+    ubigeo: string;
+    x: number;
+    y: number;
+    land: LandRegistryMap;
+    owner: LandOwner;
+
 }

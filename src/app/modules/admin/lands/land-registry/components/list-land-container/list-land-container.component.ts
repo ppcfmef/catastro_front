@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -26,15 +26,26 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.landRegistryService.getLandOwner()
+    combineLatest([
+      this.landRegistryService.getLandOwner(),
+      this.landRegistryService.getLandRegister()
+    ])
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
-      (ownerResult) => {
-        this.landOwnerId = ownerResult?.id;
+      (result) => {
+        const ownerResult = result[0];
+        const registerLand = result[1];
+        if (ownerResult) {
+          this.landOwnerId = ownerResult?.id;
+        }
+        else {
+          this.landOwnerId = registerLand?.owner;
+        }
         if (this.landOwnerId) {
           this.landRegistryService
           .getLandList({ limit: this.defaultTableLimit, owner: this.landOwnerId })
-          .subscribe(
+          .toPromise()
+          .then(
             (landResult) => {
               this.landRecords = landResult.results;
               this.tableLength = landResult.count;
@@ -50,7 +61,6 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
   }
 
   createLandRecord(): void {
-    console.log('>>> createLandRecord');
     this.landRegistryService.setLandCreate(true);
   }
 

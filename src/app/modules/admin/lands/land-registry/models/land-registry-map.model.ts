@@ -2,6 +2,7 @@
 import { GestionPredios } from '../interfaces/gestion-predios.interface';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { Lote } from '../interfaces/lote.interface';
+import { Predio } from '../interfaces/predio.interface';
 
 export class LandRegistryMapModel implements LandRegistryMap{
     id: number;
@@ -242,8 +243,87 @@ export class LandRegistryMapModel implements LandRegistryMap{
             ESTADO: ''
         };
         return gestion;
-
     }
 
+    getPredios():  Predio{
+        const predio: Predio ={
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_LOTE: this.idLote,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            UBIGEO: this.ubigeo,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_MZN: this.codMzn,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_SECT: this.codSect,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_UU: this.codUu,
+
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_LOTE: this.codLand,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            TIPO_UU: this.uuType,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NOM_UU: this.habilitacionName,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            LOT_URB: this.urbanLotNumber,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            TIP_VIA: this.streetType,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NOM_VIA: this.streetName,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            BLOCK: this.block,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            INTERIOR: this.indoor,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            PISO: this.floor,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            KM: this.km,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            REFEREN: this.landmark,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COOR_Y: this.latitude,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COOR_X: this.longitude,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            FUENTE: this.sourceInformation,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_ARANC: this.idAranc,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_PRED: 0,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            //COD_PRE: this.cod,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            SEC_EJEC: 0,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_CPU: this.cup,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ANIO_CART: 0,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_VIA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            CUADRA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            LADO: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            MZN_URB: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            NUM_MUN: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            PARTIDA: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            RAN_NUM: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_PRE: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            OBJECTID: null,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            COD_CUC: '',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            AREA: 0
+        };
+        return predio;
+
+    }
 
 }

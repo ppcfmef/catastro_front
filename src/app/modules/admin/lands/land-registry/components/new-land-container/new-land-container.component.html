@@ -1,13 +1,14 @@
 <section class="container">
     <app-land-registry-geolocation></app-land-registry-geolocation>
-    <ng-container *ngIf="showEditForm" >
+    <ng-container *ngIf="showEditForm && ownerId" >
         <app-land-create-and-edit
-        [ownerId]="652"
+        [ownerId]="ownerId"
         [landRecord]="landRecordIn"
         [landMapRecord]="landRecordOut"
+        (registerLand)="registerLand($event)"
         (showFormEdit)="receivedShowFormEdit($event)"></app-land-create-and-edit>
     </ng-container>
-    <ng-container *ngIf="!showEditForm">
+    <ng-container *ngIf="!showEditForm && ownerId">
         <app-land-detail-summary
         [landRecord]="landRecordIn"
         (showFormEdit)="receivedShowFormEdit($event)"></app-land-detail-summary>

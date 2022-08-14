@@ -15,6 +15,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   showEditForm = false;
   landRecordIn: LandRegistryMap;
   landRecordOut: LandRegistryMap;
+  ownerId: number;
   private unsubscribeInAll = new Subject<any>();
   private unsubscribeAll = new Subject<any>();
 
@@ -24,6 +25,9 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+
+    this.landRegistryService.getLandOwner()
+    .subscribe(result => this.ownerId = result?.id);
 
     this.landRegistryMapService.landIn$
     .pipe(takeUntil(this.unsubscribeInAll))
@@ -50,6 +54,11 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
 
   receivedShowFormEdit(event): void{
     this.showEditForm = event;
+  }
+
+  registerLand(landRecord: LandRegistryMap): void {
+    this.landRegistryMapService.gestionPredios = landRecord;
+    this.landRegistryService.setLandRegister(landRecord);
   }
 
   ngOnDestroy(): void {
