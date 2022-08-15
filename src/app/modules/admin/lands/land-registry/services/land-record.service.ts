@@ -14,7 +14,7 @@ export class LandRecordService {
 
   apiUrl = environment.apiUrl;
   private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
-  
+
 
   constructor(
     private http: HttpClient
@@ -28,7 +28,7 @@ export class LandRecordService {
     return this.getList({owner: landOwnerId});
   }
 
-  
+
 
   setLandRecordDownloadCroquis(value: boolean): void {
     this._landRecordDownloadCroquis$.next(value);
