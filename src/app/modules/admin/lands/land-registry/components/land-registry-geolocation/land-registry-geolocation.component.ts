@@ -544,7 +544,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                         return r;
                                     }
                                 });
-                                console.log(results);
+                                console.log('results<<',results);
 
                                 if (results.length > 0) {
                                     const resultsLen = results.length - 1;
@@ -569,9 +569,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                                 graphic.geometry.longitude;
 
                                             latitude =
-                                                graphic.attributes['COOR_Y'];
+                                                graphic.attributes['COORD_Y'];
                                             longitude =
-                                                graphic.attributes['COOR_X'];
+                                                graphic.attributes['COORD_X'];
                                             const lote = graphic.attributes;
                                             const _landRegistryMapModel: LandRegistryMapModel =
                                                 new LandRegistryMapModel();
@@ -989,20 +989,20 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 if (projectionWkid!==4326)
                 {
                     const geometryIni = new Point({
-                        x: feature.COOR_X,
-                        y: feature.COOR_Y,
+                        x: feature.COORD_X,
+                        y: feature.COORD_Y,
                         spatialReference: {
                           wkid: 4326
                         }
                       });
                       const pointProject=projection.project(geometryIni, outSpatialReference);
-                      feature.COOR_X=pointProject.x;
-                      feature.COOR_Y=pointProject.y;
+                      feature.COORD_X=pointProject.x;
+                      feature.COORD_Y=pointProject.y;
                 }
 
                 const geometry = {
-                    x: feature.COOR_X,
-                    y: feature.COOR_Y,
+                    x: feature.COORD_X,
+                    y: feature.COORD_Y,
                 };
 
                 const attributes = FormUtils.deleteKeysNullInObject(feature);

@@ -24,9 +24,9 @@ export interface GestionPredios {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_VIA: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    COOR_X: number;
+    COORD_X: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    COOR_Y: number;
+    COORD_Y: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CUADRA: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
