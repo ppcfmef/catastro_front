@@ -27,8 +27,8 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest([
-      this.landRegistryService.getLandOwner(),
-      this.landRegistryService.getLandRegister()
+      this.landRegistryService.getLandOwner(), // Se ejecuta cuando cambiamos de propietario
+      this.landRegistryService.getLandRegister() // se ejecuta cuando agregamos o editamos registros
     ])
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(

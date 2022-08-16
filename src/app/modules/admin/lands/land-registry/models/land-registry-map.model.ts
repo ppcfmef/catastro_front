@@ -5,6 +5,8 @@ import { Lote } from '../interfaces/lote.interface';
 
 export class LandRegistryMapModel implements LandRegistryMap{
     id: number;
+    idPlot: string | null;
+    idCartographicImg: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string;  // codigo unico patrimonial
