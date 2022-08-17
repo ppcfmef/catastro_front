@@ -29,6 +29,7 @@ export class LandRegistryService {
   }
 
   setLandCreate(value: boolean): void {
+    // Genero el evento para crear un nuevo registro
     this.landCreate$.next(value);
   }
 
