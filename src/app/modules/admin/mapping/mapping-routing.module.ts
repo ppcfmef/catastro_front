@@ -10,6 +10,10 @@ const routes: Routes = [
   {
       path: 'geovisor',
       loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
+  },
+  {
+    path: 'metadata',
+    loadChildren: () => import('./metadata/metadata.module').then(m => m.MetadataModule)
   }
 ];;
 
