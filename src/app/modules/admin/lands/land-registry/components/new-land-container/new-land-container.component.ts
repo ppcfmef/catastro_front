@@ -42,12 +42,13 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Evento que reacciona al dar click en crear nuevo predio
     this.landRegistryService.getLandCreate()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if (result) {
-        this.showEditForm = result;
-        this.landRecordIn = null;
+        this.showEditForm = true; // muestra el formulario
+        this.landRegistryMapService.landIn = null; // Inicializa data en null
       }
     });
   }

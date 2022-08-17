@@ -29,7 +29,8 @@ export class LandCreateAndEditComponent implements OnChanges {
   ) { }
 
   emitShowFormEdit(): void{
-    this.showFormEdit.emit(false);
+    this.formEdit.reset();
+    setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
   }
 
   createFormEdit(): void{
@@ -51,36 +52,22 @@ export class LandCreateAndEditComponent implements OnChanges {
       latitude: [this.landMergeRecord?.latitude],
       longitude: [this.landMergeRecord?.longitude],
     });
+
+    this.setTitle();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const landCurentValue = changes?.landMapRecord?.currentValue;
     if (landCurentValue) {
-      if (this.isEdit) {
-        const dialogRef = this.confirmationService.info(
-          'Obtener datos',
-          'Desea obtener los datos del mapa base'
-        );
-
-        dialogRef.afterClosed().toPromise().then((option) => {
-          if (option === 'confirmed') {
-            this.mergeRecords(landCurentValue);
-          }
-        });
-      }else {
-        this.mergeRecords(landCurentValue);
-      }
+      // Si la data es enviada por el mapa
+      this.landMergeRecord = this.mergeRecords(landCurentValue);
     }else {
+      // si la data es enviada al crear o editar
       this.landMergeRecord = this.landRecord;
-      if (this.landMergeRecord) {
-        this.isEdit = true;
-      }else {
-        this.isEdit = false;
-      }
-      this.createFormEdit();
+      this.isEdit = this.landMergeRecord ? true : false;
     }
 
-    this.setTitle();
+    this.createFormEdit();
   }
 
   saveLand(): void {
@@ -113,20 +100,18 @@ export class LandCreateAndEditComponent implements OnChanges {
     }
   }
 
-  private mergeRecords(landCurentValue: LandRegistryMapModel): void {
+  private mergeRecords(landCurentValue: LandRegistryMap): LandRegistryMap {
     if (this.landRecord) {
-      this.landMergeRecord = this.landRecord;
-      this.landMapRecord = landCurentValue;
-      for (const key in this.landMapRecord) {
-        if (this.landMapRecord[key]) {
-          this.landMergeRecord[key] = this.landMapRecord[key];
+      const landMergeRecord = this.landRecord;
+      // this.landMapRecord = landCurentValue;
+      for (const key in landCurentValue) {
+        if (landCurentValue[key]) {
+          landMergeRecord[key] = landCurentValue[key];
         }
       }
-    }else {
-      this.landMergeRecord = landCurentValue;
+      return landMergeRecord;
     }
-
-    this.createFormEdit();
+    return landCurentValue;
   }
 
   private setTitle(): void {

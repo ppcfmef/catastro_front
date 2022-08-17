@@ -40,15 +40,6 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
         this.createFormEdit();
       }
     );
-
-    this.landRegistryService.getLandCreate()
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((result) => {
-      console.log('limpiar componente al crear');
-      if (result) {
-        this.resetForm();
-      }
-    });
   }
 
   createFormEdit(): void{
