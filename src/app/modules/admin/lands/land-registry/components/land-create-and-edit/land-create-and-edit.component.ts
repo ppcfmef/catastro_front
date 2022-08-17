@@ -21,6 +21,7 @@ export class LandCreateAndEditComponent implements OnChanges {
   formEdit: FormGroup;
   title: string;
   isEdit = false; //evalua si es para editar o añadir predio
+  showCartographicImg = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -70,10 +71,12 @@ export class LandCreateAndEditComponent implements OnChanges {
     if (landCurentValue) {
       // Si la data es enviada por el mapa
       this.landMergeRecord = this.mergeRecords(landCurentValue);
+      this.setShowCartographicImg();
     }else {
       // si la data es enviada al crear o editar
       this.landMergeRecord = this.landRecord;
       this.isEdit = this.landMergeRecord ? true : false;
+      this.showCartographicImg = false;
     }
 
     this.createFormEdit();
@@ -129,6 +132,12 @@ export class LandCreateAndEditComponent implements OnChanges {
       this.title = 'Editar Predio';
     }else{
       this.title = 'Añadir Predio';
+    }
+  }
+
+  private setShowCartographicImg(): void {
+    if (this.landMergeRecord.idCartographicImg && !this.landMergeRecord.idPlot) {
+      this.showCartographicImg = true;
     }
   }
 

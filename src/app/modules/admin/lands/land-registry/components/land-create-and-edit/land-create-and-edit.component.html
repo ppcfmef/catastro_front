@@ -2,6 +2,12 @@
     <h3 class="subtitle-card mb-2">
             {{title}} <mat-icon [svgIcon]="isEdit? 'mat_solid:edit':'mat_solid:library_add'">
         </mat-icon></h3>
+    <div *ngIf="showCartographicImg">
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+            <mat-label>Copiar el Cod. de Imagen GIS en RSTM </mat-label>
+            <input matInput type="text" formControlName="idCartographicImg" readonly>
+        </mat-form-field>
+    </div>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Cod. predio municipal</mat-label>
         <input matInput type="text" formControlName="cpm">
