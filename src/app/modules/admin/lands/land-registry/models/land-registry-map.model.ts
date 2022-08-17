@@ -61,7 +61,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
     condominium: number;
     deduction: number;
     selfAssessmentAffection: number;
-
+    apartmentNumber: string;
+    statusImg: number;
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;

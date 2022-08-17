@@ -2,6 +2,21 @@
     <h3 class="subtitle-card mb-2">
             {{title}} <mat-icon [svgIcon]="isEdit? 'mat_solid:edit':'mat_solid:library_add'">
         </mat-icon></h3>
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
+        <mat-label>Cod. predio municipal</mat-label>
+        <input matInput type="text" formControlName="cpm">
+    </mat-form-field>
+
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
+        <mat-label>Tipo de resolución</mat-label>
+        <input matInput type="text" formControlName="resolutionType">
+    </mat-form-field>
+
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
+        <mat-label>Nro. resolución</mat-label>
+        <input matInput type="text" formControlName="resolutionDocument">
+    </mat-form-field>
+
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
         <mat-label>Ubigeo</mat-label>
         <input matInput type="text" formControlName="ubigeo">
@@ -15,7 +30,7 @@
         <mat-label>Código de Habilitación</mat-label>
         <input matInput type="text" formControlName="codUu">
     </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Nombre de Habilitación</mat-label>
         <input matInput type="text" formControlName="habilitacionName">
     </mat-form-field>
@@ -28,7 +43,7 @@
         <mat-label>Codigo vía</mat-label>
         <input matInput type="text" formControlName="codStreet">
     </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-7/12">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-7/12 pr-2.5">
         <mat-label>Nombre de vía</mat-label>
         <input matInput type="text" formControlName="streetName">
     </mat-form-field>
@@ -42,11 +57,15 @@
         <mat-label>Lt. urbano</mat-label>
         <input matInput type="text" formControlName="urbanLotNumber">
     </mat-form-field>
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+        <mat-label>Nro. Puerta</mat-label>
+        <input matInput type="text" formControlName="municipalNumber">
+    </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
         <mat-label>Nro. Bloque</mat-label>
         <input matInput type="text" formControlName="block">
     </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-1/12 pr-2.5">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
         <mat-label>Interior</mat-label>
         <input matInput type="text" formControlName="indoor">
     </mat-form-field>
@@ -56,14 +75,19 @@
         <input matInput type="text" formControlName="floor">
     </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+        <mat-label>Nro. Dpto</mat-label>
+        <input matInput type="text" formControlName="apartmentNumber">
+    </mat-form-field>
+
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
         <mat-label>Km</mat-label>
         <input matInput type="text" formControlName="km">
     </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Longitud</mat-label>
         <input matInput type="text" formControlName="longitude">
     </mat-form-field>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
         <mat-label>Latitud</mat-label>
         <input matInput type="text" formControlName="latitude">
     </mat-form-field>

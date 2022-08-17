@@ -36,6 +36,11 @@ export class LandCreateAndEditComponent implements OnChanges {
   createFormEdit(): void{
     this.formEdit = this.fb.group({
       id: [this.landMergeRecord?.id],
+      idPlot: [this.landMergeRecord?.idPlot],
+      idCartographicImg: [this.landMergeRecord?.idCartographicImg],
+      statusImg: [this.landMergeRecord?.statusImg],
+      cup: [this.landMergeRecord?.cup],
+      cpm: [this.landMergeRecord?.cpm],
       ubigeo: [this.landMergeRecord?.ubigeo],
       uuType: [this.landMergeRecord?.uuType],
       codUu: [this.landMergeRecord?.codUu],
@@ -49,6 +54,10 @@ export class LandCreateAndEditComponent implements OnChanges {
       indoor: [this.landMergeRecord?.indoor],
       floor: [this.landMergeRecord?.floor],
       km: [this.landMergeRecord?.km],
+      municipalNumber: [this.landMergeRecord?.municipalNumber],
+      apartmentNumber: [this.landMergeRecord?.apartmentNumber],
+      resolutionDocument: [this.landMergeRecord?.resolutionDocument],
+      resolutionType: [this.landMergeRecord?.resolutionType],
       latitude: [this.landMergeRecord?.latitude],
       longitude: [this.landMergeRecord?.longitude],
     });
