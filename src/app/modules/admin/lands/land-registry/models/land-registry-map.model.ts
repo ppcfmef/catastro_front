@@ -62,7 +62,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
     condominium: number;
     deduction: number;
     selfAssessmentAffection: number;
-
+    apartmentNumber: string;
+    statusImg: number;
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
@@ -130,8 +131,11 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.resolutionType=l?.resolutionType;
         this.resolutionDocument=l?.resolutionDocument;
         this.idLote=l?.idLote;
-        this.idImg = l?.idImg;
+        //this.idImg = l?.idImg;
         this.secuen =l?.secuen;
+
+        this.idCartographicImg = l?.idCartographicImg;
+        this.idPlot = l?.idPlot;
 
     }
 
@@ -257,7 +261,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     getPredios():  Predio{
         const predio: Predio ={
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            ID_LOTE: this.idLote,
+            ID_LOTE: this.idPlot,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             UBIGEO: this.ubigeo,
             // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -62,7 +62,10 @@ export interface LandRegistryMap {
     resolutionType: string;
     resolutionDocument: string;
 
+    apartmentNumber: string;
+    statusImg: number;
     idLote: string;
+
     owner?: number | null;
     idImg:string;
     secuen :number;

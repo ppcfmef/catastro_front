@@ -2,8 +2,8 @@ import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
-import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryService } from '../../services/land-registry.service';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -21,20 +21,28 @@ export class LandCreateAndEditComponent implements OnChanges {
   formEdit: FormGroup;
   title: string;
   isEdit = false; //evalua si es para editar o añadir predio
+  showCartographicImg = false;
 
   constructor(
     private readonly fb: FormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
+    private landRegistryMapService: LandRegistryMapService,
   ) { }
 
   emitShowFormEdit(): void{
-    this.showFormEdit.emit(false);
+    this.formEdit.reset();
+    setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
   }
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
       id: [this.landMergeRecord?.id],
+      idPlot: [this.landMergeRecord?.idPlot],
+      idCartographicImg: [this.landMergeRecord?.idCartographicImg],
+      statusImg: [this.landMergeRecord?.statusImg],
+      cup: [this.landMergeRecord?.cup],
+      cpm: [this.landMergeRecord?.cpm],
       ubigeo: [this.landMergeRecord?.ubigeo],
       uuType: [this.landMergeRecord?.uuType],
       codUu: [this.landMergeRecord?.codUu],
@@ -48,39 +56,31 @@ export class LandCreateAndEditComponent implements OnChanges {
       indoor: [this.landMergeRecord?.indoor],
       floor: [this.landMergeRecord?.floor],
       km: [this.landMergeRecord?.km],
+      municipalNumber: [this.landMergeRecord?.municipalNumber],
+      apartmentNumber: [this.landMergeRecord?.apartmentNumber],
+      resolutionDocument: [this.landMergeRecord?.resolutionDocument],
+      resolutionType: [this.landMergeRecord?.resolutionType],
       latitude: [this.landMergeRecord?.latitude],
       longitude: [this.landMergeRecord?.longitude],
     });
+
+    this.setTitle();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const landCurentValue = changes?.landMapRecord?.currentValue;
     if (landCurentValue) {
-      if (this.isEdit) {
-        const dialogRef = this.confirmationService.info(
-          'Obtener datos',
-          'Desea obtener los datos del mapa base'
-        );
-
-        dialogRef.afterClosed().toPromise().then((option) => {
-          if (option === 'confirmed') {
-            this.mergeRecords(landCurentValue);
-          }
-        });
-      }else {
-        this.mergeRecords(landCurentValue);
-      }
+      // Si la data es enviada por el mapa
+      this.landMergeRecord = this.mergeRecords(landCurentValue);
+      this.setShowCartographicImg();
     }else {
+      // si la data es enviada al crear o editar
       this.landMergeRecord = this.landRecord;
-      if (this.landMergeRecord) {
-        this.isEdit = true;
-      }else {
-        this.isEdit = false;
-      }
-      this.createFormEdit();
+      this.isEdit = this.landMergeRecord ? true : false;
+      this.showCartographicImg = false;
     }
 
-    this.setTitle();
+    this.createFormEdit();
   }
 
   saveLand(): void {
@@ -88,8 +88,23 @@ export class LandCreateAndEditComponent implements OnChanges {
       const data = this.formEdit.value;
       data.owner = this.ownerId;
       // ToDo: debe ser en el container
-      this.landRegistryService.saveLand(data)
-      .subscribe(
+      if (data.idPlot) {
+        this.landRegistryMapService.createCpu(data)
+        .subscribe(result => this.saveLandApi(result));
+      }else {
+        this.saveLandApi(data);
+      }
+    }else {
+      this.confirmationService.error(
+        'Registro de predio',
+        'Error al registrar el predio, intente nuevamente'
+      );
+    }
+  }
+
+  private saveLandApi(data): void {
+    this.landRegistryService.saveLand(data).toPromise()
+      .then(
         (result) => {
           this.confirmationService.success(
             'Registro de predio',
@@ -105,28 +120,20 @@ export class LandCreateAndEditComponent implements OnChanges {
           );
         }
       );
-    }else {
-      this.confirmationService.error(
-        'Registro de predio',
-        'Error al registrar el predio, intente nuevamente'
-      );
-    }
   }
 
-  private mergeRecords(landCurentValue: LandRegistryMapModel): void {
+  private mergeRecords(landCurentValue: LandRegistryMap): LandRegistryMap {
     if (this.landRecord) {
-      this.landMergeRecord = this.landRecord;
-      this.landMapRecord = landCurentValue;
-      for (const key in this.landMapRecord) {
-        if (this.landMapRecord[key]) {
-          this.landMergeRecord[key] = this.landMapRecord[key];
+      const landMergeRecord = this.landRecord;
+      // this.landMapRecord = landCurentValue;
+      for (const key in landCurentValue) {
+        if (landCurentValue[key]) {
+          landMergeRecord[key] = landCurentValue[key];
         }
       }
-    }else {
-      this.landMergeRecord = landCurentValue;
+      return landMergeRecord;
     }
-
-    this.createFormEdit();
+    return landCurentValue;
   }
 
   private setTitle(): void {
@@ -135,6 +142,12 @@ export class LandCreateAndEditComponent implements OnChanges {
       this.title = 'Editar Predio';
     }else{
       this.title = 'Añadir Predio';
+    }
+  }
+
+  private setShowCartographicImg(): void {
+    if (this.landMergeRecord.idCartographicImg && !this.landMergeRecord.idPlot) {
+      this.showCartographicImg = true;
     }
   }
 
