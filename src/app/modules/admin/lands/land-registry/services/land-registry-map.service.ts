@@ -1,7 +1,7 @@
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
-
+import { loadModules } from 'esri-loader';
 
 
 @Injectable({
@@ -16,9 +16,6 @@ export class LandRegistryMapService {
   public _gestionPredios: Subject<LandRegistryMap> = new Subject();
   public _estado: Subject<string> = new Subject();
 
-  /*
-  public _landIn = new Subject<LandRegistryMap>();
-  */
 
   constructor() {
   }
@@ -31,10 +28,6 @@ export class LandRegistryMapService {
         return this._landIn.asObservable();
     }
 
-    /*setLandIn(  ){
-
-    }*/
-
 
     set landOut(value: LandRegistryMap){
         this._landOut.next(value);
@@ -42,6 +35,10 @@ export class LandRegistryMapService {
 
     get landOut$(): Observable<LandRegistryMap>{
         return this._landOut.asObservable();
+    }
+
+    createCpu(value: LandRegistryMap): Observable<LandRegistryMap> {
+        return new BehaviorSubject<LandRegistryMap>(value);
     }
 
     set gestionPredios(value: LandRegistryMap){
@@ -64,9 +61,5 @@ export class LandRegistryMapService {
     }
 
 
-    createCPU(land: LandRegistryMap){
-        
-        return land
-    }
     
 }
