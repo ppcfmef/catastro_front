@@ -29,6 +29,9 @@ import { FormUtils } from 'app/shared/utils/form.utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Role } from 'app/shared/enums/role.enum';
 import { FormatUtils } from 'app/shared/utils/format.utils';
+import { Estado } from 'app/shared/enums/estado-map.enum';
+import { LandRegistryService } from '../../services/land-registry.service';
+import { LandOwnerModel } from '../../models/land-owner.model';
 
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -45,7 +48,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     points: any[];
     user: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    estado='inicio';
+    estado=Estado.INICIAR;
 
     userUbigeo: string = '010101';
     /*projection: number=32717;*/
@@ -265,13 +268,20 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
     featureZonaUrbana: any;
     featureDistrito: any;
+
+    landOwner: LandOwnerModel = new LandOwnerModel();
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
         private _landRegistryMapService: LandRegistryMapService,
-        protected _messageProviderService: MessageProviderService
+        protected _messageProviderService: MessageProviderService,
+        private _landRegistryService: LandRegistryService
     ) {}
+/*
 
+this.landRegistryService.getLandOwner()
+    .subscribe(result => this.ownerId = result?.id);
+*/
     ngOnInit(): void {
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -288,12 +298,16 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                         this.view.center = [data.longitude, data.latitude];
                         this.view.zoom = 19;
                     }
+                    
                 } else if (data && data.ubigeo) {
                     const where = " UBIGEO='" + data.ubigeo + "'";
                     setTimeout(() => {
                         this.zoomToUbigeo(where);
                     }, 1000);
+                    
                 }
+
+                this.estado = Estado.EDITAR;
             });
 
             this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
@@ -304,6 +318,12 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
               //_landRegistryMapModel.idImg ='1000';
               //this.saveGestionPredios(_landRegistryMapModel);
             });
+
+            this._landRegistryService.getLandOwner().pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+              this.landOwner.setValue(result);
+              this.estado =Estado.INICIAR;
+            });     
     }
 
     ngAfterViewInit(): void {
@@ -498,136 +518,142 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             });
 
             this.view.on('click', (event) => {
-                // only include graphics from hurricanesLayer in the hitTest
+               
 
-                let graphic = event.mapPoint;
-                let longitude = graphic.longitude;
-                let latitude = graphic.latitude;
-
-                const point = {
-                    //Create a point
-                    type: 'point',
-                    longitude: longitude,
-                    latitude: latitude,
-                };
-                const intersect = this.queryIntersectFeaturelayer(
-                    this.featureDistrito,
-                    point
-                );
-
-                intersect.then((data: any) => {
-                    if (data && data.attributes) {
-                        const ubigeo = data.attributes['UBIGEO'];
-                        console.log('ubigeo>>', ubigeo);
-
-                        if (
-                            this.idCargo === Role.DISTRITAL &&
-                            this.userUbigeo !== ubigeo
-                        ) {
-                            this._messageProviderService.showAlert(
-                                'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
-                            );
-                        } else {
-                            this.landRegistryMapModel =
-                                new LandRegistryMapModel();
-                            this.landRegistryMapModel.latitude = latitude;
-                            this.landRegistryMapModel.longitude = longitude;
-                            this.landRegistryMapModel.ubigeo = ubigeo;
-
-                            this.view.hitTest(event).then((response) => {
-                                const results = response.results.filter((r) => {
-                                    console.log(
-                                        r,
-                                        r.graphic,
-                                        r.graphic.layer,
-                                        r.graphic.layer.layerId
-                                    );
-                                    if (
-                                        r &&
-                                        r.graphic &&
-                                        r.graphic.layer &&
-                                        r.graphic.layer.layerId === 1
-                                    ) {
-                                        return r;
+                if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR){
+                    let graphic = event.mapPoint;
+                    let longitude = graphic.longitude;
+                    let latitude = graphic.latitude;
+    
+                    const point = {
+                        //Create a point
+                        type: 'point',
+                        longitude: longitude,
+                        latitude: latitude,
+                    };
+                    const intersect = this.queryIntersectFeaturelayer(
+                        this.featureDistrito,
+                        point
+                    );
+    
+                    intersect.then((data: any) => {
+                        if (data && data.attributes) {
+                            const ubigeo = data.attributes['UBIGEO'];
+                            console.log('ubigeo>>', ubigeo);
+    
+                            if (
+                                this.idCargo === Role.DISTRITAL &&
+                                this.userUbigeo !== ubigeo
+                            ) {
+                                this._messageProviderService.showAlert(
+                                    'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
+                                );
+                            } else {
+                                this.landRegistryMapModel =
+                                    new LandRegistryMapModel();
+                                this.landRegistryMapModel.latitude = latitude;
+                                this.landRegistryMapModel.longitude = longitude;
+                                this.landRegistryMapModel.ubigeo = ubigeo;
+    
+                                this.view.hitTest(event).then((response) => {
+                                    const results = response.results.filter((r) => {
+                                        console.log(
+                                            r,
+                                            r.graphic,
+                                            r.graphic.layer,
+                                            r.graphic.layer.layerId
+                                        );
+                                        if (
+                                            r &&
+                                            r.graphic &&
+                                            r.graphic.layer &&
+                                            r.graphic.layer.layerId === 1
+                                        ) {
+                                            return r;
+                                        }
+                                    });
+                                    console.log('results<<',results);
+    
+                                    if (results.length > 0) {
+                                        const resultsLen = results.length - 1;
+    
+                                        if (
+                                            results[resultsLen] &&
+                                            results[resultsLen].graphic &&
+                                            results[resultsLen].graphic.geometry
+                                        ) {
+                                            graphic = results[resultsLen].graphic;
+                                            //console.log('graphic>>', graphic);
+    
+                                            if (
+                                                graphic &&
+                                                graphic.attributes &&
+                                                graphic.attributes['ID_LOTE']
+                                            ) {
+                                                //  console.log('graphic.attributes>>', graphic.attributes);
+                                               /* latitude =
+                                                    graphic.geometry.latitude;
+                                                longitude =
+                                                    graphic.geometry.longitude;*/
+    
+                                                latitude =
+                                                    graphic.attributes['COORD_Y'];
+                                                longitude =
+                                                    graphic.attributes['COORD_X'];
+                                                const lote = graphic.attributes;
+                                                /*const _landRegistryMapModel: LandRegistryMapModel =
+                                                    new LandRegistryMapModel();*/
+                                                /*console.log('lote>>',lote);*/
+                                                /*_landRegistryMapModel.loteToLandRegistryMapModel(
+                                                    lote
+                                                );*/
+                                                /*this.landRegistryMapModel = new LandRegistryMapModel()       
+                                                this.landRegistryMapModel.loteToLandRegistryMapModel(lote);*/
+    
+    
+                                                this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
+                                                this.addPoint(
+                                                    latitude,
+                                                    longitude,
+                                                    this.simpleMarkerSymbol
+                                                );
+    
+                                                this._landRegistryMapService.landOut = this.landRegistryMapModel
+                                               /* this._landRegistryMapService.landOut =
+                                                _landRegistryMapModel;*/
+    
+                                            }
+                                        }
+                                    } else {
+    
+                                       
+                                        this.addPoint(
+                                            latitude,
+                                            longitude,
+                                            this.simpleMarkerSymbolUndefined
+                                        );
+    
+                                        /*this._landRegistryMapService.landOut =
+                                        landRegistryMapModel;*/
                                     }
                                 });
-                                console.log('results<<',results);
-
-                                if (results.length > 0) {
-                                    const resultsLen = results.length - 1;
-
-                                    if (
-                                        results[resultsLen] &&
-                                        results[resultsLen].graphic &&
-                                        results[resultsLen].graphic.geometry
-                                    ) {
-                                        graphic = results[resultsLen].graphic;
-                                        //console.log('graphic>>', graphic);
-
-                                        if (
-                                            graphic &&
-                                            graphic.attributes &&
-                                            graphic.attributes['ID_LOTE']
-                                        ) {
-                                            //  console.log('graphic.attributes>>', graphic.attributes);
-                                           /* latitude =
-                                                graphic.geometry.latitude;
-                                            longitude =
-                                                graphic.geometry.longitude;*/
-
-                                            latitude =
-                                                graphic.attributes['COORD_Y'];
-                                            longitude =
-                                                graphic.attributes['COORD_X'];
-                                            const lote = graphic.attributes;
-                                            /*const _landRegistryMapModel: LandRegistryMapModel =
-                                                new LandRegistryMapModel();*/
-                                            /*console.log('lote>>',lote);*/
-                                            /*_landRegistryMapModel.loteToLandRegistryMapModel(
-                                                lote
-                                            );*/
-                                            /*this.landRegistryMapModel = new LandRegistryMapModel()       
-                                            this.landRegistryMapModel.loteToLandRegistryMapModel(lote);*/
-
-
-                                            this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
-                                            this.addPoint(
-                                                latitude,
-                                                longitude,
-                                                this.simpleMarkerSymbol
-                                            );
-
-                                            this._landRegistryMapService.landOut = this.landRegistryMapModel
-                                           /* this._landRegistryMapService.landOut =
-                                            _landRegistryMapModel;*/
-
-                                        }
-                                    }
-                                } else {
-
-                                   
-                                    this.addPoint(
-                                        latitude,
-                                        longitude,
-                                        this.simpleMarkerSymbolUndefined
-                                    );
-
-                                    /*this._landRegistryMapService.landOut =
-                                    landRegistryMapModel;*/
-                                }
-                            });
+                            }
                         }
-                    }
-                });
+                    });
+
+                }
+
             });
 
             const screenshotDiv = document.getElementById('screenshotDiv');
 
             this.view.when(() => {
-                if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
+                /*if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
                     this.zoomToUbigeo(where);
-                }
+                }*/
+
+                this.resetMap();
 
                 this.view.ui.add(searchWidget, {
                     position: 'top-left',
@@ -642,9 +668,20 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                     position: 'top-right',
                 });
 
-                this.view.ui.add([baseMapGalleryExpand, screenshotDiv], {
+                this.view.ui.add([baseMapGalleryExpand], {
                     position: 'top-right',
                 });
+
+
+                if(this.estado === Estado.EDITAR || this.estado === Estado.LEER){
+                    this.view.ui.add([screenshotDiv], {
+                        position: 'top-right',
+                    });
+                }
+
+                else{
+                    this.view.ui.remove([screenshotDiv]);
+                }
                 /*const where = '\'UBIGEO = '
                 zoomToUbigeo(where: string)*/
             });
@@ -653,6 +690,16 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         }
     }
 
+    resetMap(){
+        this.landRegistryMapModel = new LandRegistryMapModel();
+        this.view.graphics.removeAll();
+        if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
+            const where = `UBIGEO='${this.userUbigeo}'`;
+            this.zoomToUbigeo(where);
+          
+        }
+    }
+    
     async addPoint(latitude, longitude, symbol): Promise<any> {
         try {
             const [
@@ -964,7 +1011,9 @@ return idImg
     }
 
 async saveNewPointGestionPredios(){
- const _landRegistryMapModel=new LandRegistryMapModel();
+ //const _landRegistryMapModel=new LandRegistryMapModel();
+ const idImg=this.generateIdImg(this.urlGestionPredios);
+   
 
  /*this.addPoint(
     latitude,
@@ -997,7 +1046,7 @@ async saveNewPointGestionPredios(){
         const wkid = parseInt('327' + utm, 10);
 
         if (data.idLote) {
-            const _predio=data.getPredios();
+            const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
             const urlBase=`${_layer.urlBase}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
@@ -1020,7 +1069,7 @@ async saveNewPointGestionPredios(){
                     /*this._messageProviderService.showSnackError('Registrados no cargados');*/
                 });
         }else{
-            const _gestionPredio=data.getGestionPredios();
+            const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 

@@ -127,7 +127,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
 }
 
 
-formatLandRegistryMapModelToPredio(land:LandRegistryMapModel):  Predio{
+public static  formatLandRegistryMapModelToPredio(land:LandRegistryMapModel):  Predio{
     const predio: Predio ={
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ID_LOTE: land.idLote,
