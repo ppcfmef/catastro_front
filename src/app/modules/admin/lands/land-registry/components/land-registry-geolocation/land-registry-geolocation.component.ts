@@ -56,7 +56,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     idCargo = 1;
     proj4Wkid = 32717;
     proj4GestionPrediosWkid = 4326;
-
+    displayImprimir='none';
+    displaySave='none';
+    displayEditPoint ='none';
     /*proj4ScrWkid=4326;*/
     proj4Src = this.proj4Catalog + ':' + String(this.proj4Wkid);
     layerList: any;
@@ -270,6 +272,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     featureDistrito: any;
 
     landOwner: LandOwnerModel = new LandOwnerModel();
+    screenshotDiv:any;
+    saveNewPointDiv:any;
+    editPointDiv:any;
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
@@ -283,31 +288,48 @@ this.landRegistryService.getLandOwner()
     .subscribe(result => this.ownerId = result?.id);
 */
     ngOnInit(): void {
+        this._landRegistryMapService.setEstado(Estado.INICIAR);
+        this._landRegistryMapService.getEstado().pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((data: any)=>{
+
+            this.estado = data;
+            this.changeUI();
+
+        }); 
+
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: LandRegistryMap) => {
-                console.log('LandRegistryMap>>',data);
 
-                if (data?.latitude && data?.longitude) {
-                    this.addPoint(
-                        data.latitude,
-                        data.longitude,
-                        this.simpleMarkerSymbol
-                    );
-                    if (this.view) {
-                        this.view.center = [data.longitude, data.latitude];
-                        this.view.zoom = 19;
+
+                //console.log('LandRegistryMap>>',data);
+                if(data){
+                    if (data?.latitude && data?.longitude) {
+                        this.addPoint(
+                            data.latitude,
+                            data.longitude,
+                            this.simpleMarkerSymbol
+                        );
+                        if (this.view) {
+                            this.view.center = [data.longitude, data.latitude];
+                            this.view.zoom = 19;
+                        }
+                        
+                    } else if (data && data.ubigeo) {
+                        this.resetMap();
+                        
                     }
-                    
-                } else if (data && data.ubigeo) {
-                    const where = " UBIGEO='" + data.ubigeo + "'";
-                    setTimeout(() => {
-                        this.zoomToUbigeo(where);
-                    }, 1000);
-                    
+                    this._landRegistryMapService.setEstado(Estado.EDITAR);
                 }
 
-                this.estado = Estado.EDITAR;
+                else {
+                    if(this.landOwner.id){
+                        this._landRegistryMapService.setEstado(Estado.CREAR);
+                    }
+
+                }
+
+                //this.estado = Estado.EDITAR;
             });
 
             this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
@@ -322,7 +344,8 @@ this.landRegistryService.getLandOwner()
             this._landRegistryService.getLandOwner().pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
               this.landOwner.setValue(result);
-              this.estado =Estado.INICIAR;
+              //this.estado =Estado.INICIAR;
+              this._landRegistryMapService.setEstado(Estado.INICIAR);
             });     
     }
 
@@ -645,8 +668,10 @@ this.landRegistryService.getLandOwner()
 
             });
 
-            const screenshotDiv = document.getElementById('screenshotDiv');
+            this.screenshotDiv = document.getElementById('screenshotDiv');
 
+            this.saveNewPointDiv = document.getElementById('saveNewPointDiv');
+            this.editPointDiv= document.getElementById('saveNewPointDiv');
             this.view.when(() => {
                 /*if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
@@ -672,8 +697,8 @@ this.landRegistryService.getLandOwner()
                     position: 'top-right',
                 });
 
-
-                if(this.estado === Estado.EDITAR || this.estado === Estado.LEER){
+                this.changeUI();
+                /*if(this.estado === Estado.EDITAR || this.estado === Estado.LEER){
                     this.view.ui.add([screenshotDiv], {
                         position: 'top-right',
                     });
@@ -681,7 +706,7 @@ this.landRegistryService.getLandOwner()
 
                 else{
                     this.view.ui.remove([screenshotDiv]);
-                }
+                }*/
                 /*const where = '\'UBIGEO = '
                 zoomToUbigeo(where: string)*/
             });
@@ -693,13 +718,56 @@ this.landRegistryService.getLandOwner()
     resetMap(){
         this.landRegistryMapModel = new LandRegistryMapModel();
         this.view.graphics.removeAll();
-        if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
+        if (this.idCargo === Role.DISTRITAL && this.userUbigeo && this.estado === Estado.INICIAR) {
             const where = `UBIGEO='${this.userUbigeo}'`;
             this.zoomToUbigeo(where);
           
         }
     }
     
+
+    changeUI(){
+        //this.resetDisplayUI();
+      
+
+        if(this.screenshotDiv && this.saveNewPointDiv){
+
+            if (this.estado===Estado.INICIAR){
+                this.resetDisplayUI();
+                //this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv]);
+            }
+
+            else if(this.estado === Estado.EDITAR || this.estado === Estado.LEER){
+                this.displayImprimir='flex';
+                /*this.view.ui.add([this.screenshotDiv,this.saveNewPointDiv], {
+                    position: 'top-right',
+                });
+                this.displayImprimir='flex';*/
+            }
+    
+          /*  else{
+                
+                this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv]);
+                this.displayImprimir='none';
+            }*/
+
+        }
+      
+
+    }
+
+    resetDisplayUI(){
+        this.displayImprimir='none';
+        this.displaySave='none';
+        this.displayEditPoint='none'
+        this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv,this.editPointDiv]);
+    }
+
+    editPoint(){
+
+    }
+
+
     async addPoint(latitude, longitude, symbol): Promise<any> {
         try {
             const [
@@ -1010,10 +1078,16 @@ return idImg
         doc.save('Declaración Jurada de Ubicación de Predio.pdf');
     }
 
-async saveNewPointGestionPredios(){
+async saveNewPointGestionPredio(){
  //const _landRegistryMapModel=new LandRegistryMapModel();
- const idImg=this.generateIdImg(this.urlGestionPredios);
-   
+ 
+ const idImg=await this.generateIdImg(this.urlGestionPredios);
+
+   this.landRegistryMapModel.idCartographicImg= idImg;
+   this.saveLandRegistryMap(this.landRegistryMapModel);
+   this._landRegistryMapService.landOut = this.landRegistryMapModel;
+
+
 
  /*this.addPoint(
     latitude,
@@ -1045,7 +1119,7 @@ async saveNewPointGestionPredios(){
 
         const wkid = parseInt('327' + utm, 10);
 
-        if (data.idLote) {
+        if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
             const urlBase=`${_layer.urlBase}/0/addFeatures`;
 

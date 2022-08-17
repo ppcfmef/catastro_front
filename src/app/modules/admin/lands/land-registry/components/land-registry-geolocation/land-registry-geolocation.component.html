@@ -1,15 +1,29 @@
-<div #mapViewNode  ></div>
-
-<!--<div #toolbar id="toolbar" >HOLASSSS
-    <div #mapGalleryBase id="mapGalleryBase"></div>
-    <div  #maplayerList id="maplayerList" ></div>
-</div>-->
-<div id="screenshotDiv" class="esri-widget--button esri-widget esri-interactive" (click)="downloadPDF()" >
+<div #mapViewNode  >
+  <div id="screenshotDiv" class="esri-widget--button esri-widget esri-interactive" (click)="downloadPDF()" [ngStyle]="{'display': displayImprimir}" >
     <span aria-hidden="true" role="presentation" class="esri-icon esri-icon-printer"></span>
 <!--<button id="screenshotBtn" class="action-button esri-widget" >
       Imprimir
 </button>-->
 </div>
+
+
+<div id="saveNewPointDiv" class="esri-widget--button esri-widget esri-interactive" (click)="saveNewPointGestionPredio()"  [ngStyle]="{'display': displaySave}">
+  <span aria-hidden="true" role="presentation" class="esri-icon esri-icon-save"></span>
+<!--<button id="screenshotBtn" class="action-button esri-widget" >
+    Imprimir
+</button>-->
+</div>
+
+
+
+<div id="editPointDiv" class="esri-widget--button esri-widget esri-interactive" (click)="editPoint()"  [ngStyle]="{'display': displayEditPoint}">
+  <span aria-hidden="true" role="presentation" class="esri-icon esri-icon-edit"></span>
+
+</div>
+
+</div>
+
+
 
 <link
   rel="stylesheet"

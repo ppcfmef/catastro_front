@@ -14,7 +14,7 @@ export class LandRegistryMapService {
   public _ubigeo: Subject<string> = new Subject();
 
   public _gestionPredios: Subject<LandRegistryMap> = new Subject();
-
+  public _estado: Subject<string> = new Subject();
 
   /*
   public _landIn = new Subject<LandRegistryMap>();
@@ -54,12 +54,19 @@ export class LandRegistryMapService {
     }
 
 
-    /*set ubigeo(value: string){
-        this._ubigeo.next(value);
+    getEstado(): Observable<any>{
+        return this._estado.asObservable();
     }
 
-    get ubigeo$(): Observable<string>{
-        return this._ubigeo.asObservable();
 
-    }*/
+    setEstado(value: string){
+        this._estado.next(value);
+    }
+
+
+    createCPU(land: LandRegistryMap){
+        
+        return land
+    }
+    
 }
