@@ -2,8 +2,8 @@ import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
-import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryService } from '../../services/land-registry.service';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -27,6 +27,7 @@ export class LandCreateAndEditComponent implements OnChanges {
     private readonly fb: FormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
+    private landRegistryMapService: LandRegistryMapService,
   ) { }
 
   emitShowFormEdit(): void{
@@ -87,8 +88,23 @@ export class LandCreateAndEditComponent implements OnChanges {
       const data = this.formEdit.value;
       data.owner = this.ownerId;
       // ToDo: debe ser en el container
-      this.landRegistryService.saveLand(data)
-      .subscribe(
+      if (data.idPlot) {
+        this.landRegistryMapService.createCpu(data)
+        .subscribe(result => this.saveLandApi(result));
+      }else {
+        this.saveLandApi(data);
+      }
+    }else {
+      this.confirmationService.error(
+        'Registro de predio',
+        'Error al registrar el predio, intente nuevamente'
+      );
+    }
+  }
+
+  private saveLandApi(data): void {
+    this.landRegistryService.saveLand(data).toPromise()
+      .then(
         (result) => {
           this.confirmationService.success(
             'Registro de predio',
@@ -104,12 +120,6 @@ export class LandCreateAndEditComponent implements OnChanges {
           );
         }
       );
-    }else {
-      this.confirmationService.error(
-        'Registro de predio',
-        'Error al registrar el predio, intente nuevamente'
-      );
-    }
   }
 
   private mergeRecords(landCurentValue: LandRegistryMap): LandRegistryMap {
