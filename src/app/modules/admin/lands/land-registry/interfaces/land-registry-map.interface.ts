@@ -60,6 +60,7 @@ export interface LandRegistryMap {
     resolutionType: string;
     resolutionDocument: string;
 
-    idLote: number;
+    idLote: string;
     owner?: number | null;
+    idImg:string;
 }

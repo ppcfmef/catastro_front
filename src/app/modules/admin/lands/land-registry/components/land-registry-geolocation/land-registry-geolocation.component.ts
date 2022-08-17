@@ -16,7 +16,7 @@ import { MapUtils } from 'app/shared/utils/map.utils';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { GestionPredios } from '../../interfaces/gestion-predios.interface';
+import { GestionPredio } from '../../interfaces/gestion-predios.interface';
 import { LandMapIn } from '../../interfaces/land-map-in.interface';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandMapInModel } from '../../models/land-map-in.model';
@@ -28,6 +28,7 @@ import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { FormUtils } from 'app/shared/utils/form.utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Role } from 'app/shared/enums/role.enum';
+import { FormatUtils } from 'app/shared/utils/format.utils';
 
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -44,6 +45,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     points: any[];
     user: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    estado='inicio';
 
     userUbigeo: string = '010101';
     /*projection: number=32717;*/
@@ -74,7 +76,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             children: [6, 7, 8],
         },
     ];
-
+    landRegistryMapModel:LandRegistryMapModel
     simpleMarkerSymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
@@ -252,8 +254,12 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     urlSearchDirecciones =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
 
+    /*urlGestionPredios =
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';*/
+
+
     urlGestionPredios =
-        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer';
 
     urlSearchDistrito =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
@@ -293,9 +299,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: LandRegistryMap) => {
               const _landRegistryMapModel=new LandRegistryMapModel(data);
-              console.log('_landRegistryMapModel>>',_landRegistryMapModel);
-              _landRegistryMapModel.idLote =1000;
-              this.saveGestionPredios(_landRegistryMapModel);
+              //console.log('_landRegistryMapModel>>',_landRegistryMapModel);
+              
+              //_landRegistryMapModel.idImg ='1000';
+              //this.saveGestionPredios(_landRegistryMapModel);
             });
     }
 
@@ -521,11 +528,11 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                 'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
                             );
                         } else {
-                            const landRegistryMapModel: LandRegistryMapModel =
+                            this.landRegistryMapModel =
                                 new LandRegistryMapModel();
-                            landRegistryMapModel.latitude = latitude;
-                            landRegistryMapModel.longitude = longitude;
-                            landRegistryMapModel.ubigeo = ubigeo;
+                            this.landRegistryMapModel.latitude = latitude;
+                            this.landRegistryMapModel.longitude = longitude;
+                            this.landRegistryMapModel.ubigeo = ubigeo;
 
                             this.view.hitTest(event).then((response) => {
                                 const results = response.results.filter((r) => {
@@ -563,32 +570,36 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                             graphic.attributes['ID_LOTE']
                                         ) {
                                             //  console.log('graphic.attributes>>', graphic.attributes);
-                                            latitude =
+                                           /* latitude =
                                                 graphic.geometry.latitude;
                                             longitude =
-                                                graphic.geometry.longitude;
+                                                graphic.geometry.longitude;*/
 
                                             latitude =
                                                 graphic.attributes['COORD_Y'];
                                             longitude =
                                                 graphic.attributes['COORD_X'];
                                             const lote = graphic.attributes;
-                                            const _landRegistryMapModel: LandRegistryMapModel =
-                                                new LandRegistryMapModel();
-                                            console.log('lote>>',lote);
-                                            _landRegistryMapModel.loteToLandRegistryMapModel(
+                                            /*const _landRegistryMapModel: LandRegistryMapModel =
+                                                new LandRegistryMapModel();*/
+                                            /*console.log('lote>>',lote);*/
+                                            /*_landRegistryMapModel.loteToLandRegistryMapModel(
                                                 lote
-                                            );
+                                            );*/
+                                            /*this.landRegistryMapModel = new LandRegistryMapModel()       
+                                            this.landRegistryMapModel.loteToLandRegistryMapModel(lote);*/
 
-                                          
-                              
+
+                                            this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
                                             this.addPoint(
                                                 latitude,
                                                 longitude,
                                                 this.simpleMarkerSymbol
                                             );
-                                            this._landRegistryMapService.landOut =
-                                            _landRegistryMapModel;
+
+                                            this._landRegistryMapService.landOut = this.landRegistryMapModel
+                                           /* this._landRegistryMapService.landOut =
+                                            _landRegistryMapModel;*/
 
                                         }
                                     }
@@ -600,8 +611,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                                         longitude,
                                         this.simpleMarkerSymbolUndefined
                                     );
-                                    this._landRegistryMapService.landOut =
-                                    landRegistryMapModel;
+
+                                    /*this._landRegistryMapService.landOut =
+                                    landRegistryMapModel;*/
                                 }
                             });
                         }
@@ -667,6 +679,61 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             console.error('EsriLoader: ', error);
         }
     }
+
+
+generateMaxCPU(layer:any){
+    let query = layer.createQuery();
+    query.where = `UBIGEO='${this.userUbigeo}'`;
+
+    const maxCPU={
+        onStatisticField: "CPU",  // service field for 2015 population
+        outStatisticFieldName: "max_CPU",
+        statisticType: "max"
+
+    };
+
+    
+query.outStatistics = [ maxCPU ];
+
+
+layer.queryFeatures(query)
+  .then(function(response){
+     let stats = response.features[0].attributes;
+     console.log("Total Population in WA:" ,stats.max_CPU);
+     
+  });
+}
+
+
+async generateIdImg(layer:any){
+    let query = layer.createQuery();
+    query.where = `UBIGEO='${this.userUbigeo}'`;
+
+    const maxCPU={
+        onStatisticField: "SECUEN",  // service field for 2015 population
+        outStatisticFieldName: "max_SECUEN",
+        statisticType: "max"
+
+    };
+    
+    
+query.outStatistics = [ maxCPU ];
+const response=await layer.queryFeatures(query);
+let stats = response.features[0].attributes;
+console.log("Total Population in WA:" ,stats.max_SECUEN);
+const maxSecuen=stats.max_SECUEN;
+const idImg=`i${this}${this.userUbigeo}${maxSecuen+1}`
+
+return idImg
+/*layer.queryFeatures(query)
+  .then(function(response){
+     let stats = response.features[0].attributes;
+     console.log("Total Population in WA:" ,stats.max_SECUEN);
+     
+  });*/
+
+
+}
 
     async zoomToUbigeo(where: string): Promise<any> {
         try {
@@ -896,7 +963,20 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         doc.save('Declaración Jurada de Ubicación de Predio.pdf');
     }
 
-    async saveGestionPredios(
+async saveNewPointGestionPredios(){
+ const _landRegistryMapModel=new LandRegistryMapModel();
+
+ /*this.addPoint(
+    latitude,
+    longitude,
+    this.simpleMarkerSymbolUndefined
+);*/
+
+
+}
+
+
+    async saveLandRegistryMap(
         data: LandRegistryMapModel
         //_gestionPredios: GestionPredios
 
@@ -915,8 +995,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
 
 
         const wkid = parseInt('327' + utm, 10);
-        /*const urlGestionPredios;*/
-        ///0/addFeatures
+
         if (data.idLote) {
             const _predio=data.getPredios();
             const urlBase=`${_layer.urlBase}/0/addFeatures`;
@@ -942,7 +1021,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 });
         }else{
             const _gestionPredio=data.getGestionPredios();
-            const urlBase = this.urlGestionPredios;
+            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();

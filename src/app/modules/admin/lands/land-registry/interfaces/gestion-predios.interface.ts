@@ -1,4 +1,4 @@
-export interface GestionPredios {
+export interface GestionPredio {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_PRED: number;
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -34,7 +34,7 @@ export interface GestionPredios {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_ARANC: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    ID_LOTE: number;
+    ID_LOTE: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     INTERIOR: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -88,4 +88,6 @@ export interface GestionPredios {
     DIR_FISCAL: string;
 // eslint-disable-next-line @typescript-eslint/naming-convention
     ESTADO: string;
+
+    ID_IMG:string;
 }

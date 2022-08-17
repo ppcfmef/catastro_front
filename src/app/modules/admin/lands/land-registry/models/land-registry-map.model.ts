@@ -1,5 +1,5 @@
 
-import { GestionPredios } from '../interfaces/gestion-predios.interface';
+import { GestionPredio } from '../interfaces/gestion-predios.interface';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { Lote } from '../interfaces/lote.interface';
 import { Predio } from '../interfaces/predio.interface';
@@ -64,8 +64,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
-    idLote: number;
-
+    idLote: string;
+    idImg:string;
     constructor(l?: LandRegistryMap){
         this.id= l?.id;
         this.secEjec=l?.secEjec;
@@ -127,11 +127,12 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.resolutionType=l?.resolutionType;
         this.resolutionDocument=l?.resolutionDocument;
         this.idLote=l?.idLote;
+        this.idImg = l?.idImg;
 
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    loteToLandRegistryMapModel(lote?: Lote){
+    /*loteToLandRegistryMapModel(lote?: Lote){
 
         this.ubigeo =lote.UBIGEO;
         this.landArea =lote.AREA;
@@ -155,11 +156,12 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.sourceInformation=lote.FUENTE;
         this.idAranc =lote.ID_ARANC;
         this.idLote= lote.ID_LOTE;
+        
 
-    }
+    }*/
 
-    getGestionPredios(): GestionPredios{
-        const gestion: GestionPredios ={
+    getGestionPredios(): GestionPredio{
+        const gestion: GestionPredio ={
             // eslint-disable-next-line @typescript-eslint/naming-convention
             UBIGEO: this.ubigeo,
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -240,7 +242,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
             // eslint-disable-next-line @typescript-eslint/naming-convention
             DIR_FISCAL: '',
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            ESTADO: ''
+            ESTADO: '',
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_IMG:''
         };
         return gestion;
     }

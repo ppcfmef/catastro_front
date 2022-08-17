@@ -24,7 +24,7 @@ export interface Lote {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_ARANC: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    ID_LOTE: number;
+    ID_LOTE: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     INTERIOR: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
