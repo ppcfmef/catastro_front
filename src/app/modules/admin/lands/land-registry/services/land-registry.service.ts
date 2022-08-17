@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { LandOwner } from '../interfaces/land-owner.interface';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
+import { MasterDomain } from '../interfaces/master-domain.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -88,5 +89,9 @@ export class LandRegistryService {
     // Eliminando registros que el backend no modifica
     // delete data['<key>'];
     return this.http.patch<LandRegistryMap>(`${this.apiUrl}/lands/register/${id}/`, data);
+  }
+
+  getMasterDomain(): Observable<MasterDomain> {
+    return this.http.get<MasterDomain>(`${this.apiUrl}/master/domain/`);
   }
 }

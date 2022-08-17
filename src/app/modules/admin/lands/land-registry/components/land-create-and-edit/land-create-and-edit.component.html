@@ -1,4 +1,4 @@
-<section class="container" *ngIf="formEdit" [formGroup]="formEdit">
+<section class="container" *ngIf="formEdit && masterDomain" [formGroup]="formEdit">
     <h3 class="subtitle-card mb-2">
             {{title}} <mat-icon [svgIcon]="isEdit? 'mat_solid:edit':'mat_solid:library_add'">
         </mat-icon></h3>
@@ -15,7 +15,9 @@
 
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Tipo de resolución</mat-label>
-        <input matInput type="text" formControlName="resolutionType">
+        <mat-select formControlName="resolutionType">
+            <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id"> {{domain.name}}</mat-option>
+        </mat-select>
     </mat-form-field>
 
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
@@ -31,6 +33,9 @@
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
         <mat-label>Tipo de Habilitación</mat-label>
         <input matInput type="text" formControlName="uuType">
+        <mat-select formControlName="uuType">
+            <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
+        </mat-select>
     </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
         <mat-label>Código de Habilitación</mat-label>
@@ -47,7 +52,9 @@
     </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
         <mat-label>Codigo vía</mat-label>
-        <input matInput type="text" formControlName="codStreet">
+        <mat-select formControlName="codStreet">
+            <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
+        </mat-select>
     </mat-form-field>
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-7/12 pr-2.5">
         <mat-label>Nombre de vía</mat-label>

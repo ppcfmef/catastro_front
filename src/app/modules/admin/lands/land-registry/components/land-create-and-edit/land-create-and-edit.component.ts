@@ -1,16 +1,17 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { MasterDomain } from '../../interfaces/master-domain.interface';
 
 @Component({
   selector: 'app-land-create-and-edit',
   templateUrl: './land-create-and-edit.component.html',
   styleUrls: ['./land-create-and-edit.component.scss']
 })
-export class LandCreateAndEditComponent implements OnChanges {
+export class LandCreateAndEditComponent implements OnInit, OnChanges {
 
   @Input() ownerId: number;
   @Input() landRecord: LandRegistryMap;
@@ -22,6 +23,7 @@ export class LandCreateAndEditComponent implements OnChanges {
   title: string;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
+  masterDomain: MasterDomain;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -29,6 +31,11 @@ export class LandCreateAndEditComponent implements OnChanges {
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
   ) { }
+
+  ngOnInit(): void {
+      this.landRegistryService.getMasterDomain()
+      .subscribe(result => this.masterDomain = result);
+  }
 
   emitShowFormEdit(): void{
     this.formEdit.reset();
