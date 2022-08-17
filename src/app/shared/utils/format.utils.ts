@@ -123,7 +123,8 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ESTADO: '',
           // eslint-disable-next-line @typescript-eslint/naming-convention
-        ID_IMG:land.idCartographicImg
+        ID_IMG:land.idCartographicImg,
+        SECUEN : land.secuen
     };
     return gestion;
 }

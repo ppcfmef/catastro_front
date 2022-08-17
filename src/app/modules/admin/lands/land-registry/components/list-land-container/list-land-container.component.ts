@@ -62,6 +62,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
 
   createLandRecord(): void {
     this.landRegistryService.setLandCreate(true);
+    this.landRegistryMapService.landIn = null;
   }
 
   onChangePage(paginator: MatPaginator): void {

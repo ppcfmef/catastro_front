@@ -68,6 +68,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     resolutionDocument: string;
     idLote: string;
     idImg:string;
+    secuen:number;
     constructor(l?: LandRegistryMap){
         this.id= l?.id;
         this.secEjec=l?.secEjec;
@@ -130,6 +131,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.resolutionDocument=l?.resolutionDocument;
         this.idLote=l?.idLote;
         this.idImg = l?.idImg;
+        this.secuen =l?.secuen;
 
     }
 
@@ -245,8 +247,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
             DIR_FISCAL: '',
             // eslint-disable-next-line @typescript-eslint/naming-convention
             ESTADO: '',
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-            ID_IMG:''
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            ID_IMG: '',
+            SECUEN: this.secuen
         };
         return gestion;
     }

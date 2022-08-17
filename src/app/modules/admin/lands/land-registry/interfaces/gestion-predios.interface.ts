@@ -90,4 +90,6 @@ export interface GestionPredio {
     ESTADO: string;
 
     ID_IMG:string;
+
+    SECUEN : number;
 }

@@ -32,6 +32,7 @@ import { FormatUtils } from 'app/shared/utils/format.utils';
 import { Estado } from 'app/shared/enums/estado-map.enum';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -291,7 +292,7 @@ this.landRegistryService.getLandOwner()
         this._landRegistryMapService.setEstado(Estado.INICIAR);
         this._landRegistryMapService.getEstado().pipe(takeUntil(this._unsubscribeAll))
         .subscribe((data: any)=>{
-
+            
             this.estado = data;
             this.changeUI();
 
@@ -302,8 +303,9 @@ this.landRegistryService.getLandOwner()
             .subscribe((data: LandRegistryMap) => {
 
 
-                //console.log('LandRegistryMap>>',data);
+                console.log('LandRegistryMap>>',data);
                 if(data){
+                    this.landRegistryMapModel= new LandRegistryMapModel(data);
                     if (data?.latitude && data?.longitude) {
                         this.addPoint(
                             data.latitude,
@@ -315,15 +317,18 @@ this.landRegistryService.getLandOwner()
                             this.view.zoom = 19;
                         }
                         
+                        this._landRegistryMapService.setEstado(Estado.LEER);
                     } else if (data && data.ubigeo) {
-                        this.resetMap();
-                        
+                        //this.resetMap();
+                        this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
-                    this._landRegistryMapService.setEstado(Estado.EDITAR);
+                   
                 }
 
                 else {
+                    this.landRegistryMapModel= new LandRegistryMapModel();
                     if(this.landOwner.id){
+                        this.resetMap();
                         this._landRegistryMapService.setEstado(Estado.CREAR);
                     }
 
@@ -345,6 +350,7 @@ this.landRegistryService.getLandOwner()
             .subscribe((result) => {
               this.landOwner.setValue(result);
               //this.estado =Estado.INICIAR;
+              this.resetMap();
               this._landRegistryMapService.setEstado(Estado.INICIAR);
             });     
     }
@@ -543,7 +549,7 @@ this.landRegistryService.getLandOwner()
             this.view.on('click', (event) => {
                
 
-                if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR){
+                if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
                     let graphic = event.mapPoint;
                     let longitude = graphic.longitude;
                     let latitude = graphic.latitude;
@@ -640,10 +646,12 @@ this.landRegistryService.getLandOwner()
                                                     longitude,
                                                     this.simpleMarkerSymbol
                                                 );
-    
+                                                this._landRegistryMapService.setEstado(Estado.EDITAR);
                                                 this._landRegistryMapService.landOut = this.landRegistryMapModel
                                                /* this._landRegistryMapService.landOut =
                                                 _landRegistryMapModel;*/
+
+                                                
     
                                             }
                                         }
@@ -655,6 +663,10 @@ this.landRegistryService.getLandOwner()
                                             longitude,
                                             this.simpleMarkerSymbolUndefined
                                         );
+
+                                        this._landRegistryMapService.setEstado(Estado.NUEVO_PUNTO);
+
+
     
                                         /*this._landRegistryMapService.landOut =
                                         landRegistryMapModel;*/
@@ -671,7 +683,7 @@ this.landRegistryService.getLandOwner()
             this.screenshotDiv = document.getElementById('screenshotDiv');
 
             this.saveNewPointDiv = document.getElementById('saveNewPointDiv');
-            this.editPointDiv= document.getElementById('saveNewPointDiv');
+            this.editPointDiv= document.getElementById('editPointDiv');
             this.view.when(() => {
                 /*if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
@@ -717,7 +729,10 @@ this.landRegistryService.getLandOwner()
 
     resetMap(){
         this.landRegistryMapModel = new LandRegistryMapModel();
-        this.view.graphics.removeAll();
+        if(this.view){
+            this.view.graphics.removeAll();
+        
+        }
         if (this.idCargo === Role.DISTRITAL && this.userUbigeo && this.estado === Estado.INICIAR) {
             const where = `UBIGEO='${this.userUbigeo}'`;
             this.zoomToUbigeo(where);
@@ -730,21 +745,49 @@ this.landRegistryService.getLandOwner()
         //this.resetDisplayUI();
       
 
-        if(this.screenshotDiv && this.saveNewPointDiv){
-
-            if (this.estado===Estado.INICIAR){
+        if(this.screenshotDiv && this.saveNewPointDiv && this.editPointDiv){
+            this.resetDisplayUI();
+            /*if (this.estado===Estado.INICIAR){
                 this.resetDisplayUI();
-                //this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv]);
-            }
+              
+            }*/
 
-            else if(this.estado === Estado.EDITAR || this.estado === Estado.LEER){
+             if(this.estado === Estado.LEER){
+                //this.resetDisplayUI();
                 this.displayImprimir='flex';
+                this.displayEditPoint='flex';
+                this.view.ui.add([this.screenshotDiv,this.editPointDiv], {
+                    position: 'top-right',
+                });
+
+
                 /*this.view.ui.add([this.screenshotDiv,this.saveNewPointDiv], {
                     position: 'top-right',
                 });
                 this.displayImprimir='flex';*/
             }
-    
+
+            else if(this.estado==Estado.NUEVO_PUNTO){
+                
+                this.displaySave='flex';
+                this.view.ui.add([this.saveNewPointDiv], {
+                    position: 'top-right',
+                });
+                /*this.resetDisplayUI();
+                this.displayImprimir='flex';
+                this.view.ui.add([this.screenshotDiv], {
+                    position: 'top-right',
+                });*/
+            }
+
+            
+
+            
+
+           /* else if (this.estado === Estado.CREAR){
+
+            }
+    */
           /*  else{
                 
                 this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv]);
@@ -759,12 +802,13 @@ this.landRegistryService.getLandOwner()
     resetDisplayUI(){
         this.displayImprimir='none';
         this.displaySave='none';
-        this.displayEditPoint='none'
+        this.displayEditPoint='none';
+        
         this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv,this.editPointDiv]);
     }
 
-    editPoint(){
-
+    editPointEvent(){
+        this._landRegistryMapService.setEstado(Estado.EDITAR);
     }
 
 
@@ -820,7 +864,7 @@ layer.queryFeatures(query)
 }
 
 
-async generateIdImg(layer:any){
+async generateMaxSecuen(layer:any){
     let query = layer.createQuery();
     query.where = `UBIGEO='${this.userUbigeo}'`;
 
@@ -836,10 +880,10 @@ query.outStatistics = [ maxCPU ];
 const response=await layer.queryFeatures(query);
 let stats = response.features[0].attributes;
 console.log("Total Population in WA:" ,stats.max_SECUEN);
-const maxSecuen=stats.max_SECUEN;
-const idImg=`i${this}${this.userUbigeo}${maxSecuen+1}`
+const maxSecuen=(stats.max_SECUEN)?stats.max_SECUEN:0;
 
-return idImg
+
+return maxSecuen
 /*layer.queryFeatures(query)
   .then(function(response){
      let stats = response.features[0].attributes;
@@ -1079,15 +1123,38 @@ return idImg
     }
 
 async saveNewPointGestionPredio(){
+
+    const [
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+      
+        FeatureLayer,
+        
+    ] = await loadModules([
+     
+        'esri/layers/FeatureLayer',
+     
+    ]);
+
+    const district: DistrictResource =await this._commonService.getDistrictResource(this.userUbigeo).toPromise();
+    const utm=district.resources[0].utm;
+
  //const _landRegistryMapModel=new LandRegistryMapModel();
- 
- const idImg=await this.generateIdImg(this.urlGestionPredios);
+ const urlBase = `${this.urlGestionPredios}/0`;
+ const feature = new FeatureLayer(urlBase);
+ const secuen=await this.generateMaxSecuen(feature)+1;
+ const idImg=`i${utm}${this.userUbigeo}${secuen}`;
 
-   this.landRegistryMapModel.idCartographicImg= idImg;
-   this.saveLandRegistryMap(this.landRegistryMapModel);
-   this._landRegistryMapService.landOut = this.landRegistryMapModel;
+ /*this._messageProviderService.showAlert(
+    'Carga Exitosa'
+);*/
+    this.landRegistryMapModel.idCartographicImg= idImg;
+    this.landRegistryMapModel.secuen = secuen;
 
+    console.log('this.landRegistryMapModel>>',this.landRegistryMapModel);
+    this.saveLandRegistryMap(this.landRegistryMapModel);
+    this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
+    this._landRegistryMapService.setEstado(Estado.LEER);
 
  /*this.addPoint(
     latitude,

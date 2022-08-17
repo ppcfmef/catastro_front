@@ -65,4 +65,5 @@ export interface LandRegistryMap {
     idLote: string;
     owner?: number | null;
     idImg:string;
+    secuen :number;
 }
