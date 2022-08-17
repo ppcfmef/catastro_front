@@ -33,6 +33,7 @@ import { Estado } from 'app/shared/enums/estado-map.enum';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import moment from 'moment';
 
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -276,6 +277,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     screenshotDiv:any;
     saveNewPointDiv:any;
     editPointDiv:any;
+  district:DistrictResource;
+
+
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
@@ -340,10 +344,12 @@ this.landRegistryService.getLandOwner()
             this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: LandRegistryMap) => {
               const _landRegistryMapModel=new LandRegistryMapModel(data);
-              //console.log('_landRegistryMapModel>>',_landRegistryMapModel);
-              
-              //_landRegistryMapModel.idImg ='1000';
-              //this.saveGestionPredios(_landRegistryMapModel);
+
+              if(_landRegistryMapModel.idPlot &&  !(_landRegistryMapModel?.idCartographicImg!)){
+
+                this.saveLandRegistryMap(_landRegistryMapModel);
+              }
+           
             });
 
             this._landRegistryService.getLandOwner().pipe(takeUntil(this._unsubscribeAll))
@@ -365,7 +371,9 @@ this.landRegistryService.getLandOwner()
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
                         : '010101';
-               
+                  this._commonService.getDistrictResource(this.userUbigeo).subscribe((data)=>{
+                    this.district =data;
+                });
                 this.idCargo = this.user.placeScope.id;
                 setTimeout(() => {
                     this.initializeMap(this.points);
@@ -908,6 +916,7 @@ return maxSecuen
 
         const doc = new jsPDF();
 
+        this.district=await this._commonService.getDistrictResource(this.landRegistryMapModel.ubigeo).toPromise();
 
         const screenshot = await this.view.takeScreenshot({
             format: 'jpg',
@@ -941,7 +950,7 @@ return maxSecuen
 
                 [
                     {
-                        content: 'MUNICIPALIDAD DE  UBIGEO',
+                        content: `MUNICIPALIDAD DE ${this.district?.name}  UBIGEO ${this.landRegistryMapModel?.ubigeo}` ,
                         colSpan: 2,
                         styles: { halign: 'center', fontSize: 14 },
                     },
@@ -954,7 +963,7 @@ return maxSecuen
                 [
                     {
                         content:
-                            'Yo,(CONTRIBUYENTE),  identificado(a) con DNI/RUC Nº (RUC/DNI), con datos de contacto (TELEFONO),(EMAIL), en pleno ejercicio de mis derechos ciudadanos ',
+                        `Yo,${this.landOwner.name} ${this.landOwner.paternalSurname} ${this.landOwner.maternalSurname},  identificado(a) con DNI/RUC Nº ${this.landOwner.dni}, con datos de contacto ${this.landOwner.phone},${this.landOwner.email}, en pleno ejercicio de mis derechos ciudadanos `,
                             colSpan: 2,
                     },
 
@@ -964,7 +973,7 @@ return maxSecuen
                     // eslint-disable-next-line max-len
                     {
                         content:
-                            'DECLARO BAJO JURAMENTO: Que el predio con dirección (TIPO HABILITACIÓN, NOMBRE HABILITACIÓN, TIPO VIA, NOMBRE VIA, MANZANA, LOTE, N° ALTERNO, BLOQUE, INTERIOR, PISO, N° DEPARTAMENTO, KILOMETRO), se encuentra ubicado tal cual se muestra en el siguiente croquis:',
+                        `DECLARO BAJO JURAMENTO: Que el predio con dirección TIPO HABILITACIÓN,${this.landRegistryMapModel.habilitacionName}, ${this.landRegistryMapModel.streetType}, ${this.landRegistryMapModel.streetName}, ${this.landRegistryMapModel.codMzn}, ${this.landRegistryMapModel.codLand}, ${this.landRegistryMapModel.codLand}, ${this.landRegistryMapModel.block}, ${this.landRegistryMapModel.indoor}, ${this.landRegistryMapModel.floor}, ${this.landRegistryMapModel.condominium}, ${this.landRegistryMapModel.km}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
                             colSpan: 2,
                     },
 
@@ -1010,7 +1019,7 @@ return maxSecuen
                 [
                     // eslint-disable-next-line max-len
                     {
-                        content: ' UBICACIÓN GEOGRÁFIA: (LATITUD/LONGITUD)',
+                        content: ` UBICACIÓN GEOGRÁFIA: ${this.landRegistryMapModel.latitude}/${this.landRegistryMapModel.longitude}`,
                         colSpan: 2,
                         styles: {
                             halign: 'center',
@@ -1054,7 +1063,7 @@ return maxSecuen
                     },
 
                     {
-                        content: 'Distrito,(DIA) de (MES) del (AÑO)',
+                        content: `${this.district?.name},${moment(new Date()).format("DD/MM/YYYY")}`,
 
                     },
                 ],
@@ -1135,8 +1144,8 @@ async saveNewPointGestionPredio(){
      
     ]);
 
-    const district: DistrictResource =await this._commonService.getDistrictResource(this.userUbigeo).toPromise();
-    const utm=district.resources[0].utm;
+    this.district =await this._commonService.getDistrictResource(this.userUbigeo).toPromise();
+    const utm=this.district.resources[0].utm;
 
  //const _landRegistryMapModel=new LandRegistryMapModel();
  const urlBase = `${this.urlGestionPredios}/0`;
@@ -1172,8 +1181,8 @@ async saveNewPointGestionPredio(){
 
         ): Promise<void> {
 
-        const district: DistrictResource =await this._commonService.getDistrictResource(data.ubigeo).toPromise();
-        const utm=district.resources[0].utm;
+        this.district =await this._commonService.getDistrictResource(data.ubigeo).toPromise();
+        const utm=this.district.resources[0].utm;
 
                 /*.subscribe((data: DistrictResource) => {
                     this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
