@@ -96,8 +96,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
       data.owner = this.ownerId;
       // ToDo: debe ser en el container
       if (data.idPlot) {
-        this.landRegistryMapService.createCpu(data)
-        .subscribe(result => this.saveLandApi(result));
+        this.landRegistryMapService.createCpu(data).toPromise()
+        .then(result => this.saveLandApi(result));
       }else {
         this.saveLandApi(data);
       }

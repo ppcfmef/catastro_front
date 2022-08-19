@@ -69,4 +69,5 @@ export interface LandRegistryMap {
     owner?: number | null;
     idImg:string;
     secuen :number;
+    idLandCartographic: string;
 }

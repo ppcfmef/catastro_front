@@ -1,6 +1,6 @@
 export interface GestionPredio {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    ID_PRED: number;
+    ID_PRED: string;
 // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_PRE: string;
 
