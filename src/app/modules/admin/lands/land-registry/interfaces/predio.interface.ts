@@ -6,7 +6,7 @@ export interface Predio {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     SEC_EJEC: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    ID_PRED: number;
+    ID_PRED: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ANIO_CART: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention

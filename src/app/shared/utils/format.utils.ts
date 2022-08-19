@@ -33,6 +33,7 @@ export class FormatUtils {
     land.idAranc =lote.ID_ARANC;
     //land.idLote= lote.ID_LOTE;
     land.idPlot= lote.ID_LOTE;
+    //land.idLandCartographic = lote.ID_PREDIO;
     
     return land;
 
@@ -83,7 +84,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ID_LOTE: land.idPlot,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        ID_PRED: 0,
+        ID_PRED: land.idLandCartographic,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         COD_PRE: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -133,7 +134,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
 public static  formatLandRegistryMapModelToPredio(land:LandRegistryMapModel):  Predio{
     const predio: Predio ={
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        ID_LOTE: land.idLote,
+        ID_LOTE: land.idPlot,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         UBIGEO: land.ubigeo,
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -175,7 +176,7 @@ public static  formatLandRegistryMapModelToPredio(land:LandRegistryMapModel):  P
         ID_ARANC: land.idAranc,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        ID_PRED: 0,
+        ID_PRED: land.idLandCartographic,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         //COD_PRE: land.cod,
         // eslint-disable-next-line @typescript-eslint/naming-convention

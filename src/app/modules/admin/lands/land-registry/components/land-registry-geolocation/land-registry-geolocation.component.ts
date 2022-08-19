@@ -761,10 +761,9 @@ this.landRegistryService.getLandOwner()
             this.view.graphics.removeAll();
         
         }
-        if (this.idCargo === Role.DISTRITAL && this.userUbigeo && this.estado === Estado.INICIAR) {
+        if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) ) {
             const where = `UBIGEO='${this.userUbigeo}'`;
             this.zoomToUbigeo(where);
-          
         }
     }
     
@@ -926,7 +925,8 @@ return maxSecuen
         try {
             console.log('where>>>', where);
             console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);
-            MapUtils.zoomToFeature(this.view, this.featureZonaUrbana, where);
+            if(this.view,this.featureZonaUrbana)
+                MapUtils.zoomToFeature(this.view, this.featureZonaUrbana, where);
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -1217,7 +1217,7 @@ async saveNewPointGestionPredio(){
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
-            const urlBase=`${_layer.urlBase}/0/addFeatures`;
+            const urlBase=`${_layer.urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
 

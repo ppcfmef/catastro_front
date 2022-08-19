@@ -2,8 +2,9 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { LandRegistryMap } from '../interfaces/land-registry-map.interface';
 import { loadModules } from 'esri-loader';
+import { CommonService } from 'app/core/common/services/common.service';
 
-
+import { from } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,48 @@ export class LandRegistryMapService {
   public _estado: Subject<string> = new Subject();
 
 
-  constructor() {
+
+  layersInfo = [
+  
+
+     {
+      
+         id: 0,
+         idServer: 0,
+         urlBase:
+             'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+             utm: 17,
+
+     },
+
+     {
+      
+        id: 1,
+        idServer: 0,
+        urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
+            utm: 18,
+
+    },
+
+    {
+      
+        id: 2,
+        idServer: 0,
+        urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
+            utm: 19,
+
+    },
+
+
+
+ ];
+
+
+
+
+  constructor(private _commonService: CommonService,) {
   }
 
     set landIn(value: LandRegistryMap){
@@ -38,7 +80,9 @@ export class LandRegistryMapService {
     }
 
     createCpu(value: LandRegistryMap): Observable<LandRegistryMap> {
-        return new BehaviorSubject<LandRegistryMap>(value);
+
+        return from(this.generateMaxCPU(value));
+
     }
 
     set gestionPredios(value: LandRegistryMap){
@@ -48,6 +92,9 @@ export class LandRegistryMapService {
 
     get gestionPredios$(): Observable<LandRegistryMap>{
         return this._gestionPredios.asObservable();
+
+
+        
     }
 
 
@@ -60,6 +107,76 @@ export class LandRegistryMapService {
         this._estado.next(value);
     }
 
+
+   async generateMaxCPU( value: LandRegistryMap) :Promise<LandRegistryMap>{
+
+    const [
+
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        FeatureLayer,
+
+    ] = await loadModules([
+
+        'esri/layers/FeatureLayer',
+
+    ]);
+
+        const ubigeo = (value && value.ubigeo)?value.ubigeo:'150101';
+
+        
+
+
+        const district =await this._commonService.getDistrictResource(ubigeo).toPromise();
+        const utm=district.resources[0].utm;
+
+        const layerInfo=this.layersInfo.find((e)=>{ return e.utm === utm});
+        const url=`${layerInfo.urlBase}/${layerInfo.idServer}`;
+
+        const layer = new FeatureLayer(url);
+
+
+        let query = layer.createQuery();
+        query.where = `UBIGEO='${value.ubigeo}'`;
+    
+        const maxCPUStatistics={
+            onStatisticField: "COD_CPU",  // service field for 2015 population
+            outStatisticFieldName: "max_COD_CPU",
+            statisticType: "max"
+    
+        };
+
+        const maxIDPREDIOStatistics={
+            onStatisticField: "ID_PRED",  // service field for 2015 population
+            outStatisticFieldName: "max_ID_PRED",
+            statisticType: "max"
+    
+        };
+    
+        
+    query.outStatistics = [ maxCPUStatistics ,maxIDPREDIOStatistics];
+    
+  /*
+    layer.queryFeatures(query)
+      .then(function(response){
+         let stats = response.features[0].attributes;
+         console.log("Total Population in WA:" ,stats.max_CPU);
+         
+      });
+    }
+*/
+
+
+    const response=await layer.queryFeatures(query);
+let stats = response.features[0].attributes;
+console.log("Max cpu:" ,stats.max_COD_CPU);
+const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU) +1 :1;
+const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED) +1 :1;
+value.cup = maxCPU.toString();
+value.idLandCartographic = idPRED.toString();
+
+return value
+
+   }
 
     
 }
