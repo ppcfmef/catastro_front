@@ -48,7 +48,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     view: any = null;
     map: any;
     points: any[];
-    user: any;
+    user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     estado=Estado.INICIAR;
 
@@ -315,7 +315,8 @@ this.landRegistryService.getLandOwner()
                         this.addPoint(
                             data.latitude,
                             data.longitude,
-                            this.simpleMarkerSymbolUndefined
+                            this.simpleMarkerSymbol
+                            //this.simpleMarkerSymbolUndefined
                         );
                         /*if(this.landRegistryMapModel?.idPlot){
                             this.addPoint(
@@ -983,7 +984,7 @@ return maxSecuen
                 [
                     {
                         content:
-                        `Yo,${this.landOwner.name} ${this.landOwner.paternalSurname} ${this.landOwner.maternalSurname},  identificado(a) con DNI/RUC Nº ${this.landOwner.dni}, con datos de contacto ${this.landOwner.phone},${this.landOwner.email}, en pleno ejercicio de mis derechos ciudadanos `,
+                        `Yo,${this.landOwner.name} ${this.landOwner.paternalSurname} ${this.landOwner.maternalSurname} ${this.landOwner.dni? ', identificado(a) con DNI/RUC Nº' +this.landOwner.dni :'' }, con datos de contacto:  ${this.landOwner.phone?this.landOwner.phone:''}${this.landOwner.email?','+this.landOwner.email:''}; en pleno ejercicio de mis derechos ciudadanos `,
                             colSpan: 2,
                     },
 
@@ -993,7 +994,7 @@ return maxSecuen
                     // eslint-disable-next-line max-len
                     {
                         content:
-                        `DECLARO BAJO JURAMENTO: Que el predio con dirección TIPO HABILITACIÓN,${this.landRegistryMapModel.habilitacionName}, ${this.landRegistryMapModel.streetType}, ${this.landRegistryMapModel.streetName}, ${this.landRegistryMapModel.codMzn}, ${this.landRegistryMapModel.codLand}, ${this.landRegistryMapModel.codLand}, ${this.landRegistryMapModel.block}, ${this.landRegistryMapModel.indoor}, ${this.landRegistryMapModel.floor}, ${this.landRegistryMapModel.condominium}, ${this.landRegistryMapModel.km}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
+                        `DECLARO BAJO JURAMENTO: Que el predio con dirección TIPO HABILITACIÓN${this.landRegistryMapModel.habilitacionName?','+this.landRegistryMapModel.habilitacionName:'' }${this.landRegistryMapModel.streetType?','+this.landRegistryMapModel.streetType:''}${this.landRegistryMapModel.streetName?', '+this.landRegistryMapModel.streetName:''}${this.landRegistryMapModel.codMzn?', '+this.landRegistryMapModel.codMzn:''}${this.landRegistryMapModel.codLand?', '+this.landRegistryMapModel.codLand:''}${this.landRegistryMapModel.block?', '+this.landRegistryMapModel.block:''}${this.landRegistryMapModel.indoor?', '+this.landRegistryMapModel.indoor:''}${this.landRegistryMapModel.floor?', '+this.landRegistryMapModel.floor:''}${this.landRegistryMapModel.condominium?', '+this.landRegistryMapModel.condominium:''}${this.landRegistryMapModel.km?', '+this.landRegistryMapModel.km:''}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
                             colSpan: 2,
                     },
 
@@ -1099,6 +1100,10 @@ return maxSecuen
                     {
                         content: 'Firma : ____________________',
 
+                       /* styles: {
+                            minCellWidth: 100
+                        },*/
+
                     },
                 ],
 
@@ -1106,20 +1111,25 @@ return maxSecuen
                     {
                         content: '',
                         styles: {
-                            minCellWidth: 100
+                            minCellWidth: 100,
+                         
                         },
 
                     },
                     // eslint-disable-next-line max-len
                     {
-                        content: 'Huella : ____________________',
+                        content: 'Huella : ',
+                        styles: {
+                          /*  minCellWidth: 100,*/
+                            minCellHeight:40
+                        },
 
                     },
                 ],
 
                 [
                     {
-                        content: 'Operador Plataforma: Jose Carlos Ramirez Tello',
+                        content: `Operador Plataforma: ${this.user.name}`,
                        colSpan:2,
 
                     },
@@ -1131,16 +1141,32 @@ return maxSecuen
             didDrawCell: (data: any) => {
 
                 if (data.section === 'body' && data.column.index ===0 && data.row.index ===5){
-                    console.log('data>>',data);
+                    //console.log('data>>',data);
                     /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
                     doc.addImage(
+                        screenshot.dataUrl,
+                        'JPEG',
+                        data.cell.x +40,
+                        data.cell.y ,
+                        100,
+                        100
+                    );
+                }
+
+                if (data.section === 'body' && data.column.index ===1 && data.row.index ===11 ){
+
+                    //console.log('data>>',data);
+                    doc.rect( data.cell.x+15 ,
+                        data.cell.y+5 , 30, 30); 
+                    /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
+                   /* doc.addImage(
                         screenshot.dataUrl,
                         'JPEG',
                         data.cell.x + 40,
                         data.cell.y ,
                         100,
                         100
-                    );
+                    );*/
                 }
 
             },

@@ -30,6 +30,7 @@ export interface User {
     province?: Province;
     district?: District;
     placeScope?: any;
+    ubigeo:string;
 }
 
 
