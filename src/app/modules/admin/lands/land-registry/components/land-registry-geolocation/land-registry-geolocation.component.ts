@@ -311,11 +311,31 @@ this.landRegistryService.getLandOwner()
                 if(data){
                     this.landRegistryMapModel= new LandRegistryMapModel(data);
                     if (data?.latitude && data?.longitude) {
+
                         this.addPoint(
                             data.latitude,
                             data.longitude,
-                            this.simpleMarkerSymbol
+                            this.simpleMarkerSymbolUndefined
                         );
+                        /*if(this.landRegistryMapModel?.idPlot){
+                            this.addPoint(
+                                data.latitude,
+                                data.longitude,
+                                this.simpleMarkerSymbol
+                            );
+                        }
+                        else if(this.landRegistryMapModel?.idCartographicImg){
+
+                            this.addPoint(
+                                data.latitude,
+                                data.longitude,
+                                this.simpleMarkerSymbolUndefined
+                            );
+                        }*/
+
+
+                        //this.landRegistryMapModel?.idCartographicImg
+                       
                         if (this.view) {
                             this.view.center = [data.longitude, data.latitude];
                             this.view.zoom = 19;
