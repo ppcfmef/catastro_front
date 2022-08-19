@@ -9,7 +9,13 @@
 
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Nro de documento</mat-label>
+        <mat-icon
+            class="icon-size-5 touched"
+            (click)="getIntegrationData()"
+            [svgIcon]="'heroicons_solid:search'"
+            matSuffix></mat-icon>
         <input matInput type="text" formControlName="dni">
+
     </mat-form-field>
 
     <ng-container  [ngSwitch]="typeDocSelectValue">
