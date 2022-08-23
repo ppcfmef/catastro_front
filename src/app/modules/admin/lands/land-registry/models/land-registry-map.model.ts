@@ -22,6 +22,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     referenceName: string;
     urbanMza: string;
     urbanLotNumber: number;
+    
     streetType: string;
     streetName: string;
     streetNameAlt: string;

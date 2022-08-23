@@ -31,6 +31,8 @@ export class FormatUtils {
     land.longitude = lote.COORD_X;
     land.sourceInformation=lote.FUENTE;
     land.idAranc =lote.ID_ARANC;
+    land.urbanMza = lote.MZN_URB;
+    
     //land.idLote= lote.ID_LOTE;
     land.idPlot= lote.ID_LOTE;
     //land.idLandCartographic = lote.ID_PREDIO;
