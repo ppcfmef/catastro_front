@@ -5,6 +5,7 @@ import { Lote } from '../interfaces/lote.interface';
 import { Predio } from '../interfaces/predio.interface';
 
 export class LandRegistryMapModel implements LandRegistryMap{
+    objectId:number;
     id: number;
     idPlot: string | null;
     idCartographicImg: string | null;
@@ -22,6 +23,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     referenceName: string;
     urbanMza: string;
     urbanLotNumber: number;
+    codStreet :string;
     streetType: string;
     streetName: string;
     streetNameAlt: string;
@@ -71,6 +73,13 @@ export class LandRegistryMapModel implements LandRegistryMap{
     idImg:string;
     secuen:number;
     idLandCartographic:string;
+    // atributos adicionales de lote
+    departure: string;
+    side: string;
+    ranNum: string;
+    streetBlock: string;
+
+    //DEPARTURE
     constructor(l?: LandRegistryMap){
         this.id= l?.id;
         this.secEjec=l?.secEjec;
@@ -139,6 +148,12 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.idPlot = l?.idPlot;
 
         this.idLandCartographic = l?.idLandCartographic;
+        this.departure = l?.departure;
+
+        this.departure=l?.departure;
+        this.side=l?.side;
+        this.ranNum=l?.ranNum;
+        this.streetBlock=l?.streetBlock;
 
     }
 
