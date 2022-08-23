@@ -125,8 +125,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
       .toPromise().then(
         (result) => {
           this.formEdit.get('name').setValue(result.nane);
-          this.formEdit.get('paternalSurname').setValue(result.maternalSurname);
-          this.formEdit.get('maternalSurname').setValue(result.paternalSurname);
+          this.formEdit.get('maternalSurname').setValue(result.maternalSurname);
+          this.formEdit.get('paternalSurname').setValue(result.paternalSurname);
         }
       );
     }
@@ -138,6 +138,11 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  getDocumentType(code): string {
+    // return this.typeDocs.find(element => element.name === code);
+    return '';
   }
 
   get typeDocSelectValue(): string {
