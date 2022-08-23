@@ -1,4 +1,5 @@
 export interface GestionPredio {
+    OBJECTID :number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_PRED: string;
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -92,4 +93,7 @@ export interface GestionPredio {
     ID_IMG:string;
 
     SECUEN : number;
+
+   
+    
 }

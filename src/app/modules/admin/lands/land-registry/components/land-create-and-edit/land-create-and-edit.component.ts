@@ -23,6 +23,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   title: string;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
+  showPlot = false;
   masterDomain: MasterDomain;
 
   constructor(
@@ -80,6 +81,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
       // Si la data es enviada por el mapa
       this.landMergeRecord = this.mergeRecords(landCurentValue);
       this.setShowCartographicImg();
+      this.setShowPlot();
     }else {
       // si la data es enviada al crear o editar
       this.landMergeRecord = this.landRecord;
@@ -155,6 +157,12 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   private setShowCartographicImg(): void {
     if (this.landMergeRecord.idCartographicImg && !this.landMergeRecord.idPlot) {
       this.showCartographicImg = true;
+    }
+  }
+
+  private setShowPlot(): void {
+    if (this.landMergeRecord.idPlot) {
+      this.showPlot = true;
     }
   }
 

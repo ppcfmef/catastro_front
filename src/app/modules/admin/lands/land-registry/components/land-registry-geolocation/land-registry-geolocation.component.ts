@@ -375,6 +375,13 @@ this.landRegistryService.getLandOwner()
               if(_landRegistryMapModel.idPlot){
                 this.saveLandRegistryMap(_landRegistryMapModel);
               }
+
+              else if(_landRegistryMapModel.idCartographicImg){
+                this.updateLandRegistryMap(_landRegistryMapModel);
+
+              }
+
+              this._landRegistryMapService.setEstado(Estado.INICIAR);
            
             });
 
@@ -673,8 +680,8 @@ this.landRegistryService.getLandOwner()
 
                                         this._landRegistryMapService.setEstado(Estado.NUEVO_PUNTO);
                                         
-
-
+                                        /*const l = new LandRegistryMapModel();
+                                        this._landRegistryMapService.landOut = l;*/
     
                                         /*this._landRegistryMapService.landOut =
                                         landRegistryMapModel;*/
@@ -1272,7 +1279,10 @@ async saveNewPointGestionPredio(){
     this.landRegistryMapModel.secuen = secuen;
 
     console.log('this.landRegistryMapModel>>',this.landRegistryMapModel);
-    this.saveLandRegistryMap(this.landRegistryMapModel);
+    //this.landRegistryMapMode=await 
+    
+    this.landRegistryMapModel= await this.saveLandRegistryMap(this.landRegistryMapModel);
+
     this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
     //this._landRegistryMapService.setEstado(Estado.LEER);
@@ -1293,7 +1303,7 @@ async saveNewPointGestionPredio(){
         data: LandRegistryMapModel
         //_gestionPredios: GestionPredios
 
-        ): Promise<void> {
+        ): Promise<LandRegistryMapModel> {
 
         this.district =await this._commonService.getDistrictResource(data.ubigeo).toPromise();
         const utm=this.district.resources[0].utm;
@@ -1318,46 +1328,47 @@ async saveNewPointGestionPredio(){
             console.log('json>>>', json);
             const formData = new FormData();
             formData.append('features', JSON.stringify(json));
+            formData.append('F', 'json');
 
-            fetch(`${urlBase}`, {
+
+            const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
             })
-                .then((resObj) => {
-                    this._messageProviderService.showSnack('Registro guardado correctamente');
-                    console.log(resObj);
-                    /*this._fuseSplashScreenService.hide();
-                this._messageProviderService.showSnack('Registrados cargados correctamente');*/
-                })
-                .catch((error) => {
-                    this._messageProviderService.showSnack('Error de guardado');
-                    /*this._messageProviderService.showSnackError('Registrados no cargados');*/
-                });
+            const responseJson = await response.json();
+            console.log('responseJson>>',responseJson);
+                
+
+                if(responseJson?.addResults){
+                    const addFeature=responseJson?.addResults[0];
+                    data.objectId=addFeature.objectId;
+                }
+
         }else{
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
+          
             formData.append('features', JSON.stringify(json));
+            formData.append('F', 'json');
 
-            fetch(`${urlBase}`, {
+
+            const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
             })
-                .then((resObj) => {
-                    console.log(resObj);
-                    this._messageProviderService.showAlert('Punto nuevo guardado correctamente');
-                   /* this._messageProviderService.showSnack('Punto nuevo guardado correctamente');*/
-                    /*this._fuseSplashScreenService.hide();
-                this._messageProviderService.showSnack('Registrados cargados correctamente');*/
-                })
-                .catch((error) => {
-                    this._messageProviderService.showAlert('Error de guardado');
-                    /*this._messageProviderService.showSnackError('Registrados no cargados');*/
-                });
+            const responseJson: any = await response.json();
+            console.log('responseJson>>',responseJson);
+            if(responseJson?.addResults){
+                const addFeature=responseJson?.addResults[0];
+                data.objectId=addFeature.objectId;
+            }
 
         }
+
+        return data;
     }
 
 
@@ -1369,27 +1380,23 @@ async saveNewPointGestionPredio(){
         ): Promise<void> {
 
        
-            const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
-            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
+            const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
+            const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
+          
             formData.append('features', JSON.stringify(json));
+            formData.append('F', 'json');
 
-            fetch(`${urlBase}`, {
+
+            const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
             })
-                .then((resObj) => {
-                    this._messageProviderService.showAlert('Punto nuevo guardado correctamente');
-                   /* this._messageProviderService.showSnack('Punto nuevo guardado correctamente');*/
-                    /*this._fuseSplashScreenService.hide();
-                this._messageProviderService.showSnack('Registrados cargados correctamente');*/
-                })
-                .catch((error) => {
-                    this._messageProviderService.showAlert('Error de guardado');
-                    /*this._messageProviderService.showSnackError('Registrados no cargados');*/
-                });
+            const responseJson = await response.json();
+            console.log('responseJson>>',responseJson);
+
 
         
     }
@@ -1462,3 +1469,7 @@ async saveNewPointGestionPredio(){
         return feature;
     }
 }
+function data(data: any, arg1: (LandRegistryMapModel: any) => void): any {
+    throw new Error('Function not implemented.');
+}
+

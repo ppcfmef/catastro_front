@@ -9,7 +9,7 @@ export class FormatUtils {
   public static   formatLoteToLandRegistryMapModel(lote?: Lote): LandRegistryMapModel{
 
     let land = new LandRegistryMapModel();
-
+    land.objectId = lote.OBJECTID;
     land.ubigeo =lote.UBIGEO;
     land.landArea =lote.AREA;
     land.codMzn= lote.COD_MZN;
@@ -32,10 +32,15 @@ export class FormatUtils {
     land.sourceInformation=lote.FUENTE;
     land.idAranc =lote.ID_ARANC;
     land.urbanMza = lote.MZN_URB;
-    
+    land.codStreet = lote.COD_VIA;
     //land.idLote= lote.ID_LOTE;
     land.idPlot= lote.ID_LOTE;
     //land.idLandCartographic = lote.ID_PREDIO;
+        // atributos adicionales de lote
+        land.departure= lote.PARTIDA;
+        land.side=lote.LADO;
+        land.ranNum=lote.RAN_NUM;
+        land.streetBlock=lote.CUADRA;
     
     return land;
 
@@ -44,6 +49,7 @@ export class FormatUtils {
 
 public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapModel): GestionPredio{
     const gestion: GestionPredio ={
+        OBJECTID: land.objectId,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         UBIGEO: land.ubigeo,
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -96,19 +102,14 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ANIO_CART: 0,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        COD_VIA: '',
+        COD_VIA: land.codStreet,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        CUADRA: '',
+
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        LADO: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        MZN_URB: '',
+        MZN_URB: land.urbanMza,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         NUM_MUN: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        PARTIDA: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        RAN_NUM: '',
+
         // eslint-disable-next-line @typescript-eslint/naming-convention
         TIP_DOC: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -127,7 +128,15 @@ public static   formatLandRegistryMapModelToGestionPredio(land:LandRegistryMapMo
         ESTADO: '',
           // eslint-disable-next-line @typescript-eslint/naming-convention
         ID_IMG:land.idCartographicImg,
-        SECUEN : land.secuen
+        SECUEN : land.secuen,
+ // eslint-disable-next-line @typescript-eslint/naming-convention
+        PARTIDA: land.departure,
+
+        LADO: land.side,
+        RAN_NUM : land.ranNum,
+        CUADRA : land.streetBlock
+
+      
     };
     return gestion;
 }
@@ -188,27 +197,28 @@ public static  formatLandRegistryMapModelToPredio(land:LandRegistryMapModel):  P
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ANIO_CART: 0,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        COD_VIA: '',
+        COD_VIA: land.codStreet,
+
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        CUADRA: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        LADO: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        MZN_URB: '',
+        MZN_URB: land.urbanMza,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         NUM_MUN: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        PARTIDA: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        RAN_NUM: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         COD_PRE: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        OBJECTID: null,
+        OBJECTID: land.objectId,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         COD_CUC: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        AREA: 0
+        AREA: 0,
+
+         // eslint-disable-next-line @typescript-eslint/naming-convention
+         PARTIDA: land.departure,
+
+         LADO: land.side,
+         RAN_NUM : land.ranNum,
+         CUADRA : land.streetBlock
+ 
     };
     return predio;
 

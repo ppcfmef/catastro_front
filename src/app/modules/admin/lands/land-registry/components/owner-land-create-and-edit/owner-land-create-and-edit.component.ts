@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
+import { IntegrationService } from 'app/shared/services/integration.service';
 
 @Component({
   selector: 'app-owner-land-create-and-edit',
@@ -29,6 +30,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
+    private integrationService: IntegrationService,
   ) {}
 
   ngOnInit(): void {
@@ -112,6 +114,29 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnDestroy {
   resetForm(): void {
     if (this.formEdit) {
       this.formEdit.reset();
+    }
+  }
+
+  getIntegrationData(): void {
+    const documentType = this.formEdit.get('documentType').value;
+    const document = this.formEdit.get('dni').value;
+    if (documentType === '01') {
+      this.integrationService.getPerson(document)
+      .toPromise().then(
+        (result) => {
+          this.formEdit.get('name').setValue(result.nane);
+          this.formEdit.get('paternalSurname').setValue(result.maternalSurname);
+          this.formEdit.get('maternalSurname').setValue(result.paternalSurname);
+        }
+      );
+    }
+    else if(documentType === '06') {
+      this.integrationService.getBusiness(document)
+      .toPromise().then(
+        (result) => {
+          this.formEdit.get('descriptionOwner').setValue(result.businessName);
+        }
+      );
     }
   }
 

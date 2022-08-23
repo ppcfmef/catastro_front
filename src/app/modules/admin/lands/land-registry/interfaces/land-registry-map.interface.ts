@@ -70,4 +70,12 @@ export interface LandRegistryMap {
     idImg:string;
     secuen :number;
     idLandCartographic: string;
+    // atributos adicionales de lote
+    departure: string;
+    side: string;
+    ranNum: string;
+    streetBlock: string;
+
+
+
 }

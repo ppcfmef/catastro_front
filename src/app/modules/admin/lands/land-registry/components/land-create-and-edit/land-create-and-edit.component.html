@@ -8,6 +8,14 @@
             <input matInput type="text" formControlName="idCartographicImg" readonly>
         </mat-form-field>
     </div>
+
+    <div *ngIf="showPlot">
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+            <mat-label>Copiar el Codigo de Lote </mat-label>
+            <input matInput type="text" formControlName="idPlot" readonly>
+        </mat-form-field>
+    </div>
+
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Cod. predio municipal</mat-label>
         <input matInput type="text" formControlName="cpm">
