@@ -14,7 +14,9 @@
         </button>
     </article>
     <ng-container *ngIf="!showFormEdit">
-        <app-owner-land-detail (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
+        <app-owner-land-detail
+        [landOwnerIn]="landOwner"
+        (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
     </ng-container>
     <ng-container *ngIf="showFormEdit">
         <app-owner-land-create-and-edit

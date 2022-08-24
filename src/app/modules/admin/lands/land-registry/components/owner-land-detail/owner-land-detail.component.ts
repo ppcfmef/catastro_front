@@ -1,39 +1,39 @@
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output,EventEmitter, SimpleChanges } from '@angular/core';
+import { LandOwner } from '../../interfaces/land-owner.interface';
 import { LandOwnerModel } from '../../models/land-owner.model';
-import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-owner-land-detail',
   templateUrl: './owner-land-detail.component.html',
   styleUrls: ['./owner-land-detail.component.scss']
 })
-export class OwnerLandDetailComponent implements OnInit, OnDestroy {
+export class OwnerLandDetailComponent implements OnInit, OnChanges {
+  @Input() landOwnerIn: LandOwner;
   @Output() formEdit = new EventEmitter<boolean>();
-  landOwner: LandOwnerModel = new LandOwnerModel();
+  landOwner = new LandOwnerModel();
   showAddress = false;
-  private unsubscribeAll: Subject<any> = new Subject<any>();
+  typeDocs = [
+    {val: '01', name:'DNI'},
+    {val: '06', name:'RUC'},
+  ];
 
-  constructor(
-    private landRegistryService: LandRegistryService
-  ) { }
+  constructor() { }
 
-  ngOnInit(): void {
-    this.landRegistryService.getLandOwner()
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((result) => {
-      this.landOwner.setValue(result);
-    });
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const ownerCurentValue = changes?.landOwnerIn?.currentValue;
+    if (ownerCurentValue) {
+      this.landOwner.setValue(ownerCurentValue);
+    }
   }
 
   emitShowFormEdit(): void{
     this.formEdit.emit(true);
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeAll.next();
-    this.unsubscribeAll.complete();
+  getDocumentType(code): string {
+    const typeDocument = this.typeDocs.find(element => element.name === code);
+    return typeDocument?.name;
   }
-
 }

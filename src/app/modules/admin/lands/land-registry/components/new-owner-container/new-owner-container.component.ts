@@ -4,7 +4,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
-import { LandOwnerModel } from '../../models/land-owner.model';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 
 @Component({

@@ -140,11 +140,6 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
     }
   }
 
-  getDocumentType(code): string {
-    // return this.typeDocs.find(element => element.name === code);
-    return '';
-  }
-
   get typeDocSelectValue(): string {
     return this.formEdit.get('documentType').value;
   }
