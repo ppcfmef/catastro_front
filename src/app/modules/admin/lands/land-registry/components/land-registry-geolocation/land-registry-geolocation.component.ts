@@ -321,7 +321,7 @@ this.landRegistryService.getLandOwner()
                             data.latitude,
                             data.longitude,
                             this.simpleMarkerSymbol,
-                            Estado.LEER
+                            //Estado.LEER
 
                         );
                         /*
