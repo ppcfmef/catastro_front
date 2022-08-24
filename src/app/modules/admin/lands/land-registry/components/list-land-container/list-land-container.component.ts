@@ -69,8 +69,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
-    const queryParams = { limit, offset, ownerFilter };
-
+    const queryParams = { limit, offset, ...ownerFilter };
     this.landRegistryService.getLandList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
