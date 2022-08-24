@@ -460,7 +460,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     async zoomToUbigeo(where: string): Promise<any> {
         try {
             console.log('where>>', where);
-            const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7'
+            const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
 
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const [FeatureLayer]= await loadModules(['esri/layers/FeatureLayer',]);

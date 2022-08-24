@@ -1,7 +1,9 @@
+
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum Estado {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     INICIAR = 'iniciar',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     LEER = 'leer',
 
     EDITAR = 'editar',
@@ -9,5 +11,5 @@ export enum Estado {
     CREAR = 'crear',
 
     NUEVO_PUNTO ='nuevo_punto',
-    
+
 };

@@ -273,7 +273,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
         const legendJson = [];
 
         this.layersInfo
-            .filter((l) => l.title.includes(utm.toString()))
+            .filter(l => l.title.includes(utm.toString()))
             .forEach((l) => {
                 const legendLayers = l.legend.layers;
                 legendLayers.forEach((lf) => {
@@ -352,7 +352,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
                         colSpan: 2,
                     },
                 ],
-                [{ content: `Área Construida:  mt2`, colSpan: 2 }],
+                [{ content: 'Área Construida:  mt2', colSpan: 2 }],
             ],
         });
 

@@ -86,7 +86,10 @@ export class MapUtils {
 
         const res=await layer.queryExtent(queryLayer);
         console.log('res>>',res);
-        view.extent=res.extent;
+        if(view){
+            view.extent=res.extent;
+        }
+
         return res;
       /* return  layer.queryExtent(queryLayer).then( (response) => {
 

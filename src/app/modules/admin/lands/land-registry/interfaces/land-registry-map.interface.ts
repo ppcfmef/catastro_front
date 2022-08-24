@@ -1,4 +1,5 @@
 export interface LandRegistryMap {
+    idObjectImg: number;
     id: number;
     idPlot: string | null;
     idCartographicImg: string | null;
@@ -67,8 +68,8 @@ export interface LandRegistryMap {
     idLote: string;
 
     owner?: number | null;
-    idImg:string;
-    secuen :number;
+    idImg: string;
+    secuen: number;
     idLandCartographic: string;
     // atributos adicionales de lote
     departure: string;

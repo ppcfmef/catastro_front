@@ -38,6 +38,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .subscribe((result) => {
       if(result) {
         this.landRecordOut = result;
+        console.log('landOut result',result);
         this.showEditForm = true;
       }
     });

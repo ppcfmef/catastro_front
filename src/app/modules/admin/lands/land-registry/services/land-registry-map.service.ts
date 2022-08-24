@@ -20,10 +20,10 @@ export class LandRegistryMapService {
 
 
   layersInfo = [
-  
+
 
      {
-      
+
          id: 0,
          idServer: 0,
          urlBase:
@@ -33,7 +33,7 @@ export class LandRegistryMapService {
      },
 
      {
-      
+
         id: 1,
         idServer: 0,
         urlBase:
@@ -43,7 +43,7 @@ export class LandRegistryMapService {
     },
 
     {
-      
+
         id: 2,
         idServer: 0,
         urlBase:
@@ -94,7 +94,7 @@ export class LandRegistryMapService {
         return this._gestionPredios.asObservable();
 
 
-        
+
     }
 
 
@@ -108,7 +108,7 @@ export class LandRegistryMapService {
     }
 
 
-   async generateMaxCPU( value: LandRegistryMap) :Promise<LandRegistryMap>{
+   async generateMaxCPU( value: LandRegistryMap): Promise<LandRegistryMap>{
 
     const [
 
@@ -123,60 +123,60 @@ export class LandRegistryMapService {
 
         const ubigeo = (value && value.ubigeo)?value.ubigeo:'150101';
 
-        
+
 
 
         const district =await this._commonService.getDistrictResource(ubigeo).toPromise();
         const utm=district.resources[0].utm;
 
-        const layerInfo=this.layersInfo.find((e)=>{ return e.utm === utm});
+        const layerInfo=this.layersInfo.find(e=>e.utm === utm);
         const url=`${layerInfo.urlBase}/${layerInfo.idServer}`;
 
         const layer = new FeatureLayer(url);
 
 
-        let query = layer.createQuery();
+        const query = layer.createQuery();
         query.where = `UBIGEO='${value.ubigeo}'`;
-    
+
         const maxCPUStatistics={
-            onStatisticField: "COD_CPU",  // service field for 2015 population
-            outStatisticFieldName: "max_COD_CPU",
-            statisticType: "max"
-    
+            onStatisticField: 'COD_CPU',  // service field for 2015 population
+            outStatisticFieldName: 'max_COD_CPU',
+            statisticType: 'max'
+
         };
 
         const maxIDPREDIOStatistics={
-            onStatisticField: "ID_PRED",  // service field for 2015 population
-            outStatisticFieldName: "max_ID_PRED",
-            statisticType: "max"
-    
+            onStatisticField: 'ID_PRED',  // service field for 2015 population
+            outStatisticFieldName: 'max_ID_PRED',
+            statisticType: 'max'
+
         };
-    
-        
+
+
     query.outStatistics = [ maxCPUStatistics ,maxIDPREDIOStatistics];
-    
+
   /*
     layer.queryFeatures(query)
       .then(function(response){
          let stats = response.features[0].attributes;
          console.log("Total Population in WA:" ,stats.max_CPU);
-         
+
       });
     }
 */
 
 
     const response=await layer.queryFeatures(query);
-let stats = response.features[0].attributes;
-console.log("Max cpu:" ,stats.max_COD_CPU);
+const stats = response.features[0].attributes;
+console.log('Max cpu:' ,stats.max_COD_CPU);
 const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU) +1 :1;
 const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED) +1 :1;
 value.cup = maxCPU.toString();
 value.idLandCartographic = idPRED.toString();
 
-return value
+return value;
 
    }
 
-    
+
 }

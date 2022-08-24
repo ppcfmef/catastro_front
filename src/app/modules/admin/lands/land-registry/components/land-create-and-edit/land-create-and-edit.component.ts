@@ -44,7 +44,9 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   }
 
   createFormEdit(): void{
+    console.log('this.landMergeRecord Form',this.landMergeRecord);
     this.formEdit = this.fb.group({
+      idObjectImg:[this.landMergeRecord?.idObjectImg],
       id: [this.landMergeRecord?.id],
       idPlot: [this.landMergeRecord?.idPlot],
       idCartographicImg: [this.landMergeRecord?.idCartographicImg],
@@ -95,6 +97,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   saveLand(): void {
     if(this.formEdit.valid) {
       const data = this.formEdit.value;
+      console.log('dataForm>>',data);
       data.owner = this.ownerId;
       // ToDo: debe ser en el container
       if (data.idPlot) {

@@ -43,11 +43,11 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
     styleUrls: ['./land-registry-geolocation.component.scss'],
 })
 export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
-
-    apiKey = "AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9";
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+    apiKey = 'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9';
+
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
@@ -87,7 +87,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             children: [6, 7, 8],
         },
     ];
-    landRegistryMapModel:LandRegistryMapModel
+    landRegistryMapModel: LandRegistryMapModel;
     simpleMarkerSymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
@@ -128,7 +128,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 17,
@@ -143,7 +143,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 17,
@@ -159,7 +159,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 17,
@@ -176,7 +176,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 18,
@@ -191,7 +191,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 18,
@@ -206,7 +206,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 18,
@@ -221,7 +221,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 19,
@@ -236,7 +236,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 19,
@@ -251,7 +251,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1<>1',
+            definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             utm: 19,
@@ -278,10 +278,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     featureDistrito: any;
 
     landOwner: LandOwnerModel = new LandOwnerModel();
-    screenshotDiv:any;
-    saveNewPointDiv:any;
-    editPointDiv:any;
-  district:DistrictResource;
+    screenshotDiv: any;
+    saveNewPointDiv: any;
+    editPointDiv: any;
+  district: DistrictResource;
 
 
     constructor(
@@ -301,11 +301,11 @@ this.landRegistryService.getLandOwner()
         this._landRegistryMapService.setEstado(Estado.INICIAR);
         this._landRegistryMapService.getEstado().pipe(takeUntil(this._unsubscribeAll))
         .subscribe((data: any)=>{
-            
+
             this.estado = data;
             this.changeUI();
 
-        }); 
+        });
 
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -320,9 +320,17 @@ this.landRegistryService.getLandOwner()
                         this.addPoint(
                             data.latitude,
                             data.longitude,
-                            this.simpleMarkerSymbol
-                            //this.simpleMarkerSymbolUndefined
+                            this.simpleMarkerSymbol,
+                            Estado.LEER
+
                         );
+                        /*
+                        this.addPopup(
+                            data.latitude,
+                            data.longitude
+                        )*/
+
+
                         /*if(this.landRegistryMapModel?.idPlot){
                             this.addPoint(
                                 data.latitude,
@@ -341,18 +349,22 @@ this.landRegistryService.getLandOwner()
 
 
                         //this.landRegistryMapModel?.idCartographicImg
-                       
+
                         if (this.view) {
                             this.view.center = [data.longitude, data.latitude];
                             this.view.zoom = 19;
                         }
-                        
+
                         this._landRegistryMapService.setEstado(Estado.LEER);
+                        /*if (this.view){
+
+                        }*/
+
                     } else if (data && data.ubigeo) {
                         //this.resetMap();
                         this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
-                   
+
                 }
 
                 else {
@@ -370,8 +382,10 @@ this.landRegistryService.getLandOwner()
 
             this._landRegistryMapService.gestionPredios$.pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: LandRegistryMap) => {
-              const _landRegistryMapModel=new LandRegistryMapModel(data);
 
+              const _landRegistryMapModel=new LandRegistryMapModel(data);
+                console.log('data>>',data);
+                console.log('_landRegistryMapModel',_landRegistryMapModel);
               if(_landRegistryMapModel.idPlot){
                 this.saveLandRegistryMap(_landRegistryMapModel);
               }
@@ -382,7 +396,7 @@ this.landRegistryService.getLandOwner()
               }
 
               this._landRegistryMapService.setEstado(Estado.INICIAR);
-           
+
             });
 
             this._landRegistryService.getLandOwner().pipe(takeUntil(this._unsubscribeAll))
@@ -391,7 +405,7 @@ this.landRegistryService.getLandOwner()
               //this.estado =Estado.INICIAR;
               this.resetMap();
               this._landRegistryMapService.setEstado(Estado.INICIAR);
-            });     
+            });
     }
 
     ngAfterViewInit(): void {
@@ -403,7 +417,7 @@ this.landRegistryService.getLandOwner()
                 this.userUbigeo =
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
-                        : '010101';
+                        : '150101';
                   this._commonService.getDistrictResource(this.userUbigeo).subscribe((data)=>{
                     this.district =data;
                 });
@@ -510,8 +524,8 @@ this.landRegistryService.getLandOwner()
             const featureDirecciones = new FeatureLayer(
                 this.urlSearchDirecciones
             );
-            
-      
+
+
             const labelClassVias = {
                 // autocasts as new LabelClass()
                 symbol: {
@@ -545,7 +559,7 @@ this.landRegistryService.getLandOwner()
 
             this.groupLayers.reverse().map((g) => {
                 const fs = g.children.map(
-                    (c) => this.layersInfo.find((l) => l.id === c)?.featureLayer
+                    c => this.layersInfo.find(l => l.id === c)?.featureLayer
                 );
 
                 const demographicGroupLayer = new GroupLayer({
@@ -555,19 +569,19 @@ this.landRegistryService.getLandOwner()
                 this.map.add(demographicGroupLayer);
             });
 
-       
+
             const cs1 = new SpatialReference({
                 wkid: 32717, //PE_GCS_ED_1950
             });
 
             this.view.on('click', (event) => {
-               
+
 
                 if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
                     let graphic = event.mapPoint;
                     let longitude = graphic.longitude;
                     let latitude = graphic.latitude;
-    
+
                     const point = {
                         //Create a point
                         type: 'point',
@@ -578,12 +592,12 @@ this.landRegistryService.getLandOwner()
                         this.featureDistrito,
                         point
                     );
-    
+
                     intersect.then((data: any) => {
                         if (data && data.attributes) {
                             const ubigeo = data.attributes['UBIGEO'];
                             console.log('ubigeo>>', ubigeo);
-    
+
                             if (
                                 this.idCargo === Role.DISTRITAL &&
                                 this.userUbigeo !== ubigeo
@@ -597,7 +611,7 @@ this.landRegistryService.getLandOwner()
                                 this.landRegistryMapModel.latitude = latitude;
                                 this.landRegistryMapModel.longitude = longitude;
                                 this.landRegistryMapModel.ubigeo = ubigeo;
-    
+
                                 this.view.hitTest(event).then((response) => {
                                     const results = response.results.filter((r) => {
                                         console.log(
@@ -616,10 +630,10 @@ this.landRegistryService.getLandOwner()
                                         }
                                     });
                                     console.log('results<<',results);
-    
+
                                     if (results.length > 0) {
                                         const resultsLen = results.length - 1;
-    
+
                                         if (
                                             results[resultsLen] &&
                                             results[resultsLen].graphic &&
@@ -627,7 +641,7 @@ this.landRegistryService.getLandOwner()
                                         ) {
                                             graphic = results[resultsLen].graphic;
                                             //console.log('graphic>>', graphic);
-    
+
                                             if (
                                                 graphic &&
                                                 graphic.attributes &&
@@ -638,7 +652,7 @@ this.landRegistryService.getLandOwner()
                                                     graphic.geometry.latitude;
                                                 longitude =
                                                     graphic.geometry.longitude;*/
-    
+
                                                 latitude =
                                                     graphic.attributes['COORD_Y'];
                                                 longitude =
@@ -650,10 +664,10 @@ this.landRegistryService.getLandOwner()
                                                 /*_landRegistryMapModel.loteToLandRegistryMapModel(
                                                     lote
                                                 );*/
-                                                /*this.landRegistryMapModel = new LandRegistryMapModel()       
+                                                /*this.landRegistryMapModel = new LandRegistryMapModel()
                                                 this.landRegistryMapModel.loteToLandRegistryMapModel(lote);*/
-    
-    
+
+
                                                 this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
                                                 this.addPoint(
                                                     latitude,
@@ -661,17 +675,17 @@ this.landRegistryService.getLandOwner()
                                                     this.simpleMarkerSymbol
                                                 );
                                                 this._landRegistryMapService.setEstado(Estado.EDITAR);
-                                                this._landRegistryMapService.landOut = this.landRegistryMapModel
+                                                this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                                /* this._landRegistryMapService.landOut =
                                                 _landRegistryMapModel;*/
 
-                                                
-    
+
+
                                             }
                                         }
                                     } else {
-    
-                                       
+
+
                                         this.addPoint(
                                             latitude,
                                             longitude,
@@ -679,10 +693,10 @@ this.landRegistryService.getLandOwner()
                                         );
 
                                         this._landRegistryMapService.setEstado(Estado.NUEVO_PUNTO);
-                                        
+
                                         /*const l = new LandRegistryMapModel();
                                         this._landRegistryMapService.landOut = l;*/
-    
+
                                         /*this._landRegistryMapService.landOut =
                                         landRegistryMapModel;*/
                                     }
@@ -707,57 +721,112 @@ this.landRegistryService.getLandOwner()
 
                 this.resetMap();
 
+
+
                 let sources=[];
 
                 if(this.idCargo === Role.DISTRITAL){
 
-                    const searchFilter = {
+                    const where = `UBIGEO='${this.userUbigeo}'`;
+                    this.layersInfo.forEach((l) => {
+                        if(l.featureLayer){
+                            const featureLayer = l.featureLayer;
+                            console.log('where',where);
+                            featureLayer.definitionExpression = where;
+                        }
+                    });
+
+                    const outSpatialReference = new SpatialReference(
+                        4326
+                    );
+
+                    const layer = new FeatureLayer(this.urlSearchDistrito);
+                    const queryLayer = layer.createQuery();
+                    queryLayer.where = where;
+                    queryLayer.outSpatialReference = outSpatialReference;
+
+                   // const res=await layer.queryExtent(queryLayer);
 
 
-                        //geometry: this.view.extent,
-                       
-                      };
+                    layer.queryExtent(queryLayer).then((res) => {
+                        const extent = res.extent;
+                        /*const extentProject=projection.project(this.view.extent, outSpatialReference);*/
+                        /*console.log('extentProject>>',extentProject);*/
 
 
-                    sources= [
-                        {
-                            name: "ArcGIS World Geocoding Service",
-                            placeholder: "Buscar Direccion",
-                            apiKey: this.apiKey,
-                            countryCode:"PE",
-                            singleLineFieldName: "SingleLine",
-                            url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-                            //filter:searchExtent
-    
-                          },
-    
-                        {
-                            layer: featureDirecciones,
-                            searchFields: ['DIR_MUN'],
-                            displayField: 'DIR_MUN',
-                            exactMatch: false,
-                            outFields: ['DIR_MUN'],
-                            name: 'DIRECCIONES',
-                            //filter:searchExtent
+                        const searchFilter = {
+                                geometry:extent
 
-                        },
-                    ]   
+                           // geometry: this.view.extent,
+
+                        };
+
+
+                        sources= [
+                            {
+                                name: 'ArcGIS World Geocoding Service',
+                                placeholder: 'Buscar Direccion',
+                                apiKey: this.apiKey,
+                                countryCode:'PE',
+                                singleLineFieldName: 'SingleLine',
+                                url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
+                                filter:searchFilter
+
+                              },
+
+                            {
+                                layer: featureDirecciones,
+                                searchFields: ['DIR_MUN'],
+                                displayField: 'DIR_MUN',
+                                exactMatch: false,
+                                outFields: ['DIR_MUN'],
+                                name: 'DIRECCIONES',
+                                filter:searchFilter
+
+                            },
+                        ];
+
+                        const searchWidget = new Search({
+                            view: this.view,
+                            includeDefaultSources: false,
+                            sources:sources
+
+                        });
+
+                        searchWidget.on('select-result', (event) => {
+                            this.view.zoom = 16;
+                            console.log('event>>',event);
+                        });
+
+
+                        this.view.ui.add(searchWidget, {
+                            position: 'top-left',
+                            index: 1,
+                        });
+
+
+
+                    });
+
+
+
+
                 }
-    
+
                 else{
-    
+
                     sources= [
                         {
-                            name: "ArcGIS World Geocoding Service",
-                            placeholder: "Buscar Direccion",
+                            name: 'ArcGIS World Geocoding Service',
+                            placeholder: 'Buscar Direccion',
                             apiKey: this.apiKey,
-                            countryCode:"PE",
-                            singleLineFieldName: "SingleLine",
-                            url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-                           
-    
+                            countryCode:'PE',
+                            singleLineFieldName: 'SingleLine',
+                            url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
+
+
                           },
-    
+
                         {
                             layer: featureDirecciones,
                             searchFields: ['DIR_MUN'],
@@ -774,29 +843,32 @@ this.landRegistryService.getLandOwner()
                             outFields: ['UBIGEO', 'DISTRITO'],
                             name: 'DISTRITOS',
                         },
-                    ]   
-    
+                    ];
+
+                    const searchWidget = new Search({
+                        view: this.view,
+                        includeDefaultSources: false,
+                        sources:sources
+
+                    });
+
+                    searchWidget.on('select-result', (event) => {
+                        this.view.zoom = 16;
+                        console.log('event>>',event);
+                    });
+
+
+                    this.view.ui.add(searchWidget, {
+                        position: 'top-left',
+                        index: 1,
+                    });
+
                 }
 
 
-                
-                
-                const searchWidget = new Search({
-                    view: this.view,
-                    includeDefaultSources: false,
-                    sources:sources
-                    
-                });
-    
-                searchWidget.on('select-result', (event) => {
-                    this.view.zoom = 16;
-                });
 
 
-                this.view.ui.add(searchWidget, {
-                    position: 'top-left',
-                    index: 1,
-                });
+
 
                 this.view.ui.add([toolbar], {
                     position: 'top-right',
@@ -812,35 +884,45 @@ this.landRegistryService.getLandOwner()
 
                 this.changeUI();
 
-                
+
             });
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
     }
 
-    resetMap(){
+    resetMap(): void{
         this.landRegistryMapModel = new LandRegistryMapModel();
         if(this.view){
             this.view.graphics.removeAll();
-        
+
         }
-        if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) ) {
+        if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) && this.idCargo===Role.DISTRITAL) {
             const where = `UBIGEO='${this.userUbigeo}'`;
+
+/*
+            this.layersInfo.forEach((l) => {
+                if(l.featureLayer){
+                    const featureLayer = l.featureLayer;
+                    console.log('where',where);
+                    featureLayer.definitionExpression = where;
+                }
+            });*/
+
             this.zoomToUbigeo(where);
         }
     }
-    
 
-    changeUI(){
+
+    changeUI(): void{
         //this.resetDisplayUI();
-      
+
 
         if(this.screenshotDiv && this.saveNewPointDiv && this.editPointDiv){
             this.resetDisplayUI();
             /*if (this.estado===Estado.INICIAR){
                 this.resetDisplayUI();
-              
+
             }*/
 
              if(this.estado === Estado.LEER){
@@ -858,8 +940,8 @@ this.landRegistryService.getLandOwner()
                 this.displayImprimir='flex';*/
             }
 
-            else if(this.estado==Estado.NUEVO_PUNTO){
-                
+            else if(this.estado===Estado.NUEVO_PUNTO){
+
                 this.displaySave='flex';
                 this.view.ui.add([this.saveNewPointDiv], {
                     position: 'top-right',
@@ -871,39 +953,39 @@ this.landRegistryService.getLandOwner()
                 });*/
             }
 
-            
 
-            
+
+
 
            /* else if (this.estado === Estado.CREAR){
 
             }
     */
           /*  else{
-                
+
                 this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv]);
                 this.displayImprimir='none';
             }*/
 
         }
-      
+
 
     }
 
-    resetDisplayUI(){
+    resetDisplayUI(): void{
         this.displayImprimir='none';
         this.displaySave='none';
         this.displayEditPoint='none';
-        
+
         this.view.ui.remove([this.screenshotDiv,this.saveNewPointDiv,this.editPointDiv]);
     }
 
-    editPointEvent(){
+    editPointEvent(): void{
         this._landRegistryMapService.setEstado(Estado.EDITAR);
     }
 
 
-    async addPoint(latitude, longitude, symbol): Promise<any> {
+    async addPoint(latitude, longitude, symbol,estado: string=null): Promise<any> {
         try {
             const [
                 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -925,63 +1007,65 @@ this.landRegistryService.getLandOwner()
                 /*symbol: this.simpleMarkerSymbolUndefined*/
             });
             this.view.graphics.addMany([pointGraphic]);
+            if(estado&& estado===Estado.LEER ){
+                console.log('open');
+                this.view.popup.open({
+                    title: 'Predio',  // title displayed in the popup
+                    content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
+                    location: pointGraphic.geometry,
+                    actions:[]
+                  });
+
+                  this.view.popup.alignment = 'top-right';
+
+
+                /*  let zoomOutAction = {
+                    // This text is displayed as a tooltip
+                    title: "Zoom",
+                    // The ID used to reference this action in the event handler
+                    id: "zoom-out",
+                    // Sets the icon font used to style the action button
+                    className: "esri-icon-zoom-out-magnifying-glass"
+                   };
+*/
+                   const editAction = {
+                    // This text is displayed as a tooltip
+                    title: 'Editar',
+                    // The ID used to reference this action in the event handler
+                    id: 'edit',
+                    // Sets the icon font used to style the action button
+                    className: 'esri-icon-edit'
+                   };
+
+                   this.view.popup.actions=[editAction];
+            }
+
+
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
     }
 
 
-generateMaxCPU(layer:any){
-    let query = layer.createQuery();
-    query.where = `UBIGEO='${this.userUbigeo}'`;
+
+async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>{
+    const query = layer.createQuery();
+    query.where = `UBIGEO='${land.ubigeo}'`;
 
     const maxCPU={
-        onStatisticField: "CPU",  // service field for 2015 population
-        outStatisticFieldName: "max_CPU",
-        statisticType: "max"
+        onStatisticField: 'SECUEN',  // service field for 2015 population
+        outStatisticFieldName: 'max_SECUEN',
+        statisticType: 'max'
 
     };
 
-    
-query.outStatistics = [ maxCPU ];
+    query.outStatistics = [ maxCPU ];
+    const response=await layer.queryFeatures(query);
+    const stats = response.features[0].attributes;
+    console.log('Total Population in WA:' ,stats.max_SECUEN);
+    const maxSecuen=(stats.max_SECUEN)?stats.max_SECUEN:0;
 
-
-layer.queryFeatures(query)
-  .then(function(response){
-     let stats = response.features[0].attributes;
-     console.log("Total Population in WA:" ,stats.max_CPU);
-     
-  });
-}
-
-
-async generateMaxSecuen(layer:any){
-    let query = layer.createQuery();
-    query.where = `UBIGEO='${this.userUbigeo}'`;
-
-    const maxCPU={
-        onStatisticField: "SECUEN",  // service field for 2015 population
-        outStatisticFieldName: "max_SECUEN",
-        statisticType: "max"
-
-    };
-    
-    
-query.outStatistics = [ maxCPU ];
-const response=await layer.queryFeatures(query);
-let stats = response.features[0].attributes;
-console.log("Total Population in WA:" ,stats.max_SECUEN);
-const maxSecuen=(stats.max_SECUEN)?stats.max_SECUEN:0;
-
-
-return maxSecuen
-/*layer.queryFeatures(query)
-  .then(function(response){
-     let stats = response.features[0].attributes;
-     console.log("Total Population in WA:" ,stats.max_SECUEN);
-     
-  });*/
-
+    return maxSecuen;
 
 }
 
@@ -989,8 +1073,8 @@ return maxSecuen
         try {
             console.log('where>>>', where);
             console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);
-            if(this.view,this.featureZonaUrbana)
-                MapUtils.zoomToFeature(this.view, this.featureZonaUrbana, where);
+            if(this.view )
+                {MapUtils.zoomToFeature(this.view, this.featureZonaUrbana, where);}
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -1147,7 +1231,7 @@ return maxSecuen
                     },
 
                     {
-                        content: `${this.district?.name},${moment(new Date()).format("DD/MM/YYYY")}`,
+                        content: `${this.district?.name},${moment(new Date()).format('DD/MM/YYYY')}`,
 
                     },
                 ],
@@ -1175,7 +1259,7 @@ return maxSecuen
                         content: '',
                         styles: {
                             minCellWidth: 100,
-                         
+
                         },
 
                     },
@@ -1220,7 +1304,7 @@ return maxSecuen
 
                     //console.log('data>>',data);
                     doc.rect( data.cell.x+15 ,
-                        data.cell.y+5 , 30, 30); 
+                        data.cell.y+5 , 30, 30);
                     /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
                    /* doc.addImage(
                         screenshot.dataUrl,
@@ -1240,49 +1324,48 @@ return maxSecuen
         doc.save('Declaración Jurada de Ubicación de Predio.pdf');
     }
 
-async saveNewPointGestionPredio(){
+async saveNewPointGestionPredio(): Promise<void>{
 
 
     const dialogRef = this.confirmationService.info(
-        'Guardar punto',
+        'Guardar Nuevo Punto',
         'Desea guardar el punto nuevo en la base de datos'
       );
-      
+
       dialogRef.afterClosed().toPromise().then(async (option) => {
         if (option === 'confirmed') {
           // aqui codigo al aceptar
 
-          
+
 
     const [
         // eslint-disable-next-line @typescript-eslint/naming-convention
-      
         FeatureLayer,
-        
+
     ] = await loadModules([
-     
+
         'esri/layers/FeatureLayer',
-     
+
     ]);
 
-    this.district =await this._commonService.getDistrictResource(this.userUbigeo).toPromise();
+    this.district =await this._commonService.getDistrictResource(this.landRegistryMapModel.ubigeo).toPromise();
     const utm=this.district.resources[0].utm;
 
- 
+
  const urlBase = `${this.urlGestionPredios}/0`;
  const feature = new FeatureLayer(urlBase);
- const secuen=await this.generateMaxSecuen(feature)+1;
- const idImg=`i${utm}${this.userUbigeo}${secuen}`;
+ const secuen=await this.generateMaxSecuen(feature,this.landRegistryMapModel)+1;
+ const idImg=`i${utm}${this.landRegistryMapModel.ubigeo}${secuen}`;
 
 
     this.landRegistryMapModel.idCartographicImg= idImg;
     this.landRegistryMapModel.secuen = secuen;
 
     console.log('this.landRegistryMapModel>>',this.landRegistryMapModel);
-    //this.landRegistryMapMode=await 
-    
-    this.landRegistryMapModel= await this.saveLandRegistryMap(this.landRegistryMapModel);
+    //this.landRegistryMapMode=await
 
+    this.landRegistryMapModel= await this.saveLandRegistryMap(this.landRegistryMapModel);
+    console.log('creado::',this.landRegistryMapModel);
     this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
     //this._landRegistryMapService.setEstado(Estado.LEER);
@@ -1291,10 +1374,6 @@ async saveNewPointGestionPredio(){
 
         }
       });
-
-
-
-
 
 }
 
@@ -1313,7 +1392,7 @@ async saveNewPointGestionPredio(){
                 });*/
 
         const _layer = this.layersInfo.find(
-                    (e) =>  e.utm === utm
+                    e =>  e.utm === utm
                 );
 
 
@@ -1334,14 +1413,14 @@ async saveNewPointGestionPredio(){
             const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
-            })
+            });
             const responseJson = await response.json();
             console.log('responseJson>>',responseJson);
-                
+
 
                 if(responseJson?.addResults){
                     const addFeature=responseJson?.addResults[0];
-                    data.objectId=addFeature.objectId;
+                    //data.idObjectImg=addFeature.objectId;
                 }
 
         }else{
@@ -1350,7 +1429,7 @@ async saveNewPointGestionPredio(){
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
-          
+
             formData.append('features', JSON.stringify(json));
             formData.append('F', 'json');
 
@@ -1358,12 +1437,12 @@ async saveNewPointGestionPredio(){
             const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
-            })
+            });
             const responseJson: any = await response.json();
             console.log('responseJson>>',responseJson);
             if(responseJson?.addResults){
                 const addFeature=responseJson?.addResults[0];
-                data.objectId=addFeature.objectId;
+                data.idObjectImg=addFeature.objectId;
             }
 
         }
@@ -1379,13 +1458,13 @@ async saveNewPointGestionPredio(){
 
         ): Promise<void> {
 
-       
+
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
             const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
-          
+
             formData.append('features', JSON.stringify(json));
             formData.append('F', 'json');
 
@@ -1393,12 +1472,12 @@ async saveNewPointGestionPredio(){
             const response =   await fetch(`${urlBase}`, {
                 method: 'POST',
                 body: formData,
-            })
+            });
             const responseJson = await response.json();
             console.log('responseJson>>',responseJson);
 
 
-        
+
     }
     /*/FeatureServer/0*/
     async createArcgisJSON(features: any[],projectionWkid: number): Promise<any[]> {
@@ -1469,7 +1548,9 @@ async saveNewPointGestionPredio(){
         return feature;
     }
 }
+
+/*
 function data(data: any, arg1: (LandRegistryMapModel: any) => void): any {
     throw new Error('Function not implemented.');
-}
+}*/
 
