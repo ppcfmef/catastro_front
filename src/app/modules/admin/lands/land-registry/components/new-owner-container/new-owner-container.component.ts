@@ -34,6 +34,11 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
     this.showFormEdit = event;
   }
 
+  newOwner(): void{
+    this.showFormEdit = true;
+    this.landRegistryService.setLandOwner(null);
+  }
+
   searchOwner(): void {
     const searchText = this.search.value;
     this.landRegistryService.searchOwnerbyDocument(searchText)

@@ -35,6 +35,10 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
       (result) => {
         const ownerResult = result[0];
         const registerLand = result[1];
+        if (ownerResult === null) {
+          this.landRecords = null;
+        }
+
         if (ownerResult) {
           this.landOwnerId = ownerResult?.id;
         }
