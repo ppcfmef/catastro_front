@@ -4,6 +4,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
+import { LandOwnerModel } from '../../models/land-owner.model';
+import { LandOwner } from '../../interfaces/land-owner.interface';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -13,6 +15,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   showFormEdit = true;
   search: FormControl = new FormControl();
+  landOwner: LandOwner;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -23,6 +26,9 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.landRegistryService.getLandOwner()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(result => this.landOwner = result);
   }
 
   receivedShowFormEdit(event): void{
@@ -32,8 +38,8 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   searchOwner(): void {
     const searchText = this.search.value;
     this.landRegistryService.searchOwnerbyDocument(searchText)
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe(
+    .toPromise()
+    .then(
       (result) => {
         this.receivedShowFormEdit(false);
         this.landRegistryService.setLandOwner(result);
@@ -56,6 +62,7 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void{
+    this.landRegistryService.setLandOwner(null);
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
   }

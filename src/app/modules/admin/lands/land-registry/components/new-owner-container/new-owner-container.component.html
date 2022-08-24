@@ -17,7 +17,10 @@
         <app-owner-land-detail (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
     </ng-container>
     <ng-container *ngIf="showFormEdit">
-        <app-owner-land-create-and-edit (showFormEdit)="receivedShowFormEdit($event)"></app-owner-land-create-and-edit>
+        <app-owner-land-create-and-edit
+        [landOwnerIn]="landOwner"
+        (showFormEdit)="receivedShowFormEdit($event)">
+    </app-owner-land-create-and-edit>
     </ng-container>
     
 </section>
