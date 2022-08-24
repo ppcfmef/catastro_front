@@ -1,6 +1,9 @@
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-land-summary-table',
@@ -19,10 +22,20 @@ export class LandSummaryTableComponent implements OnInit {
   pageIndex = 0;
   pageSize = 5;
   pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+  private unsubscribeAll = new Subject<any>();
 
-  constructor() { }
+  constructor(
+    private landRegistryService: LandRegistryService
+  ) { }
 
   ngOnInit(): void {
+    this.landRegistryService.getLandCreate()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) => {
+      if (result) {
+        this.landSelected?.clear();
+      }
+    });
   }
 
   landSelection(landRecord: LandRegistryMap): void{
