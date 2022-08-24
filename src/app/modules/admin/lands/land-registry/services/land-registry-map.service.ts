@@ -5,6 +5,7 @@ import { loadModules } from 'esri-loader';
 import { CommonService } from 'app/core/common/services/common.service';
 
 import { from } from 'rxjs';
+import { LandOwner } from '../interfaces/land-owner.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class LandRegistryMapService {
 
   public _gestionPredios: Subject<LandRegistryMap> = new Subject();
   public _estado: Subject<string> = new Subject();
-
+  public _print: Subject<any>= new Subject();
 
 
   layersInfo = [
@@ -103,8 +104,21 @@ export class LandRegistryMapService {
     }
 
 
-    setEstado(value: string){
+    setEstado(value: string): void {
         this._estado.next(value);
+    }
+
+
+    emitPrint(land: LandRegistryMap, owner: LandOwner): void{
+        const inputs ={
+            land: land,
+            owner: owner
+        };
+        this._print.next(inputs);
+    }
+
+    getPrint(): Observable<any>{
+        return this._print.asObservable();
     }
 
 
@@ -177,6 +191,7 @@ value.idLandCartographic = idPRED.toString();
 return value;
 
    }
+
 
 
 }
