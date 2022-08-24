@@ -13,37 +13,43 @@
     <p><b>Telefono:</b> {{ landOwner.phone }}</p>
     <p class="w-full"><b>Email:</b> {{ landOwner.phone }}</p>
 
-    <h3 class="subtitle-card mb-2 mt-6">Domicilio Fiscal</h3>
-    <p class="w-full"><b>Ubigeo:</b> {{ landOwner.address?.ubigeo }}</p>
-    
-    <p class="w-full">
-        <b>Tipo de Habilitación:</b> {{ landOwner.address?.uuType }}
-        <b>Código de Habilitación:</b> {{ landOwner.address?.codUu }}
-    </p>
-    <p class="w-full">
-        <b>Nombre de Habilitación:</b> {{ landOwner.address?.habilitacionName }}
-    </p>
-    <p class="w-full">
-        <b>Tipo de vía:</b> {{ landOwner.address?.streetType }}
-        <b>Código de vía:</b> {{ landOwner.address?.codStreet }}
-    </p>
-    <p class="w-full">
-        <b>Nombre de vía:</b> {{ landOwner.address?.streetName }}
-    </p>
-    <p class="w-full"><b>Urbanización:</b> {{ landOwner.address?.urbanMza }}</p>
-    <p class="w-full">
-        <b>Mz.</b>
-        <b class="ml-2">Km. </b> {{ landOwner.address?.km }}
-        <b class="ml-2">Lt. </b> {{ landOwner.address?.urbanLotNumber }}
-        <b class="ml-2">Piso. </b> {{ landOwner.address?.floor }}
-        <b class="ml-2">Interior. </b> {{ landOwner.address?.indoor }}
-        <!--<b class="ml-2">Nro. C.</b> 15
-        <b class="ml-2">Lado</b>
-        <b class="ml-2">Nro. Puerta</b>
-        -->
-    </p>
-
-    <button class="edit-container" (click)="emitShowFormEdit()">
-        <mat-icon svgIcon="mat_outline:edit"></mat-icon>
-    </button>
+    <h3 class="subtitle-card mb-2 mt-6">
+        <div (click)="showAddress = !showAddress" class="cursor-pointer flex items-center w-max">
+            Domicilio Fiscal
+            <mat-icon [svgIcon]="showAddress? 'heroicons_solid:chevron-up':'heroicons_solid:chevron-down'">
+            </mat-icon>
+        </div>
+    </h3>
+    <ng-container *ngIf="showAddress">
+        <p class="w-full"><b>Ubigeo:</b> {{ landOwner.address?.ubigeo }}</p>
+        <p class="w-full">
+            <b>Tipo de Habilitación:</b> {{ landOwner.address?.uuType }}
+            <b>Código de Habilitación:</b> {{ landOwner.address?.codUu }}
+        </p>
+        <p class="w-full">
+            <b>Nombre de Habilitación:</b> {{ landOwner.address?.habilitacionName }}
+        </p>
+        <p class="w-full">
+            <b>Tipo de vía:</b> {{ landOwner.address?.streetType }}
+            <b>Código de vía:</b> {{ landOwner.address?.codStreet }}
+        </p>
+        <p class="w-full">
+            <b>Nombre de vía:</b> {{ landOwner.address?.streetName }}
+        </p>
+        <p class="w-full"><b>Urbanización:</b> {{ landOwner.address?.urbanMza }}</p>
+        <p class="w-full">
+            <b>Mz.</b>
+            <b class="ml-2">Km. </b> {{ landOwner.address?.km }}
+            <b class="ml-2">Lt. </b> {{ landOwner.address?.urbanLotNumber }}
+            <b class="ml-2">Piso. </b> {{ landOwner.address?.floor }}
+            <b class="ml-2">Interior. </b> {{ landOwner.address?.indoor }}
+            <!--<b class="ml-2">Nro. C.</b> 15
+            <b class="ml-2">Lado</b>
+            <b class="ml-2">Nro. Puerta</b>
+            -->
+        </p>
+    </ng-container>
+        <button class="edit-container" (click)="emitShowFormEdit()">
+            <mat-icon svgIcon="mat_outline:edit"></mat-icon>
+        </button>
 </section>

@@ -12,6 +12,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 export class OwnerLandDetailComponent implements OnInit, OnDestroy {
   @Output() formEdit = new EventEmitter<boolean>();
   landOwner: LandOwnerModel = new LandOwnerModel();
+  showAddress = false;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
