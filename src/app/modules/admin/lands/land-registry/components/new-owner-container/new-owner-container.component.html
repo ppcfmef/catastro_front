@@ -9,15 +9,20 @@
         </section>
         
         <button class="btn-success box-shadow-z1"
-        (click)="receivedShowFormEdit(true)"> Nuevo contribuyente
+        (click)="newOwner()"> Nuevo contribuyente
             <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
         </button>
     </article>
     <ng-container *ngIf="!showFormEdit">
-        <app-owner-land-detail (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
+        <app-owner-land-detail
+        [landOwnerIn]="landOwner"
+        (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
     </ng-container>
     <ng-container *ngIf="showFormEdit">
-        <app-owner-land-create-and-edit (showFormEdit)="receivedShowFormEdit($event)"></app-owner-land-create-and-edit>
+        <app-owner-land-create-and-edit
+        [landOwnerIn]="landOwner"
+        (showFormEdit)="receivedShowFormEdit($event)">
+    </app-owner-land-create-and-edit>
     </ng-container>
     
 </section>

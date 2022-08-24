@@ -13,5 +13,6 @@
         [dataSource]="landRecords"
         [length]="tableLength"
         (seledRecord)="seledRecord($event)"
+        (changePage)="onChangePage($event)"
         ></app-land-summary-table>
 </section>

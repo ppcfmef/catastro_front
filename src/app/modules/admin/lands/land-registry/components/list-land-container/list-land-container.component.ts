@@ -35,6 +35,10 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
       (result) => {
         const ownerResult = result[0];
         const registerLand = result[1];
+        if (ownerResult === null) {
+          this.landRecords = null;
+        }
+
         if (ownerResult) {
           this.landOwnerId = ownerResult?.id;
         }
@@ -69,8 +73,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
-    const queryParams = { limit, offset, ownerFilter };
-
+    const queryParams = { limit, offset, ...ownerFilter };
     this.landRegistryService.getLandList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
