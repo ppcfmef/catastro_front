@@ -828,12 +828,9 @@ this.landRegistryService.getLandOwner()
                         
                         });
 
-
-    
                     }
     
                 });
-
 
 
 
