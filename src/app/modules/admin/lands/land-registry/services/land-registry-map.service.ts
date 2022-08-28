@@ -82,7 +82,17 @@ export class LandRegistryMapService {
 
     createCpu(value: LandRegistryMap): Observable<LandRegistryMap> {
 
-        return from(this.generateMaxCPU(value));
+         const o  = new Subject<LandRegistryMap>();
+         o.next(value);
+
+        if(value.cup) {
+          return o.asObservable() ;
+        }
+
+        else{
+            return from(this.generateMaxCPU(value));
+        }
+       
 
     }
 
@@ -183,8 +193,8 @@ export class LandRegistryMapService {
     const response=await layer.queryFeatures(query);
 const stats = response.features[0].attributes;
 console.log('Max cpu:' ,stats.max_COD_CPU);
-const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU) +1 :1;
-const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED) +1 :1;
+const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;
+const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED, 10) +1 :1;
 value.cup = maxCPU.toString();
 value.idLandCartographic = idPRED.toString();
 

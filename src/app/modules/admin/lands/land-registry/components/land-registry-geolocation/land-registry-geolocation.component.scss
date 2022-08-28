@@ -10,3 +10,15 @@
     height: 100%;
     width: 100%;
   }
+
+
+
+  .esri-popup__inline-actions-container:only-child>.esri-popup__action, .esri-popup__inline-actions-container:only-child>.esri-popup__action-toggle {
+     max-width: 100%!important;
+
+}
+
+
+.esri-view-width-less-than-medium .esri-popup__action-text {
+   display: inline!important; 
+}

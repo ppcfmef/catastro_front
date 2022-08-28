@@ -285,7 +285,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
     editPointDiv: any;
   district: DistrictResource;
 
-
+  displayPopupDiv='none';
+  popupDiv: any;
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
@@ -308,7 +309,7 @@ this.landRegistryService.getLandOwner()
         this._landRegistryMapService.setEstado(Estado.INICIAR);
         this._landRegistryMapService.getEstado().pipe(takeUntil(this._unsubscribeAll))
         .subscribe((estado: any)=>{
-
+            if(this.view) {this.view.popup.close();}
             this.estado = estado;
             this.changeUI();
 
@@ -322,49 +323,31 @@ this.landRegistryService.getLandOwner()
                 if(land){
                     this.landRegistryMapModel= new LandRegistryMapModel(land);
                     if (land?.latitude && land?.longitude) {
+                    let symbol=  this.simpleMarkerSymbolUndefined;
+                      if(this.landRegistryMapModel?.idCartographicImg && !this.landRegistryMapModel?.idPlot){
+
+                        symbol=  this.simpleMarkerSymbolUndefined;
+
+                        }
+
+                        else{
+                            symbol=  this.simpleMarkerSymbol;
+                        }
 
                         this.addPoint(
                             land.latitude,
                             land.longitude,
-                            this.simpleMarkerSymbol,
-                            //Estado.LEER
+                            symbol,
+                            Estado.LEER
 
                         );
-                        /*
-                        this.addPopup(
-                            data.latitude,
-                            data.longitude
-                        )*/
 
-
-                        /*if(this.landRegistryMapModel?.idPlot){
-                            this.addPoint(
-                                data.latitude,
-                                data.longitude,
-                                this.simpleMarkerSymbol
-                            );
-                        }
-                        else if(this.landRegistryMapModel?.idCartographicImg){
-
-                            this.addPoint(
-                                data.latitude,
-                                data.longitude,
-                                this.simpleMarkerSymbolUndefined
-                            );
-                        }*/
-
-
-                        //this.landRegistryMapModel?.idCartographicImg
 
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
                         }
-
                         this._landRegistryMapService.setEstado(Estado.LEER);
-                        /*if (this.view){
-
-                        }*/
 
                     } else if (land && land.ubigeo) {
                         //this.resetMap();
@@ -418,14 +401,13 @@ this.landRegistryService.getLandOwner()
                 }
 
             });
-    }
 
-    ngAfterViewInit(): void {
-        this._userService.user$
+
+            this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: any) => {
                 this.user = user;
-                console.log('this.user>>', this.user);
+               // console.log('this.user>>', this.user);
                 this.userUbigeo =
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
@@ -438,6 +420,10 @@ this.landRegistryService.getLandOwner()
                     this.initializeMap(this.points);
                 }, 1000);
             });
+    }
+
+    ngAfterViewInit(): void {
+
     }
 
     async initializeMap(inputPoints: any[] = []): Promise<void> {
@@ -491,16 +477,41 @@ this.landRegistryService.getLandOwner()
 
             const mapProperties = {
                 basemap: 'streets-vector',
+
             };
 
+            
             this.map = new Map(mapProperties);
+
+            const actionEdit = {
+                // This text is displayed as a tooltip
+                title: 'Editar',
+                // The ID used to reference this action in the event handler
+                id: 'edit',
+                // Sets the icon font used to style the action button
+                className: 'esri-icon-edit'
+               };
 
             const mapViewProperties = {
                 container: this.mapViewEl.nativeElement,
                 zoom: 17,
                 center: [-71.955921, -13.53063],
                 map: this.map,
+                popup: {
+                    dockEnabled: false,
+                    dockOptions: {
+                    //buttonEnabled: false,
+                    breakpoint: false
+                    },
+                    alignment : 'top-right',
+                    autoOpenEnabled : false,
+                    actions:[actionEdit]
+                    },
+
             };
+
+
+            
             this.view = new MapView(mapViewProperties);
 
             const layerList = new LayerList({
@@ -536,7 +547,7 @@ this.landRegistryService.getLandOwner()
             const featureDirecciones = new FeatureLayer(
                 this.urlSearchDirecciones
             );
-
+            
 
             const labelClassVias = {
                 // autocasts as new LabelClass()
@@ -586,150 +597,245 @@ this.landRegistryService.getLandOwner()
                 wkid: 32717, //PE_GCS_ED_1950
             });
 
-            this.view.on('click', (event) => {
-
-
-                if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
-                    let graphic = event.mapPoint;
-                    let longitude = graphic.longitude;
-                    let latitude = graphic.latitude;
-
-                    const point = {
-                        //Create a point
-                        type: 'point',
-                        longitude: longitude,
-                        latitude: latitude,
-                    };
-                    const intersect = this.queryIntersectFeaturelayer(
-                        this.featureDistrito,
-                        point
-                    );
-
-                    intersect.then((data: any) => {
-                        if (data && data.attributes) {
-                            const ubigeo = data.attributes['UBIGEO'];
-                            console.log('ubigeo>>', ubigeo);
-
-                            if (
-                                this.idCargo === Role.DISTRITAL &&
-                                this.userUbigeo !== ubigeo
-                            ) {
-                                this._messageProviderService.showAlert(
-                                    'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
-                                );
-                            } else {
-                                this.landRegistryMapModel =
-                                    new LandRegistryMapModel();
-                                this.landRegistryMapModel.latitude = latitude;
-                                this.landRegistryMapModel.longitude = longitude;
-                                this.landRegistryMapModel.ubigeo = ubigeo;
-
-                                this.view.hitTest(event).then((response) => {
-                                    const results = response.results.filter((r) => {
-                                        console.log(
-                                            r,
-                                            r.graphic,
-                                            r.graphic.layer,
-                                            r.graphic.layer.layerId
-                                        );
-                                        if (
-                                            r &&
-                                            r.graphic &&
-                                            r.graphic.layer &&
-                                            r.graphic.layer.layerId === 1
-                                        ) {
-                                            return r;
-                                        }
-                                    });
-                                    console.log('results<<',results);
-
-                                    if (results.length > 0) {
-                                        const resultsLen = results.length - 1;
-
-                                        if (
-                                            results[resultsLen] &&
-                                            results[resultsLen].graphic &&
-                                            results[resultsLen].graphic.geometry
-                                        ) {
-                                            graphic = results[resultsLen].graphic;
-                                            //console.log('graphic>>', graphic);
-
-                                            if (
-                                                graphic &&
-                                                graphic.attributes &&
-                                                graphic.attributes['ID_LOTE']
-                                            ) {
-                                                //  console.log('graphic.attributes>>', graphic.attributes);
-                                               /* latitude =
-                                                    graphic.geometry.latitude;
-                                                longitude =
-                                                    graphic.geometry.longitude;*/
-
-                                                latitude =
-                                                    graphic.attributes['COORD_Y'];
-                                                longitude =
-                                                    graphic.attributes['COORD_X'];
-                                                const lote = graphic.attributes;
-                                                /*const _landRegistryMapModel: LandRegistryMapModel =
-                                                    new LandRegistryMapModel();*/
-                                                /*console.log('lote>>',lote);*/
-                                                /*_landRegistryMapModel.loteToLandRegistryMapModel(
-                                                    lote
-                                                );*/
-                                                /*this.landRegistryMapModel = new LandRegistryMapModel()
-                                                this.landRegistryMapModel.loteToLandRegistryMapModel(lote);*/
-
-
-                                                this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
-                                                this.addPoint(
-                                                    latitude,
-                                                    longitude,
-                                                    this.simpleMarkerSymbol
-                                                );
-                                                this._landRegistryMapService.setEstado(Estado.EDITAR);
-                                                this._landRegistryMapService.landOut = this.landRegistryMapModel;
-                                               /* this._landRegistryMapService.landOut =
-                                                _landRegistryMapModel;*/
-
-
-
-                                            }
-                                        }
-                                    } else {
-
-
-                                        this.addPoint(
-                                            latitude,
-                                            longitude,
-                                            this.simpleMarkerSymbolUndefined
-                                        );
-
-                                        this._landRegistryMapService.setEstado(Estado.NUEVO_PUNTO);
-
-                                        /*const l = new LandRegistryMapModel();
-                                        this._landRegistryMapService.landOut = l;*/
-
-                                        /*this._landRegistryMapService.landOut =
-                                        landRegistryMapModel;*/
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                }
-
-            });
 
             this.screenshotDiv = document.getElementById('screenshotDiv');
 
             this.saveNewPointDiv = document.getElementById('saveNewPointDiv');
             this.editPointDiv= document.getElementById('editPointDiv');
+
+            this.popupDiv = document.getElementById('popupDiv');
             this.view.when(() => {
-                /*if (this.idCargo === Role.DISTRITAL && this.userUbigeo) {
-                    const where = `UBIGEO='${this.userUbigeo}'`;
-                    this.zoomToUbigeo(where);
-                }*/
+
+                this.view.on('click', (event) => {
+                    //this.view.popup.visible = true;
+    
+                    //console.log('event.mapPoint>>',event.mapPoint);
+                    /*this.view.popup.open({
+                        location: event.mapPoint,
+                      });
+    */
+                
+    
+                    if(this.estado === Estado.LEER){
+
+                        this.view.hitTest(event).then((response) => {
+    
+                            const results = response.results.filter((r) => {
+                                if (r && r.graphic &&  r.graphic.sourceLayer ==null) {
+                                    return r;
+                                }
+                            });
+
+                            if(results.length>0){
+                                //console.log('results>>',results);
+                                this.displayPopupDiv='inline';
+                                this.view.popup.open({
+                                    title: 'Predio',
+                                    //container: this.popupDiv,
+                                    location: event.mapPoint,
+                                   content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
+                                  });
+                            }
+
+                        });
+                    }
+    
+                    /*let graphic = event.mapPoint;
+                    let longitude = graphic.longitude;
+                    let latitude = graphic.latitude;*/
+    
+                    if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
+                        let graphic = event.mapPoint;
+                        let longitude = graphic.longitude;
+                        let latitude = graphic.latitude;
+    
+                        const point = {
+                            //Create a point
+                            type: 'point',
+                            longitude: longitude,
+                            latitude: latitude,
+                        };
+                        const intersect = this.queryIntersectFeaturelayer(
+                            this.featureDistrito,
+                            point
+                        );
+
+
+                        this.view.hitTest(event).then((response) => {
+                            const results = response.results.filter((r) => {
+                                if (
+                                    r &&
+                                    r.graphic &&
+                                    r.graphic.layer &&
+                                    r.graphic.layer.layerId === 1
+                                ) {
+                                    return r;
+                                }
+                            });
+
+                            console.log('results<<',results);
+                            if (results.length > 0) {
+                                const resultsLen = results.length - 1;
+
+                                if (
+                                    results[resultsLen] &&
+                                    results[resultsLen].graphic &&
+                                    results[resultsLen].graphic.geometry
+                                ) {
+                                    graphic = results[resultsLen].graphic;
+                                    //console.log('graphic>>', graphic);
+
+                                    if (
+                                        graphic &&
+                                        graphic.attributes &&
+                                        graphic.attributes['ID_LOTE']
+                                    ) {
+ 
+
+                                        this.addPoint(
+                                            latitude,
+                                            longitude,
+                                            this.simpleMarkerSymbol
+                                        );
+
+                                        /*let dialogRef = this.confirmationService.info(
+                                            'Asignar Lote',
+                                            'Desea asignar este lote'
+                                        );
+    */
+                                        let dialogRef = null;
+                                        if(this.landRegistryMapModel.cup)
+                                            {
+                                                if(!this.landRegistryMapModel.idPlot &&  this.landRegistryMapModel.idCartographicImg)
+                                                {
+                                                    dialogRef = this.confirmationService.info(
+                                                        'Convertir a predio',
+                                                        'Desea actualizar esta ubicaci{on a predio ?'
+                                                    );
+                                                }
+
+                                                else{
+                                                    dialogRef = this.confirmationService.info(
+                                                        'Asignar Lote',
+                                                        'Desea asignar este lote?'
+                                                    );
+                                                }
+
+                                            }
+                                        else{
+
+                                            dialogRef = this.confirmationService.info(
+                                                'Actualizar Predio',
+                                                'Desea actualizar el predio?'
+                                            );
+
+                                        }
+
+                                    dialogRef.afterClosed().toPromise().then( (option) => {
+                                        if (option === 'confirmed') {
+                                            latitude =
+                                            graphic.attributes['COORD_Y'];
+                                        longitude =
+                                            graphic.attributes['COORD_X'];
+                                        const lote = graphic.attributes;
+
+                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
+                                        
+                                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                                        this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                        }
+
+                                        else{
+
+                                            this.addPoint(
+                                                this.landRegistryMapModel.latitude,
+                                                this.landRegistryMapModel.longitude,
+                                                this.simpleMarkerSymbol
+                                            );
+
+                                        }
+
+
+                                    });
+
+}
+                                }
+                            } else {
+
+                                if(!this.landRegistryMapModel.cup ){
+
+                                    intersect.then((data: any) => {
+                                        if (data && data.attributes) {
+                                            const ubigeo = data.attributes['UBIGEO'];
+                                            console.log('ubigeo>>', ubigeo);
+                
+                                            if (
+                                                this.idCargo === Role.DISTRITAL &&
+                                                this.userUbigeo !== ubigeo
+                                            ) {
+                                                this._messageProviderService.showAlert(
+                                                    'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
+                                                );
+                                            } else {
+    
+    
+                                                this.addPoint(
+                                                    latitude,
+                                                    longitude,
+                                                    this.simpleMarkerSymbolUndefined
+                                                );
+    
+    
+                                                const dialogRef = this.confirmationService.info(
+                                                    'Guardar Nueva Ubicacion',
+                                                    'Desea guardar esta nueva ubicación'
+                                                  );
+    
+                                                  dialogRef.afterClosed().toPromise().then( (option) => {
+                                                    if (option === 'confirmed') {
+    
+                                                        this.landRegistryMapModel =
+                                                        new LandRegistryMapModel();
+                                                        this.landRegistryMapModel.latitude = latitude;
+                                                        this.landRegistryMapModel.longitude = longitude;
+                                                        this.landRegistryMapModel.ubigeo = ubigeo;
+                                                     
+    
+                                                        this.saveNewPointGestionPredio();
+    
+                                                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                                                   /*     this._landRegistryMapService.landOut = this.landRegistryMapModel;*/
+                                                    }
+                                                    else{
+    
+                                                    }
+    
+    
+                                                });
+    
+    
+    
+    
+                                            }
+                                        }
+                                    });
+
+                                }
+
+
+                            
+                            }
+                        
+                        });
+
+
+    
+                    }
+    
+                });
+
+
+
 
                 this.resetMap();
 
@@ -757,22 +863,16 @@ this.landRegistryService.getLandOwner()
                     queryLayer.where = where;
                     queryLayer.outSpatialReference = outSpatialReference;
 
-                   // const res=await layer.queryExtent(queryLayer);
+
 
 
                     layer.queryExtent(queryLayer).then((res) => {
                         const extent = res.extent;
-                        /*const extentProject=projection.project(this.view.extent, outSpatialReference);*/
-                        /*console.log('extentProject>>',extentProject);*/
 
 
                         const searchFilter = {
                                 geometry:extent
-
-                           // geometry: this.view.extent,
-
                         };
-
 
                         sources= [
                             {
@@ -880,7 +980,7 @@ this.landRegistryService.getLandOwner()
 
 
 
-
+               // this.view.popup.collapseEnabled= false;
 
                 this.view.ui.add([toolbar], {
                     position: 'top-right',
@@ -897,6 +997,14 @@ this.landRegistryService.getLandOwner()
                 this.changeUI();
 
 
+                this.view.popup.on('trigger-action', (event) => {
+                    // Execute the measureThis() function if the measure-this action is clicked
+                    if (event.action.id === 'edit') {
+                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                    }
+                  });
+
+
             });
         } catch (error) {
             console.error('EsriLoader: ', error);
@@ -904,8 +1012,11 @@ this.landRegistryService.getLandOwner()
     }
 
     resetMap(): void{
+       
         this.landRegistryMapModel = new LandRegistryMapModel();
         if(this.view){
+
+            this.view.popup.close();
             this.view.graphics.removeAll();
 
         }
@@ -937,12 +1048,14 @@ this.landRegistryService.getLandOwner()
             }*/
 
              if(this.estado === Estado.LEER){
-                //this.resetDisplayUI();
+            
+                /*
+                
                 this.displayImprimir='flex';
                 this.displayEditPoint='flex';
                 this.view.ui.add([this.screenshotDiv,this.editPointDiv], {
                     position: 'top-right',
-                });
+                });*/
 
 
                 /*this.view.ui.add([this.screenshotDiv,this.saveNewPointDiv], {
@@ -952,7 +1065,7 @@ this.landRegistryService.getLandOwner()
             }
 
             else if(this.estado===Estado.NUEVO_PUNTO){
-
+                
                 this.displaySave='flex';
                 this.view.ui.add([this.saveNewPointDiv], {
                     position: 'top-right',
@@ -1020,17 +1133,32 @@ this.landRegistryService.getLandOwner()
             this.view.graphics.addMany([pointGraphic]);
             if(estado&& estado===Estado.LEER ){
                 console.log('open');
+                //this.displayPopupDiv='flex';
+/*
+                let actionEdit = {
+                    // This text is displayed as a tooltip
+                    title: "Editar",
+                    // The ID used to reference this action in the event handler
+                    id: "edit",
+                    // Sets the icon font used to style the action button
+                    className: "esri-icon-zoom-out-magnifying-glass"
+                   };*/
+
                 this.view.popup.open({
-                    title: 'Predio',  // title displayed in the popup
-                    content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
+                    title: 'Predio',
+                    //content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
                     location: pointGraphic.geometry,
-                    actions:[]
+                    content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
+                    /*actions:[
+                        actionEdit
+                    ]*/
                   });
 
-                  this.view.popup.alignment = 'top-right';
+                 // this.view.popup.alignment = 'top-right';
+                 // this.view.popup.collapseEnabled= false;
 
-
-                /*  let zoomOutAction = {
+                /*
+                    let zoomOutAction = {
                     // This text is displayed as a tooltip
                     title: "Zoom",
                     // The ID used to reference this action in the event handler
@@ -1039,16 +1167,6 @@ this.landRegistryService.getLandOwner()
                     className: "esri-icon-zoom-out-magnifying-glass"
                    };
 */
-                   const editAction = {
-                    // This text is displayed as a tooltip
-                    title: 'Editar',
-                    // The ID used to reference this action in the event handler
-                    id: 'edit',
-                    // Sets the icon font used to style the action button
-                    className: 'esri-icon-edit'
-                   };
-
-                   this.view.popup.actions=[editAction];
             }
 
 
@@ -1352,18 +1470,6 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
 
 async saveNewPointGestionPredio(): Promise<void>{
 
-
-    const dialogRef = this.confirmationService.info(
-        'Guardar Nuevo Punto',
-        'Desea guardar el punto nuevo en la base de datos'
-      );
-
-      dialogRef.afterClosed().toPromise().then(async (option) => {
-        if (option === 'confirmed') {
-          // aqui codigo al aceptar
-
-
-
     const [
         // eslint-disable-next-line @typescript-eslint/naming-convention
         FeatureLayer,
@@ -1383,23 +1489,20 @@ async saveNewPointGestionPredio(): Promise<void>{
  const secuen=await this.generateMaxSecuen(feature,this.landRegistryMapModel)+1;
  const idImg=`i${utm}${this.landRegistryMapModel.ubigeo}${secuen}`;
 
-
     this.landRegistryMapModel.idCartographicImg= idImg;
     this.landRegistryMapModel.secuen = secuen;
 
-    console.log('this.landRegistryMapModel>>',this.landRegistryMapModel);
-    //this.landRegistryMapMode=await
 
-    this.landRegistryMapModel= await this.saveLandRegistryMap(this.landRegistryMapModel);
+
+    this.landRegistryMapModel = await this.saveLandRegistryMap(this.landRegistryMapModel);
     console.log('creado::',this.landRegistryMapModel);
+
+
     this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
-    //this._landRegistryMapService.setEstado(Estado.LEER);
 
-
-
-        }
-      });
+      //  }
+   //   });
 
 }
 
@@ -1420,7 +1523,6 @@ async saveNewPointGestionPredio(): Promise<void>{
         const _layer = this.layersInfo.find(
                     e =>  e.utm === utm
                 );
-
 
         const wkid = parseInt('327' + utm, 10);
 
