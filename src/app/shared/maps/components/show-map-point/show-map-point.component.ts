@@ -28,14 +28,15 @@ import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land
     styleUrls: ['./show-map-point.component.scss'],
 })
 export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
+    @Input() landOwner: LandOwner;
+    @Input() landRecord: LandRecord;
     @Input() points: Coordinates[] = [
         { latitude: -13.53063, longitude: -71.955921 },
         { latitude: -13.54, longitude: -71.955921 },
     ];
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
 
-    @Input() landOwner: LandOwner;
-    @Input() landRecord: LandRecord;
+
 
     title = 'Gestor Cartográfico';
     view: any = null;
@@ -62,6 +63,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             featureTable: null,
             popupTemplate: null,
             legend: null,
+            sublayers: 'all',
         },
 
         {
@@ -76,6 +78,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             featureTable: null,
             popupTemplate: null,
             legend: null,
+            sublayers: 'all',
         },
 
         {
@@ -90,6 +93,51 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             featureTable: null,
             popupTemplate: null,
             legend: null,
+            sublayers: 'all',
+        },
+
+        {
+            idServer: 0,
+            title: 'Actualizacion Cartográfica',
+            id: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            legend: null,
+            sublayers: [
+                {id:0,
+                  visible:true,
+                  title:'ACT_ARANCEL'
+                },
+                {id:1,
+                    visible:true,
+                    title:'ACT_MANZANA'
+                },
+            ],
+        },
+
+        {
+            idServer: 0,
+            title: 'Gestion de Predios',
+            id: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            legend: null,
+            sublayers: [
+                {id:0,
+                    visible:true,
+                    title:'TB_PUNTO_IMG'
+                }
+            ],
         },
     ];
 
@@ -156,6 +204,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
                 MapImageLayer,
                 Expand,
                 BasemapGallery,
+                LayerList
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -164,6 +213,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
                 'esri/layers/MapImageLayer',
                 'esri/widgets/Expand',
                 'esri/widgets/BasemapGallery',
+                'esri/widgets/LayerList',
             ]);
 
             const mapProperties = {
@@ -181,24 +231,27 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
 
             this.view = new MapView(mapViewProperties);
 
-            const basemapGallery = new BasemapGallery({
-                view: this.view,
-            });
 
-            // basemapGallery.activeBasemap ='satellite';
 
-            const baseMapGalleryExpand = new Expand({
-                view: this.view,
-                content: basemapGallery,
-                id: 'mapGalleryBase',
-                group: 'bottom-right',
-            });
+            this.layersInfo.reverse().forEach(async (l) => {
+                let options: any = {};
 
-            this.layersInfo.forEach(async (l) => {
-                const layer = new MapImageLayer({
-                    url: l.urlBase,
-                });
-                this.map.add(layer);
+                if (l.sublayers === 'all'){
+                    options = {
+                        url : l.urlBase,
+                    };
+                }
+
+                else {
+                    options = {
+                        url : l.urlBase,
+                        sublayers: l.sublayers
+                    };
+                }
+
+                const mapImageLayer = new MapImageLayer(options);
+
+                this.map.add(mapImageLayer);
 
                 const urlLegend = l.urlBase + '/legend?f=pjson';
                 const response = await fetch(urlLegend);
@@ -207,13 +260,37 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
                 /*const layers: any[]=infoLayers.layers;*/
             });
 
-            const screenshotDiv = document.getElementById('screenshotDiv');
+          /*  const screenshotDiv = document.getElementById('screenshotDiv');*/
+
+
+            const basemapGallery = new BasemapGallery({
+                view: this.view,
+            });
+
+
+
+            const baseMapGalleryExpand = new Expand({
+                view: this.view,
+                content: basemapGallery,
+                id: 'mapGalleryBase',
+                group: 'bottom-right',
+            });
+
+            const layerList = new LayerList({
+                view: this.view,
+            });
+
+            const layerListExpand = new Expand({
+                view: this.view,
+                content: layerList,
+                id: 'maplayerListExpand',
+                group: 'bottom-right',
+            });
+
 
             this.view.when(() => {
                 this.addPoints(this.points);
-                //this.view.ui.add(print, "top-right");
-
-                this.view.ui.add([baseMapGalleryExpand, screenshotDiv], {
+                this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
                     position: 'top-right',
                 });
             });
@@ -323,19 +400,19 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
 
                 [
                     {
-                        content: `Código Predial Único: ${this.landRecord.cup}`,
+                        content: `Código Predial Único: ${this.landRecord.cup?this.landRecord.cup:''}`,
                         colSpan: 2,
                     },
                 ],
                 [
                     {
-                        content: `Código de Predio Municipal: ${this.landRecord.cpm}`,
+                        content: `Código de Predio Municipal: ${this.landRecord.cpm?this.landRecord.cpm:''}`,
                         colSpan: 2,
                     },
                 ],
                 [
                     {
-                        content: `Identificador geográfico: ${this.landRecord.municipalNumber}`,
+                        content: `Identificador geográfico: ${this.landRecord.municipalNumber?this.landRecord.municipalNumber:''}`,
                         colSpan: 2,
                     },
                 ],

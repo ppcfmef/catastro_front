@@ -88,6 +88,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             title: 'Zona 19',
             children: [6, 7, 8],
         },
+
+        {
+            id: 3,
+            title: 'Actualizacion Cartografica',
+            children: [9,10],
+        },
+
+        {
+            id: 4,
+            title: 'Gestión de Predios',
+            children: [11],
+        },
+
     ];
     landRegistryMapModel: LandRegistryMapModel;
     simpleMarkerSymbol = {
@@ -135,6 +148,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 17,
             projection: 32717,
+            visible:true,
         },
 
         {
@@ -150,6 +164,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 17,
             projection: 32717,
+            visible:true,
         },
 
         {
@@ -166,6 +181,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 17,
             projection: 32717,
+            visible:true,
         },
 
 
@@ -183,6 +199,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 18,
             projection: 32718,
+            visible:true,
         },
 
         {
@@ -198,6 +215,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 18,
             projection: 32718,
+            visible:true,
         },
 
         {
@@ -213,6 +231,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 18,
             projection: 32718,
+            visible:true,
         },
 
         {
@@ -228,6 +247,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 19,
             projection: 32719,
+            visible:true,
         },
 
         {
@@ -243,6 +263,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 19,
             projection: 32719,
+            visible:true,
         },
 
         {
@@ -258,6 +279,56 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             popupTemplate: null,
             utm: 19,
             projection: 32719,
+            visible:true,
+        },
+
+        {
+            title: 'Arancel',
+            id: 9,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: 4326,
+            visible:false,
+        },
+
+
+        {
+            title: 'Manzana',
+            id: 10,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: 4326,
+            visible:false,
+        },
+
+        {
+            title: 'Punto Imagen',
+            id: 11,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: 4326,
+            visible:false,
         },
     ];
 
@@ -480,7 +551,7 @@ this.landRegistryService.getLandOwner()
 
             };
 
-            
+
             this.map = new Map(mapProperties);
 
             const actionEdit = {
@@ -511,7 +582,7 @@ this.landRegistryService.getLandOwner()
             };
 
 
-            
+
             this.view = new MapView(mapViewProperties);
 
             const layerList = new LayerList({
@@ -547,7 +618,7 @@ this.landRegistryService.getLandOwner()
             const featureDirecciones = new FeatureLayer(
                 this.urlSearchDirecciones
             );
-            
+
 
             const labelClassVias = {
                 // autocasts as new LabelClass()
@@ -572,6 +643,7 @@ this.landRegistryService.getLandOwner()
                     url: `${l.urlBase}/${l.idServer}`,
                     title: l.title,
                     outFields: ['*'],
+                    visible:l.visible
                 };
 
                 if (l.title.includes('Via')) {
@@ -608,18 +680,18 @@ this.landRegistryService.getLandOwner()
 
                 this.view.on('click', (event) => {
                     //this.view.popup.visible = true;
-    
+
                     //console.log('event.mapPoint>>',event.mapPoint);
                     /*this.view.popup.open({
                         location: event.mapPoint,
                       });
     */
-                
-    
+
+
                     if(this.estado === Estado.LEER){
 
                         this.view.hitTest(event).then((response) => {
-    
+
                             const results = response.results.filter((r) => {
                                 if (r && r.graphic &&  r.graphic.sourceLayer ==null) {
                                     return r;
@@ -639,16 +711,16 @@ this.landRegistryService.getLandOwner()
 
                         });
                     }
-    
+
                     /*let graphic = event.mapPoint;
                     let longitude = graphic.longitude;
                     let latitude = graphic.latitude;*/
-    
+
                     if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
                         let graphic = event.mapPoint;
                         let longitude = graphic.longitude;
                         let latitude = graphic.latitude;
-    
+
                         const point = {
                             //Create a point
                             type: 'point',
@@ -690,7 +762,7 @@ this.landRegistryService.getLandOwner()
                                         graphic.attributes &&
                                         graphic.attributes['ID_LOTE']
                                     ) {
- 
+
 
                                         this.addPoint(
                                             latitude,
@@ -740,7 +812,7 @@ this.landRegistryService.getLandOwner()
                                         const lote = graphic.attributes;
 
                                         this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
-                                        
+
                                         this._landRegistryMapService.setEstado(Estado.EDITAR);
                                         this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                         }
@@ -768,7 +840,7 @@ this.landRegistryService.getLandOwner()
                                         if (data && data.attributes) {
                                             const ubigeo = data.attributes['UBIGEO'];
                                             console.log('ubigeo>>', ubigeo);
-                
+
                                             if (
                                                 this.idCargo === Role.DISTRITAL &&
                                                 this.userUbigeo !== ubigeo
@@ -777,45 +849,45 @@ this.landRegistryService.getLandOwner()
                                                     'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
                                                 );
                                             } else {
-    
-    
+
+
                                                 this.addPoint(
                                                     latitude,
                                                     longitude,
                                                     this.simpleMarkerSymbolUndefined
                                                 );
-    
-    
+
+
                                                 const dialogRef = this.confirmationService.info(
                                                     'Guardar Nueva Ubicacion',
                                                     'Desea guardar esta nueva ubicación'
                                                   );
-    
+
                                                   dialogRef.afterClosed().toPromise().then( (option) => {
                                                     if (option === 'confirmed') {
-    
+
                                                         this.landRegistryMapModel =
                                                         new LandRegistryMapModel();
                                                         this.landRegistryMapModel.latitude = latitude;
                                                         this.landRegistryMapModel.longitude = longitude;
                                                         this.landRegistryMapModel.ubigeo = ubigeo;
-                                                     
-    
+
+
                                                         this.saveNewPointGestionPredio();
-    
+
                                                         this._landRegistryMapService.setEstado(Estado.EDITAR);
                                                    /*     this._landRegistryMapService.landOut = this.landRegistryMapModel;*/
                                                     }
                                                     else{
-    
+
                                                     }
-    
-    
+
+
                                                 });
-    
-    
-    
-    
+
+
+
+
                                             }
                                         }
                                     });
@@ -823,13 +895,13 @@ this.landRegistryService.getLandOwner()
                                 }
 
 
-                            
+
                             }
-                        
+
                         });
 
                     }
-    
+
                 });
 
 
@@ -1009,7 +1081,7 @@ this.landRegistryService.getLandOwner()
     }
 
     resetMap(): void{
-       
+
         this.landRegistryMapModel = new LandRegistryMapModel();
         if(this.view){
 
@@ -1045,9 +1117,9 @@ this.landRegistryService.getLandOwner()
             }*/
 
              if(this.estado === Estado.LEER){
-            
+
                 /*
-                
+
                 this.displayImprimir='flex';
                 this.displayEditPoint='flex';
                 this.view.ui.add([this.screenshotDiv,this.editPointDiv], {
@@ -1062,7 +1134,7 @@ this.landRegistryService.getLandOwner()
             }
 
             else if(this.estado===Estado.NUEVO_PUNTO){
-                
+
                 this.displaySave='flex';
                 this.view.ui.add([this.saveNewPointDiv], {
                     position: 'top-right',
