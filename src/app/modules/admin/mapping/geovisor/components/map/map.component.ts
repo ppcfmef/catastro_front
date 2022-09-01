@@ -67,21 +67,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             visible:false,
             layers:[]
         },
-/*
-        {
-            id:4,
-            url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_COFOPRI_TOTAL/MapServer',
-            title:'CARTO_COFOPRI_TOTAL',
-            visible:true,
-        },*/
-        {
-            id:5,
-            url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/limites_nacional/MapServer',
-            title:'LIMITES NACIONALES',
-            visible:true,
-            layers:[]
 
-        },
+
 
     ];
 
@@ -495,7 +482,6 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
 
     async  descargar(params: any): Promise<void> {
 
-        //this.listImageLayers.find()
         const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
         const _layers=(_imageLayer )?_imageLayer.layers:[];
         const _layer= _layers.find((l: any)=> l.id===params.featureId);
@@ -520,8 +506,6 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
         );
 
 
-
-
         const query = _featureLayer.createQuery();
         const ubigeo = params.district;
         query.where = `UBIGEO='${ubigeo}'`;
@@ -531,26 +515,65 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
             _featureLayer,
             query
         );
+        if(features && features.length>0 ){
+            const geojson = await MapUtils.createGeoJSON(features);
 
-        const geojson = await MapUtils.createGeoJSON(features);
+            const options = {
+                types: {
+                    point: 'points',
+                    polygon: 'polygons',
+                    polyline: 'polylines',
+                },
+                wkt: proj4DestWKT,
+            };
 
-        const options = {
-            types: {
-                point: 'points',
-                polygon: 'polygons',
-                polyline: 'polylines',
-            },
-            wkt: proj4DestWKT,
-        };
+            shpwrite.zip(geojson, options).then((content) => {
+                saveAs(content, nameZip);
+                this._fuseSplashScreenService.hide();
+                this._messageProviderService.showAlert(
+                    'Descarga Exitosa'
+                );
+            });
 
-        shpwrite.zip(geojson, options).then((content) => {
-            saveAs(content, nameZip);
-            this._fuseSplashScreenService.hide();
+        }
+        else{
             this._messageProviderService.showAlert(
-                'Descarga Exitosa'
+                'No hay datos para descargar'
             );
-        });
+        }
 
+
+    }
+
+
+    async  cargar(params: any):  Promise<void> {
+        const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
+        const _layers=(_imageLayer )?_imageLayer.layers:[];
+        const _layer= _layers.find((l: any)=> l.id===params.featureId);
+        this.proj4DestWkid = params.projection;
+        this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
+
+        const [
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            FeatureLayer,
+            proj4DestWKT,
+            shpWrite,
+        ] = await loadModules([
+            'esri/layers/FeatureLayer',
+            'dojo/text!https://epsg.io/' + this.proj4DestWkid + '.esriwkt',
+        ]);
+
+        this._fuseSplashScreenService.show();
+        console.log('url',_imageLayer.url + '/' + _layer.id);
+        const _featureLayer = new FeatureLayer(
+            _imageLayer.url + '/' + _layer.id
+        );
+
+        const query = _featureLayer.createQuery();
+        const ubigeo = params.district;
+        query.where = `UBIGEO='${ubigeo}'`;
+        query.outSpatialReference = this.proj4DestWkid;
+        query.returnGeometry = true;
 
     }
 }

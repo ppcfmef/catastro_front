@@ -679,15 +679,6 @@ this.landRegistryService.getLandOwner()
             this.view.when(() => {
 
                 this.view.on('click', (event) => {
-                    //this.view.popup.visible = true;
-
-                    //console.log('event.mapPoint>>',event.mapPoint);
-                    /*this.view.popup.open({
-                        location: event.mapPoint,
-                      });
-    */
-
-
                     if(this.estado === Estado.LEER){
 
                         this.view.hitTest(event).then((response) => {
@@ -711,10 +702,6 @@ this.landRegistryService.getLandOwner()
 
                         });
                     }
-
-                    /*let graphic = event.mapPoint;
-                    let longitude = graphic.longitude;
-                    let latitude = graphic.latitude;*/
 
                     if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
                         let graphic = event.mapPoint;

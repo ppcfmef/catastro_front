@@ -15,6 +15,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FiltersComponent implements OnInit {
   @Input() listImageLayers: ServiceLayer[] = [];
+  @Output() buscarEventEmitter = new EventEmitter<any>();
+  @Output() descargarEventEmmiterr = new EventEmitter<any>();
+  @Output() cargarEventEmmiterr = new EventEmitter<any>();
+
   user: User;
   _unsubscribeAll: Subject<any> = new Subject<any>();
   departments$: Observable<Department[]>;
@@ -24,19 +28,10 @@ export class FiltersComponent implements OnInit {
   fileName: string;
   isDisabled = true;
   isDisabledDescargar = true;
+  isDisabledCargar = false;
 
   layers: any[]=[];
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @Output()
-  buscarEventEmitter = new EventEmitter<any>();
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @Output()
-  descargarEventEmmiterr = new EventEmitter<any>();
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @Output()
-  cargarEventEmmiterr = new EventEmitter<any>();
 
   fileToUpload: any;
   params = {
@@ -132,6 +127,11 @@ export class FiltersComponent implements OnInit {
 
   descargar(): void {
       this.descargarEventEmmiterr.emit(this.params);
+  }
+
+
+  cargar(): void{
+    this.cargarEventEmmiterr.emit(this.params);
   }
 
 }

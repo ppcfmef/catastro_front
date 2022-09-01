@@ -87,28 +87,15 @@
             </button>
         </div>
 
+        <div class="flex flex-col w-6/12 items-center p-3">
+            <button class="mat-focus-indicator mat-flat-button mat-button-base bg-success"
+            (click)="cargar()" [disabled]="isDisabledCargar" >
+            <mat-icon svgIcon="heroicons_outline:upload"></mat-icon>
+            <span class="ml-2 mr-1  c-white">Cargar</span>
+            </button>
+        </div>
 
     </div>
 
-
-
-
-<!--
-    <div class="w-full flex flex-row justify-between">
-
-
-
-            <div class="flex flex-col items-center justify-between">
-                <div>
-                    <button class="mat-focus-indicator mat-flat-button mat-button-base bg-success"
-                        (click)="descargar()" [disabled]="isDisabledDescargar" >
-                        <span class="ml-2 mr-1 w-full c-white">Descargar</span>
-                    </button>
-                </div>
-            </div>
-
-
-    </div>
--->
 
 </div>
