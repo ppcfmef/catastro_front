@@ -22,3 +22,11 @@
 .esri-view-width-less-than-medium .esri-popup__action-text {
    display: inline!important; 
 }
+
+.map-placeholder {
+  z-index: 99;
+  position: absolute;
+  left: 20px;
+  top: 150px;
+  background-color: white;
+}

@@ -40,6 +40,7 @@ import { LandDetailSummaryComponent } from './components/land-detail-summary/lan
 
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 import { SearchPlaceholderComponent } from './components/search-placeholder/search-placeholder.component';
+import { MapPlaceholderComponent } from './components/map-placeholder/map-placeholder.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { SearchPlaceholderComponent } from './components/search-placeholder/sear
     LandDetailSummaryComponent,
     LandRegistryGeolocationComponent,
     SearchPlaceholderComponent,
+    MapPlaceholderComponent,
   ],
   imports: [
     CommonModule,
