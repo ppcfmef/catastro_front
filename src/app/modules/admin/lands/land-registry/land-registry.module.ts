@@ -39,6 +39,8 @@ import { LandCreateAndEditComponent } from './components/land-create-and-edit/la
 import { LandDetailSummaryComponent } from './components/land-detail-summary/land-detail-summary.component';
 
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
+import { SearchPlaceholderComponent } from './components/search-placeholder/search-placeholder.component';
+import { MapPlaceholderComponent } from './components/map-placeholder/map-placeholder.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,8 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     LandCreateAndEditComponent,
     LandDetailSummaryComponent,
     LandRegistryGeolocationComponent,
+    SearchPlaceholderComponent,
+    MapPlaceholderComponent,
   ],
   imports: [
     CommonModule,
