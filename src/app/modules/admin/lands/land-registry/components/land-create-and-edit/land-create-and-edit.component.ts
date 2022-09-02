@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -30,6 +31,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   showPlot = false;
   masterDomain: MasterDomain;
   landActive = true;
+  hideInfoFields = false;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -59,6 +61,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       idPlot: [{ value: this.landMergeRecord?.idPlot, disabled}],
       idCartographicImg: [{ value: this.landMergeRecord?.idCartographicImg, disabled}],
       status: [{ value: this.landActive, disabled}],
+      inactiveReason: [{ value: this.landMergeRecord?.inactiveReason, disabled}],
       statusImg: [{ value: this.landMergeRecord?.statusImg, disabled}],
       cup: [{ value: this.landMergeRecord?.cup, disabled}],
       cpm: [{ value: this.landMergeRecord?.cpm, disabled}],
@@ -98,6 +101,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       this.landMergeRecord = this.landRecord;
       this.isEdit = this.landMergeRecord ? true : false;
       this.showCartographicImg = false;
+      this.hideInfoFields = false;
     }
 
     this.createFormEdit();
@@ -123,9 +127,39 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
 
+  onToggleStatus(value: MatSlideToggleChange): void {
+    if (!value.checked) {
+      const dialogRef = this.confirmationService.error(
+        'Estado del predio',
+        'Desea cambiar el estado de predio a inactivo, al inactivar un predio no podra activarlo nuevamente'
+      );
+
+      dialogRef.afterClosed().toPromise().then((option) => {
+        if (option === 'confirmed') {
+          this.hideInfoFields = true;
+        }else {
+          this.formEdit.get('status').setValue(true);
+        }
+      });
+    }else {
+      this.hideInfoFields = true;
+    }
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
+  }
+
+  get f(): {[key: string]: AbstractControl} {
+    return this.formEdit.controls;
+  }
+
+  private resetForm(): void {
+    this.formEdit.reset();
+    this.hideInfoFields = false;
+    this.isEdit = false;
+    this.setTitle();
   }
 
   private saveLandApi(data): void {
@@ -136,7 +170,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
             'Registro de predio',
             'Se registro el predio correctamente'
           );
-          this.formEdit.reset();
+          this.resetForm();
           this.registerLand.emit(result);
         },
         (error) => {
