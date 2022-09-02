@@ -1,7 +1,16 @@
-<section class="container" *ngIf="formEdit && masterDomain" [formGroup]="formEdit">
+<form class="container" *ngIf="formEdit && masterDomain" [formGroup]="formEdit">
     <h3 class="subtitle-card mb-2">
-            {{title}} <mat-icon [svgIcon]="isEdit? 'mat_solid:edit':'mat_solid:library_add'">
+            {{ title?.text }} 
+            <mat-icon [svgIcon]="title?.icon">
         </mat-icon></h3>
+    
+    <div *ngIf="isEdit" class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+        <mat-slide-toggle [disabled]="!landActive"
+        color="primary" formControlName="status" class="mat-form-field-style">
+            Estado del predio
+        </mat-slide-toggle>
+    </div>
+
     <div *ngIf="showCartographicImg">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
             <mat-label>Copiar el Cod. de Imagen GIS en RSTM </mat-label>
@@ -114,11 +123,11 @@
     </mat-form-field>
 
     <div class="w-full flex items-center justify-end">
-        <button class="btn-confirm mr-4" (click)="saveLand()"> Guardar</button>
+        <button class="btn-confirm mr-4" (click)="saveLand()" [disabled]="!landActive"> Guardar</button>
         <button class="btn-danger" (click)="emitShowFormEdit()">Cancelar</button>
     </div>
 
     <button class="button-collapse" (click)="emitShowFormEdit()">
         <span class="triangle-bottom"></span>
     </button>
-</section>
+</form>

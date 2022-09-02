@@ -6,6 +6,8 @@ import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 
+export const INACTIVE_STATUS = 3;
+
 @Component({
   selector: 'app-land-create-and-edit',
   templateUrl: './land-create-and-edit.component.html',
@@ -20,11 +22,12 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
-  title: string;
+  title: any;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
   showPlot = false;
   masterDomain: MasterDomain;
+  landActive = true;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -44,34 +47,36 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   }
 
   createFormEdit(): void{
-    console.log('this.landMergeRecord Form',this.landMergeRecord);
+    this.landActive = this.statusToToggle(this.landMergeRecord?.status);
+    const disabled = !this.landActive;
     this.formEdit = this.fb.group({
-      idObjectImg:[this.landMergeRecord?.idObjectImg],
-      id: [this.landMergeRecord?.id],
-      idPlot: [this.landMergeRecord?.idPlot],
-      idCartographicImg: [this.landMergeRecord?.idCartographicImg],
-      statusImg: [this.landMergeRecord?.statusImg],
-      cup: [this.landMergeRecord?.cup],
-      cpm: [this.landMergeRecord?.cpm],
-      ubigeo: [this.landMergeRecord?.ubigeo],
-      uuType: [this.landMergeRecord?.uuType],
-      codUu: [this.landMergeRecord?.codUu],
-      habilitacionName: [this.landMergeRecord?.habilitacionName],
-      codStreet: [this.landMergeRecord?.codStreet],
-      streetType: [this.landMergeRecord?.streetType],
-      streetName: [this.landMergeRecord?.streetName],
-      urbanMza: [this.landMergeRecord?.urbanMza],
-      urbanLotNumber: [this.landMergeRecord?.urbanLotNumber],
-      block: [this.landMergeRecord?.block],
-      indoor: [this.landMergeRecord?.indoor],
-      floor: [this.landMergeRecord?.floor],
-      km: [this.landMergeRecord?.km],
-      municipalNumber: [this.landMergeRecord?.municipalNumber],
-      apartmentNumber: [this.landMergeRecord?.apartmentNumber],
-      resolutionDocument: [this.landMergeRecord?.resolutionDocument],
-      resolutionType: [this.landMergeRecord?.resolutionType],
-      latitude: [this.landMergeRecord?.latitude],
-      longitude: [this.landMergeRecord?.longitude],
+      idObjectImg:[{ value: this.landMergeRecord?.idObjectImg, disabled}],
+      id: [{ value: this.landMergeRecord?.id, disabled}],
+      idPlot: [{ value: this.landMergeRecord?.idPlot, disabled}],
+      idCartographicImg: [{ value: this.landMergeRecord?.idCartographicImg, disabled}],
+      status: [{ value: this.landActive, disabled}],
+      statusImg: [{ value: this.landMergeRecord?.statusImg, disabled}],
+      cup: [{ value: this.landMergeRecord?.cup, disabled}],
+      cpm: [{ value: this.landMergeRecord?.cpm, disabled}],
+      ubigeo: [{ value: this.landMergeRecord?.ubigeo, disabled}],
+      uuType: [{ value: this.landMergeRecord?.uuType, disabled}],
+      codUu: [{ value: this.landMergeRecord?.codUu, disabled}],
+      habilitacionName: [{ value: this.landMergeRecord?.habilitacionName, disabled}],
+      codStreet: [{ value: this.landMergeRecord?.codStreet, disabled}],
+      streetType: [{ value: this.landMergeRecord?.streetType, disabled}],
+      streetName: [{ value: this.landMergeRecord?.streetName, disabled}],
+      urbanMza: [{ value: this.landMergeRecord?.urbanMza, disabled}],
+      urbanLotNumber: [{ value: this.landMergeRecord?.urbanLotNumber, disabled}],
+      block: [{ value: this.landMergeRecord?.block, disabled}],
+      indoor: [{ value: this.landMergeRecord?.indoor, disabled}],
+      floor: [{ value: this.landMergeRecord?.floor, disabled}],
+      km: [{ value: this.landMergeRecord?.km, disabled}],
+      municipalNumber: [{ value: this.landMergeRecord?.municipalNumber, disabled}],
+      apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled}],
+      resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled}],
+      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled}],
+      latitude: [{ value: this.landMergeRecord?.latitude, disabled}],
+      longitude: [{ value: this.landMergeRecord?.longitude, disabled}],
     });
 
     this.setTitle();
@@ -97,10 +102,10 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   saveLand(): void {
     if(this.formEdit.valid) {
       const data = this.formEdit.value;
-      console.log('dataForm>>',data);
       data.owner = this.ownerId;
+      data.status = this.toggleToStatus(data.status);
       // ToDo: debe ser en el container
-      if (data.idPlot) {
+      if (data.idPlot && !data.cup) {
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
       }else {
@@ -150,10 +155,14 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
 
   private setTitle(): void {
     // Generar el texto del titulo e icono en funcion de evento
-    if(this.isEdit){
-      this.title = 'Editar Predio';
-    }else{
-      this.title = 'Añadir Predio';
+    if(this.isEdit && this.landActive){
+      this.title = {text: 'Editar Predio', icon: 'mat_solid:edit'};
+    }
+    else if(this.isEdit && !this.landActive) {
+      this.title = {text: 'Predio Inactivo', icon: 'mat_solid:remove_circle_outline'};
+    }
+    else{
+      this.title = {text: 'Añadir Predio', icon: 'mat_solid:library_add'};
     }
   }
 
@@ -169,4 +178,17 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
     }
   }
 
+  private statusToToggle(status: number): boolean {
+    if (status === INACTIVE_STATUS) {
+      return false;
+    }
+    return true;
+  }
+
+  private toggleToStatus(status: boolean): number {
+    if (status) {
+      return this.landMergeRecord?.status;
+    }
+    return INACTIVE_STATUS;
+  }
 }
