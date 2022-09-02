@@ -1,5 +1,5 @@
 <div #mapViewNode  >
-  <app-map-placeholder class="map-placeholder" *ngIf="estado === 'crear'"></app-map-placeholder>
+  <app-map-placeholder class="map-placeholder" texto="Primero busque o seleccione una ubicación para registrar un predio" *ngIf="estado === 'crear'"></app-map-placeholder>
   <div id="screenshotDiv" class="esri-widget--button esri-widget esri-interactive" (click)="downloadPDF()" [ngStyle]="{'display': displayImprimir}" >
     <span aria-hidden="true" role="presentation" class="esri-icon esri-icon-printer"></span>
 
