@@ -73,6 +73,10 @@ export class LandRegistryService {
     return this.http.get<IPagination<LandRegistryMap>>(`${this.apiUrl}/lands/records/`, {params: queryParams});
   }
 
+  getLandInactiveByCpu(cpu: string): Observable<LandRegistryMap> {
+    return this.http.get<LandRegistryMap>(`${this.apiUrl}/lands/records/search-inactive/${cpu}/`);
+  }
+
   saveLand(data: LandRegistryMap): Observable<LandRegistryMap> {
     if (data.id) {
       return this.editLandRecord(data.id, data);
