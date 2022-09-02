@@ -156,6 +156,24 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     this.unsubscribeAll.complete();
   }
 
+  searchLandByCPU(): void {
+    const cup = this.formEdit.get('cup').value;
+    this.landRegistryService.getLandInactiveByCpu(cup)
+      .toPromise().then(
+        (result) => {
+          result.id = null;
+          result.status = LandStatus.withMapping;
+          result.inactiveReason = null;
+          this.landRecord = result;
+          this.landMergeRecord = this.mergeRecords(this.landRecord);
+          this.isEdit = this.landMergeRecord ? true : false;
+          this.showCartographicImg = false;
+          this.hideInfoFields = false;
+          this.createFormEdit();
+        }
+      );
+  }
+
   get f(): {[key: string]: AbstractControl} {
     return this.formEdit.controls;
   }
