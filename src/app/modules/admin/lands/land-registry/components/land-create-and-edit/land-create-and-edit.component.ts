@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
@@ -13,7 +15,7 @@ export const INACTIVE_STATUS = 3;
   templateUrl: './land-create-and-edit.component.html',
   styleUrls: ['./land-create-and-edit.component.scss']
 })
-export class LandCreateAndEditComponent implements OnInit, OnChanges {
+export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() ownerId: number;
   @Input() landRecord: LandRegistryMap;
@@ -28,6 +30,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
   showPlot = false;
   masterDomain: MasterDomain;
   landActive = true;
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -38,6 +41,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
       this.landRegistryService.getMasterDomain()
+      .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(result => this.masterDomain = result);
   }
 
@@ -117,6 +121,11 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges {
         'Error al registrar el predio, intente nuevamente'
       );
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 
   private saveLandApi(data): void {
