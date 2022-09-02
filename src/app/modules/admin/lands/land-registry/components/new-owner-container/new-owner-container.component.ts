@@ -12,7 +12,7 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
   styleUrls: ['./new-owner-container.component.scss']
 })
 export class NewOwnerContainerComponent implements OnInit, OnDestroy {
-  showFormEdit = true;
+  showFormEdit: boolean | null;
   search: FormControl = new FormControl();
   landOwner: LandOwner;
   private unsubscribeAll: Subject<any> = new Subject<any>();

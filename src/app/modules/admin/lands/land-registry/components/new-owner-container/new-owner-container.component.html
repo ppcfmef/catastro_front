@@ -13,16 +13,22 @@
             <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
         </button>
     </article>
-    <ng-container *ngIf="!showFormEdit">
+    <ng-container [ngSwitch]="showFormEdit">
         <app-owner-land-detail
-        [landOwnerIn]="landOwner"
-        (formEdit)="receivedShowFormEdit($event)"></app-owner-land-detail>
-    </ng-container>
-    <ng-container *ngIf="showFormEdit">
+            *ngSwitchCase="false"
+            [landOwnerIn]="landOwner"
+            (formEdit)="receivedShowFormEdit($event)">
+        </app-owner-land-detail>
+
         <app-owner-land-create-and-edit
-        [landOwnerIn]="landOwner"
-        (showFormEdit)="receivedShowFormEdit($event)">
-    </app-owner-land-create-and-edit>
+            *ngSwitchCase="true"
+            [landOwnerIn]="landOwner"
+            (showFormEdit)="receivedShowFormEdit($event)">
+        </app-owner-land-create-and-edit>
+
+        <ng-container *ngSwitchDefault>
+            <app-search-placeholder></app-search-placeholder>
+        </ng-container>
     </ng-container>
     
 </section>
