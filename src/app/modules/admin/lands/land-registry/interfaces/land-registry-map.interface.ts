@@ -46,6 +46,7 @@ export interface LandRegistryMap {
     descriptionOwner: string;
     taxAddress: string;
     status: number;
+    inactiveReason: string;
     landArea: number;
     frontLength: number;
     locationPark: string;
@@ -76,7 +77,4 @@ export interface LandRegistryMap {
     side: string;
     ranNum: string;
     streetBlock: string;
-
-
-
 }

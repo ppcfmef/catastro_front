@@ -52,6 +52,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     descriptionOwner: string;
     taxAddress: string;
     status: number;
+    inactiveReason: string;
     landArea: number;
     frontLength: number;
     locationPark: string;

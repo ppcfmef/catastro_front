@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
 import { MapsModule } from 'app/shared/maps/maps.module';
@@ -74,6 +75,7 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
     MatIconModule,
     MatButtonModule,
     MatInputModule,
+    MatSlideToggleModule,
     CustomSharedModule,
     //LandRegistryGeolocationComponent,
 
