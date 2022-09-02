@@ -6,14 +6,16 @@
 </section>
 -->
 <section *ngIf="landRecords" class="container">
-        <button class="add-container" (click)="createLandRecord()">
-            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
-        </button>
-        <app-land-summary-table
-        [dataSource]="landRecords"
-        [length]="tableLength"
-        (seledRecord)="seledRecord($event)"
-        (changePage)="onChangePage($event)"
-        (downloadDeclaration)="downloadDeclaration($event)"
-        ></app-land-summary-table>
+    <h3 class="subtitle-card mb-2">Predios del contribuyente</h3>
+    <button class="add-container btn-success box-shadow-z1"
+        (click)="createLandRecord()"> Nuevo predio
+        <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+    </button>
+    <app-land-summary-table
+    [dataSource]="landRecords"
+    [length]="tableLength"
+    (seledRecord)="seledRecord($event)"
+    (changePage)="onChangePage($event)"
+    (downloadDeclaration)="downloadDeclaration($event)"
+    ></app-land-summary-table>
 </section>
