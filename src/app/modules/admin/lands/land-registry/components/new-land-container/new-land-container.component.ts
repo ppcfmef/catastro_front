@@ -12,7 +12,7 @@ import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 })
 export class NewLandContainerComponent implements OnInit, OnDestroy {
 
-  showEditForm = false;
+  showEditForm: boolean | null;
   landRecordIn: LandRegistryMap;
   landRecordOut: LandRegistryMap;
   ownerId: number;
@@ -31,14 +31,18 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
 
     this.landRegistryMapService.landIn$
     .pipe(takeUntil(this.unsubscribeInAll))
-    .subscribe(result => this.landRecordIn = result);
+    .subscribe((result) => {
+      if (result) {
+        this.showEditForm = true;
+      }
+      this.landRecordIn = result;
+    });
 
     this.landRegistryMapService.landOut$
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if(result) {
         this.landRecordOut = result;
-        console.log('landOut result',result);
         this.showEditForm = true;
       }
     });
@@ -48,7 +52,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if (result) {
-        this.showEditForm = true; // muestra el formulario
+        this.showEditForm = null; // no muestra el formulario ni el detalle
         this.landRegistryMapService.landIn = null; // Inicializa data en null
       }
     });
