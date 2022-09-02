@@ -9,7 +9,12 @@ import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 
-export const INACTIVE_STATUS = 3;
+export enum LandStatus {
+  withOutMapping = 0,
+  withMapping = 1,
+  withMappingImg = 2,
+  inactive = 3
+}
 
 @Component({
   selector: 'app-land-create-and-edit',
@@ -222,16 +227,22 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private statusToToggle(status: number): boolean {
-    if (status === INACTIVE_STATUS) {
+    if (status === LandStatus.inactive) {
       return false;
     }
     return true;
   }
 
   private toggleToStatus(status: boolean): number {
-    if (status) {
-      return this.landMergeRecord?.status;
+    if (status && this.landMergeRecord?.idPlot) {
+      return LandStatus.withMapping;
     }
-    return INACTIVE_STATUS;
+    else if (status && this.landMergeRecord?.idCartographicImg) {
+      return LandStatus.withMappingImg;
+    }
+    else if (!status) {
+      return LandStatus.inactive;
+    }
+    return 0;
   }
 }
