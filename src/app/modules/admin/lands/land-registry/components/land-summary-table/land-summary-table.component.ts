@@ -16,8 +16,9 @@ export class LandSummaryTableComponent implements OnInit {
   @Input() length: number;
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
   @Output() seledRecord: EventEmitter<LandRegistryMap> = new EventEmitter();
+  @Output() downloadDeclaration: EventEmitter<LandRegistryMap> = new EventEmitter();
 
-  displayedColumns: string[] = ['nro', 'cup', 'cpm', 'steetName'];
+  displayedColumns: string[] = ['nro', 'cup', 'cpm', 'print', 'steetName'];
   landSelected = new Set<any>();
   pageIndex = 0;
   pageSize = 5;
@@ -47,5 +48,9 @@ export class LandSummaryTableComponent implements OnInit {
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
     this.changePage.emit(paginator);
+  }
+
+  onDownloadDeclaration(landRecord: LandRegistryMap): void {
+    this.downloadDeclaration.emit(landRecord);
   }
 }

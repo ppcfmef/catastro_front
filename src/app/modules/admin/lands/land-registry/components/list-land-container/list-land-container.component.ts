@@ -5,6 +5,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandOwner } from '../../interfaces/land-owner.interface';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
   tableLength: number;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private landOwnerId!: number;
+  private landOwner: LandOwner;
   private defaultTableLimit = 5;
 
   constructor(
@@ -40,6 +42,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
         }
 
         if (ownerResult) {
+          this.landOwner = ownerResult;
           this.landOwnerId = ownerResult?.id;
         }
         else {
@@ -77,6 +80,13 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
     this.landRegistryService.getLandList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
+  }
+
+  downloadDeclaration(landRecord: LandRegistryMap): void {
+    this.landRegistryMapService.emitPrint(
+      landRecord,
+      this.landOwner
+    );
   }
 
   ngOnDestroy(): void {
