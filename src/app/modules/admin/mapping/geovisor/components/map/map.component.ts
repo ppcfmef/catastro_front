@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
@@ -10,7 +10,10 @@ import { MapUtils } from 'app/shared/utils/map.utils';
 import { ServiceLayer } from 'app/shared/models/image-layer.interface';
 declare let shpwrite: any;
 import { saveAs } from 'file-saver';
-
+import { takeUntil } from 'rxjs/operators';
+import { CommonService } from 'app/core/common/services/common.service';
+import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { Role } from 'app/shared/enums/role.enum';
 
 @Component({
   selector: 'app-map',
@@ -43,43 +46,74 @@ export class MapComponent implements OnInit, AfterViewInit {
             id:0,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
             title:'CARTO_FISCAL_17',
-            visible:false,
+            visible:true,
+            mapImageLayer:null,
             layers:[]
         },
         {
             id:1,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             title:'CARTO_FISCAL_18',
-            visible:false,
+            visible:true,
+            mapImageLayer:null,
             layers:[]
         },
         {
             id:2,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             title:'CARTO_FISCAL_19',
-            visible:false,
+            visible:true,
+            mapImageLayer:null,
             layers:[]
         },
         {
             id:3,
             url:'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer',
             title:'CARTO_TEMATICA_INEI',
-            visible:false,
+            visible:true,
+            mapImageLayer:null,
             layers:[]
         },
 
 
 
     ];
-
+    //userUbigeo: string='';
+    params: any ={};
+    urlSearchZonaUrbana =
+    'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     constructor(
         protected _ngxSpinner: NgxSpinnerService,
         private _userService: UserService,
         protected _messageProviderService: MessageProviderService,
-        protected _fuseSplashScreenService: FuseSplashScreenService
+        protected _fuseSplashScreenService: FuseSplashScreenService,
+        private _commonService: CommonService,
     ) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+
+        this._userService.user$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((user: User) => {
+            this.user = user;
+            const ubigeo =
+                this.user && this.user.ubigeo
+                    ? this.user.ubigeo
+                    : '150101';
+
+                    this._commonService
+                    .getDistrictResource(ubigeo)
+                    .subscribe((result: DistrictResource) => {
+                        
+                        this.params = {
+                            district: ubigeo,
+                            namedistrict: result.name,
+                        };
+                       
+                    });
+        });
+
+    }
     ngAfterViewInit(): void {
         this._fuseSplashScreenService.show(0);
         setTimeout(() => {
@@ -179,18 +213,19 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
 
-            this.listImageLayers.reverse().map( async (l: ServiceLayer)=>{
+            this.listImageLayers.map( async (l: ServiceLayer)=>{
                 const options = {
                     url:l.url,
                     title:l.title,
                     visible:l.visible
                 };
                 const imageLayer = new MapImageLayer(options);
+                l.mapImageLayer = imageLayer;
                 const urlLayers=l.url + '/layers?f=pjson';
                 const response = await fetch(urlLayers);
                 const infoLayers: any = await response.json();
                 const layers: any[]=infoLayers.layers;
-                l.layers=layers.map( (layer: any)=> ({id:layer.id, name: layer.name}));
+                l.layers=layers.map( (layer: any)=> ({id:layer.id, name: layer.name})).filter((c)=>{ if(!c.name.includes('LOTE') && !c.name.includes('PREDIO') ) {return c;}});
                 this.map.add(imageLayer);
             });
 
@@ -346,22 +381,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                 //this.visibility = 'visible';
 
                 this._fuseSplashScreenService.hide();
-
-                const params = {
-                    district: '150101',
-                    namedistrict: 'LIMA',
-                };
-
-                this.buscar(params);
-
-
-                const  print = new Print({
-                    view: this.view,
-                    printServiceUrl: 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/impresionCF/GPServer/Export%20Web%20Map/'
-                    // specify your own print service
-                    //printServiceUrl:'https://200.60.146.74/serverdf/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
-                      //'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
-                  });
+                console.log('this.user>>',this.user);
+                if(this.user.placeScope.id === Role.DISTRITAL){
+                    this.buscar(this.params);
+                }
 
                   this.view.ui.add([baseMapGalleryExpand, layerListExpand,legendExpand], {
                     position: 'top-right',
@@ -376,14 +399,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                  this.iniExtent =  this.view.extent;
 
-                  //this.view.ui.add( ,'top-left');
-
-                  this.view.ui.add(print, 'top-right');
-
-                 // this.view.ui.add(screenshotDiv, "top-right");
-
-
-
+              
 
 
 
@@ -436,33 +452,48 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     }
 
     buscar(params: any): void {
-        console.log('params', params);
-        const ubigeo = params.district;
-        const where = `UBIGEO='${ubigeo}'`;
-        this.zoomToUbigeo(where);
+        if(this.view){
+            console.log('params', params);
+            const ubigeo = params.district;
+            const where = `UBIGEO='${ubigeo}'`;
+           
+
+            this.listImageLayers.forEach((l) => {
+                if(l.mapImageLayer && l.mapImageLayer.sublayers){
+                    const sublayers: any[] = l.mapImageLayer.sublayers;
+                    sublayers.forEach((sublayer)=>{
+                        sublayer.definitionExpression = where;
+                    });
+                    
+                }
+            });
+            
+            this.zoomToUbigeo(where);
+        }
+       
     }
 
 
 
     async zoomToUbigeo(where: string): Promise<any> {
         try {
-            console.log('where>>', where);
-            const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
+           // console.log('where>>', where);
+            //const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
 
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const [FeatureLayer]= await loadModules(['esri/layers/FeatureLayer',]);
-
-            const layerDistrito = new FeatureLayer(urlDistrito);
+            const featureZonaUrbana = new FeatureLayer(this.urlSearchZonaUrbana);
+            //const layerDistrito = new FeatureLayer(urlDistrito);
 
             /*const layerDistrito = this.layersInfo.find(
                 (e) => e.title === 'Distritos'
             ).featureLayer;*/
 
             this._fuseSplashScreenService.show(0);
-            const res=await MapUtils.zoomToFeature(this.view, layerDistrito, where);
+            const res=await MapUtils.zoomToFeature(this.view, featureZonaUrbana, where);
             console.log('res>>',res);
             this._fuseSplashScreenService.hide();
-            this.iniExtent =  this.view.extent;
+           /* this.iniExtent =  this.view.extent;*/
             /*this.iniExtent =  this.view.extent;*/
 
         } catch (error) {
@@ -537,6 +568,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
 
         }
         else{
+            this._fuseSplashScreenService.hide();
             this._messageProviderService.showAlert(
                 'No hay datos para descargar'
             );

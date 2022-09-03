@@ -5,5 +5,6 @@ export class ServiceLayer {
     title: string;
     visible: boolean;
     layers: any[];
+    mapImageLayer: any;
 }
 

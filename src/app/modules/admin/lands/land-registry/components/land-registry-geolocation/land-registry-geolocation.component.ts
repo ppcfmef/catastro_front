@@ -428,6 +428,11 @@ this.landRegistryService.getLandOwner()
                 }
 
                 else {
+
+                    console.log('land>>',land);
+                    this._messageProviderService.showAlert(
+                        'Por favor elija una punto en el mapa'
+                    );
                     this.landRegistryMapModel= new LandRegistryMapModel();
                     if(this.landOwner.id){
                         this.resetMap();
@@ -769,24 +774,36 @@ this.landRegistryService.getLandOwner()
                                                 {
                                                     dialogRef = this.confirmationService.info(
                                                         'Convertir a predio',
-                                                        'Desea actualizar esta ubicaci{on a predio ?'
+                                                        'Desea actualizar esta ubicacion a predio ?'
                                                     );
                                                 }
 
                                                 else{
                                                     dialogRef = this.confirmationService.info(
+                                                        'Actualizar Predio',
+                                                        'Desea actualizar el predio?'
+                                                    );
+
+                                                   /*
+                                                   dialogRef = this.confirmationService.info(
                                                         'Asignar Lote',
                                                         'Desea asignar este lote?'
                                                     );
+                                                    */
                                                 }
 
                                             }
                                         else{
-
                                             dialogRef = this.confirmationService.info(
+                                                'Asignar Lote',
+                                                'Desea asignar este lote?'
+                                            );
+                                           /*
+                                           dialogRef = this.confirmationService.info(
                                                 'Actualizar Predio',
                                                 'Desea actualizar el predio?'
                                             );
+                                            */
 
                                         }
 
@@ -806,11 +823,11 @@ this.landRegistryService.getLandOwner()
 
                                         else{
 
-                                            this.addPoint(
+                                            /*this.addPoint(
                                                 this.landRegistryMapModel.latitude,
                                                 this.landRegistryMapModel.longitude,
                                                 this.simpleMarkerSymbol
-                                            );
+                                            );*/
 
                                         }
 
@@ -1077,7 +1094,8 @@ this.landRegistryService.getLandOwner()
 
         }
         if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) && this.idCargo===Role.DISTRITAL) {
-            const where = `UBIGEO='${this.userUbigeo}'`;
+            this.buscar(this.userUbigeo);
+            /*const where = `UBIGEO='${this.userUbigeo}'`;*/
 
 /*
             this.layersInfo.forEach((l) => {
@@ -1088,8 +1106,21 @@ this.landRegistryService.getLandOwner()
                 }
             });*/
 
-            this.zoomToUbigeo(where);
+            /*this.zoomToUbigeo(where);*/
         }
+    }
+
+    buscar(ubigeo: string): void{
+        const where = `UBIGEO='${ubigeo}'`;
+        this.layersInfo.forEach((l) => {
+            if(l.featureLayer){
+                const featureLayer = l.featureLayer;
+                console.log('where',where);
+                featureLayer.definitionExpression = where;
+            }
+        });
+        this.zoomToUbigeo(where);
+
     }
 
     changeUI(): void{

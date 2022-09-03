@@ -48,7 +48,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if (result) {
-        this.showEditForm = true; // muestra el formulario
+        this.showEditForm = false; // muestra el formulario
         this.landRegistryMapService.landIn = null; // Inicializa data en null
       }
     });

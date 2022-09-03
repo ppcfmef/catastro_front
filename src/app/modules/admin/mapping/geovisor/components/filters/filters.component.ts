@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { Department, District, DistrictResource, Province } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { Role } from 'app/shared/enums/role.enum';
 import { ServiceLayer } from 'app/shared/models/image-layer.interface';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -41,7 +42,7 @@ export class FiltersComponent implements OnInit {
       district: '',
       namedistrict: '',
       projection: 0,
-      serviceId:0,
+      serviceId:null,
       featureId:0,
       fileToUpload:null,
   };
@@ -49,6 +50,8 @@ export class FiltersComponent implements OnInit {
   dataSearch: DistrictResource;
 
   isReadOnly = false;
+  menssage: string='';
+
   constructor(
       private _commonService: CommonService,
       private _userService: UserService,
@@ -56,33 +59,45 @@ export class FiltersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
       this._userService.user$
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe((user: User) => {
               this.user = user;
               const ubigeo =
-                  this.user.placeScope && this.user.placeScope.ubigeo
-                      ? this.user.placeScope.ubigeo
+                  this.user && this.user.ubigeo
+                      ? this.user.ubigeo
                       : '150101';
+            
               this._commonService
                   .getDistrictResource(ubigeo)
                   .subscribe((data: DistrictResource) => {
                       this.params.department = data.department;
                       this.params.province = data.province;
                       this.params.district = ubigeo;
-                      /*this.params.projection= parseInt('327'+data.resources[0].utm, 10);
-          this.params.namedistrict=data.name;*/
                       this.initParams();
                   });
           });
   }
 
-  selectService(): void{
-    const imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===this.params.serviceId);
-    this.layers=(imageLayer )?imageLayer.layers:[];
+  /*ngOnChanges(): void{
+    this.selectService();
+  }*/
+  
 
+  selectService(): void{
+    console.log('this.params.serviceId',this.params.serviceId);
+    console.log('this.listImageLayers',this.listImageLayers);
+    const imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===this.params.serviceId);
+    console.log('imageLayer',imageLayer);
+    this.layers=(imageLayer)?imageLayer.layers:[];
+    console.log('this.layers',this.layers);
   }
   initParams(): void {
+    if(this.user.placeScope.id === Role.DISTRITAL){
+        this.isReadOnly=true;
+        //this.buscar(this.params);
+    }
       this.departments$ = this._commonService.getDepartments();
 
       this.params.department ? this.selectDep() : false;
@@ -117,11 +132,16 @@ export class FiltersComponent implements OnInit {
                   );
 
                   this.params.namedistrict = data.name;
+                  this.menssage=`Distrito ${this.params.namedistrict} - zona utm ${this.dataSearch.resources[0].utm}`;
+                  this.buscar();
               });
+
+
       }
   }
 
   buscar(): void {
+    console
       this.buscarEventEmitter.emit(this.params);
   }
 
