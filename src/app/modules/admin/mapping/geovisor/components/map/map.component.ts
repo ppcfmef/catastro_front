@@ -457,7 +457,6 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
             const ubigeo = params.district;
             const where = `UBIGEO='${ubigeo}'`;
            
-
             this.listImageLayers.forEach((l) => {
                 if(l.mapImageLayer && l.mapImageLayer.sublayers){
                     const sublayers: any[] = l.mapImageLayer.sublayers;
@@ -547,6 +546,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
             query
         );
         if(features && features.length>0 ){
+            console.log('features>>',features);
             const geojson = await MapUtils.createGeoJSON(features);
 
             const options = {
@@ -557,7 +557,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
                 },
                 wkt: proj4DestWKT,
             };
-
+            console.log('geojson>>',geojson);
             shpwrite.zip(geojson, options).then((content) => {
                 saveAs(content, nameZip);
                 this._fuseSplashScreenService.hide();

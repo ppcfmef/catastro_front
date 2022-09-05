@@ -24,13 +24,18 @@ export class MapUtils {
         let featureID = 1;
 
         await features.forEach(async (feature) => {
+
             const attr = feature.attributes;
             if (typeof attr.feature === 'object') {
                 delete attr.feature;
             }
+            //console.log('feature>>',feature);
 
             for (const key in attr) {
                 if (key.includes('.')) {
+                    delete attr[key];
+                }
+                else if (key === 'OBJECTID') {
                     delete attr[key];
                 }
             }
