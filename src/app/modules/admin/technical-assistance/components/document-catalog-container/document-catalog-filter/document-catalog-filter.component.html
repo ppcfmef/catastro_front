@@ -1,0 +1,15 @@
+<div class="mt-2">
+    <div class="flex flex-row sm:flex-row items-end justify-end w-full max-w-xs sm:max-w-none">
+        <mat-form-field
+                class="fuse-mat-no-subscript w-full sm:w-72 sm:mt-0"
+                [floatLabel]="'always'">
+            <mat-icon
+                    matPrefix
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input  [formControl]="searchControl"
+                    placeholder="Buscar"
+                    matInput>
+        </mat-form-field>
+    </div>
+</div>

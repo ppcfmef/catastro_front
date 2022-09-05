@@ -14,6 +14,17 @@ import { DocumentCatalogContainerComponent } from './components/document-catalog
 import { DocumentManageContainerComponent } from './components/document-manage-container/document-manage-container.component';
 import { FaqManageContainerComponent } from './components/faq-manage-container/faq-manage-container.component';
 import { FaqContainerComponent } from './components/faq-container/faq-container.component';
+import {
+    DocumentCatalogListComponent
+} from './components/document-catalog-container/document-catalog-list/document-catalog-list.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {DocumentCatalogService} from './services/document-catalog.service';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { DocumentCatalogFilterComponent } from './components/document-catalog-container/document-catalog-filter/document-catalog-filter.component';
+import {MatInputModule} from '@angular/material/input';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -29,11 +40,22 @@ import { FaqContainerComponent } from './components/faq-container/faq-container.
     DocumentCatalogContainerComponent,
     DocumentManageContainerComponent,
     FaqManageContainerComponent,
-    FaqContainerComponent
+    FaqContainerComponent,
+    DocumentCatalogListComponent,
+    DocumentCatalogFilterComponent
   ],
   imports: [
     CommonModule,
-    TechnicalAssistanceRoutingModule
+    TechnicalAssistanceRoutingModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    DocumentCatalogService
   ]
 })
 export class TechnicalAssistanceModule { }
