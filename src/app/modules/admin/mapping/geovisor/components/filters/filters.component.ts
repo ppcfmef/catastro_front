@@ -68,7 +68,7 @@ export class FiltersComponent implements OnInit {
                   this.user && this.user.ubigeo
                       ? this.user.ubigeo
                       : '150101';
-            
+
               this._commonService
                   .getDistrictResource(ubigeo)
                   .subscribe((data: DistrictResource) => {
@@ -83,7 +83,7 @@ export class FiltersComponent implements OnInit {
   /*ngOnChanges(): void{
     this.selectService();
   }*/
-  
+
 
   selectService(): void{
     console.log('this.params.serviceId',this.params.serviceId);
@@ -141,7 +141,6 @@ export class FiltersComponent implements OnInit {
   }
 
   buscar(): void {
-    console
       this.buscarEventEmitter.emit(this.params);
   }
 
@@ -153,5 +152,17 @@ export class FiltersComponent implements OnInit {
   cargar(): void{
     this.cargarEventEmmiterr.emit(this.params);
   }
+
+  uploadFile(event: any): void {
+    //this._fuseSplashScreenService.show(0);
+    console.log('holass');
+    this.fileToUpload = event.target.files[0];
+    this.fileName = event.target.value;
+    this.fileName = this.fileName.split(/(\\|\/)/g).pop();
+    this.fileName = this.fileName.toString();
+    const ext = this.fileName.split('.').pop();
+    this.isDisabled = false;
+    this.params.fileToUpload = this.fileToUpload;
+}
 
 }

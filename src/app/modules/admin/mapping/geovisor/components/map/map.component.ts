@@ -5,7 +5,7 @@ import { User } from 'app/core/user/user.types';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
-import { loadModules } from 'esri-loader';
+import { loadModules, utils } from 'esri-loader';
 import { MapUtils } from 'app/shared/utils/map.utils';
 import { ServiceLayer } from 'app/shared/models/image-layer.interface';
 declare let shpwrite: any;
@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 import { Role } from 'app/shared/enums/role.enum';
+import * as shp from 'shpjs';
 
 @Component({
   selector: 'app-map',
@@ -48,7 +49,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             title:'CARTO_FISCAL_17',
             visible:true,
             mapImageLayer:null,
-            layers:[]
+            layers:[],
+            wkid:null
         },
         {
             id:1,
@@ -56,7 +58,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             title:'CARTO_FISCAL_18',
             visible:true,
             mapImageLayer:null,
-            layers:[]
+            layers:[],
+            wkid:null
         },
         {
             id:2,
@@ -64,7 +67,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             title:'CARTO_FISCAL_19',
             visible:true,
             mapImageLayer:null,
-            layers:[]
+            layers:[],
+            wkid:null
         },
         {
             id:3,
@@ -72,7 +76,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             title:'CARTO_TEMATICA_INEI',
             visible:true,
             mapImageLayer:null,
-            layers:[]
+            layers:[],
+            wkid:null
         },
 
 
@@ -104,12 +109,12 @@ export class MapComponent implements OnInit, AfterViewInit {
                     this._commonService
                     .getDistrictResource(ubigeo)
                     .subscribe((result: DistrictResource) => {
-                        
+
                         this.params = {
                             district: ubigeo,
                             namedistrict: result.name,
                         };
-                       
+
                     });
         });
 
@@ -222,9 +227,14 @@ export class MapComponent implements OnInit, AfterViewInit {
                 const imageLayer = new MapImageLayer(options);
                 l.mapImageLayer = imageLayer;
                 const urlLayers=l.url + '/layers?f=pjson';
+                const url= l.url+'?f=pjson';
                 const response = await fetch(urlLayers);
-                const infoLayers: any = await response.json();
-                const layers: any[]=infoLayers.layers;
+                const jsonLayers: any = await response.json();
+                const response2 = await fetch(url);
+                const jsonImageLayer: any = await response2.json();
+                console.log('infoLayers>>>',jsonLayers);
+                const layers: any[]=jsonLayers.layers;
+                l.wkid=jsonImageLayer.spatialReference.wkid;
                 l.layers=layers.map( (layer: any)=> ({id:layer.id, name: layer.name})).filter((c)=>{ if(!c.name.includes('LOTE') && !c.name.includes('PREDIO') ) {return c;}});
                 this.map.add(imageLayer);
             });
@@ -292,97 +302,14 @@ export class MapComponent implements OnInit, AfterViewInit {
                 view: this.view
               });
 
-             // this.view.ui.add( [baseMapGalleryExpand],{})
-
-
-
-
-
-
-            //this.view.ui.remove('zoom'); // Remover el boton Zoom;
-/*
-
-
-            const fieldInfos = [
-                {
-                    fieldName: 'ID_ARAN',
-                    label: 'ID_ARAN',
-                },
-
-                {
-                    fieldName: 'UBIGEO',
-                    label: 'UBIGEO',
-                },
-
-                {
-                    fieldName: 'COD_SECT',
-                    label: 'COD_SECT',
-                },
-
-                {
-                    fieldName: 'COD_MZN',
-                    label: 'COD_MZN',
-                },
-                {
-                    fieldName: 'FREN_MZN',
-                    label: 'FREN_MZN',
-                },
-
-                {
-                    fieldName: 'COD_FREN',
-                    label: 'COD_FREN',
-                },
-
-                {
-                    fieldName: 'COD_VIA',
-                    label: 'COD_VIA',
-                },
-                {
-                    fieldName: 'TIP_VIA',
-                    label: 'TIP_VIA',
-                },
-
-                {
-                    fieldName: 'NOM_VIA',
-                    label: 'NOM_VIA',
-                },
-
-                {
-                    fieldName: 'CUADRA',
-                    label: 'CUADRA',
-                },
-
-                {
-                    fieldName: 'VAL_ACT',
-                    label: 'VAL_ACT',
-                },
-                {
-                    fieldName: 'FUENTE',
-                    label: 'FUENTE',
-                },
-            ];
-            const fieldConfigs = fieldInfos.map((e: any) => ({
-                name: e.fieldName,
-                label: e.label,
-            }));
-
-            const popupTemp = {
-                title: 'Arancel',
-                content: [
-                    {
-                        type: 'fields',
-                        fieldInfos: fieldInfos,
-                    },
-                ],
-            };
-*/
 
             this.view.when(() => {
                 //this.visibility = 'visible';
 
                 this._fuseSplashScreenService.hide();
                 console.log('this.user>>',this.user);
-                if(this.user.placeScope.id === Role.DISTRITAL){
+                //if(this.user.placeScope.id === Role.DISTRITAL){
+                if(this.params.district){
                     this.buscar(this.params);
                 }
 
@@ -399,52 +326,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                  this.iniExtent =  this.view.extent;
 
-              
-
-
-
 
                 });
-/*
-            reactiveUtils.watch(
-                () => this.view?.extent?.xmin,
-                (xmin) => {
-                  console.log(`Extent change xmin = ${xmin}`)
-                });
-
-
-*/
-
-
-/*
-watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
-    if(!this.view.stationary){
-      watchUtils.whenTrueOnce(this.view, 'stationary', (evt)=>{
-
-        console.log('this.view.extent>>',this.view.extent);
-        console.log('this.iniExtent.extent>>' , this.iniExtent);
-        if(this.iniExtent && this.view.extent.xmin !== this.iniExtent.xmin)
-
-         {
-
-
-            console.log('stationary>>');
-            console.log(this.view.extent);
-
-            this.view.extent = this.iniExtent;
-        console.log("max extent reached, rolling back to previous extent");
-         }
-
-      });
-    }else{
-
-      watchUtils.whenFalseOnce(this.view, 'interacting', (evt)=>{
-        console.log('interacting>>');
-        console.log(this.view.extent);
-      });
-    }
-  })
-*/
 
         } catch (error) {
             console.error('EsriLoader: ', error);
@@ -456,44 +339,37 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
             console.log('params', params);
             const ubigeo = params.district;
             const where = `UBIGEO='${ubigeo}'`;
-           
+
             this.listImageLayers.forEach((l) => {
                 if(l.mapImageLayer && l.mapImageLayer.sublayers){
                     const sublayers: any[] = l.mapImageLayer.sublayers;
                     sublayers.forEach((sublayer)=>{
                         sublayer.definitionExpression = where;
                     });
-                    
+
                 }
             });
-            
+
             this.zoomToUbigeo(where);
         }
-       
+
     }
 
 
 
     async zoomToUbigeo(where: string): Promise<any> {
         try {
-           // console.log('where>>', where);
-            //const urlDistrito='https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
 
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const [FeatureLayer]= await loadModules(['esri/layers/FeatureLayer',]);
             const featureZonaUrbana = new FeatureLayer(this.urlSearchZonaUrbana);
-            //const layerDistrito = new FeatureLayer(urlDistrito);
 
-            /*const layerDistrito = this.layersInfo.find(
-                (e) => e.title === 'Distritos'
-            ).featureLayer;*/
 
             this._fuseSplashScreenService.show(0);
             const res=await MapUtils.zoomToFeature(this.view, featureZonaUrbana, where);
             console.log('res>>',res);
             this._fuseSplashScreenService.hide();
-           /* this.iniExtent =  this.view.extent;*/
-            /*this.iniExtent =  this.view.extent;*/
+
 
         } catch (error) {
             console.error('EsriLoader: ', error);
@@ -547,7 +423,7 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
         );
         if(features && features.length>0 ){
             console.log('features>>',features);
-            const geojson = await MapUtils.createGeoJSON(features);
+            const geojson = await MapUtils.arcgisToGeoJSON(features);
 
             const options = {
                 types: {
@@ -578,34 +454,60 @@ watchUtils.whenFalse(this.view, 'stationary', (evt)=>{
     }
 
 
-    async  cargar(params: any):  Promise<void> {
+
+    cargar(params: any): void {
+        const file = params.fileToUpload;
+        console.log('file>>',file);
         const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
         const _layers=(_imageLayer )?_imageLayer.layers:[];
         const _layer= _layers.find((l: any)=> l.id===params.featureId);
-        this.proj4DestWkid = params.projection;
+        this.proj4DestWkid = _imageLayer.wkid;
         this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
-
-        const [
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            FeatureLayer,
-            proj4DestWKT,
-            shpWrite,
-        ] = await loadModules([
-            'esri/layers/FeatureLayer',
-            'dojo/text!https://epsg.io/' + this.proj4DestWkid + '.esriwkt',
-        ]);
-
-        this._fuseSplashScreenService.show();
-        console.log('url',_imageLayer.url + '/' + _layer.id);
-        const _featureLayer = new FeatureLayer(
-            _imageLayer.url + '/' + _layer.id
+        const url =
+        `${_imageLayer.url}/${_layer.id}/addFeatures`.replace(
+            'MapServer',
+            'FeatureServer'
         );
+      /* const url= _imageLayer.url.replace('MapServer','FeatureServer') + '/' + _layer.id+' /addFeatures';*/
 
-        const query = _featureLayer.createQuery();
-        const ubigeo = params.district;
-        query.where = `UBIGEO='${ubigeo}'`;
-        query.outSpatialReference = this.proj4DestWkid;
-        query.returnGeometry = true;
+        const reader = new FileReader();
+        this._fuseSplashScreenService.show(0);
+        reader.onloadend = (e): void => {
+            this.shapeToGeoJson(reader.result,url);
+        };
 
+        reader.readAsArrayBuffer(file);
+    }
+
+    shapeToGeoJson(data: any,url: string): void {
+        shp(data).then((geojson: any) => {
+            MapUtils.geosjonToArcgis(geojson.features).then((json)=>{
+
+                const body = { features: json };
+
+                const formData = new FormData();
+                formData.append('features', JSON.stringify(json));
+
+                fetch(`${url}`, {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then((resObj) => {
+                        this._fuseSplashScreenService.hide();
+                       /* this._messageProviderService.showConfirm(
+                            'Descarga Exitosa'
+                        );*/
+                        this._messageProviderService.showAlert(
+                            'Carga Exitosa'
+                        );
+                    })
+                    .catch((error) => {
+                        this._messageProviderService.showAlert(
+                            'Registrados no cargados'
+                        );
+                    });
+
+            });
+        });
     }
 }

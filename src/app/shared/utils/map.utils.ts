@@ -7,7 +7,55 @@ import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 export class MapUtils {
 
 
-    static async createGeoJSON(
+    static  async geosjonToArcgis(features: any[], proj4DestWkid: number =4326): Promise<any[]> {
+        const arcgisJson = [];
+        /* eslint-disable @typescript-eslint/naming-convention */
+        const [Graphic, Polyline, projection, SpatialReference] =
+            await loadModules([
+                'esri/Graphic',
+                'esri/geometry/Polyline',
+                'esri/geometry/projection',
+                'esri/geometry/SpatialReference',
+            ]);
+        /* eslint-enable @typescript-eslint/naming-convention */
+
+        const outSpatialReference = new SpatialReference(proj4DestWkid);
+
+        return projection.load().then(() => {
+            features.forEach((feature) => {
+                const attr = feature.properties;
+
+                for (const key in attr) {
+                    if (!attr[key] || key === 'OBJECTID') {
+                        delete attr[key];
+                    }
+                }
+
+                if (feature.geometry) {
+                    const geoFeature = geojsonToArcGIS(feature);
+                    const newGeometry = projection.project(
+                        geoFeature.geometry,
+                        outSpatialReference
+                    );
+                    geoFeature.geometry = {
+                        paths: newGeometry.paths,
+                        spatialReference: {
+                            wkid: newGeometry.spatialReference.wkid,
+                        },
+                    };
+                    arcgisJson.push(geoFeature);
+                }
+            });
+            return Promise.all(arcgisJson);
+            //  return arcgisJson;
+        });
+
+        //return arcgisJson;
+    }
+
+
+
+    static async arcgisToGeoJSON(
         features: any[],
         proj4DestWkid: number =4326,
         isProject: boolean = false,
@@ -54,7 +102,7 @@ export class MapUtils {
                     (geom.type === 'MultiPolygon' ||
                         geom.type === 'MultiLineString')
                 ) {
-                    const props = feature.properties;
+                    const props = geoFeature.properties;
                     for (
                         let i = 0, len = geom.coordinates.length;
                         i < len;

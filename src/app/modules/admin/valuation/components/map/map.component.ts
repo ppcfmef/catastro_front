@@ -564,7 +564,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             query
         );
 
-        const geojson = await MapUtils.createGeoJSON(features);
+        const geojson = await MapUtils.arcgisToGeoJSON(features);
 
         const options = {
             types: {
