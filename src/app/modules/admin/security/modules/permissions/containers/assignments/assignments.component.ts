@@ -31,7 +31,7 @@ export class AssignmentsComponent implements OnInit {
 
     drawerMode: 'side' | 'over';
 
-    title = 'Gestion de permisos';
+    title = 'Gestion de Roles y Permisos';
 
     // roles$: Observable<Role[]>;
 
