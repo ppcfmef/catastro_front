@@ -8,7 +8,7 @@ const routes: Routes = [
   {path: '', component: MappingComponent},
   {path: 'basic', component: BasicMappingPage},
   {
-      path: 'geovisor',
+      path: 'carga',
       loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
   },
   {

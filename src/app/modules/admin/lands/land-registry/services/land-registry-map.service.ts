@@ -6,6 +6,7 @@ import { CommonService } from 'app/core/common/services/common.service';
 
 import { from } from 'rxjs';
 import { LandOwner } from '../interfaces/land-owner.interface';
+import { FormUtils } from 'app/shared/utils/form.utils';
 @Injectable({
   providedIn: 'root'
 })
@@ -193,7 +194,28 @@ export class LandRegistryMapService {
     const response=await layer.queryFeatures(query);
 const stats = response.features[0].attributes;
 console.log('Max cpu:' ,stats.max_COD_CPU);
-const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;
+const rangCPU=stats.max_COD_CPU.substring(0,8);
+console.log('stats.max_COD_CPU.substring(8,12)',stats.max_COD_CPU.substring(8,12));
+const unidadImb=stats.max_COD_CPU.substring(8,12) && stats.max_COD_CPU.substring(8,12)!=='NaNN'?stats.max_COD_CPU.substring(8,12):'0000';
+
+const unidadImbNew = FormUtils.zeroPad(parseInt(unidadImb,10)+1,4);
+const factores=[2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7];
+
+const temp=`${rangCPU}${unidadImbNew}`.split('').reverse().join('');
+
+// eslint-disable-next-line @typescript-eslint/prefer-for-of
+let s=0;
+    for(let i=0;i< temp.length ;i++){
+        s=parseInt(temp[i],10)*factores[0]+s;
+    }
+
+    const v=11 - s%11;
+
+
+//const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;
+const maxCPU =`${rangCPU}${unidadImbNew}${v}`;
+
+
 const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED, 10) +1 :1;
 value.cup = maxCPU.toString();
 value.idLandCartographic = idPRED.toString();

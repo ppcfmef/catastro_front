@@ -25,10 +25,14 @@
               </div>
           </div>
 
-          <div class="w-full h-full">
-
+          <div class="w-full h-full" *ngIf="x" >
+          
+                <iframe class="w-full h-full" [src]="url" frameborder="0"></iframe>
+           
+          
+             <!---
               <iframe class="w-full h-full" src="https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=90568c02bd8c44789b16c200aab65d08" frameborder="0"></iframe>
-
+            -->
           </div>
 
       </div>

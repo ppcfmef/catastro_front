@@ -127,7 +127,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 
         DIR_FISCAL: '',
 
-        ESTADO: '',
+        ESTADO: 0,
 
         ID_IMG:land.idCartographicImg,
         SECUEN : land.secuen,

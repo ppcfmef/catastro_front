@@ -89,7 +89,7 @@ export interface GestionPredio {
 // eslint-disable-next-line @typescript-eslint/naming-convention
     DIR_FISCAL: string;
 // eslint-disable-next-line @typescript-eslint/naming-convention
-    ESTADO: string;
+    ESTADO: number;
 
     ID_IMG: string;
 

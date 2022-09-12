@@ -74,19 +74,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         {
             id: 0,
             title: 'Zona 17',
-            children: [0, 1, 2],
+            children: [0, 1, 2,101],
         },
 
         {
             id: 1,
             title: 'Zona 18',
-            children: [3, 4, 5],
+            children: [3, 4, 5,102],
         },
 
         {
             id: 2,
             title: 'Zona 19',
-            children: [6, 7, 8],
+            children: [6, 7, 8,103],
         },
 
         {
@@ -184,6 +184,22 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             visible:true,
         },
 
+        {
+            title: 'Manzana Urbana Zona 17',
+            id: 101,
+            idServer: 9,
+
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: 17,
+            projection: 32717,
+            visible:true,
+        },
 
 
         {
@@ -222,6 +238,23 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             title: 'Via Zona 18',
             id: 5,
             idServer: 2,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: 18,
+            projection: 32718,
+            visible:true,
+        },
+
+        {
+            title: 'Manzana Urbana Zona 18',
+            id: 102,
+            idServer: 9,
+
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
             order: 0,
@@ -282,6 +315,22 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
             visible:true,
         },
 
+        {
+            title: 'Manzana Urbana Zona 19',
+            id: 103,
+            idServer: 9,
+
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: 19,
+            projection: 32719,
+            visible:true,
+        },
         {
             title: 'Arancel',
             id: 9,
@@ -642,6 +691,24 @@ this.landRegistryService.getLandOwner()
                     expression: '$feature.TIP_VIA +" "+ $feature.NOM_VIA',
                 },
             };
+            const labelClassManzana = {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 10,
+                        weight: 'bold',
+
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.MZN_URB',
+                },
+            };
+
 
             this.layersInfo.reverse().map((l) => {
                 const options = {
@@ -654,6 +721,11 @@ this.landRegistryService.getLandOwner()
                 if (l.title.includes('Via')) {
                     options['labelingInfo'] = [labelClassVias];
                 }
+                else if(l.title.includes('Manzana')){
+                    options['labelingInfo'] = [labelClassManzana];
+                }
+
+                 
                 l.featureLayer = new FeatureLayer(options);
             });
 
@@ -814,10 +886,11 @@ this.landRegistryService.getLandOwner()
                                         longitude =
                                             graphic.attributes['COORD_X'];
                                         const lote = graphic.attributes;
+                                        console.log('lote>>',lote);
 
                                         this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
 
-                                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                                        this._landRegistryMapService.setEstado(Estado.LEER);
                                         this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                         }
 
@@ -879,7 +952,7 @@ this.landRegistryService.getLandOwner()
 
                                                         this.saveNewPointGestionPredio();
 
-                                                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                                                        this._landRegistryMapService.setEstado(Estado.LEER);
                                                    /*     this._landRegistryMapService.landOut = this.landRegistryMapModel;*/
                                                     }
                                                     else{
@@ -980,7 +1053,8 @@ this.landRegistryService.getLandOwner()
 
                         searchWidget.on('select-result', (event) => {
                             this.view.zoom = 16;
-                            console.log('event>>',event);
+                            const template =event.getEffectivePopupTemplate();
+                            console.log(template);
                         });
 
 
@@ -1033,8 +1107,8 @@ this.landRegistryService.getLandOwner()
                     const searchWidget = new Search({
                         view: this.view,
                         includeDefaultSources: false,
-                        sources:sources
-
+                        sources:sources,
+                        popupEnabled:false
                     });
 
                     searchWidget.on('select-result', (event) => {
@@ -1640,6 +1714,7 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         }else{
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
+            _gestionPredio.ESTADO=0;
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
