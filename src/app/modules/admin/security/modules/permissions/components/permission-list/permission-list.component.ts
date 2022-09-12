@@ -37,14 +37,12 @@ export class PermissionListComponent implements OnInit, OnChanges {
     }
 
     setValuesPermissionOfTable(permissions = []): void {
-        console.log('permissions ==>', permissions);
         if (permissions?.length > 0) {
             permissions.forEach((permission) => {
                 const dataSource = this.dataSource.data;
                 const elementFound = dataSource.find((element: any) => element.id === permission.navigationView);
                 elementFound[permission.type] = true;
             });
-            console.log('data', this.dataSource.data);
         }
     }
 
@@ -81,8 +79,19 @@ export class PermissionListComponent implements OnInit, OnChanges {
     }
 
 
-    updatePermission(key, element): void {
-        console.log(key, element);
+    updatePermission(permission, record): void {
+        const genericPermission = permission.split('_')[0];
+
+        for (const data of this.dataSource.data) {
+            if(data?.id === record?.id) {
+                for (const col of this.columnsToDisplay) {
+                    if (col !== permission && col.startsWith(genericPermission)) {
+                        data[col] = false;
+                    }
+                }
+                break;
+            }
+        }
     }
 
     parsedResponse(): any {

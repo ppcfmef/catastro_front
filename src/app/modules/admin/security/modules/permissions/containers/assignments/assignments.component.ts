@@ -6,6 +6,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {Form, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDrawer} from '@angular/material/sidenav';
@@ -47,6 +48,7 @@ export class AssignmentsComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
+        private confirmationService: CustomConfirmationService,
     ) {
         this.createFormAddEdit();
         this._activatedRoute.params
@@ -108,8 +110,16 @@ export class AssignmentsComponent implements OnInit {
             const payload = this.editForm.getRawValue();
             payload.permissionsNavigation = this.permissionListComponent.parsedResponse();
             this.validateTransaction(payload);
+            this.confirmationService.success(
+                'Registro de Role y Permiso',
+                'Se guardo el registro correctamente'
+            );
         } else {
             this.editForm.markAllAsTouched();
+            this.confirmationService.error(
+                'Registro de Role y Permiso',
+                'Error al guardar Role'
+            );
         }
     }
 
