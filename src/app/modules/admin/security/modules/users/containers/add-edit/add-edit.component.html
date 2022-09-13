@@ -118,7 +118,9 @@
                                     matInput
                                     required
                                     [formControlName]="'dni'"
-                                    [placeholder]="'D.N.I.'">
+                                    [placeholder]="'D.N.I.'"
+                                    (blur)="onBlurDni()"
+                                    >
                             </mat-form-field>
                         </div>
                     </div>

@@ -27,6 +27,7 @@ import {debounceTime, map, subscribeOn, takeUntil} from 'rxjs/operators';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 
 @Component({
     selector: 'app-add-edit',
@@ -61,6 +62,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         private _listComponent: ListComponent,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private confirmationService: CustomConfirmationService,
     ) {
         this._activatedRoute
             .params
@@ -231,13 +233,21 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
     updateContact(): void {
         if (this.userForm.valid && this.userForm.dirty) {
             const payload: UserCreate = this.userForm.getRawValue();
-            payload.username = payload.dni;
             this.createOrUpdateUser(payload).subscribe((user: User) => {
                 this._userService._refreshUsers.next();
                 this._router.navigate(['security', 'users', user.id]);
+
+                this.confirmationService.success(
+                    'Registro de usuarios',
+                    'Se guardo el registro correctamente'
+                );
             });
         } else {
             this.userForm.markAllAsTouched();
+            this.confirmationService.error(
+                'Registro de usuarios',
+                'Error al guardar el usuario'
+            );
         }
     }
 
@@ -281,5 +291,17 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._router.navigate(['security', 'users']);
             }
         });
+    }
+
+    onBlurDni(): void {
+        const id = this.userForm.get('id');
+        const dni = this.userForm.get('dni');
+        const username = this.userForm.get('username');
+        if ((dni.value && dni.value !== '') && (username.value === '' || !username.value)) {
+            username.setValue(dni.value);
+        }
+        else if (id.value === '' &&  (dni.value && dni.value !== '') && (!username.dirty && !username.touched)) {
+            username.setValue(dni.value);
+        }
     }
 }
