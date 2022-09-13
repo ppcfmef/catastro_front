@@ -1,103 +1,64 @@
-<mat-drawer-container (backdropClick)="onBackdropClicked()"
-                      class="flex-auto h-full bg-card dark:bg-transparent">
+<!-- Main -->
+<div class="flex flex-col flex-auto">
 
-    <!-- Drawer -->
-    <mat-drawer
-        class="w-full sm:w-100 dark:bg-gray-900"
-        [mode]="drawerMode"
-        [opened]="false"
-        [position]="'end'"
-        [disableClose]="true"
-        #matDrawer>
-        <router-outlet></router-outlet>
-    </mat-drawer>
-
-    <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
-
-        <!-- Main -->
-        <div class="flex flex-col flex-auto">
-
-            <!-- Header -->
-            <div
-                class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
-                <!-- Title -->
-                <div>
-                    <div class="text-4xl font-extrabold tracking-tight leading-none">{{ title }}</div>
-                </div>
-
-                <!-- Main actions -->
-                <div class="flex items-center mt-4 sm:mt-0 md:mt-4 gap-4">
-                    <!-- Add contact button -->
-                    <button
-                        class="ml-4"
-                        mat-flat-button
-                        (click)="redirectPage()"
-                        [color]="'warn'">
-                        <mat-icon [svgIcon]="'heroicons_outline:arrow-circle-left'"></mat-icon>
-                        <span class="ml-2 mr-1">Volver</span>
-                    </button>
-
-                    <button
-                        class="ml-4"
-                        mat-flat-button
-                        (click)="saveOrUpdateItem()"
-                        [color]="'primary'">
-                        <mat-icon [svgIcon]="'heroicons_outline:cloud-upload'"></mat-icon>
-                        <span class="ml-2 mr-1">Guardar permiso</span>
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="p-6">
-                <div class="flex flex-col gap-4 w-full">
-
-                    <div
-                        class="flex flex-row gap-4 sm:flex-row items-center w-full max-w-xs sm:max-w-none"
-                        [formGroup]="editForm">
-
-<!--                        <mat-form-field class="fuse-mat-no-subscript w-3/12">-->
-<!--                            <mat-label>Nombre del permiso</mat-label>-->
-<!--                            <mat-icon-->
-<!--                                matPrefix-->
-<!--                                class="hidden sm:flex icon-size-5"-->
-<!--                                [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>-->
-<!--                            <input-->
-<!--                                matInput-->
-<!--                                [formControlName]="'name'"-->
-<!--                                [placeholder]="'Nombre del permiso'">-->
-<!--                        </mat-form-field>-->
-
-                        <mat-form-field class="fuse-mat-no-subscript w-5/12">
-                            <mat-label>Nombre del Rol</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-                            <input
-                                matInput
-                                [formControlName]="'description'"
-                                [placeholder]="'Descripcion'">
-                        </mat-form-field>
-
-<!--                        <div class="flex w-4/12 items-center pt-4">-->
-<!--                            <div class="flex items-center">-->
-<!--                                <mat-slide-toggle [formControlName]="'isActive'">Activo</mat-slide-toggle>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-                    </div>
-
-                    <div class="w-full">
-                        <h3>Asignar Permisos al Rol</h3>
-                        <app-permission-list [permissions]="permissionsNavigation"></app-permission-list>
-                    </div>
-                </div>
-
-            </div>
-
+    <!-- Header -->
+    <div
+        class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ title }}</div>
         </div>
 
-    </mat-drawer-content>
+        <!-- Main actions -->
+        <div class="flex items-center mt-4 sm:mt-0 md:mt-4 gap-4">
+            <!-- Add contact button -->
+            <button
+                class="ml-4"
+                mat-flat-button
+                (click)="redirectPage()"
+                [color]="'warn'">
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-circle-left'"></mat-icon>
+                <span class="ml-2 mr-1">Volver</span>
+            </button>
 
-</mat-drawer-container>
+            <button
+                class="ml-4"
+                mat-flat-button
+                (click)="saveOrUpdateItem()"
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'heroicons_outline:cloud-upload'"></mat-icon>
+                <span class="ml-2 mr-1">Guardar permiso</span>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="p-6">
+        <div class="flex flex-col gap-4 w-full">
+
+            <div
+                class="flex flex-row gap-4 sm:flex-row items-center w-full max-w-xs sm:max-w-none"
+                [formGroup]="editForm">
+                <mat-form-field class="fuse-mat-no-subscript w-5/12">
+                    <mat-label>Nombre del Rol</mat-label>
+                    <mat-icon
+                        matPrefix
+                        class="hidden sm:flex icon-size-5"
+                        [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+                    <input
+                        matInput
+                        [formControlName]="'description'"
+                        [placeholder]="'Descripcion'">
+                </mat-form-field>
+
+            </div>
+
+            <div class="w-full">
+                <h3 class="subtitle-card">Asignar Permisos al Rol</h3>
+                <app-permission-list [permissions]="permissionsNavigation"></app-permission-list>
+            </div>
+        </div>
+
+    </div>
+
+</div>
