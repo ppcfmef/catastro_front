@@ -1,3 +1,5 @@
+import { Observable, of, Subject } from 'rxjs';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -8,26 +10,19 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {ListComponent} from '../list/list.component';
-import {OverlayRef} from '@angular/cdk/overlay';
-import {Observable, of, Subject} from 'rxjs';
-import {MatDrawerToggleResult} from '@angular/material/sidenav';
-import {Role, User, UserCreate} from '../../../../../../../core/user/user.types';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
-import {CommonService} from '../../../../../../../core/common/services/common.service';
-import {
-    Department,
-    District,
-    Institute,
-    IPagination,
-    Province
-} from '../../../../../../../core/common/interfaces/common.interface';
-import {debounceTime, map, subscribeOn, takeUntil} from 'rxjs/operators';
-import {UserService} from '../../../../../../../core/user/user.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { Role, User, UserCreate } from 'app/core/user/user.types';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { CommonService } from 'app/core/common/services/common.service';
+import { Department, District, Institute, Province } from 'app/core/common/interfaces/common.interface';
+import { UserService } from 'app/core/user/user.service';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { ListComponent } from '../list/list.component';
+import { UserValidator } from '../../validators/user.validator';
 
 @Component({
     selector: 'app-add-edit',
@@ -39,18 +34,19 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
 export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
-
     id: number;
     user: User;
-
     userForm: FormGroup;
-
     departments$: Observable<Department[]>;
     provinces$: Observable<Province[]>;
     districts$: Observable<District[]>;
     institutes$: Observable<Institute[]>;
     roles$: Observable<Role[]>;
-
+    displayPassword = {
+        icon: 'heroicons_solid:eye',
+        field: 'password',
+        visible: false
+    };
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -86,22 +82,42 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userForm = this._formBuilder.group({
             id: [''],
             avatar: [null],
-            username: [''],
-            password: ['', [Validators.required]],
+            username: ['', [Validators.required]],
+            password: [''],
             firstName: [''],
             lastName: [''],
             role: ['', [Validators.required]],
             email: ['', [Validators.email]],
-            dni: ['', [Validators.required]],
+            dni: ['',
+                {
+                    validators: [
+                        Validators.required,
+                        Validators.maxLength(8),
+                        Validators.minLength(8)
+                    ],
+                    updateOn: 'blur'
+                }
+            ],
             institution: [''],
             jobTitle: [''],
-            department: [''],
-            province: [{value: '', disabled: true}],
+            department: ['', {
+                updateOn: 'blur'
+            }],
+            province: [
+                {
+                    value: '', disabled: true
+                },
+                {
+                    updateOn: 'blur'
+                }
+            ],
             district: [{value: '', disabled: true}],
             observation: [''],
             isActive: [true, [Validators.required]],
+        },{
+            validators: [UserValidator.passwordRequired],
+            updateOn: 'submit'
         });
-
     }
 
     ngAfterViewInit(): void {
@@ -231,22 +247,33 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
      * Update the contact
      */
     updateContact(): void {
-        if (this.userForm.valid && this.userForm.dirty) {
+        if (this.userForm.valid) {
             const payload: UserCreate = this.userForm.getRawValue();
-            this.createOrUpdateUser(payload).subscribe((user: User) => {
-                this._userService._refreshUsers.next();
-                this._router.navigate(['security', 'users', user.id]);
+            this.createOrUpdateUser(payload).subscribe(
+                (user: User) => {
+                    this._userService._refreshUsers.next();
+                    this._router.navigate(['security', 'users', user.id]);
 
-                this.confirmationService.success(
-                    'Registro de usuarios',
-                    'Se guardo el registro correctamente'
-                );
-            });
+                    this.confirmationService.success(
+                        'Registro de usuarios',
+                        'Se guardo el registro correctamente'
+                    );
+                },
+                (error) => {
+                    let msg = 'Error al guardar el usuario, verifique la informacion ingresada';
+                    if ('username' in error?.error) {
+                        msg = error?.error.username;
+                    }
+                    this.confirmationService.error(
+                        'Registro de usuarios', msg
+                    );
+                }
+            );
         } else {
-            this.userForm.markAllAsTouched();
+            this.checkErrors();
             this.confirmationService.error(
                 'Registro de usuarios',
-                'Error al guardar el usuario'
+                'Error al guardar el usuario, verifique la informacion ingresada'
             );
         }
     }
@@ -293,15 +320,36 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    onBlurDni(): void {
+    onDniToUser(): void {
         const id = this.userForm.get('id');
         const dni = this.userForm.get('dni');
         const username = this.userForm.get('username');
+
         if ((dni.value && dni.value !== '') && (username.value === '' || !username.value)) {
             username.setValue(dni.value);
         }
         else if (id.value === '' &&  (dni.value && dni.value !== '') && (!username.dirty && !username.touched)) {
             username.setValue(dni.value);
+        }
+    }
+
+    showPassword(): void {
+        const showIcon = 'heroicons_solid:eye';
+        const hideIcon = 'heroicons_solid:eye-off';
+        const passwordField = 'password';
+        const textfield = 'text';
+        this.displayPassword.visible = !this.displayPassword.visible;
+        this.displayPassword.icon = (this.displayPassword.visible) ? hideIcon : showIcon;
+        this.displayPassword.field = (this.displayPassword.visible) ? textfield: passwordField;
+    }
+
+    get f(): {[key: string]: AbstractControl} {
+        return this.userForm.controls;
+    }
+
+    private checkErrors(): void {
+        if (this.userForm.errors?.passwordIsRequired) {
+            this.userForm.get('password').setErrors({required: true});
         }
     }
 }
