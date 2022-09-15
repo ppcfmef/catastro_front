@@ -21,7 +21,7 @@ export class CommonUtils {
 
     static deleteKeysNullInObject(rawValue): any {
         Object.keys(rawValue).forEach((key) => {
-            if (!rawValue[key]) {
+            if (rawValue[key] === null || rawValue[key] === undefined || rawValue[key] === '') {
                 delete rawValue[key];
             }
         });

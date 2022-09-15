@@ -44,6 +44,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dataSource = [];
     count = 0;
+    pageIndex = 0;
+    pageSize = 10;
 
     changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -196,6 +198,10 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.changesSubject.next(true);
             }
         });
+    }
+
+    onPage(paginator: MatPaginator): void {
+        this.pageIndex = paginator.pageIndex;
     }
 
 }
