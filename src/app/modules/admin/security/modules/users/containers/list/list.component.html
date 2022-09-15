@@ -91,19 +91,25 @@
                         -->
                     </div>
 
-                    <div class="flex flex-row sm:flex-row items-end justify-end w-full max-w-xs sm:max-w-none"
-                         [formGroup]="filters">
-                        <mat-form-field
-                            class="fuse-mat-no-subscript w-full sm:w-72 sm:mt-0"
-                            [floatLabel]="'always'">
+                    <div class="flex flex-row sm:flex-row w-full max-w-xs sm:max-w-none"
+                         [formGroup]="search">
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">      
+                            
+                            <input type="text" matInput formControlName="search"
+                                   placeholder="Buscar por Municipalidad o DNI"
+                                   autocomplete="off">
                             <mat-icon
-                                matPrefix
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <input
-                                formControlName="search"
-                                placeholder="Buscar"
-                                matInput>
+                                [matTooltip]="'Mostrar contraseña'"
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:x'"
+                                (click)="onCleanSearch()"
+                            ></mat-icon>
+                                <button mat-flat-button
+                                [color]="'primary'"
+                                (click)="onSearch()"
+                                >
+                                  <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+                                </button>
                         </mat-form-field>
                     </div>
 
@@ -119,6 +125,13 @@
                                 </td>
                             </ng-container>
 
+                            <ng-container matColumnDef="dni">
+                                <th mat-header-cell *matHeaderCellDef> DNI</th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{ element?.dni }}
+                                </td>
+                            </ng-container>
+
                             <ng-container matColumnDef="username">
                                 <th mat-header-cell *matHeaderCellDef> Usuario</th>
                                 <td mat-cell *matCellDef="let element">
@@ -130,6 +143,13 @@
                                 <th mat-header-cell *matHeaderCellDef> Institución</th>
                                 <td mat-cell *matCellDef="let element">
                                     {{ element?.institution?.name }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="district">
+                                <th mat-header-cell *matHeaderCellDef> Cod. Municipal</th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{ element?.district }}
                                 </td>
                             </ng-container>
 

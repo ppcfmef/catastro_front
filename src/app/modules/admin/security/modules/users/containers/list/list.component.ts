@@ -36,9 +36,10 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     title = 'Gestion de usuarios';
 
-    displayedColumns = ['nro', 'username', 'institute', 'rol', 'status', 'creationDate', 'actions'];
+    displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'rol', 'status', 'creationDate', 'actions'];
 
     filters: FormGroup;
+    search: FormGroup;
 
     roles$: Observable<Role[]>;
 
@@ -72,7 +73,6 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.roles$ = this._userService.getRoleSelectable();
 
         this.filters = this._fb.group({
-            search: [''],
             // eslint-disable-next-line @typescript-eslint/naming-convention
             is_active: [''],
             role: [''],
@@ -80,6 +80,10 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
             init_date: [''],
             // eslint-disable-next-line @typescript-eslint/naming-convention
             end_date: [''],
+        });
+
+        this.search = this._fb.group({
+            search: [''],
         });
 
         // Subscribe to MatDrawer opened change
@@ -140,13 +144,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(
                 debounceTime(300),
                 switchMap(() => {
-                    const filterRawValue = this.filters.getRawValue();
-                    filterRawValue.init_date = filterRawValue.init_date ? moment(filterRawValue.init_date).format('YYYY-MM-DD') : null;
-                    filterRawValue.end_date = filterRawValue.end_date ? moment(filterRawValue.end_date).format('YYYY-MM-DD') : null;
-                    const rawValueFilter = CommonUtils.deleteKeysNullInObject(filterRawValue);
-                    const queryParamsByPaginator = {...rawValueFilter} as any;
-                    queryParamsByPaginator.limit = this.paginator.pageSize;
-                    queryParamsByPaginator.offset = queryParamsByPaginator.limit * this.paginator.pageIndex;
+                    const queryParamsByPaginator = this.makeQueryParams();
                     return this._userService.getUsers(queryParamsByPaginator);
                 })
             ).subscribe((response) => {
@@ -156,6 +154,17 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+    }
+
+    makeQueryParams(): any {
+        const filterRawValue = this.filters.getRawValue();
+        filterRawValue.init_date = filterRawValue.init_date ? moment(filterRawValue.init_date).format('YYYY-MM-DD') : null;
+        filterRawValue.end_date = filterRawValue.end_date ? moment(filterRawValue.end_date).format('YYYY-MM-DD') : null;
+        const rawValueFilter = CommonUtils.deleteKeysNullInObject(filterRawValue);
+        const queryParamsByPaginator = {...rawValueFilter} as any;
+        queryParamsByPaginator.limit = this.paginator.pageSize;
+        queryParamsByPaginator.offset = queryParamsByPaginator.limit * this.paginator.pageIndex;
+        return queryParamsByPaginator;
     }
 
     /**
@@ -202,6 +211,26 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
+    }
+
+    onSearch(): void {
+        const search = this.search.get('search').value;
+        this._userService.getUsers({ search }).subscribe((response) => {
+            this.count = response.count;
+            this.dataSource = response.results;
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+    }
+
+    onCleanSearch(): void {
+        this.search.get('search').setValue(null);
+        this._userService.getUsers({}).subscribe((response) => {
+            this.count = response.count;
+            this.dataSource = response.results;
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
 }
