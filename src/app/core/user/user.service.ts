@@ -92,7 +92,8 @@ export class UserService {
      *
      */
     createUser(payload: UserCreate): Observable<User> {
-        return this._httpClient.post<User>(`${this._apiUrl}/users/`, payload);
+        const userFormData = this.parseJsonToFormData(payload);
+        return this._httpClient.post<User>(`${this._apiUrl}/users/`, userFormData);
     }
 
     /**
@@ -100,7 +101,8 @@ export class UserService {
      *
      */
     updateUserById(payload: Partial<UserCreate>): Observable<User> {
-        return this._httpClient.patch<User>(`${this._apiUrl}/users/${payload.id}/`, payload);
+        const userFormData = this.parseJsonToFormData(payload);
+        return this._httpClient.patch<User>(`${this._apiUrl}/users/${payload.id}/`, userFormData);
     }
 
     /**
@@ -165,5 +167,17 @@ export class UserService {
      */
     getRoleSelectable(): Observable<Role[]> {
         return this._httpClient.get<Role[]>(`${this._apiUrl}/users/role/select/`);
+    }
+
+    private parseJsonToFormData(data: Partial<UserCreate>): FormData {
+        const formData = new FormData();
+        for (const key of Object.keys(data)) {
+            if (data?.avatarFile && key === 'avatarFile') {
+                formData.append('avatar', data?.avatarFile, data?.avatarFile?.name);
+            }else {
+                formData.append(key, data[key]);
+            }
+        }
+        return formData;
     }
 }

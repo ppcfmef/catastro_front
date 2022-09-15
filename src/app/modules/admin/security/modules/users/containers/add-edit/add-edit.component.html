@@ -39,7 +39,7 @@
                                     class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
                                     type="file"
                                     [multiple]="false"
-                                    [accept]="'image/jpeg, image/png'"
+                                    [accept]="'image/jpg, image/jpeg, image/png'"
                                     (change)="uploadAvatar(avatarFileInput.files)"
                                     #avatarFileInput>
                                 <label
@@ -64,11 +64,11 @@
                         <!-- Image/Letter -->
                         <img
                             class="object-cover w-full h-full"
-                            *ngIf="user?.avatar"
-                            [src]="user?.avatar">
+                            *ngIf="avatarUrl"
+                            [src]="avatarUrl">
                         <div
                             class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                            *ngIf="!user?.avatar">
+                            *ngIf="!avatarUrl">
                             {{user?.username.charAt(0) || 'N'}}
                         </div>
 

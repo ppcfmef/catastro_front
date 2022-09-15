@@ -14,6 +14,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Role, User, UserCreate } from 'app/core/user/user.types';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
@@ -47,6 +48,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         field: 'password',
         visible: false
     };
+    avatarUrl: SafeUrl;
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -59,6 +61,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
         private confirmationService: CustomConfirmationService,
+        private domSanitizer: DomSanitizer,
     ) {
         this._activatedRoute
             .params
@@ -81,9 +84,9 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         // Create the contact form
         this.userForm = this._formBuilder.group({
             id: [''],
-            avatar: [null],
+            avatarFile: [null],
             username: ['', [Validators.required]],
-            password: [''],
+            password: [null],
             firstName: [''],
             lastName: [''],
             role: ['', [Validators.required]],
@@ -116,7 +119,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
             isActive: [true, [Validators.required]],
         },{
             validators: [UserValidator.passwordRequired],
-            updateOn: 'submit'
+            updateOn: 'blur' // todo: change submit
         });
     }
 
@@ -159,6 +162,8 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.id) {
             this._userService.getUserById(this.id)
                 .subscribe((response: User) => {
+                    this.user = response;
+                    this.avatarUrl = this.user?.avatar;
                     this.userForm.patchValue(response, {emitEvent: false});
                     const keys = ['role', 'institution', 'department', 'province', 'district'];
                     keys.forEach((key: string) => {
@@ -207,21 +212,20 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        const allowedTypes = ['image/jpeg', 'image/png'];
         const file = fileList[0];
+        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
 
         // Return if the file is not allowed
         if (!allowedTypes.includes(file.type)) {
             return;
         }
-
-        // Upload the avatar
-        // this._contactsService.uploadAvatar(this.contact.id, file).subscribe();
+        this.userForm.get('avatarFile').setValue(file);
+        this.avatarUrl = this.domSanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
     }
 
     removeAvatar(): void {
         // Get the form control for 'avatar'
-        const avatarFormControl = this.userForm.get('avatar');
+        const avatarFormControl = this.userForm.get('avatarFile');
 
         // Set the avatar as null
         avatarFormControl.setValue(null);
@@ -230,7 +234,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         this._avatarFileInput.nativeElement.value = null;
 
         // Update the contact
-        this.user.avatar = null;
+        this.avatarUrl = null;
     }
 
     /**
@@ -283,7 +287,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     createOrUpdateUser(payload: UserCreate): Observable<any> {
         if (payload?.id) {
-            return this._userService.updateUserById(payload);
+            return this._userService.updateUserById(this.removeNullInUpdate(payload));
         }
         return this._userService.createUser(payload);
     }
@@ -351,5 +355,18 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.userForm.errors?.passwordIsRequired) {
             this.userForm.get('password').setErrors({required: true});
         }
+    }
+
+    private removeNullInUpdate(object: UserCreate): UserCreate {
+        if (!object?.id) {
+            return object;
+        }
+
+        for (const property in object) {
+            if(object[property] === null) {
+                delete object[property];
+            }
+        }
+        return object;
     }
 }
