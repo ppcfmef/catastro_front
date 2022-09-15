@@ -1,3 +1,5 @@
+import { Observable, of, Subject } from 'rxjs';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -8,25 +10,20 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {ListComponent} from '../list/list.component';
-import {OverlayRef} from '@angular/cdk/overlay';
-import {Observable, of, Subject} from 'rxjs';
-import {MatDrawerToggleResult} from '@angular/material/sidenav';
-import {Role, User, UserCreate} from '../../../../../../../core/user/user.types';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
-import {CommonService} from '../../../../../../../core/common/services/common.service';
-import {
-    Department,
-    District,
-    Institute,
-    IPagination,
-    Province
-} from '../../../../../../../core/common/interfaces/common.interface';
-import {debounceTime, map, subscribeOn, takeUntil} from 'rxjs/operators';
-import {UserService} from '../../../../../../../core/user/user.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { Role, User, UserCreate } from 'app/core/user/user.types';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { CommonService } from 'app/core/common/services/common.service';
+import { Department, District, Institute, Province } from 'app/core/common/interfaces/common.interface';
+import { UserService } from 'app/core/user/user.service';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { ListComponent } from '../list/list.component';
+import { UserValidator } from '../../validators/user.validator';
 
 @Component({
     selector: 'app-add-edit',
@@ -38,18 +35,20 @@ import {FuseConfirmationService} from '../../../../../../../../@fuse/services/co
 export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
-
     id: number;
     user: User;
-
     userForm: FormGroup;
-
     departments$: Observable<Department[]>;
     provinces$: Observable<Province[]>;
     districts$: Observable<District[]>;
     institutes$: Observable<Institute[]>;
     roles$: Observable<Role[]>;
-
+    displayPassword = {
+        icon: 'heroicons_solid:eye',
+        field: 'password',
+        visible: false
+    };
+    avatarUrl: SafeUrl;
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -61,6 +60,8 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         private _listComponent: ListComponent,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private confirmationService: CustomConfirmationService,
+        private domSanitizer: DomSanitizer,
     ) {
         this._activatedRoute
             .params
@@ -83,23 +84,43 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         // Create the contact form
         this.userForm = this._formBuilder.group({
             id: [''],
-            avatar: [null],
-            username: [''],
-            password: ['', [Validators.required]],
+            avatarFile: [null],
+            username: ['', [Validators.required]],
+            password: [null],
             firstName: [''],
             lastName: [''],
             role: ['', [Validators.required]],
             email: ['', [Validators.email]],
-            dni: ['', [Validators.required]],
+            dni: ['',
+                {
+                    validators: [
+                        Validators.required,
+                        Validators.maxLength(8),
+                        Validators.minLength(8)
+                    ],
+                    updateOn: 'blur'
+                }
+            ],
             institution: [''],
             jobTitle: [''],
-            department: [''],
-            province: [{value: '', disabled: true}],
+            department: ['', {
+                updateOn: 'blur'
+            }],
+            province: [
+                {
+                    value: '', disabled: true
+                },
+                {
+                    updateOn: 'blur'
+                }
+            ],
             district: [{value: '', disabled: true}],
             observation: [''],
             isActive: [true, [Validators.required]],
+        },{
+            validators: [UserValidator.passwordRequired],
+            updateOn: 'blur' // todo: change submit
         });
-
     }
 
     ngAfterViewInit(): void {
@@ -141,6 +162,8 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.id) {
             this._userService.getUserById(this.id)
                 .subscribe((response: User) => {
+                    this.user = response;
+                    this.avatarUrl = this.user?.avatar;
                     this.userForm.patchValue(response, {emitEvent: false});
                     const keys = ['role', 'institution', 'department', 'province', 'district'];
                     keys.forEach((key: string) => {
@@ -189,21 +212,20 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        const allowedTypes = ['image/jpeg', 'image/png'];
         const file = fileList[0];
+        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
 
         // Return if the file is not allowed
         if (!allowedTypes.includes(file.type)) {
             return;
         }
-
-        // Upload the avatar
-        // this._contactsService.uploadAvatar(this.contact.id, file).subscribe();
+        this.userForm.get('avatarFile').setValue(file);
+        this.avatarUrl = this.domSanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
     }
 
     removeAvatar(): void {
         // Get the form control for 'avatar'
-        const avatarFormControl = this.userForm.get('avatar');
+        const avatarFormControl = this.userForm.get('avatarFile');
 
         // Set the avatar as null
         avatarFormControl.setValue(null);
@@ -212,7 +234,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         this._avatarFileInput.nativeElement.value = null;
 
         // Update the contact
-        this.user.avatar = null;
+        this.avatarUrl = null;
     }
 
     /**
@@ -229,15 +251,34 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
      * Update the contact
      */
     updateContact(): void {
-        if (this.userForm.valid && this.userForm.dirty) {
+        if (this.userForm.valid) {
             const payload: UserCreate = this.userForm.getRawValue();
-            payload.username = payload.dni;
-            this.createOrUpdateUser(payload).subscribe((user: User) => {
-                this._userService._refreshUsers.next();
-                this._router.navigate(['security', 'users', user.id]);
-            });
+            this.createOrUpdateUser(payload).subscribe(
+                (user: User) => {
+                    this._userService._refreshUsers.next();
+                    this._router.navigate(['security', 'users', user.id]);
+
+                    this.confirmationService.success(
+                        'Registro de usuarios',
+                        'Se guardo el registro correctamente'
+                    );
+                },
+                (error) => {
+                    let msg = 'Error al guardar el usuario, verifique la informacion ingresada';
+                    if ('username' in error?.error) {
+                        msg = error?.error.username;
+                    }
+                    this.confirmationService.error(
+                        'Registro de usuarios', msg
+                    );
+                }
+            );
         } else {
-            this.userForm.markAllAsTouched();
+            this.checkErrors();
+            this.confirmationService.error(
+                'Registro de usuarios',
+                'Error al guardar el usuario, verifique la informacion ingresada'
+            );
         }
     }
 
@@ -246,7 +287,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     createOrUpdateUser(payload: UserCreate): Observable<any> {
         if (payload?.id) {
-            return this._userService.updateUserById(payload);
+            return this._userService.updateUserById(this.removeNullInUpdate(payload));
         }
         return this._userService.createUser(payload);
     }
@@ -281,5 +322,51 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._router.navigate(['security', 'users']);
             }
         });
+    }
+
+    onDniToUser(): void {
+        const id = this.userForm.get('id');
+        const dni = this.userForm.get('dni');
+        const username = this.userForm.get('username');
+
+        if ((dni.value && dni.value !== '') && (username.value === '' || !username.value)) {
+            username.setValue(dni.value);
+        }
+        else if (id.value === '' &&  (dni.value && dni.value !== '') && (!username.dirty && !username.touched)) {
+            username.setValue(dni.value);
+        }
+    }
+
+    showPassword(): void {
+        const showIcon = 'heroicons_solid:eye';
+        const hideIcon = 'heroicons_solid:eye-off';
+        const passwordField = 'password';
+        const textfield = 'text';
+        this.displayPassword.visible = !this.displayPassword.visible;
+        this.displayPassword.icon = (this.displayPassword.visible) ? hideIcon : showIcon;
+        this.displayPassword.field = (this.displayPassword.visible) ? textfield: passwordField;
+    }
+
+    get f(): {[key: string]: AbstractControl} {
+        return this.userForm.controls;
+    }
+
+    private checkErrors(): void {
+        if (this.userForm.errors?.passwordIsRequired) {
+            this.userForm.get('password').setErrors({required: true});
+        }
+    }
+
+    private removeNullInUpdate(object: UserCreate): UserCreate {
+        if (!object?.id) {
+            return object;
+        }
+
+        for (const property in object) {
+            if(object[property] === null) {
+                delete object[property];
+            }
+        }
+        return object;
     }
 }

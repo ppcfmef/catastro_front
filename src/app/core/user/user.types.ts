@@ -37,8 +37,9 @@ export interface User {
 export interface UserCreate {
     id: number;
     avatar?: string;
+    avatarFile?: File;
     username: string;
-    password: string;
+    password?: string;
     firstName?: string;
     lastName?: string;
     email: string;

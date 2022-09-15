@@ -1,9 +1,9 @@
+import {map} from 'rxjs/operators';
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {PermissionService} from '../../../../../../../shared/services/permission.service';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {NavigationView, TypePermission} from '../../../../../../../shared/models/permission.interface';
-import {Observable, of} from 'rxjs';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {PermissionService} from 'app/shared/services/permission.service';
+import {TypePermission} from 'app/shared/models/permission.interface';
+
 
 @Component({
     selector: 'app-permission-list',
@@ -25,26 +25,23 @@ export class PermissionListComponent implements OnInit, OnChanges {
     ) {
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {}
+
+    async ngOnChanges(changes: SimpleChanges): Promise<void> {
         this.columnsToDisplay = await this.getDisplayedColumns();
         this.dataSource.data = await this.getDataSource();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
         if (changes.permissions.currentValue) {
             this.setValuesPermissionOfTable(this.permissions);
         }
     }
 
     setValuesPermissionOfTable(permissions = []): void {
-        console.log('permissions ==>', permissions);
         if (permissions?.length > 0) {
             permissions.forEach((permission) => {
                 const dataSource = this.dataSource.data;
                 const elementFound = dataSource.find((element: any) => element.id === permission.navigationView);
                 elementFound[permission.type] = true;
             });
-            console.log('data', this.dataSource.data);
         }
     }
 
@@ -81,8 +78,19 @@ export class PermissionListComponent implements OnInit, OnChanges {
     }
 
 
-    updatePermission(key, element): void {
-        console.log(key, element);
+    updatePermission(permission, record): void {
+        const genericPermission = permission.split('_')[0];
+
+        for (const data of this.dataSource.data) {
+            if(data?.id === record?.id) {
+                for (const col of this.columnsToDisplay) {
+                    if (col !== permission && col.startsWith(genericPermission)) {
+                        data[col] = false;
+                    }
+                }
+                break;
+            }
+        }
     }
 
     parsedResponse(): any {
