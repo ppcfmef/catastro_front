@@ -8,9 +8,13 @@ const routes: Routes = [
   {path: '', component: MappingComponent},
   {path: 'basic', component: BasicMappingPage},
   {
-      path: 'carga',
+      path: 'update',
       loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
   },
+  {
+    path: 'management-upload',
+    loadChildren: () => import('./management-upload/management-upload.module').then(m => m.ManagementUploadModule)
+},
   {
     path: 'metadata',
     loadChildren: () => import('./metadata/metadata.module').then(m => m.MetadataModule)

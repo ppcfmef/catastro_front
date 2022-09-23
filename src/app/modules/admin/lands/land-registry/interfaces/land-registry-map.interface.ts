@@ -77,4 +77,5 @@ export interface LandRegistryMap {
     side: string;
     ranNum: string;
     streetBlock: string;
+    rangCup: string;
 }

@@ -83,9 +83,9 @@ export class MapUtils {
                 if (key.includes('.')) {
                     delete attr[key];
                 }
-                else if (key === 'OBJECTID') {
+                /*else if (key === 'OBJECTID') {
                     delete attr[key];
-                }
+                }*/
             }
 
             if (feature.geometry) {

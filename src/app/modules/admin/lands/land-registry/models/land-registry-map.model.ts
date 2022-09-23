@@ -79,7 +79,8 @@ export class LandRegistryMapModel implements LandRegistryMap{
     side: string;
     ranNum: string;
     streetBlock: string;
-
+    rangCup: string;
+    //RAN_CPU
     //DEPARTURE
     constructor(l?: LandRegistryMap){
         this.idObjectImg =l?.idObjectImg;
@@ -156,6 +157,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.side=l?.side;
         this.ranNum=l?.ranNum;
         this.streetBlock=l?.streetBlock;
+        this.rangCup= l?.rangCup;
 
     }
 

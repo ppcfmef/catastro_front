@@ -9,6 +9,10 @@
 //const host ='http://localhost:8001/';
 const host = 'http://54.83.44.96/';
 
+//const host ='http://90c7-38-25-18-121.ngrok.io';
+
+//const host = 'http://05f8-38-25-18-121.ngrok.io/';
+//const host = 'http://b925-38-25-18-121.ngrok.io/';
 export const environment = {
     production: false,
     url: host,

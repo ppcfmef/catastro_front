@@ -69,6 +69,12 @@ export interface Predio {
         COD_CUC: string;
 // eslint-disable-next-line @typescript-eslint/naming-convention
     AREA: number;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    RAN_CPU: number;
+     // eslint-disable-next-line @typescript-eslint/naming-convention
+    COD_UI: number;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+    COD_VER: number;
 }
 
 

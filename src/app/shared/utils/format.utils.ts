@@ -42,6 +42,7 @@ export class FormatUtils {
         land.side=lote.LADO;
         land.ranNum=lote.RAN_NUM;
         land.streetBlock=lote.CUADRA;
+        land.rangCup = lote.RAN_CPU;
 
     return land;
 
@@ -217,8 +218,10 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
          LADO: land.side,
          RAN_NUM : land.ranNum,
-         CUADRA : land.streetBlock
-
+         CUADRA : land.streetBlock,
+         RAN_CPU : parseInt(land.rangCup,10),
+         COD_UI: parseInt(land.cup.substring(8,12),10),
+         COD_VER : parseInt(land.cup.substring(12,13),10)
     };
     return predio;
 

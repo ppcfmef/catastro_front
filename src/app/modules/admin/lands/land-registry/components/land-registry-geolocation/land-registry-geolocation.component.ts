@@ -870,6 +870,8 @@ this.landRegistryService.getLandOwner()
                                                 'Asignar Lote',
                                                 'Desea asignar este lote?'
                                             );
+
+                                            
                                            /*
                                            dialogRef = this.confirmationService.info(
                                                 'Actualizar Predio',
@@ -1689,6 +1691,7 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
+            
             const urlBase=`${_layer.urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);

@@ -40,7 +40,7 @@ export class BasicMappingPage implements OnInit {
         this.userUbigeo =
             this.user.ubigeo && this.user.ubigeo
                 ? this.user.ubigeo
-                : '140204';
+                : '150101';
           this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
             console.log(data);
 
@@ -48,9 +48,10 @@ export class BasicMappingPage implements OnInit {
             this.x=ext.x;
             this.y=ext.y;
             console.log(this.x,this.y);
-            this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}`;
-            //this.urlString=this.urlString+`&extent=${this.x},${this.y}&level=${this.zoom}`;
+            this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&query=limites_nacional_1821_2,UBIGEO=${this.userUbigeo}`;
+            console.log('this.urlString',this.urlString);
             this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlString);
+
         });
        /* this.idCargo = this.user.placeScope.id;
         setTimeout(() => {

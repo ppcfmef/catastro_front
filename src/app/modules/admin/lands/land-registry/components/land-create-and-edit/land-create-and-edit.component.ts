@@ -89,6 +89,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled}],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled}],
       longitude: [{ value: this.landMergeRecord?.longitude, disabled}],
+      ranCup:[{ value: this.landMergeRecord?.rangCup, disabled}]
     });
 
     this.setTitle();

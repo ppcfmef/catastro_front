@@ -159,9 +159,8 @@ export class LandRegistryMapService {
 
         const layer = new FeatureLayer(url);
 
-
         const query = layer.createQuery();
-        query.where = `UBIGEO='${value.ubigeo}'`;
+        query.where = `UBIGEO='${value.ubigeo}' and RAN_CPU='${value.rangCup}'`;
 
         const maxCPUStatistics={
             onStatisticField: 'COD_CPU',  // service field for 2015 population
@@ -194,7 +193,8 @@ export class LandRegistryMapService {
     const response=await layer.queryFeatures(query);
 const stats = response.features[0].attributes;
 console.log('Max cpu:' ,stats.max_COD_CPU);
-const rangCPU=stats.max_COD_CPU.substring(0,8);
+//const rangCPU=stats.max_COD_CPU.substring(0,8);
+const rangCPU=value.rangCup;
 console.log('stats.max_COD_CPU.substring(8,12)',stats.max_COD_CPU.substring(8,12));
 const unidadImb=stats.max_COD_CPU.substring(8,12) && stats.max_COD_CPU.substring(8,12)!=='NaNN'?stats.max_COD_CPU.substring(8,12):'0000';
 
@@ -208,8 +208,8 @@ let s=0;
     for(let i=0;i< temp.length ;i++){
         s=parseInt(temp[i],10)*factores[0]+s;
     }
-
-    const v=11 - s%11;
+    //let v = 11-s%11;
+    const v=([11,10].includes(s%11))?s%11: 11-s%11;
 
 
 //const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;

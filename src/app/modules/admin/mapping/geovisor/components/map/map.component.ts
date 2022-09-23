@@ -391,10 +391,12 @@ export class MapComponent implements OnInit, AfterViewInit {
         const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
         const _layers=(_imageLayer )?_imageLayer.layers:[];
         const _layer= _layers.find((l: any)=> l.id===params.featureId);
-        this.proj4DestWkid = params.projection;
+        //this.proj4DestWkid = params.projection;
+
+        this.proj4DestWkid = _imageLayer.wkid;
         this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
         const nameZip = `${_imageLayer.title}_${_layer.name}_${params.namedistrict}.zip`;
-
+        console.log('this.proj4DestWkid>>',this.proj4DestWkid);
         const [
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FeatureLayer,
@@ -450,7 +452,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             );
         }
 
-
     }
 
 
@@ -502,6 +503,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                         );
                     })
                     .catch((error) => {
+                        this._fuseSplashScreenService.hide();
                         this._messageProviderService.showAlert(
                             'Registrados no cargados'
                         );

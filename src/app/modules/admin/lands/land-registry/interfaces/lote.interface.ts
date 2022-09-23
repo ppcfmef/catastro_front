@@ -61,6 +61,8 @@ export interface Lote {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
     AREA: number;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+    RAN_CPU: string;
 }
 
 
