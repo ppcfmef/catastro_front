@@ -75,16 +75,17 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onChangePage(paginator: MatPaginator): void {
     const rawValue = this.formFilters.getRawValue();
-    const search = rawValue?.search || null;
+    const search = rawValue?.search || '';
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     const queryParams = { limit, offset, search };
 
-    this._landOwnerService.getList(queryParams).toPromise().then(
-      (response: IPagination<LandOwner>) => {
-        this.dataSource = response.results;
-        this.lengthOwner = response.count;
-    });
+    this.landRecordService.getList(queryParams).subscribe(
+      (response) => {
+        this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
+      }
+    );
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
