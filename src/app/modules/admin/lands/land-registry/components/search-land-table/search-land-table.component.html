@@ -28,6 +28,21 @@
           {{ element.cpm }}
         </td>
     </ng-container>
+
+    <ng-container matColumnDef="idPlot">
+        <th mat-header-cell *matHeaderCellDef> ID Lote</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.idPlot }}
+        </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="idCartographicImg">
+        <th mat-header-cell *matHeaderCellDef> ID Imagen</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.idCartographicImg }}
+        </td>
+    </ng-container>
     
     <ng-container matColumnDef="habilitacionName">
         <th mat-header-cell *matHeaderCellDef> Nombre habilitacion</th>

@@ -55,18 +55,6 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.dataSourceLands = response.results;
         this.lengthLandsOwner = response.count;
     });
-
-    this.formFilters.valueChanges.pipe(
-      switchMap(() => {
-        const rawValue = this.formFilters.getRawValue();
-        const search = rawValue?.search || null;
-        const queryParams = { search };
-        return this.landRecordService.getList(queryParams);
-      })
-    ).subscribe((response: IPagination<LandRecord>) => {
-      this.dataSourceLands = response.results;
-      this.lengthLandsOwner = response.count;
-    });
   }
 
   ngOnDestroy(): void {
@@ -103,6 +91,27 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onDowloandCroquis(): void{
     this.landRecordService.setLandRecordDownloadCroquis(true);
+  }
+
+  onClickSearch(): void {
+    const rawValue = this.formFilters.getRawValue();
+    const search = rawValue?.search || null;
+    const queryParams = { search };
+    this.landRecordService.getList(queryParams)
+    .subscribe((response: IPagination<LandRecord>) => {
+      this.dataSourceLands = response.results;
+      this.lengthLandsOwner = response.count;
+    });
+  }
+
+  onCleanSearch(): void {
+    this.formFilters.get('search').setValue(null);
+    this.ownerLandSubscription = this.landRecordService.getList({limit: 10})
+    .subscribe(
+      (response: IPagination<LandRecord>) => {
+        this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
+    });
   }
 
   private createFormFilters(): void {

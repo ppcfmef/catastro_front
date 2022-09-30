@@ -1,6 +1,8 @@
 export interface LandRecord {
   cup: string;  // codigo unico patrimonial
   cpm: string;  // codigo patrimonial municipio
+  idPlot: string;
+  idCartographicImg: string;
   ubigeo: string;
   habilitacionName: string;
   steetName: string;

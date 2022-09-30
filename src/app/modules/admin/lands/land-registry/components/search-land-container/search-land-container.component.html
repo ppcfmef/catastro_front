@@ -1,10 +1,21 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12">      
-      <input type="text" matInput formControlName="search"
-             placeholder="Buscar por dirección"
-             autocomplete="off">
-      <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
-  </mat-form-field>
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">      
+    <input type="text" matInput formControlName="search"
+           placeholder="Buscar por CPU - ID lote o ID Imagen"
+           autocomplete="off">
+        <mat-icon
+          [matTooltip]="'Mostrar contraseña'"
+          class="hidden sm:flex icon-size-5"
+          [svgIcon]="'heroicons_solid:x'"
+          (click)="onCleanSearch()"
+        ></mat-icon>
+        <button mat-flat-button
+        [color]="'primary'"
+        (click)="onClickSearch()"
+        >
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+        </button>
+</mat-form-field>
 </div>
 
 <app-search-land-table  
@@ -29,15 +40,5 @@
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
 
   </div>
-
-  <!--<button (click) >CROQUIS</button>
-       <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary"
-                (click)="buscar()"  >
-            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
-            <span class="ml-2 mr-1">Buscar</span>
-        </button>
-  
-  
-  -->
   
 </div>

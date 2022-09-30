@@ -16,8 +16,8 @@ export class SearchLandTableComponent implements OnInit {
   @Output() showLandMap: EventEmitter<LandRecord> = new EventEmitter();
 
   displayedColumns = [
-    'nro', 'ubigeo', 'landCode', 'municipalLandCode', 'habilitacionName', 'steetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber', 'municipalNumber',
-    'creationDate', 'map'
+    'nro', 'ubigeo', 'landCode', 'municipalLandCode', 'idPlot', 'idCartographicImg', 'habilitacionName', 'steetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber',
+    'municipalNumber', 'creationDate', 'map'
   ];
   pageIndex = 0;
   pageSize = 10;
