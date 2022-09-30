@@ -11,14 +11,14 @@ import { LandRecord } from '../../interfaces/land-record.interface';
 export class SearchLandTableComponent implements OnInit {
 
   @Input() dataSource: LandRecord[];
+  @Input() length: number = 0;
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
   @Output() showLandMap: EventEmitter<LandRecord> = new EventEmitter();
 
   displayedColumns = [
-    'nro', 'landCode', 'municipalLandCode', 'habilitacionName', 'steetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber', 'site', 'municipalNumber',
-    'alternateNumber', 'dptoNumber', 'indoor', 'block', 'map'
+    'nro', 'ubigeo', 'landCode', 'municipalLandCode', 'habilitacionName', 'steetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber', 'municipalNumber',
+    'creationDate', 'map'
   ];
-  count = 0;
   pageIndex = 0;
   pageSize = 10;
 
@@ -28,6 +28,7 @@ export class SearchLandTableComponent implements OnInit {
   }
 
   onPage(paginator: MatPaginator): void {
+    this.pageIndex = paginator.pageIndex;
     this.changePage.emit(paginator);
   }
 

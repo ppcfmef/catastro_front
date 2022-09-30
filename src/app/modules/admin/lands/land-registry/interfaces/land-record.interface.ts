@@ -18,4 +18,5 @@ export interface LandRecord {
   landArea: number;
   builtArea: number;
   owner: number;
+  creationDate?: string;
 }

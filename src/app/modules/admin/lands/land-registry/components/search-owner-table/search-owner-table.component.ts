@@ -11,11 +11,11 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
 export class SearchOwnerTableComponent implements OnInit {
 
   @Input() dataSource: LandOwner[];
+  @Input() length: number = 0;
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
   @Output() showLandsTable: EventEmitter<LandOwner> = new EventEmitter();
 
-  displayedColumns = ['nro', 'documentType', 'dni', 'paternalSurname', 'maternalSurname', 'name', 'lands'];
-  count = 0;
+  displayedColumns = ['nro', 'documentType', 'dni', 'paternalSurname', 'maternalSurname', 'name', 'creationDate', 'lands'];
   pageIndex = 0;
   pageSize = 10;
 
@@ -25,6 +25,7 @@ export class SearchOwnerTableComponent implements OnInit {
   }
 
   onPage(paginator: MatPaginator): void {
+    this.pageIndex = paginator.pageIndex;
     this.changePage.emit(paginator);
   }
 

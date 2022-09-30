@@ -33,7 +33,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   dataSource: LandOwner[] = [];
   dataSourceLands: LandRecord[] = [];
-
+  lengthOwner: number = 0;
+  lengthLandsOwner: number = 0;
   landOwner: LandOwner;
   landRecord: LandRecord;
 
@@ -52,6 +53,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     .subscribe(
       (response: IPagination<LandOwner>) => {
         this.dataSource = response.results;
+        this.lengthOwner = response.count;
     });
 
     this.formFilters.valueChanges.pipe(
@@ -63,6 +65,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
       })
     ).subscribe((response: IPagination<LandOwner>) => {
       this.dataSource = response.results;
+      this.lengthOwner = response.count;
     });
   }
 
@@ -80,6 +83,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     this._landOwnerService.getList(queryParams).toPromise().then(
       (response: IPagination<LandOwner>) => {
         this.dataSource = response.results;
+        this.lengthOwner = response.count;
     });
   }
 
@@ -87,8 +91,26 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     this.showLandsTable = true;
     this.showLandsMap = false;
     this.landOwner = landOwner;
-    this.landRecordService.getAllBy(landOwner.id).subscribe(
-      response => this.dataSourceLands = response.results
+    const queryParams = { limit: 10, owner: this.landOwner.id };
+    this.landRecordService.getList(queryParams).subscribe(
+      (response) => {
+        this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
+      }
+    );
+  }
+
+  onChangePageLand(paginator: MatPaginator): void {
+    const owner = this.landOwner.id;
+    const limit = paginator.pageSize;
+    const offset = limit * paginator.pageIndex;
+    const queryParams = { limit, offset, owner };
+
+    this.landRecordService.getList(queryParams).subscribe(
+      (response) => {
+        this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
+      }
     );
   }
 

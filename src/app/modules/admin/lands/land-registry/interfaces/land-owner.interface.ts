@@ -28,4 +28,5 @@ export interface LandOwner {
   taxAddress?: string;  // ToDo: resume for address
   numberLands?: number;
   address?: OwnerAddress;
+  creationDate?: string;
 }

@@ -6,6 +6,13 @@
             {{ (pageIndex * pageSize) + i + 1 }}
         </td>
     </ng-container>
+
+    <ng-container matColumnDef="ubigeo">
+        <th mat-header-cell *matHeaderCellDef> Ubigeo</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.ubigeo }}
+        </td>
+    </ng-container>
     
     <ng-container matColumnDef="landCode">
         <th mat-header-cell *matHeaderCellDef> Código único de predio</th>
@@ -31,7 +38,7 @@
     <ng-container matColumnDef="steetName">
         <th mat-header-cell *matHeaderCellDef> Nombre de via </th>
         <td mat-cell *matCellDef="let element">
-            {{ element.steetName }}
+            {{ element.streetName }}
         </td>
     </ng-container>
     
@@ -50,51 +57,23 @@
     </ng-container>
 
     <ng-container matColumnDef="roadBlockNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro de cuadra de la via </th>
+        <th mat-header-cell *matHeaderCellDef> Nro cuadra </th>
         <td mat-cell *matCellDef="let element">
             {{ element.roadBlockNumber }}
         </td>
     </ng-container>
 
-    <ng-container matColumnDef="site">
-        <th mat-header-cell *matHeaderCellDef> Lado </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.site }}
-        </td>
-    </ng-container>
-
     <ng-container matColumnDef="municipalNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro municipal </th>
+        <th mat-header-cell *matHeaderCellDef> Nro </th>
         <td mat-cell *matCellDef="let element">
             {{ element.municipalNumber }}
         </td>
     </ng-container>
 
-    <ng-container matColumnDef="alternateNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro alterno </th>
+    <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Fecha Registro </th>
         <td mat-cell *matCellDef="let element">
-            {{ element.alternateNumber }}
-        </td>
-    </ng-container>
-
-    <ng-container matColumnDef="dptoNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro Departamento </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.dptoNumber }}
-        </td>
-    </ng-container>
-
-    <ng-container matColumnDef="indoor">
-        <th mat-header-cell *matHeaderCellDef> Interior </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.indoor }}
-        </td>
-    </ng-container>
-
-    <ng-container matColumnDef="block">
-        <th mat-header-cell *matHeaderCellDef> Bloque </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.block }}
+            {{ element.creationDate | date: 'dd/MM/yyyy' }}
         </td>
     </ng-container>
     
@@ -116,7 +95,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator [length]="dataSource.length"
+  <mat-paginator [length]="length"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"

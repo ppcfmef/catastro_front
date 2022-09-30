@@ -10,12 +10,16 @@
   </mat-form-field>
   
 </div>
-<app-search-owner-table [dataSource]="dataSource"
+<app-search-owner-table
+[dataSource]="dataSource"
+[length]="lengthOwner"
 (changePage)="onChangePage($event)"
 (showLandsTable)="onShowLandsTable($event)"></app-search-owner-table>
 
-<app-search-land-table *ngIf="showLandsTable" [dataSource]="dataSourceLands"
-(changePage)="onChangePage($event)"
+<app-search-land-table *ngIf="showLandsTable"
+[dataSource]="dataSourceLands"
+[length]="lengthLandsOwner"
+(changePage)="onChangePageLand($event)"
 (showLandMap)="onShowLandsMap($event)"></app-search-land-table>
 
 <div class="container-panel flex w-full" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">

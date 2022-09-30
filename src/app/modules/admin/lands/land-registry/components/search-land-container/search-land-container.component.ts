@@ -32,7 +32,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   dataSource: LandOwner[] = [];
   dataSourceLands: LandRecord[] = [];
-
+  lengthOwner: number = 0;
+  lengthLandsOwner: number = 0;
   landOwner: LandOwner;
   landRecord: LandRecord;
 
@@ -52,6 +53,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     .subscribe(
       (response: IPagination<LandRecord>) => {
         this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
     });
 
     this.formFilters.valueChanges.pipe(
@@ -63,6 +65,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       })
     ).subscribe((response: IPagination<LandRecord>) => {
       this.dataSourceLands = response.results;
+      this.lengthLandsOwner = response.count;
     });
   }
 
@@ -80,6 +83,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     this._landOwnerService.getList(queryParams).toPromise().then(
       (response: IPagination<LandOwner>) => {
         this.dataSource = response.results;
+        this.lengthOwner = response.count;
     });
   }
 
@@ -87,6 +91,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     this._landOwnerService.getDetail(landRecord.owner).subscribe(
       (response) => {
         this.dataSource = response.results;
+        this.lengthOwner = response.count;
         this.landOwner = response.results[0];
         this.landRecord = landRecord;
         this.showOwnerTable = true;

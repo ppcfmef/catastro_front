@@ -7,11 +7,15 @@
   </mat-form-field>
 </div>
 
-<app-search-land-table  [dataSource]="dataSourceLands"
+<app-search-land-table  
+[dataSource]="dataSourceLands"
+[length]="lengthLandsOwner"
 (changePage)="onChangePage($event)"
 (showLandMap)="onShowLandsMap($event)"></app-search-land-table>
 
-<app-search-owner-table *ngIf="showOwnerTable" [dataSource]="dataSource"
+<app-search-owner-table *ngIf="showOwnerTable"
+[dataSource]="dataSource"
+[length]="lengthOwner"
 (changePage)="onChangePage($event)"></app-search-owner-table>
 
 
