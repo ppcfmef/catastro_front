@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { LandRecord } from '../interfaces/land-record.interface';
+import { LandRecordSummary } from '../interfaces/land-record-summary.interface';
 
 
 @Injectable({
@@ -36,5 +37,9 @@ export class LandRecordService {
 
   getLandRecordDownloadCroquis(): Observable<boolean> {
     return this._landRecordDownloadCroquis$;
+  }
+
+  getSummary(): Observable<LandRecordSummary> {
+    return this.http.get<LandRecordSummary>(`${this.apiUrl}/lands/summary/`);
   }
 }

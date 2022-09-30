@@ -24,14 +24,14 @@
 
   <!-- Main -->
   <div class="flex flex-col flex-auto p-6 sm:p-10">
-    <div class="flex justify-center pb-10">
+    <div class="flex justify-center pb-10" *ngIf="summary">
         <div class="block-icon">
             <div class="flex items-center justify-center p-4 rounded-full bgIcon">
                 <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
             </div>
             <div class="block-text">
                 <p>Predios Registrados</p>
-                <h5>123</h5>
+                <h5>{{ summary.totalRecords }}</h5>
             </div>
         </div>
 
@@ -42,18 +42,18 @@
             </div>
             <div class="block-text">
                 <p>Predios con Cartografia</p>
-                <h5>123</h5>
+                <h5>{{ summary.mappingRecords }}</h5>
             </div>
         </div>
 
-        <div class="block-icon blue">
+        <div class="block-icon red">
             
             <div class="flex items-center justify-center p-4 rounded-full bgIcon">
                 <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
             </div>
             <div class="block-text">
-                <p>Predios Registrados</p>
-                <h5>123</h5>
+                <p>Predios sin Cartografia</p>
+                <h5>{{ summary.withoutMappingRecords }}</h5>
             </div>
         </div>    
     </div>

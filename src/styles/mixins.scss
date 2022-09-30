@@ -165,8 +165,24 @@
             color: #668199;
           }
           
+        }
       }
-    }
+
+      &.red{
+        .bgIcon{
+          background-color: #f9ebe2;
+          mat-icon{
+            color: #997466;
+          }
+          
+        }
+        .block-text{
+          p,h5{
+            color: #997d66;
+          }
+          
+        }
+      }
     }
 }
 

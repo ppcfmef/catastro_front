@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ITabLayout } from 'app/core/common/interfaces/common.interface';
+import { LandRecordSummary } from '../../interfaces/land-record-summary.interface';
+import { LandRecordService } from '../../services/land-record.service';
 
 
 @Component({
@@ -16,12 +18,17 @@ export class SearchSumaryPage implements OnInit {
     {label: 'Consultar predio', route: '/land/registry/search/search-land'},
   ];
 
+  summary: LandRecordSummary;
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
+    private landRecordService: LandRecordService,
   ) { }
 
   ngOnInit(): void {
+    this.landRecordService.getSummary()
+    .subscribe(summary => this.summary = summary);
   }
 
   onGoToNewRecord(): void {
