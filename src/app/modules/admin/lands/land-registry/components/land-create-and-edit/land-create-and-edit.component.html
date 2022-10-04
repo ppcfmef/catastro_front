@@ -51,14 +51,14 @@
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
-            <mat-label>Tipo de resolución</mat-label>
+            <mat-label>Tipo Doc. Sustento</mat-label>
             <mat-select formControlName="resolutionType">
                 <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id"> {{domain.name}}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
-            <mat-label>Nro. resolución</mat-label>
+            <mat-label>Nro. Doc. Sustento</mat-label>
             <input matInput type="text" formControlName="resolutionDocument">
         </mat-form-field>
 
