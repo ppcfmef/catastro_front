@@ -1,5 +1,6 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">      
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">
+    <mat-label>Buscar</mat-label>   
     <input type="text" matInput formControlName="search"
            placeholder="Buscar por CPU - ID lote o ID Imagen"
            autocomplete="off">
@@ -15,7 +16,20 @@
         >
           <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
         </button>
-</mat-form-field>
+  </mat-form-field>
+
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12">
+    <mat-label>Estado</mat-label>
+    <mat-icon
+        matPrefix
+        class="hidden sm:flex icon-size-5"
+        [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+    <mat-select formControlName="is_active">
+        <mat-option>Todos</mat-option>
+        <mat-option [value]="true">Predios con Cartografia</mat-option>
+        <mat-option [value]="false">Predios sin Cartografia</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <app-search-land-table  

@@ -1,12 +1,11 @@
 <!-- Items list -->
 <ng-container *ngIf="navigationItems?.length > 0; else noItems">
-    <div class="flex flex-row gap-2">
+    <div class="flex flex-row gap-2" [ngClass]="{'flex-wrap': navigationItems?.length > 3}">
         <!-- Items -->
         <ng-container *ngFor="let item of navigationItems; trackBy:trackByFn">
-            <div class="w-4/12">
+            <div>
                 <app-card-menu-item (eventPageRedirect)="redirectPage(item)"
-                [bgColor]="'#67b4f1'"
-                                    [item]="item"></app-card-menu-item>
+                [bgColor]="'#67b4f1'" [item]="item"></app-card-menu-item>
             </div>
         </ng-container>
 
