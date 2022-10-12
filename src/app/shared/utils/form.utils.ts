@@ -9,8 +9,9 @@ export class FormUtils {
                     formData.append(k, `${(+rawValue[k])}`);
                 } else if (rawValue[k] === 0) {
                     formData.append(k, `${(rawValue[k])}`);
-                }
-                if (rawValue[k] !== '' && !!rawValue[k]) {
+                } else if (k === 'archivo' || k === 'file' || k === 'fileUpload') {
+                    formData.append(k, rawValue[k], rawValue[k]?.name);
+                } else if (rawValue[k] !== '' && !!rawValue[k]) {
                     formData.append(k, rawValue[k]);
                 }
             }

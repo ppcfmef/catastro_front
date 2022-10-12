@@ -22,4 +22,8 @@ export class UploadhistoryService {
   getList(queryParams: any): Observable<IPagination<UploadHistory>> {
     return this.http.get<IPagination<UploadHistory>>(`${this.apiUrl}/lands/registry/`, {params: queryParams});
   }
+
+  uploadFile(payload: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/lands/registry/`, payload);
+  }
 }

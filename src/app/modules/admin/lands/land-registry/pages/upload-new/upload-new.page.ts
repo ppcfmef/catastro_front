@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
 import { Router } from '@angular/router';
+import { UploadhistoryService } from '../../services/uploadhistory.service';
 
 @Component({
   selector: 'app-upload-new',
@@ -15,17 +16,17 @@ export class UploadNewPage implements OnInit {
   @ViewChild('uploadfile') uploadfileElement: ElementRef;
   uploadId: number;
   uploadForm = new FormGroup({
-      archivo: new FormControl(null, [Validators.required]),
+    fileUpload: new FormControl(null, [Validators.required]),
   });
   records: any;
 
   fileName: string;
 
   constructor(
-
       private _router: Router,
       private _ngxSpinner: NgxSpinnerService,
-      private _messageProviderService: MessageProviderService
+      private _messageProviderService: MessageProviderService,
+      private uploadService: UploadhistoryService,
   ) {
   }
 
@@ -34,7 +35,7 @@ export class UploadNewPage implements OnInit {
 
 
   get fileUpload(): FormControl {
-      return this.uploadForm.get('archivo') as FormControl;
+      return this.uploadForm.get('fileUpload') as FormControl;
   }
 
   async parseFormFile(): Promise<void> {
@@ -50,11 +51,18 @@ export class UploadNewPage implements OnInit {
   async uploadFormFile(payload: FormData): Promise<void> {
       try {
           this._ngxSpinner.show();
-          //const response = await this._filesService.leerExcel(payload).toPromise();
-          this._messageProviderService.showSnack('Cargado correctamente');
-          //this.records = response;
-          console.log(this.records);
-          this.resetControls();
+          this.uploadService.uploadFile(payload)
+          .subscribe(
+              (res) => {
+                this._messageProviderService.showSnack('Cargado correctamente');
+              },
+              (err) => {
+                this._messageProviderService.showSnackError('Error al cargar el archivo');
+              },
+              () => {
+                this.resetControls();
+              }
+          );
       } catch (err) {
           this.resetControls();
           this._messageProviderService.showSnackError('Error al cargar el archivo');
@@ -65,7 +73,7 @@ export class UploadNewPage implements OnInit {
   resetControls(isResetAll = false): void {
       this.uploadfileElement.nativeElement.value = null;
       this.fileName = null;
-      this.uploadForm.get('archivo').reset();
+      this.uploadForm.get('fileUpload').reset();
       this.uploadForm.markAsPristine();
       this._ngxSpinner.hide();
       if (isResetAll) {
