@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     Input,
+    OnDestroy,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -44,7 +45,7 @@ import { MasterDomain } from '../../interfaces/master-domain.interface';
     templateUrl: './land-registry-geolocation.component.html',
     styleUrls: ['./land-registry-geolocation.component.scss'],
 })
-export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
+export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, OnDestroy  {
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
@@ -415,6 +416,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit {
         private _landRegistryService: LandRegistryService,
         private confirmationService: CustomConfirmationService
     ) {}
+    ngOnDestroy(): void {
+       this._messageProviderService=null;
+    }
 
 /*
 

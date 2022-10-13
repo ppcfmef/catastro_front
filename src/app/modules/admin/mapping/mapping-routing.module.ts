@@ -19,6 +19,11 @@ const routes: Routes = [
     path: 'metadata',
     loadChildren: () => import('./metadata/metadata.module').then(m => m.MetadataModule)
   }
+  ,
+  {
+    path: 'geovisor',
+    loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
+  }
 ];;
 
 @NgModule({
