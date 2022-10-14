@@ -416,15 +416,12 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         private _landRegistryService: LandRegistryService,
         private confirmationService: CustomConfirmationService
     ) {}
+
     ngOnDestroy(): void {
        this._messageProviderService=null;
     }
 
-/*
 
-this.landRegistryService.getLandOwner()
-    .subscribe(result => this.ownerId = result?.id);
-*/
     ngOnInit(): void {
 
         this._landRegistryService.getMasterDomain()
@@ -484,7 +481,7 @@ this.landRegistryService.getLandOwner()
 
                     console.log('land>>',land);
                     this._messageProviderService.showAlert(
-                        'Por favor elija una punto en el mapa'
+                        'Por favor elija un punto en el mapa'
                     );
                     this.landRegistryMapModel= new LandRegistryMapModel();
                     if(this.landOwner.id){

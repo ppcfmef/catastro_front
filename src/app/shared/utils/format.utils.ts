@@ -219,9 +219,9 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
          LADO: land.side,
          RAN_NUM : land.ranNum,
          CUADRA : land.streetBlock,
-         RAN_CPU : parseInt(land.rangCup,10),
-         COD_UI: parseInt(land.cup.substring(8,12),10),
-         COD_VER : parseInt(land.cup.substring(12,13),10)
+         RAN_CPU : land.cup? parseInt(land.cup.split('-')[0],10):null,
+         COD_UI: land.cup? parseInt(land.cup.split('-')[1],10):null,
+         COD_VER :land.cup? parseInt(land.cup.split('-')[2],10):null
     };
     return predio;
 
