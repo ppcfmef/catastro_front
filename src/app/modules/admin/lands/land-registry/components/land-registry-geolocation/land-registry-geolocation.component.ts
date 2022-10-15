@@ -1443,6 +1443,9 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                             // eslint-disable-next-line max-len
                             `Yo,${landOwner.name} ${landOwner.paternalSurname} ${landOwner.maternalSurname} ${landOwner.dni? ', identificado(a) con DNI/RUC Nº' +landOwner.dni :'' } ${(landOwner.phone|| landOwner.email) ?', con datos de contacto: ':''}   ${landOwner.phone?landOwner.phone:''}${landOwner.email?','+landOwner.email:''}; en pleno ejercicio de mis derechos ciudadanos `,
                                 colSpan: 2,
+                                styles: {
+                                    halign: 'justify',
+                                },
                         },
 
                     ],
@@ -1452,8 +1455,11 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                         {
                             content:
                              // eslint-disable-next-line max-len
-                            `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${uuType? uuType.name:''} ${land.habilitacionName? land.habilitacionName:'' } ${streetType?  ', '+streetType.name:' '}${land.streetName? land.streetName:''}${land.codMzn?', '+land.codMzn:''}${land.codLand?', '+land.codLand:''}${land.block?', '+land.block:''}${land.indoor?', '+land.indoor:''}${land.floor?', '+land.floor:''}${land.condominium?', '+land.condominium:''}${land.km?', '+land.km:''}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
+                            `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${uuType? uuType.name:''} ${land.habilitacionName? land.habilitacionName:'' } ${streetType?  ', '+streetType.name:' '}${(streetType && land.streetName)? ' '+land.streetName:''}  ${land.urbanMza?',Manzana '+land.urbanMza:''} ${land.urbanLotNumber?',Lote '+land.urbanLotNumber:''} ${land.block?',Bloque '+land.block:''}${land.municipalNumber?' ,Nro Puerta '+land.municipalNumber:''}${land.block?' ,Nro. Bloque '+land.block:''}${land.indoor?' ,Interior '+land.indoor:''}${land.indoor?' ,Piso '+land.indoor:''}${land.apartmentNumber? ' ,Nro. Dpto '+land.apartmentNumber:''}${land.km?' ,Kilometro '+land.km:''}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
                                 colSpan: 2,
+                                styles: {
+                                    halign: 'justify',
+                                },
                         },
 
                     ],
@@ -1504,10 +1510,21 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                                 //fontSize: 14,
                             },
                         },
+                    ],
+                    [
+                        // eslint-disable-next-line max-len
+                        {
+                            content: (land.cup)?` Codigo CPU: ${land.cup}`:` Codigo Imagen: ${land.idCartographicImg}` ,
+                            colSpan: 2,
+                            styles: {
+                                halign: 'center',
+                                fontStyle: 'bold',
+                                //fontSize: 14,
+                            },
+                        },
+                        
 
                     ],
-
-
 
                     [
 
@@ -1515,6 +1532,10 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                             // eslint-disable-next-line max-len
                             content: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedaden la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).',
                             colSpan: 2,
+
+                                styles: {
+                                    halign: 'justify',
+                                },
                         },
 
                     ],
