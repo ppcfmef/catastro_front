@@ -47,7 +47,7 @@
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
             <mat-label>Cod. predio municipal</mat-label>
-            <input matInput type="text" formControlName="cpm">
+            <input matInput type="text" formControlName="cpm" [readonly]="f.cpm !== '' || f.cpm !== null">
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
@@ -64,7 +64,7 @@
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
             <mat-label>Ubigeo</mat-label>
-            <input matInput type="text" formControlName="ubigeo">
+            <input matInput type="text" formControlName="ubigeo" readonly>
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
@@ -74,10 +74,12 @@
                 <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
             </mat-select>
         </mat-form-field>
+        <!--
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
             <mat-label>Código de Habilitación</mat-label>
             <input matInput type="text" formControlName="codUu">
         </mat-form-field>
+        -->
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
             <mat-label>Nombre de Habilitación</mat-label>
             <input matInput type="text" formControlName="habilitacionName">
