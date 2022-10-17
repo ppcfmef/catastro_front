@@ -131,6 +131,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       }else {
         this.saveLandApi(data);
       }
+     
     }else {
       this.confirmationService.error(
         'Registro de predio',
@@ -202,6 +203,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
           );
           this.resetForm();
           this.registerLand.emit(result);
+          setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
         },
         (error) => {
           this.confirmationService.error(
