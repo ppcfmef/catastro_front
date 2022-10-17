@@ -19,6 +19,7 @@ export class UploadNewPage implements OnInit {
     fileUpload: new FormControl(null, [Validators.required]),
   });
   records: any;
+  recordSumary: any;
 
   fileName: string;
 
@@ -54,10 +55,12 @@ export class UploadNewPage implements OnInit {
           this.uploadService.uploadFile(payload)
           .subscribe(
               (res) => {
+                  this.recordSumary = res;
                 this._messageProviderService.showSnack('Cargado correctamente');
               },
               (err) => {
                 this._messageProviderService.showSnackError('Error al cargar el archivo');
+                this.resetControls();
               },
               () => {
                 this.resetControls();

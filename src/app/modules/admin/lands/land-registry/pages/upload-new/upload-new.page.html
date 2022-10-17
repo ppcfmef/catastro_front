@@ -43,18 +43,21 @@
                             <div class="flex items-center justify-between py-3">
                                 <h3 class="text-secondary font-bold text-2xl">{{ fileName? fileName : "Nombre del Archivo"}}</h3>
                             </div>
-                            <div>
-                                <div class="text-secondary">Cantidad de Registros:</div>
-                                <div class="font-semibold">{{ (records?.validos?.length + records?.invalidos?.length) || 0 }}</div>
-                            </div>
-                            <div>
-                                <div class="text-secondary ">Registros válidos</div>
-                                <div class="text-green-500 font-semibold">{{ records?.validos?.length || 0 }}</div>
-                            </div>
-                            <div>
-                                <div class="text-secondary">Registros inválidos</div>
-                                <div class="text-red-500 font-semibold">{{ records?.invalidos?.length || 0 }}</div>
-                            </div>
+                            <ng-container *ngIf="recordSumary">
+                                <div>
+                                    <div class="text-secondary">Cantidad de Registros:</div>
+                                    <div class="font-semibold">{{ recordSumary?.total || 0 }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-secondary ">Registros válidos</div>
+                                    <div class="text-green-500 font-semibold">{{ recordSumary?.corrects || 0 }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-secondary">Registros inválidos</div>
+                                    <div class="text-red-500 font-semibold">{{ recordSumary.erros || 0 }}</div>
+                                </div>
+                            </ng-container>
+                            
                             <!---->
                         </div>
                     </div>                    
@@ -81,7 +84,7 @@
                     </div>
                 </div>
             </div>
-
+            <!--
             <div class="flex justify-center py-10">
                 <div class="block-icon">
                     
@@ -116,7 +119,8 @@
                     </div>
                 </div>
             </div>
-        
+            -->
+            <!--
             <div class="flex-row w-full">
                 <div *ngIf="records" class="flex flex-col gap-4">
                     <ng-container *ngIf="records?.invalidos?.length > 0">
@@ -129,6 +133,7 @@
                 <app-table-files styleTable="red" title="Registros Incorrectos" [records]="records" [posicionExcel]="true" isDownload="true"></app-table-files>
                 <app-table-files styleTable="green" title="Registros Validos" [records]="records" [posicionExcel]="false" isDownload="true"></app-table-files>
             </div>
+            -->
         </div>
     </div>
 </div>
