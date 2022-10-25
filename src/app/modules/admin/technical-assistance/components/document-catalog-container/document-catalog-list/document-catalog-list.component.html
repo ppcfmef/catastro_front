@@ -1,0 +1,20 @@
+<div class="flex flex-col w-full gap-4 p-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8 mt-8 sm:mt-10 ng-star-inserted">
+        <div class="flex flex-col h-auto rounded-2xl overflow-hidden px-10" *ngFor="let document of documents">
+            <a [href]="document.url" target="_blank">
+                <div class="flex flex-col max-w-100">
+                    <img [src]="document.thumbnail">
+                </div>
+                <div class="flex flex-col w-full mt-auto">
+                    <div class="relative h-0.5"></div>
+                    <div class="py-4 text-left dark:bg-transparent">
+                        <p class="title"><strong>{{document.title}}</strong></p>
+                        <p class="subtitle"><strong>{{document.description}}</strong></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <ng-content select="[paginator]"></ng-content>
+</div>
+
