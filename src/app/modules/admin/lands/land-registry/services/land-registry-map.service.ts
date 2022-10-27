@@ -101,7 +101,7 @@ export class LandRegistryMapService {
         else{
             return from(this.generateMaxCPU(value));
         }
-       
+
 
     }
 
@@ -178,29 +178,29 @@ export class LandRegistryMapService {
                 onStatisticField: 'COD_CPU',  // service field for 2015 population
                 outStatisticFieldName: 'max_COD_CPU',
                 statisticType: 'max'
-    
+
             };
-    
+
             const maxIDPREDIOStatistics={
                 onStatisticField: 'ID_PRED',  // service field for 2015 population
                 outStatisticFieldName: 'max_ID_PRED',
                 statisticType: 'max'
-    
+
             };
-    
-    
+
+
         query.outStatistics = [ maxCPUStatistics ,maxIDPREDIOStatistics];
-    
-    
-    
-    
+
+
+
+
         const response=await layer.queryFeatures(query);
-    
+
     const stats = response.features[0].attributes;
     console.log('Max cpu:' ,stats.max_COD_CPU);
     //const rangCPU=stats.max_COD_CPU.substring(0,8);
     const rangCPU=value.rangCup;
-    
+
     //console.log('stats.max_COD_CPU.substring(8,12)',stats.max_COD_CPU.substring(8,12));
     //const unidadImb=stats.max_COD_CPU.substring(8,12) && stats.max_COD_CPU.substring(8,12)!=='NaNN'?stats.max_COD_CPU.substring(8,12):'0000';
     let unidadImbNew = '0001';
@@ -208,25 +208,26 @@ export class LandRegistryMapService {
         const unidadImb=stats.max_COD_CPU.split('-')[1];
         unidadImbNew = FormUtils.zeroPad(parseInt(unidadImb,10)+1,4);
     }
-    
-    
+
+
     const factores=[2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7];
-    
+
     const temp=`${rangCPU}${unidadImbNew}`.split('').reverse().join('');
-    
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
+    /* eslint-disable @typescript-eslint/prefer-for-of */
     let s=0;
-        for(let i=0;i< temp.length ;i++){
-            s=parseInt(temp[i],10)*factores[0]+s;
-        }
-        //let v = 11-s%11;
-        const v=([11,10].includes(s%11))?s%11: 11-s%11;
-    
-    
+    for(let i=0;i< temp.length ;i++){
+        s=parseInt(temp[i],10)*factores[0]+s;
+    }
+    /* eslint-enable @typescript-eslint/prefer-for-of */
+    //let v = 11-s%11;
+    const v=([11,10].includes(s%11))?s%11: 11-s%11;
+
+
     //const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;
     const maxCPU =`${rangCPU}-${unidadImbNew}-${v}`;
-    
-    
+
+
     const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED, 10) +1 :1;
     //value.cup = maxCPU.toString();
     value.cup = maxCPU;

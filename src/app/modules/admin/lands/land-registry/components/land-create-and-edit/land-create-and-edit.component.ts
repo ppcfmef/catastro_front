@@ -131,7 +131,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       }else {
         this.saveLandApi(data);
       }
-     
+
     }else {
       this.confirmationService.error(
         'Registro de predio',

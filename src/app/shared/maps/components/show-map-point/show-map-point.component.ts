@@ -446,6 +446,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
         const columns = 3;
         let array1 = [];
 
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         legendJson.forEach((l, i) => {
             array1 = array1.concat([{ content: '' }, { content: l.layerName }]);
             // eslint-disable-next-line eqeqeq

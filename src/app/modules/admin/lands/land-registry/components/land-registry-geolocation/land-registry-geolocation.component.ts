@@ -726,7 +726,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     options['labelingInfo'] = [labelClassManzana];
                 }
 
-                 
+
                 l.featureLayer = new FeatureLayer(options);
             });
 
@@ -872,7 +872,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                 'Desea asignar este lote?'
                                             );
 
-                                            
+
                                            /*
                                            dialogRef = this.confirmationService.info(
                                                 'Actualizar Predio',
@@ -1522,7 +1522,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                                 //fontSize: 14,
                             },
                         },
-                        
+
 
                     ],
 
@@ -1713,7 +1713,7 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
-            
+
             const urlBase=`${_layer.urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);

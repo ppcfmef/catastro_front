@@ -6,6 +6,6 @@ export class ServiceLayer {
     visible: boolean;
     layers: any[];
     mapImageLayer: any;
-    wkid :number;
+    wkid: number;
 }
 

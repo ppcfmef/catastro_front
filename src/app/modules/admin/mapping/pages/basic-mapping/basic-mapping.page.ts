@@ -13,7 +13,7 @@ import {DomSanitizer,SafeResourceUrl,} from '@angular/platform-browser';
   styleUrls: ['./basic-mapping.page.scss']
 })
 export class BasicMappingPage implements OnInit {
-  
+
   @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     title = 'Actualizacion Cartografica';
@@ -64,7 +64,7 @@ urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=f37
           this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
             console.log(data);
             const utm = data.resources[0].utm;
-            this.urlString=this.urls.find((e)=>e.utm ===utm).urlString;
+            this.urlString=this.urls.find(e=>e.utm ===utm).urlString;
             const ext: any=data.extensions[0];
             this.x=ext.x;
             this.y=ext.y;

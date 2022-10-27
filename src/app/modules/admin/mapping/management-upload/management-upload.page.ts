@@ -50,24 +50,24 @@ export class ManagementUploadPage implements OnInit {
               this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
                 //console.log(data);
                 const utm = data.resources[0].utm;
-                this.urlString=this.urls.find((e)=>e.utm ===utm).urlString;
+                this.urlString=this.urls.find(e=>e.utm ===utm).urlString;
                 const ext: any=data.extensions[0];
                 this.x=ext.x;
                 this.y=ext.y;
                 //console.log(this.x,this.y);
                 if(this.urlString.includes('?')){
                     this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
-                
+
                 }
                 else{
                     this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
-                
+
                 }
                 //console.log('this.urlString',this.urlString);
                 this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlString);
-    
+
             });
-    
+
         });
 
 
