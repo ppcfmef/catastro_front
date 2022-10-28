@@ -80,13 +80,38 @@ export class PermissionListComponent implements OnInit, OnChanges {
 
     updatePermission(permission, record): void {
         const genericPermission = permission.split('_')[0];
-
         for (const data of this.dataSource.data) {
             if(data?.id === record?.id) {
                 for (const col of this.columnsToDisplay) {
                     if (col !== permission && col.startsWith(genericPermission)) {
                         data[col] = false;
                     }
+                }
+                const selectedPermission = [];
+                for (const x in data) {
+                    if (data[x] === true) {
+                        selectedPermission.push(x);
+                    }
+                }
+                // ToDo: debe ser dinamico el permiso
+                const hasRead = data['read'] || data['read_all'] || data['read_filter'];
+                const hasAdd = data['add'] || data['add_all'] || data['add_filter'];
+                const hasEdit = data['edit'] || data['edit_all'] || data['edit_filter'];
+                const hasDelete = data['delete'] || data['delete_all'] || data['delete_filter'];
+                if (!hasRead && genericPermission !== 'read') {
+                    data['read_filter'] = true;
+                }
+
+                if (!hasAdd && genericPermission !== 'add') {
+                    data['add_filter'] = true;
+                }
+
+                if (!hasEdit && genericPermission !== 'edit') {
+                    data['edit_filter'] = true;
+                }
+
+                if (!hasDelete && genericPermission !== 'delete') {
+                    data['delete_filter'] = true;
                 }
                 break;
             }
