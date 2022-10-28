@@ -256,7 +256,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
             this.createOrUpdateUser(payload).subscribe(
                 (user: User) => {
                     this._userService._refreshUsers.next();
-                    this._router.navigate(['security', 'users', user.id]);
+                    this._router.navigate(['security', 'users']);
 
                     this.confirmationService.success(
                         'Registro de usuarios',
