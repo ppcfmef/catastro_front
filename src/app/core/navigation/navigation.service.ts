@@ -42,7 +42,7 @@ export class NavigationService
      */
     get(): Observable<Navigation>
     {
-        return this._httpClient.get<FuseNavigationItem[]>(`${this._apiUrl}/common/navigation`).pipe(
+        return this._httpClient.get<FuseNavigationItem[]>(`${this._apiUrl}/common/navigation/`).pipe(
             map((navigation: FuseNavigationItem[]): Navigation => {
                 this._navigation.next({default: navigation});
                 return {default: navigation};

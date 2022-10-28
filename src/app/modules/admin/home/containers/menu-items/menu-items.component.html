@@ -4,9 +4,11 @@
         <!-- Items -->
         <ng-container *ngFor="let item of navigation?.default; trackBy:trackByFn">
            <div>
-               <app-card-menu-item (eventPageRedirect)="redirectPage(item)"
-                                    [bgColor]="'#f17171'"
-                                   [item]="item"></app-card-menu-item>
+               <app-card-menu-item *ngIf="item.id !== 'home'"
+               [bgColor]="'#f17171'"
+               [item]="item"
+               (eventPageRedirect)="redirectPage(item)">
+               </app-card-menu-item>
            </div>
         </ng-container>
 

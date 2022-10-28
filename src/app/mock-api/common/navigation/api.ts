@@ -36,7 +36,7 @@ export class NavigationMockApi
         // @ Navigation - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/common/navigation')
+            .onGet('api/common/navigation/')
             .reply(() => {
 
                 // Fill compact navigation children using the default navigation
