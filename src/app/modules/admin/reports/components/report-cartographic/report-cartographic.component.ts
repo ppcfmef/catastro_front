@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { CommonService } from 'app/core/common/services/common.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-report-cartographic',
   templateUrl: './report-cartographic.component.html',
@@ -9,28 +13,44 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ReportCartographicComponent implements OnInit {
 
   reportUrl?: any;
-
+  user: User;
+  _unsubscribeAll: Subject<any> = new Subject<any>();
+  land: any;
   constructor(
     private domSanitizer: DomSanitizer,
+    private _userService: UserService,
+    private _commonService: CommonService,
   ) { }
 
   ngOnInit(): void {
-    this.makeReportUrl();
+
+    this._userService.user$
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user: any) => {
+      this.user = user;
+      const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
+      this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
+        this.makeReportUrl(data);
+      });
+    });
   }
 
-  private makeReportUrl(): void {
-    const land = this.getLand();
+  private makeReportUrl(dataUbigeo: any): void {
+    const land = this.getLand(dataUbigeo);
+    console.log('land>>',land);
     const baseUrl = this.getBaseUrl(land?.zone);
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
   }
 
-  private getLand(): any {
+  private getLand(data: any): any {
+    console.log('data>>',data);
+
     return {
-      dpto: '14',
-      prov: '02',
-      ubigeo: '140204',
-      zone: '17'
+      dpto: data.code?data.code.substring(0,2):'14',
+      prov: data.code?data.code.substring(2,4):'02',
+      ubigeo: data.code?data.code:'140204',
+      zone: (data?.resources[0])?.utm?data?.resources[0]?.utm:'17'
     };
   }
 
