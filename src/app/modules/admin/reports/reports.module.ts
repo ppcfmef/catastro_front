@@ -7,7 +7,7 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { ReportPage } from './pages/report/report.page';
 import { ReportCartographicComponent } from './components/report-cartographic/report-cartographic.component';
 import { ReportSituationalComponent } from './components/report-situational/report-situational.component';
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +19,7 @@ import { ReportSituationalComponent } from './components/report-situational/repo
     CommonModule,
     ReportsRoutingModule,
     MatSidenavModule,
+    FormsModule
   ]
 })
 export class ReportsModule { }

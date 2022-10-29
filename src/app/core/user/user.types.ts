@@ -31,6 +31,7 @@ export interface User {
     district?: District;
     placeScope?: any;
     ubigeo: string;
+    permissionsNavigation: any[];
 }
 
 

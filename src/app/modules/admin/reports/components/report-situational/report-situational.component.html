@@ -1,3 +1,33 @@
+
+
+<div  [ngStyle]="{'position':'absolute','z-index':1, 'top':'0px','rigth':'0px','width':'400px' }">
+
+    <select aria-placeholder="Departamento"  placeholder="Elegir"   (change)="selectDep($event)">
+        <ng-container *ngFor="let department of departments$ | async">
+            <option [value]="department.code">{{ department.name }}</option>
+        </ng-container>
+
+    </select>
+
+    <select aria-placeholder="Provincia"  placeholder="Elegir"  (change)="selectProv($event)">
+        <ng-container *ngFor="let province of provinces$ | async">
+            <option [value]="province.code">{{ province.name }}</option>
+        </ng-container>
+
+    </select>
+
+
+    <select aria-placeholder="Distrito" placeholder="Elegir"  (change)="selectDist($event)" >
+        <ng-container *ngFor="let district of districts$ | async">
+            <option [value]="district.code">{{ district.name }}</option>
+        </ng-container>
+
+    </select>
+
+
+
+</div>
+
 <div class="w-full h-full">
 
   <iframe class="w-full h-full" *ngIf="reportUrl"

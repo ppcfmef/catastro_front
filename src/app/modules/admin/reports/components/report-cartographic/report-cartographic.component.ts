@@ -14,8 +14,8 @@ export class ReportCartographicComponent implements OnInit {
 
   reportUrl?: any;
   user: User;
-  _unsubscribeAll: Subject<any> = new Subject<any>();
   land: any;
+  _unsubscribeAll: Subject<any> = new Subject<any>();
   constructor(
     private domSanitizer: DomSanitizer,
     private _userService: UserService,
@@ -37,15 +37,12 @@ export class ReportCartographicComponent implements OnInit {
 
   private makeReportUrl(dataUbigeo: any): void {
     const land = this.getLand(dataUbigeo);
-    console.log('land>>',land);
     const baseUrl = this.getBaseUrl(land?.zone);
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
   }
 
   private getLand(data: any): any {
-    console.log('data>>',data);
-
     return {
       dpto: data.code?data.code.substring(0,2):'14',
       prov: data.code?data.code.substring(2,4):'02',
