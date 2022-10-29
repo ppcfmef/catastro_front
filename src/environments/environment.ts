@@ -17,6 +17,7 @@ export const environment = {
     production: false,
     url: host,
     apiUrl: host + 'api/v1',
+    portalUrl: 'https://ws.mineco.gob.pe/portaldf',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv'
 };
 
