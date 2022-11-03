@@ -1,11 +1,16 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">
-    <mat-label>Buscar</mat-label>   
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-4/12 input-icon-form">
+    <mat-label>Buscar</mat-label>
     <input type="text" matInput formControlName="search"
-           placeholder="Buscar por CPU - ID lote o ID Imagen"
+           placeholder=" Buscar por CPU - ID lote o ID Imagen"
            autocomplete="off">
+    <mat-select formControlName="view" matPrefix
+    (selectionChange)="onChangeView()">
+      <mat-option [value]="'predio'">Predios</mat-option>
+      <mat-option [value]="'Contribuyente'">Contribuyente</mat-option>
+    </mat-select>
         <mat-icon
-          [matTooltip]="'Mostrar contraseña'"
+          [matTooltip]="'Limpiar buscador'"
           class="hidden sm:flex icon-size-5"
           [svgIcon]="'heroicons_solid:x'"
           (click)="onCleanSearch()"

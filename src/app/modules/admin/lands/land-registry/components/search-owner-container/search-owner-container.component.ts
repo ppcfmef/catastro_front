@@ -1,9 +1,8 @@
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -39,6 +38,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   landRecord: LandRecord;
 
   constructor(
+    private router: Router,
     private _landOwnerService: LandOwnerService,
     private landRecordService: LandRecordService,
   ) {
@@ -132,9 +132,20 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     });
   }
 
+  onChangeView(): void {
+    const tabView = this.formFilters.get('view').value;
+    if (tabView === 'predio') {
+      this.router.navigate(['/land/registry/search/search-land']);
+    }
+    else if (tabView === 'Contribuyente') {
+      this.router.navigate(['/land/registry/search/search-owner']);
+    }
+  }
+
   private createFormFilters(): void {
     this.formFilters = new FormGroup({
       search: new FormControl(),
+      view: new FormControl('Contribuyente')
     });
   }
 }
