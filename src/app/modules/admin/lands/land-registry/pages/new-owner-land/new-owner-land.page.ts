@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-owner-land.page.scss']
 })
 export class NewOwnerLandPage implements OnInit {
-
+  expandMap = true;
   constructor() { }
 
   ngOnInit(): void {
