@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class MapPlaceholderComponent implements OnInit {
 
+  close = false;
   @Input() texto = 'texto prueba';
   constructor() { }
 

@@ -1,3 +1,6 @@
-<div class="container-popup triangle-popup-right-top">
+<div *ngIf="!close" class="container-popup triangle-popup-right-top">
+  <div class="button-close">
+    <mat-icon svgIcon="heroicons_solid:x" (click)="close= true"></mat-icon>
+  </div>
   {{texto}}
 </div>
