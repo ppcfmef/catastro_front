@@ -29,10 +29,12 @@
         matPrefix
         class="hidden sm:flex icon-size-5"
         [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-    <mat-select>
+    <mat-select (selectionChange)="onFilterStatus()" formControlName="status">
         <mat-option>Todos</mat-option>
-        <mat-option [value]="true">Predios con Cartografia</mat-option>
-        <mat-option [value]="false">Predios sin Cartografia</mat-option>
+        <mat-option [value]="0">Predios con Cartografia</mat-option>
+        <mat-option [value]="1">Predios sin Cartografia</mat-option>
+        <mat-option [value]="2">Coordenada de Imagen</mat-option>
+        <mat-option [value]="3">Inactivo</mat-option>
     </mat-select>
   </mat-form-field>
 </div>

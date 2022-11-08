@@ -95,8 +95,16 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onClickSearch(): void {
     const rawValue = this.formFilters.getRawValue();
+    const queryParams = {};
     const search = rawValue?.search || null;
-    const queryParams = { search };
+    const status = rawValue?.status;
+    if (search !== null) {
+      queryParams['search'] = search;
+    }
+
+    if (status !== null) {
+      queryParams['status'] = status;
+    }
     this.landRecordService.getList(queryParams)
     .subscribe((response: IPagination<LandRecord>) => {
       this.dataSourceLands = response.results;
@@ -106,12 +114,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onCleanSearch(): void {
     this.formFilters.get('search').setValue(null);
-    this.ownerLandSubscription = this.landRecordService.getList({limit: 10})
-    .subscribe(
-      (response: IPagination<LandRecord>) => {
-        this.dataSourceLands = response.results;
-        this.lengthLandsOwner = response.count;
-    });
+    this.getDefaultData();
   }
 
   onChangeView(): void {
@@ -124,10 +127,29 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     }
   }
 
+  onFilterStatus(): void {
+    const status = this.formFilters.get('status').value;
+    if (status !== undefined) {
+      this.onClickSearch(); // Todo: se debe unificar en un solo metodo
+    }else {
+      this.getDefaultData();
+    }
+  }
+
   private createFormFilters(): void {
     this.formFilters = new FormGroup({
       search: new FormControl(),
-      view: new FormControl('predio')
+      view: new FormControl('predio'),
+      status: new FormControl(),
+    });
+  }
+
+  private getDefaultData(): void {
+    this.ownerLandSubscription = this.landRecordService.getList({limit: 10})
+    .subscribe(
+      (response: IPagination<LandRecord>) => {
+        this.dataSourceLands = response.results;
+        this.lengthLandsOwner = response.count;
     });
   }
 
