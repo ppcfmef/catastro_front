@@ -22,10 +22,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {DocumentCatalogService} from './services/document-catalog.service';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import { DocumentCatalogFilterComponent } from './components/document-catalog-container/document-catalog-filter/document-catalog-filter.component';
+import { DocumentCatalogFilterComponent } from './components/document-catalog-filter/document-catalog-filter.component';
 import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
-
+import { TutorialItemComponent } from './components/tutorial-catalog-container/tutorial-item/tutorial-item.component';
+import { TutorialService } from './services/tutorial.service';
+import { FaqService } from './services/faq.service';
+import { QuestionAnswerComponent } from './components/faq-container/question-answer/question-answer.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     FaqManageContainerComponent,
     FaqContainerComponent,
     DocumentCatalogListComponent,
-    DocumentCatalogFilterComponent
+    DocumentCatalogFilterComponent,
+    TutorialItemComponent,
+    QuestionAnswerComponent,
   ],
   imports: [
     CommonModule,
@@ -55,7 +60,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule
   ],
   providers: [
-    DocumentCatalogService
+    DocumentCatalogService,
+    TutorialService,
+    FaqService,
   ]
 })
 export class TechnicalAssistanceModule { }
