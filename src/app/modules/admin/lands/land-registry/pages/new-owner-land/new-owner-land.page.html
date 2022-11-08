@@ -1,5 +1,5 @@
 <div class="flex w-full container-block">
-  <div class="flex-auto block" *ngIf="expandMap">
+  <div class="flex-auto" [ngClass]="{block:expandMap, hidden:!expandMap}">
     <app-new-owner-container></app-new-owner-container>
     <app-list-land-container></app-list-land-container>
   </div>
