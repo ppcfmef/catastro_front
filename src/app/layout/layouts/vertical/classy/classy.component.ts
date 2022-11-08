@@ -12,6 +12,7 @@ import { UserService } from 'app/core/user/user.service';
 @Component({
     selector     : 'classy-layout',
     templateUrl  : './classy.component.html',
+    styleUrls    :['./classy.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
@@ -19,6 +20,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     isScreenSmall: boolean;
     navigation: Navigation;
     user: User;
+
+    customExpandMenu = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
