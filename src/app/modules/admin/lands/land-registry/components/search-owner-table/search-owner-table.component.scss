@@ -1,3 +1,7 @@
 @import '~styles/mixins';
 
 @include button-style-icons-2();
+
+::ng-deep .no-hide-arrow .mat-sort-header-arrow {
+  color: #fff !important;
+}

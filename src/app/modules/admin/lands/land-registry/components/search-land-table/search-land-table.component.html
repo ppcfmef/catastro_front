@@ -1,6 +1,8 @@
 <div *ngIf="dataSource" class="mb-8">
   <h2 class="text-xl font-bold mb-2 c-purple-mef">Predios del contribuyente</h2>
-  <table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <table mat-table [dataSource]="dataTable" 
+  matSort matSortStart="desc" matSortActive="creationDate" matSortDirection="desc" matSortDisableClear #landTableSort="matSort" matSortDisableClear
+  class="shadow bg-card w-full">
     <ng-container matColumnDef="nro">
         <th mat-header-cell *matHeaderCellDef> Nro.</th>
         <td mat-cell *matCellDef="let element; let i = index">
@@ -9,28 +11,28 @@
     </ng-container>
 
     <ng-container matColumnDef="ubigeo">
-        <th mat-header-cell *matHeaderCellDef> Ubigeo</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Ubigeo</th>
         <td mat-cell *matCellDef="let element">
             {{ element.ubigeo }}
         </td>
     </ng-container>
     
     <ng-container matColumnDef="landCode">
-        <th mat-header-cell *matHeaderCellDef> Código único de predio</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código único de predio</th>
         <td mat-cell *matCellDef="let element">
             {{ element.cup }}
         </td>
     </ng-container>
     
     <ng-container matColumnDef="municipalLandCode">
-        <th mat-header-cell *matHeaderCellDef> Código de predio municipal</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio municipal</th>
         <td mat-cell *matCellDef="let element">
           {{ element.cpm }}
         </td>
     </ng-container>
 
     <ng-container matColumnDef="idPlot">
-        <th mat-header-cell *matHeaderCellDef> ID Lote</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Lote</th>
         <td mat-cell *matCellDef="let element">
           {{ element.idPlot }}
         </td>
@@ -38,21 +40,21 @@
 
 
     <ng-container matColumnDef="idCartographicImg">
-        <th mat-header-cell *matHeaderCellDef> ID Imagen</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Imagen</th>
         <td mat-cell *matCellDef="let element">
           {{ element.idCartographicImg }}
         </td>
     </ng-container>
     
     <ng-container matColumnDef="habilitacionName">
-        <th mat-header-cell *matHeaderCellDef> Nombre habilitacion</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre habilitacion</th>
         <td mat-cell *matCellDef="let element">
             {{ element.habilitacionName }}
         </td>
     </ng-container>
     
-    <ng-container matColumnDef="steetName">
-        <th mat-header-cell *matHeaderCellDef> Nombre de via </th>
+    <ng-container matColumnDef="streetName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre de via </th>
         <td mat-cell *matCellDef="let element">
             {{ element.streetName }}
         </td>
@@ -87,7 +89,7 @@
     </ng-container>
 
     <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef> Fecha Registro </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Fecha Registro </th>
         <td mat-cell *matCellDef="let element">
             {{ element.creationDate | date: 'dd/MM/yyyy' }}
         </td>
@@ -115,7 +117,6 @@
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"
-          (page)="onPage($event)"
           >
   </mat-paginator>
 </div>

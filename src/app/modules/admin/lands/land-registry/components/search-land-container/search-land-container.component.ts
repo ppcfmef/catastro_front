@@ -2,6 +2,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import {FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { IPagination } from 'app/core/common/interfaces/common.interface';
@@ -59,12 +60,13 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     this.ownerLandSubscription.unsubscribe();
   }
 
-  onChangePage(paginator: MatPaginator): void {
+  onChangePage(data: {paginator: any; sort: Sort}): void {
     const rawValue = this.formFilters.getRawValue();
     const search = rawValue?.search || '';
-    const limit = paginator.pageSize;
-    const offset = limit * paginator.pageIndex;
-    const queryParams = { limit, offset, search };
+    const limit = data?.paginator.pageSize;
+    const offset = limit * data?.paginator.pageIndex;
+    const ordering = this.orderingFormater(data.sort);
+    const queryParams = { limit, offset, search, ordering };
 
     this.landRecordService.getList(queryParams).subscribe(
       (response) => {
@@ -127,5 +129,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       search: new FormControl(),
       view: new FormControl('predio')
     });
+  }
+
+  private orderingFormater(sort: Sort): string {
+    const orderingActive = sort?.active;
+    return (sort?.direction === 'desc') ? '-'+orderingActive : orderingActive;
   }
 }
