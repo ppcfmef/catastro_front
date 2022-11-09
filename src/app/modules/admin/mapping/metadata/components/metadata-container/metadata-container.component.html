@@ -3,7 +3,7 @@
 (closeDetail)="onCloseDetail()"
 ></app-gis-catalog-detail>
 <div class="flex">
-  <app-gis-catalog *ngFor="let catalog of catalogs"
+  <app-gis-catalog class="p-5" *ngFor="let catalog of catalogs"
   [catalog]="catalog"
   (showDetail)="onShowDetail($event)"
   ></app-gis-catalog>
