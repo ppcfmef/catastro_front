@@ -18,7 +18,10 @@ export class GisMetadataService {
   constructor(private http: HttpClient) { }
 
   getCatalogList(queryParameters?: {[key: string]: string | number}): Observable<IPagination<GisCatalog>> {
-    return this.http.get<IPagination<GisCatalog>>(`${this.apiUrl}/catalogs/`, queryParameters);
+    return this.http.get<IPagination<GisCatalog>>(
+      `${this.apiUrl}/catalogs/`,
+      { params: queryParameters}
+    );
   }
 
   getCatalogDetail(catalogId: number): Observable<GisCatalog> {

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 import { MetadataRoutingModule } from './metadata-routing.module';
 import { MetadataPage } from './pages/metadata/metadata.page';
 import { MetadataManagePage } from './pages/metadata-manage/metadata-manage.page';
@@ -21,7 +23,8 @@ import { GisCatalogDetailComponent } from './components/metadata-container/gis-c
   ],
   imports: [
     CommonModule,
-    MetadataRoutingModule
+    MetadataRoutingModule,
+    MatPaginatorModule,
   ]
 })
 export class MetadataModule { }

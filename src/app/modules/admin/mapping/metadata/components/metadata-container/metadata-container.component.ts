@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
+import { MatPaginator } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -23,13 +24,7 @@ export class MetadataContainerComponent implements OnInit, OnDestroy {
   constructor(private metadataService: GisMetadataService) { }
 
   ngOnInit(): void {
-    const queryParamenter = { limit: this.paginationLimit };
-    this.metadataService.getCatalogList(queryParamenter)
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((res: IPagination<GisCatalog>) => {
-      this.catelogsPagination = res;
-      this.catalogs = res.results;
-    });
+    this.getData({limit: this.paginationLimit});
   }
 
   onShowDetail(catalog: GisCatalog): void {
@@ -45,8 +40,25 @@ export class MetadataContainerComponent implements OnInit, OnDestroy {
     this.catalogDetail = undefined;
   }
 
+  onChangePage(paginator: MatPaginator): void {
+    const paginationParamenters = {
+      offset: paginator.pageSize * paginator.pageIndex,
+      limit: paginator.pageSize
+    };
+    this.getData(paginationParamenters);
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
+  }
+
+  private getData(queryParameters: {[key: string]: string | number}): void {
+    this.metadataService.getCatalogList(queryParameters)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((res: IPagination<GisCatalog>) => {
+      this.catelogsPagination = res;
+      this.catalogs = res.results;
+    });
   }
 }

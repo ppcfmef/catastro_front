@@ -8,3 +8,11 @@
   (showDetail)="onShowDetail($event)"
   ></app-gis-catalog>
 </div>
+<mat-paginator *ngIf="catelogsPagination?.count > paginationLimit"
+  [length]="catelogsPagination.count"
+  [pageIndex]="0"
+  [pageSize]="paginationLimit"
+  [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]"
+  (page)="onChangePage($event)"
+  >
+</mat-paginator>
