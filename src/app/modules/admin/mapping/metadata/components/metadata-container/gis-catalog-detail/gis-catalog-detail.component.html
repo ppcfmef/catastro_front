@@ -1,0 +1,14 @@
+<div class="flex">
+  <img [src]="catalog.thumbnail" class="max-w-xl">
+  <div>
+    <h3>{{ catalog.title }}</h3>
+    <button class="bg-warn" (click)="onClose()">Cerrar</button>
+    <p>{{ catalog.description }}</p>
+    <ul *ngIf="catalog.services">
+      <h4>Servicios</h4>
+      <li *ngFor="let service of catalog.services">
+        <a [href]="service.url" target="_blank">{{ service.name }}</a>
+      </li>
+    </ul>
+  </div>
+</div>

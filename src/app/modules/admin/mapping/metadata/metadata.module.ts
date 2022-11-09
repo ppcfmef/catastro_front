@@ -6,6 +6,8 @@ import { MetadataPage } from './pages/metadata/metadata.page';
 import { MetadataManagePage } from './pages/metadata-manage/metadata-manage.page';
 import { MetadataContainerComponent } from './components/metadata-container/metadata-container.component';
 import { MetadataManageContainerComponent } from './components/metadata-manage-container/metadata-manage-container.component';
+import { GisCatalogComponent } from './components/metadata-container/gis-catalog/gis-catalog.component';
+import { GisCatalogDetailComponent } from './components/metadata-container/gis-catalog-detail/gis-catalog-detail.component';
 
 
 @NgModule({
@@ -13,7 +15,9 @@ import { MetadataManageContainerComponent } from './components/metadata-manage-c
     MetadataPage,
     MetadataManagePage,
     MetadataContainerComponent,
-    MetadataManageContainerComponent
+    MetadataManageContainerComponent,
+    GisCatalogComponent,
+    GisCatalogDetailComponent
   ],
   imports: [
     CommonModule,
