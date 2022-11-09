@@ -1,1 +1,18 @@
-<p>metadata-container works!</p>
+<app-gis-catalog-detail *ngIf="catalogDetail"
+[catalog]="catalogDetail"
+(closeDetail)="onCloseDetail()"
+></app-gis-catalog-detail>
+<div class="flex">
+  <app-gis-catalog class="p-5" *ngFor="let catalog of catalogs"
+  [catalog]="catalog"
+  (showDetail)="onShowDetail($event)"
+  ></app-gis-catalog>
+</div>
+<mat-paginator *ngIf="catelogsPagination?.count > paginationLimit"
+  [length]="catelogsPagination.count"
+  [pageIndex]="0"
+  [pageSize]="paginationLimit"
+  [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]"
+  (page)="onChangePage($event)"
+  >
+</mat-paginator>
