@@ -10,6 +10,13 @@
             <input  [formControl]="searchControl"
                     placeholder="Buscar"
                     matInput>
+            <mat-icon
+                    *ngIf="searchControl.value != null"
+                    (click)="clearSearchControl()"
+                    matSuffix
+                    class="icon-size-5 cursor-pointer"
+                    svgIcon="heroicons_solid:x"
+                    ></mat-icon>
         </mat-form-field>
     </div>
 </div>

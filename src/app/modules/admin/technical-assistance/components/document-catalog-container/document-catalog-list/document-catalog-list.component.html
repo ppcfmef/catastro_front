@@ -1,20 +1,43 @@
 <div class="flex flex-col w-full gap-4 p-6">
-    <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 gap-8 mt-8 sm:mt-10 ng-star-inserted">
-        <div class="flex flex-col h-auto rounded-2xl overflow-hidden px-10" *ngFor="let document of documents">
+    <div class="flex justify-center flex-wrap mt-8 sm:mt-10 ng-star-inserted">
+        <div class="flex flex-col h-auto   px-6 mb-10 card-block" *ngFor="let document of documents">
             <a [href]="document.url" target="_blank">
                 <div class="flex flex-col max-w-100">
                     <img [src]="document.thumbnail">
                 </div>
                 <div class="flex flex-col w-full mt-auto">
                     <div class="relative h-0.5"></div>
-                    <div class="py-4 text-left dark:bg-transparent">
+                    <div class="pt-4 text-left dark:bg-transparent">
                         <p class="title"><strong>{{document.title}}</strong></p>
                         <p class="subtitle"><strong>{{document.description}}</strong></p>
                     </div>
                 </div>
-            </a>
+                <div class="hover-block">
+                    <div class="title-block">
+                        <mat-icon class="icon-size-24" svgIcon="feather:file"></mat-icon>
+                    </div>
+                    <div class="button-block">
+                        <div>
+                            <mat-icon svgIcon="heroicons_outline:eye"></mat-icon>            
+                            <span>Ver Documento</span>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </a>            
+        </div>
+        <div *ngIf="documents.length == 0" class="none-documents">
+            <mat-icon class="icon-size-24" svgIcon="feather:search"></mat-icon>
+            <div>
+                No se encontraron resultados
+            </div>
         </div>
     </div>
-    <ng-content select="[paginator]"></ng-content>
+    <div [hidden]="documents.length == 0">
+        <ng-content  select="[paginator]"></ng-content>
+    </div>
+        
+    
 </div>
 

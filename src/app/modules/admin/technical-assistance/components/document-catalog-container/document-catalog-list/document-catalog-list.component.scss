@@ -1,4 +1,10 @@
 :host {
+
+  .card-block{
+    width: 240px;
+    min-width: 240px;
+  }
+
   .title {
     margin-bottom: 4px;
     text-transform: uppercase;
@@ -12,5 +18,74 @@
 
   img {
     max-height: 263px;
+    border-radius: 11px 11px 0 0;
+    margin-left: -16px;
+    margin-right: -16px;
+    min-width: calc(100% + 32px);
+    object-fit: cover;
+    margin-top: -16px;
+    }
+  a{
+    padding: 16px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 2px 4px 20px 0px rgb(0 0 0 / 26%);
+    position: relative;
+
+    .hover-block{
+      display:none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: absolute;
+      background-color: #ffffffde;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      border-radius: 10px;
+
+      .title-block{
+        mat-icon{
+          color: #5c5c5c;
+        }
+      }
+       
+
+      .button-block > div{
+        padding: 6px 10px;
+        //border: solid 2px white;
+        border-radius: 10px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 23px;
+        background-color: #f87171;
+        mat-icon{
+          color: white;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    &:hover .hover-block{
+      display: flex;
+    }
+    
+
   }
+
+  .none-documents{
+    text-align: center;
+    mat-icon{
+      color: #fca5a5;
+    }
+
+    > div{
+      font-size: 16px;
+      color: #64748b;
+    }
+  }
+  
 }

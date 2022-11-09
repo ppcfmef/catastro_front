@@ -26,4 +26,9 @@ export class DocumentCatalogFilterComponent implements OnInit, OnDestroy {
 		this.unsubscribe$.next();
 		this.unsubscribe$.complete();
 	}
+
+	clearSearchControl(): void{
+		this.searchControl.reset();
+		this.searchValue.emit('');
+	}
 }
