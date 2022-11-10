@@ -44,6 +44,14 @@ const routes: Routes = [
     path: 'new-owner',
     component: NewOwnerLandPage
   },
+  {
+    path: 'edit-owner/:ownerId',
+    component: NewOwnerLandPage
+  },
+  {
+    path: 'edit-owner/:ownerId/land/:landId',
+    component: NewOwnerLandPage
+  },
 ];
 
 @NgModule({
