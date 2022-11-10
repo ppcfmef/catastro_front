@@ -17,6 +17,7 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 	count = 0;
 	changes = new Subject();
 	textSearch = '';
+	categories = [];
 	private unsubscribe$ = new Subject<any>();
 
 
@@ -64,6 +65,17 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 	setDataResponse(response: any): void {
 		this.count = response.count;
 		this.documents = response.results;
+
+		this.categories =  [
+			{name: 'Categoria 1', id:10},
+			{name: 'Categoria 2', id:12},
+			{name: 'Categoria 3', id:11},
+		  ]
+		
+	}
+
+	selecCategory(idCategory: string){
+		console.log(idCategory);
 	}
 
 	ngOnDestroy(): void {

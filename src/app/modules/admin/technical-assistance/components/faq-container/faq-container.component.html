@@ -1,4 +1,4 @@
-fsdfsfdsfsdfsdf
+ 
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
   <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
       <mat-drawer
@@ -18,7 +18,7 @@ fsdfsfdsfsdfsdf
 
               <!-- Header -->
               <div
-                      class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+                      class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10  border-b bg-card dark:bg-transparent">
                   <!-- Title -->
                   <div>
                       <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Preguntas Frecuentes' }}</div>
@@ -37,15 +37,26 @@ fsdfsfdsfsdfsdf
                   </div>
               </div>
               <div class="gap-4 p-6">
-                  <app-document-catalog-filter (searchValue)="getTextSearch($event)"></app-document-catalog-filter>
-                  <app-question-answer [documents]="documents">
-                      <mat-paginator paginator
-                                     [length]="count"
-                                     [pageIndex]="0"
-                                     [pageSize]="10"
-                                     [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
-                      </mat-paginator>
-                  </app-question-answer>
+                <section class="search-block">
+                    <app-document-catalog-filter (searchValue)="getTextSearch($event)"></app-document-catalog-filter>
+                </section>
+
+                <section class="faqs-block">                    
+                        <app-question-answer [documents]="documents" 
+                                             [categories]="categories"
+                                             (selectCategory)="selecCategory($event)">
+
+                            <mat-paginator paginator
+                                           [length]="count"
+                                           [pageIndex]="0"
+                                           [pageSize]="100"
+                                           [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+                            </mat-paginator>
+                        </app-question-answer>                    
+                    
+                </section>
+                  
+                  
               </div>
 
           </div>
