@@ -9,15 +9,17 @@
     <ng-container matColumnDef="startDate">
         <th mat-header-cell *matHeaderCellDef> Fecha de carga</th>
         <td mat-cell *matCellDef="let element">
-            {{ element.startDate | date:'dd-MM-YYYY' }}
+            {{ element.startDate | date:'dd-MM-YYYY hh:mm a' }}
         </td>
     </ng-container>
 
     <ng-container matColumnDef="fileUpload">
         <th mat-header-cell *matHeaderCellDef> Archivo Cargado</th>
         <td mat-cell *matCellDef="let element">
-            <a [href]="element.fileUpload" class="text-blue-400 underline underline-offset-1">
-                Ver archivo
+            <a [href]="element.fileUpload" 
+            class="text-blue-400 underline underline-offset-1">
+                <mat-icon [svgIcon]="'heroicons_solid:document-download'"></mat-icon>
+                Descargar Archivo
             </a>
         </td>
     </ng-container>
@@ -25,7 +27,35 @@
     <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> Estado</th>
         <td mat-cell *matCellDef="let element">
-            {{ element.status }}
+            <ng-container [ngSwitch]="element.status">
+                <ng-container *ngSwitchCase="'INITIAL'">
+                    <mat-icon svgIcon="heroicons_solid:clock"
+                    matTooltip="Por iniciar"
+                    matTooltipPosition="right"
+                    style="color: blue!important;"
+                    ></mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchCase="'IN_PROGRESS'" class="flex">
+                    <mat-spinner [color]="accent" [diameter]="30"
+                    matTooltip="En curso"
+                    matTooltipPosition="right"
+                    ></mat-spinner>
+                </ng-container>
+                <ng-container *ngSwitchCase="'LOADED'">
+                    <mat-icon svgIcon="heroicons_solid:check-circle"
+                    matTooltip="Finalizado"
+                    matTooltipPosition="right"
+                    style="color: green!important;"
+                    ></mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchCase="'ERROR'">
+                    <mat-icon svgIcon="heroicons_solid:ban"
+                    matTooltip="Error/Detenido"
+                    matTooltipPosition="right"
+                    style="color: red!important;"
+                    ></mat-icon>
+                </ng-container>
+            </ng-container>
         </td>
     </ng-container>
 
