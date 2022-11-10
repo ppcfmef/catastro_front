@@ -1,0 +1,12 @@
+.metadata-block{
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+:host ::ng-deep .activeCatalog{
+        a{
+            outline: solid 8px #ffe586;
+        }
+    }
+

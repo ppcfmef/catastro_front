@@ -1,4 +1,8 @@
-<a (click)="onDetail()" [style.cursor]="'pointer'">
-  <img [src]="catalog.thumbnail" class="max-w-xs">
-  {{ catalog.title }}
+<a (click)="onDetail()"
+  [style.cursor]="'pointer'"
+  class="metadata-item">
+  <img [src]="catalog.thumbnail">
+  <div>
+    {{ catalog.title }}
+  </div>
 </a>

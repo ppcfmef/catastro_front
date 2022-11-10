@@ -1,8 +1,8 @@
-<div class="flex">
-  <img [src]="catalog.thumbnail" class="max-w-xl">
+<div class="block-meta-detail">
+  <img [src]="catalog.thumbnail">
   <div>
     <h3>{{ catalog.title }}</h3>
-    <button mat-flat-button color="warn" (click)="onClose()">Cerrar</button>
+
     <p>{{ catalog.description }}</p>
     <ul *ngIf="catalog.services">
       <h4>Servicios</h4>
@@ -10,5 +10,9 @@
         <a [href]="service.url" target="_blank">{{ service.name }}</a>
       </li>
     </ul>
+    <div class="flex justify-end">
+        <button mat-flat-button color="warn" (click)="onClose()">
+            <mat-icon class="mr-2" svgIcon="mat_outline:close"></mat-icon>  Cerrar</button>
+    </div>
   </div>
 </div>
