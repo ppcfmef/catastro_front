@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
 import { MapsModule } from 'app/shared/maps/maps.module';
 
@@ -88,6 +90,7 @@ import { MapPlaceholderComponent } from './components/map-placeholder/map-placeh
 
     MapsModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: [
