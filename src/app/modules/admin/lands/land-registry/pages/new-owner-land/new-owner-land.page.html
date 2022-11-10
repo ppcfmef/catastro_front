@@ -1,7 +1,7 @@
 <div class="flex w-full container-block">
-  <div class="flex-auto" [ngClass]="{block:expandMap, hidden:!expandMap}">
-    <app-new-owner-container></app-new-owner-container>
-    <app-list-land-container></app-list-land-container>
+  <div class="flex-auto" [ngClass]="{block:expandMap, hidden:!expandMap}" *ngIf="initialPage">
+    <app-new-owner-container [ownerId]="ownerId"></app-new-owner-container>
+    <app-list-land-container [landId]="landId"></app-list-land-container>
   </div>
   <div class="flex-auto block relative " [ngClass]="{expanded:!expandMap}">
     <div class="button-max" (click)="expandMap = !expandMap">

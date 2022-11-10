@@ -46,6 +46,11 @@ export class LandRegistryService {
     return this.landRegister$;
   }
 
+
+  getOwner(ownerId: number): Observable<LandOwner> {
+    return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/${ownerId}/`);
+  }
+
   searchOwnerbyDocument(document: string): Observable<LandOwner> {
     return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);
   }

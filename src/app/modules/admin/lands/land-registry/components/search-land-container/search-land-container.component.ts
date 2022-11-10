@@ -101,12 +101,12 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     const rawValue = this.formFilters.getRawValue();
     const queryParams = {};
     const search = rawValue?.search || null;
-    const status = rawValue?.status || '';
+    const status = rawValue?.status;
     if (search !== null) {
       queryParams['search'] = search;
     }
 
-    if (status !== null) {
+    if (status !== null && status !== undefined) {
       queryParams['status'] = status;
     }
     this.landRecordService.getList(queryParams)
@@ -155,7 +155,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       queryParams['search'] = search;
     }
 
-    if (status !== null) {
+    if (status !== null && status !== undefined ) {
       queryParams['status'] = status;
     }
     return queryParams;

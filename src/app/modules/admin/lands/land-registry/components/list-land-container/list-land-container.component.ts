@@ -1,7 +1,7 @@
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
@@ -14,7 +14,7 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
   styleUrls: ['./list-land-container.component.scss']
 })
 export class ListLandContainerComponent implements OnInit, OnDestroy {
-
+  @Input() landId: number;
   landRecords: LandRegistryMap[];
   tableLength: number;
   private unsubscribeAll: Subject<any> = new Subject<any>();
@@ -49,13 +49,22 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
           this.landOwnerId = registerLand?.owner;
         }
         if (this.landOwnerId) {
+          const queryParams = { limit: this.defaultTableLimit, owner: this.landOwnerId };
+          if (this.landId) {
+            queryParams['id'] = this.landId;
+          }
           this.landRegistryService
-          .getLandList({ limit: this.defaultTableLimit, owner: this.landOwnerId })
+          .getLandList(queryParams)
           .toPromise()
           .then(
             (landResult) => {
               this.landRecords = landResult.results;
               this.tableLength = landResult.count;
+              if (this.landId && this.tableLength > 0) {
+                setTimeout(() => { // ToDo: Coordinar con frank porque demora tanto su mapa
+                  this.seledRecord(this.landRecords[0]);
+                }, 6000);
+              }
             }
           );
         }
