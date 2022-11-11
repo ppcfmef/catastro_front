@@ -49,8 +49,15 @@
                     ></mat-icon>
                 </ng-container>
                 <ng-container *ngSwitchCase="'ERROR'">
-                    <mat-icon svgIcon="heroicons_solid:ban"
+                    <mat-icon svgIcon="heroicons_solid:exclamation-circle"
                     matTooltip="Error/Detenido"
+                    matTooltipPosition="right"
+                    style="color: red!important;"
+                    ></mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchCase="'CANCEL'">
+                    <mat-icon svgIcon="heroicons_solid:ban"
+                    matTooltip="Cancelado por el usuario"
                     matTooltipPosition="right"
                     style="color: red!important;"
                     ></mat-icon>
