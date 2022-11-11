@@ -13,6 +13,7 @@ import { UploadHistoryPage } from './pages/upload-history/upload-history.page';
 import { UploadDetailPage } from './pages/upload-detail/upload-detail.page';
 import { UploadhistoryListComponent } from './components/uploadhistory-list/uploadhistory-list.component';
 import { UploadTableFilesComponent } from './components/upload-table-files/upload-table-files.component';
+import { UploadContainerComponent } from './components/upload-container/upload-container.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { UploadTableFilesComponent } from './components/upload-table-files/uploa
     UploadDetailPage,
     UploadhistoryListComponent,
     UploadTableFilesComponent,
+    UploadContainerComponent,
   ],
   imports: [
     CommonModule,
