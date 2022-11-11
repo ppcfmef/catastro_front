@@ -57,13 +57,13 @@
       <div
       class="flex flex-row-reverse items-start justify-between" *ngIf="recordSumary">
           <div class="flex flex-row">
-              <button class="mat-focus-indicator mat-flat-button mat-button-base mat-warn mr-10" (click)="resetControls(true)">
+              <button class="mat-focus-indicator mat-flat-button mat-button-base mat-warn mr-10" (click)="onCancelUpload()">
                   <mat-icon svgIcon="heroicons_outline:minus-sm"></mat-icon>
                   <span class="ml-2 mr-1">Cancelar carga</span>
               </button> 
-              <button class="mat-focus-indicator mat-flat-button mat-button-base bg-recepcionar" (click)="recepcionarValidos()" *ngIf="recordSumary?.correctsData">
+              <button class="mat-focus-indicator mat-flat-button mat-button-base bg-recepcionar" (click)="onValidSaveUpload()" *ngIf="recordSumary?.correctsData">
                   <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
-                  <span class="ml-2 mr-1">Recepcionar registros válidos</span>
+                  <span class="ml-2 mr-1">Validar y Guardar</span>
               </button>
           </div>
       </div>

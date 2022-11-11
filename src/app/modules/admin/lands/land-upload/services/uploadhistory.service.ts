@@ -26,4 +26,8 @@ export class UploadhistoryService {
   uploadFile(payload: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/lands/registry/`, payload);
   }
+
+  changeStatus(uploadHistoryId: number, status: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/lands/upload/status/${uploadHistoryId}/`, { status });
+  }
 }

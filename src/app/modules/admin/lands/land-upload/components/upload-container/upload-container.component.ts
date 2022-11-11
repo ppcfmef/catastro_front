@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {FormUtils} from '../../../../../../shared/utils/form.utils';
 import { FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
 import { Router } from '@angular/router';
 import { UploadhistoryService } from '../../services/uploadhistory.service';
@@ -27,6 +28,7 @@ export class UploadContainerComponent implements OnInit {
       private _ngxSpinner: NgxSpinnerService,
       private _messageProviderService: MessageProviderService,
       private uploadService: UploadhistoryService,
+      private confirmationService: CustomConfirmationService,
   ) {
   }
 
@@ -72,19 +74,6 @@ export class UploadContainerComponent implements OnInit {
       }
   }
 
-  resetControls(isResetAll = false): void {
-      this.uploadfileElement.nativeElement.value = null;
-      this.fileName = null;
-      this.uploadForm.get('fileUpload').reset();
-      this.uploadForm.markAsPristine();
-      this._ngxSpinner.hide();
-      if (isResetAll) {
-          this.uploadId = null;
-          this.recordSumary = {};
-      }
-  }
-
-
   uploadFile(event): void {
       const fileToUpload = event.target.files.item(0);
       this.fileName = event.target.value;
@@ -101,4 +90,52 @@ export class UploadContainerComponent implements OnInit {
       this._ngxSpinner.show();
   }
 
+
+  onCancelUpload(): void {
+    this.changeUploadStatus('CANCEL');
+    this.resetControls(true);
+  }
+
+  onValidSaveUpload(): void {
+    this.changeUploadStatus('IN_PROGRESS');
+  }
+
+  private changeUploadStatus(status: string): void {
+    if (this.recordSumary) {
+        this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status)
+        .subscribe(
+            (res) => {
+                this._router.navigate(['/land/upload/history']);
+                const dialogRef = this.confirmationService.success(
+                    'Registro de Predios',
+                    'Se guardo el estado de la carga correctamente'
+                );
+
+                dialogRef.afterClosed().toPromise().then( (option) => {
+                    this._router.navigate(['/land/upload/history']);
+                });
+            },
+            (error) => {
+                this.confirmationService.error(
+                    'Registro de usuarios',
+                    'Error al guardar el estado de la carga'
+                );
+            }
+        );
+    }else {
+        console.log('alert error');
+    }
+  }
+
+  private resetControls(isResetAll = false): void {
+      this.uploadfileElement.nativeElement.value = null;
+      this.fileName = null;
+      this.uploadForm.get('fileUpload').reset();
+      this.uploadForm.markAsPristine();
+      this._ngxSpinner.hide();
+      if (isResetAll) {
+        this.uploadId = null;
+        this.recordSumary = {};
+       }
+    }
 }
