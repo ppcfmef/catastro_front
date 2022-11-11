@@ -26,6 +26,14 @@ export class ReportSituationalComponent implements OnInit {
     ubigeo: null,
   };
 
+  selectionText={
+    dep:'',
+    prov:'',
+    dist:''
+  };
+
+  hideUbigeo = true;
+
   readAll: any=null;
   departments$: Observable<Department[]>;
   provinces$: Observable<Province[]>;
@@ -72,21 +80,32 @@ export class ReportSituationalComponent implements OnInit {
 
 
 selectDep(event: any): void {
-  this.paramsUbigeo.dpto = event.target.value;
+   
+  this.paramsUbigeo.dpto = event.value.code;
+  this.selectionText={
+    dep:event.value.name,
+    prov:'',
+    dist:''
+  };
   this.provinces$ = this._commonService.getProvinces({
       department: this.paramsUbigeo.dpto,
   });
+  this.districts$ =  null;
 }
 
 selectProv(event: any): void {
-  this.paramsUbigeo.prov = event.target.value;
+  console.log(event)
+  this.paramsUbigeo.prov = event.value.code;
+  this.selectionText.prov = event.value.name;
+  this.selectionText.dist= '';
   this.districts$ = this._commonService.getDistricts({
       province: `${this.paramsUbigeo.prov}`,
   });
 }
 
 selectDist(event: any): void {
-  this.paramsUbigeo.ubigeo = event.target.value;
+  this.paramsUbigeo.ubigeo = event.value.code;
+  this.selectionText.dist = event.value.name;
   console.log('this.paramsUbigeo.ubigeo>>',this.paramsUbigeo.ubigeo);
   this.makeReportUrl(this.paramsUbigeo.ubigeo);
 
@@ -134,6 +153,14 @@ selectDist(event: any): void {
       const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
       this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
     }*/
+  }
+
+  openCloseUbigeo(close = ''):void{
+    if(close == 'close'){
+      this.hideUbigeo = true;
+      return
+    }
+    this.hideUbigeo = !this.hideUbigeo;
   }
 
 }
