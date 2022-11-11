@@ -39,7 +39,7 @@
                   </div>
                   <div>
                       <div class="text-secondary">Registros inválidos</div>
-                      <div class="text-red-500 font-semibold">{{ recordSumary?.erros || 0 }}</div>
+                      <div class="text-red-500 font-semibold">{{ recordSumary?.errors || 0 }}</div>
                   </div>
               </ng-container>
               
@@ -55,13 +55,13 @@
           <span class="ml-2 mr-1">Cargar Registros</span>
       </button>
       <div
-      class="flex flex-row-reverse items-start justify-between"> <!-- *ngIf="records" -->
+      class="flex flex-row-reverse items-start justify-between" *ngIf="recordSumary">
           <div class="flex flex-row">
               <button class="mat-focus-indicator mat-flat-button mat-button-base mat-warn mr-10" (click)="resetControls(true)">
                   <mat-icon svgIcon="heroicons_outline:minus-sm"></mat-icon>
                   <span class="ml-2 mr-1">Cancelar carga</span>
               </button> 
-              <button class="mat-focus-indicator mat-flat-button mat-button-base bg-recepcionar" (click)="recepcionarValidos()" *ngIf="records?.validos?.length > 0">
+              <button class="mat-focus-indicator mat-flat-button mat-button-base bg-recepcionar" (click)="recepcionarValidos()" *ngIf="recordSumary?.correctsData">
                   <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
                   <span class="ml-2 mr-1">Recepcionar registros válidos</span>
               </button>
@@ -70,57 +70,22 @@
   </div>
 </div>
 
-<div class="flex justify-center py-10">
-  <div class="block-icon">
-      
-      <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-          <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-      </div>
-      <div class="block-text">
-          <p>Predios Registrados</p>
-          <h5>0</h5>
-      </div>
-  </div>
-
-  <div class="block-icon green">
-      
-      <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-          <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-      </div>
-      <div class="block-text">
-          <p>Predios con Cartografia</p>
-          <h5>0</h5>
-      </div>
-  </div>
-
-  <div class="block-icon blue">
-      
-      <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-          <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-      </div>
-      <div class="block-text">
-          <p>Predios Registrados</p>
-          <h5>0</h5>
-      </div>
-  </div>
-</div>
-
-
 <div class="flex-row w-full">
   <div class="flex flex-col gap-4">
-      <ng-container>
+      <ng-container *ngIf="recordSumary">
           <app-upload-table-files styleTable="red" title="Registros Incorrectos"
-            [records]="records?.invalidos"
-            [posicionExcel]="true" >
+            [records]="recordSumary?.errorsData"
+            [posicionExcel]="true"
+            isDownload="true"
+            >
           </app-upload-table-files>
       </ng-container>
-      <ng-container>
+      <ng-container *ngIf="recordSumary">
           <app-upload-table-files styleTable="green" title="Registros Validos"
-            [records]="records?.validos"
-            [posicionExcel]="false">
+            [records]="recordSumary?.correctsData"
+            [posicionExcel]="true"
+            isDownload="true">
           </app-upload-table-files>
       </ng-container>
   </div>
-  <app-upload-table-files styleTable="red" title="Registros Incorrectos" [records]="records" [posicionExcel]="true" isDownload="true"></app-upload-table-files>
-  <app-upload-table-files styleTable="green" title="Registros Validos" [records]="records" [posicionExcel]="false" isDownload="true"></app-upload-table-files>
 </div>

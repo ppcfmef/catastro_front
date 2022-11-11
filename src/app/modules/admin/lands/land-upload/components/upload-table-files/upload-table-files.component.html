@@ -9,17 +9,22 @@
                     <th mat-header-cell *matHeaderCellDef> No.</th>
                     <td mat-cell *matCellDef="let element; let i = index;"> {{ params['offset'] + i +1 }} </td>
                 </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Estado</th>
+                    <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+                </ng-container>
     
-                <ng-container matColumnDef="codigo">
+                <ng-container matColumnDef="errorCode">
                     <th mat-header-cell *matHeaderCellDef> Código</th>
-                    <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.errorCode ?? "VALIDO" }} </td>
                 </ng-container>
     
     
-                <ng-container matColumnDef="depCensal">
+                <ng-container matColumnDef="data">
                     <th mat-header-cell *matHeaderCellDef> Fila Excel </th>                
                     <ng-container >
-                        <td mat-cell *matCellDef="let element"> {{element.fila}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.record | json | slice:0:120 }}... (Descargar para ver todo) </td>
                     </ng-container>                
                 </ng-container>
     

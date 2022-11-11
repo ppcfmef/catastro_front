@@ -17,7 +17,7 @@ export class UploadContainerComponent implements OnInit {
   uploadForm = new FormGroup({
     fileUpload: new FormControl(null, [Validators.required]),
   });
-  records: any;
+
   recordSumary: any;
 
   fileName: string;
@@ -80,7 +80,7 @@ export class UploadContainerComponent implements OnInit {
       this._ngxSpinner.hide();
       if (isResetAll) {
           this.uploadId = null;
-          this.records = [];
+          this.recordSumary = {};
       }
   }
 
@@ -99,13 +99,6 @@ export class UploadContainerComponent implements OnInit {
 
   recepcionarValidos(): void{
       this._ngxSpinner.show();
-      /*this._filesService.validacionMasiva(this.records.validos).subscribe((r) => {
-          this.records = r;
-          this._messageProviderService.showSnack('Recepcionados correctamente');
-          this._ngxSpinner.hide();
-          this.resetControls(true);
-          this._router.navigate(['/files/load-files/assignments']);
-      });*/
   }
 
 }
