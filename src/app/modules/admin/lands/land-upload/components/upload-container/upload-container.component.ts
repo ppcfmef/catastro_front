@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UploadhistoryService } from '../../services/uploadhistory.service';
 
 @Component({
@@ -19,12 +19,15 @@ export class UploadContainerComponent implements OnInit {
     fileUpload: new FormControl(null, [Validators.required]),
   });
 
+  isUpload = false;
+
   recordSumary: any;
 
   fileName: string;
 
   constructor(
       private _router: Router,
+      private route: ActivatedRoute,
       private _ngxSpinner: NgxSpinnerService,
       private _messageProviderService: MessageProviderService,
       private uploadService: UploadhistoryService,
@@ -33,6 +36,15 @@ export class UploadContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+        const uploadHistoryId = params?.uploadHistoryId;
+        if (uploadHistoryId) {
+            this.uploadService.uploadHistorySummary(Number(uploadHistoryId))
+            .subscribe(res => this.recordSumary = res);
+        }else {
+            this.isUpload = true;
+        }
+    });
   }
 
 

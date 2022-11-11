@@ -30,4 +30,8 @@ export class UploadhistoryService {
   changeStatus(uploadHistoryId: number, status: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/lands/upload/status/${uploadHistoryId}/`, { status });
   }
+
+  uploadHistorySummary(uploadHistoryId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/lands/upload/summary/${uploadHistoryId}/`);
+  }
 }
