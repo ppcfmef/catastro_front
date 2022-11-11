@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <!--
+            
             <div class="flex justify-center py-10">
                 <div class="block-icon">
                     
@@ -119,19 +119,19 @@
                     </div>
                 </div>
             </div>
-            -->
-            <!--
+           
+          
             <div class="flex-row w-full">
                 <div *ngIf="records" class="flex flex-col gap-4">
                     <ng-container *ngIf="records?.invalidos?.length > 0">
-                        <app-table-files styleTable="red" title="Registros Incorrectos" [records]="records.invalidos" [posicionExcel]="true" ></app-table-files>
+                        <app-upload-table-files styleTable="red" title="Registros Incorrectos" [records]="records.invalidos" [posicionExcel]="true" ></app-upload-table-files>
                     </ng-container>
                     <ng-container *ngIf="records?.validos?.length > 0">
-                        <app-table-files styleTable="green" title="Registros Validos" [records]="records.validos" [posicionExcel]="false"></app-table-files>
+                        <app-upload-table-files styleTable="green" title="Registros Validos" [records]="records.validos" [posicionExcel]="false"></app-upload-table-files>
                     </ng-container>
                 </div>
-                <app-table-files styleTable="red" title="Registros Incorrectos" [records]="records" [posicionExcel]="true" isDownload="true"></app-table-files>
-                <app-table-files styleTable="green" title="Registros Validos" [records]="records" [posicionExcel]="false" isDownload="true"></app-table-files>
+                <app-upload-table-files styleTable="red" title="Registros Incorrectos" [records]="records" [posicionExcel]="true" isDownload="true"></app-upload-table-files>
+                <app-upload-table-files styleTable="green" title="Registros Validos" [records]="records" [posicionExcel]="false" isDownload="true"></app-upload-table-files>
             </div>
             -->
         </div>

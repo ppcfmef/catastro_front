@@ -13,11 +13,11 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-table-files',
-  templateUrl: './table-files.component.html',
-  styleUrls: ['./table-files.component.scss']
+  selector: 'app-upload-table-files',
+  templateUrl: './upload-table-files.component.html',
+  styleUrls: ['./upload-table-files.component.scss']
 })
-export class TableFilesComponent implements OnInit, AfterViewInit, OnChanges {
+export class UploadTableFilesComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild(MatTable) recordsTable: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -67,4 +67,3 @@ export class TableFilesComponent implements OnInit, AfterViewInit, OnChanges {
 
   }
 }
-

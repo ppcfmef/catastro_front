@@ -32,6 +32,6 @@ export class SearchSumaryPage implements OnInit {
   }
 
   onGoToNewRecord(): void {
-    this._router.navigate(['/land/registry/upload'], {relativeTo: this._activatedRoute});
+    this._router.navigate(['/land/upload/new'], {relativeTo: this._activatedRoute});
   }
 }
