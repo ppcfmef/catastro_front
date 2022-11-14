@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -11,7 +11,8 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
   templateUrl: './new-owner-container.component.html',
   styleUrls: ['./new-owner-container.component.scss']
 })
-export class NewOwnerContainerComponent implements OnInit, OnDestroy {
+export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() ownerId: number;
   showFormEdit: boolean | null;
   search: FormControl = new FormControl();
   landOwner: LandOwner;
@@ -27,7 +28,21 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.landRegistryService.getLandOwner()
     .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe(result => this.landOwner = result);
+    .subscribe((result) => {
+      this.landOwner = result;
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const ownerId = changes.ownerId?.currentValue;
+    if (ownerId) {
+      this.landRegistryService.getOwner(ownerId)
+      .subscribe((res) => {
+        this.receivedShowFormEdit(false);
+        this.landRegistryService.setLandOwner(res);
+        this.search.setValue(res.dni);
+      });
+    }
   }
 
   receivedShowFormEdit(event): void{
@@ -37,6 +52,7 @@ export class NewOwnerContainerComponent implements OnInit, OnDestroy {
   newOwner(): void{
     this.showFormEdit = true;
     this.landRegistryService.setLandOwner(null);
+    this.search.reset();
   }
 
   searchOwner(): void {

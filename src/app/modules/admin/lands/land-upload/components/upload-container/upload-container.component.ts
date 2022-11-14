@@ -2,36 +2,49 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {FormUtils} from '../../../../../../shared/utils/form.utils';
 import { FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UploadhistoryService } from '../../services/uploadhistory.service';
 
 @Component({
-  selector: 'app-upload-new',
-  templateUrl: './upload-new.page.html',
-  styleUrls: ['./upload-new.page.scss']
+  selector: 'app-upload-container',
+  templateUrl: './upload-container.component.html',
+  styleUrls: ['./upload-container.component.scss']
 })
-export class UploadNewPage implements OnInit {
-
+export class UploadContainerComponent implements OnInit {
   @ViewChild('uploadfile') uploadfileElement: ElementRef;
   uploadId: number;
   uploadForm = new FormGroup({
     fileUpload: new FormControl(null, [Validators.required]),
   });
-  records: any;
+
+  isUpload = false;
+
   recordSumary: any;
 
   fileName: string;
 
   constructor(
       private _router: Router,
+      private route: ActivatedRoute,
       private _ngxSpinner: NgxSpinnerService,
       private _messageProviderService: MessageProviderService,
       private uploadService: UploadhistoryService,
+      private confirmationService: CustomConfirmationService,
   ) {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+        const uploadHistoryId = params?.uploadHistoryId;
+        if (uploadHistoryId) {
+            this.uploadService.uploadHistorySummary(Number(uploadHistoryId))
+            .subscribe(res => this.recordSumary = res);
+        }else {
+            this.isUpload = true;
+        }
+    });
   }
 
 
@@ -73,19 +86,6 @@ export class UploadNewPage implements OnInit {
       }
   }
 
-  resetControls(isResetAll = false): void {
-      this.uploadfileElement.nativeElement.value = null;
-      this.fileName = null;
-      this.uploadForm.get('fileUpload').reset();
-      this.uploadForm.markAsPristine();
-      this._ngxSpinner.hide();
-      if (isResetAll) {
-          this.uploadId = null;
-          this.records = [];
-      }
-  }
-
-
   uploadFile(event): void {
       const fileToUpload = event.target.files.item(0);
       this.fileName = event.target.value;
@@ -100,15 +100,54 @@ export class UploadNewPage implements OnInit {
 
   recepcionarValidos(): void{
       this._ngxSpinner.show();
-      /*this._filesService.validacionMasiva(this.records.validos).subscribe((r) => {
-          this.records = r;
-          this._messageProviderService.showSnack('Recepcionados correctamente');
-          this._ngxSpinner.hide();
-          this.resetControls(true);
-          this._router.navigate(['/files/load-files/assignments']);
-      });*/
   }
 
 
+  onCancelUpload(): void {
+    this.changeUploadStatus('CANCEL');
+    this.resetControls(true);
+  }
 
+  onValidSaveUpload(): void {
+    this.changeUploadStatus('IN_PROGRESS');
+  }
+
+  private changeUploadStatus(status: string): void {
+    if (this.recordSumary) {
+        this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status)
+        .subscribe(
+            (res) => {
+                this._router.navigate(['/land/upload/history']);
+                const dialogRef = this.confirmationService.success(
+                    'Registro de Predios',
+                    'Se guardo el estado de la carga correctamente'
+                );
+
+                dialogRef.afterClosed().toPromise().then( (option) => {
+                    this._router.navigate(['/land/upload/history']);
+                });
+            },
+            (error) => {
+                this.confirmationService.error(
+                    'Registro de usuarios',
+                    'Error al guardar el estado de la carga'
+                );
+            }
+        );
+    }else {
+        console.log('alert error');
+    }
+  }
+
+  private resetControls(isResetAll = false): void {
+      this.uploadfileElement.nativeElement.value = null;
+      this.fileName = null;
+      this.uploadForm.get('fileUpload').reset();
+      this.uploadForm.markAsPristine();
+      this._ngxSpinner.hide();
+      if (isResetAll) {
+        this.uploadId = null;
+        this.recordSumary = {};
+       }
+    }
 }

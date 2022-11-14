@@ -37,6 +37,15 @@
         <mat-option [value]="3">Inactivo</mat-option>
     </mat-select>
   </mat-form-field>
+  <div style="width: 100%; padding-top: 20px;">
+    <button mat-flat-button [color]="'primary'" style="float: right;"
+    (click)="onDownloadReport()"
+    >
+      <mat-icon [svgIcon]="'heroicons_solid:document-download'"></mat-icon>
+      Descargar reporte
+    </button>
+  </div>
+  
 </div>
 
 <app-search-land-table  

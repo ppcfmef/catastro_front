@@ -56,7 +56,7 @@ export class UploadhistoryListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onGoToUploadRecordDetail(uploadRecordId: number): void {
-    this._router.navigate(['/land/registry/history', uploadRecordId], {relativeTo: this._activatedRoute});
+    this._router.navigate(['/land/upload/history', uploadRecordId], {relativeTo: this._activatedRoute});
   }
 
   ngOnDestroy(): void {

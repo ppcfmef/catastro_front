@@ -14,6 +14,7 @@ export class LandSummaryTableComponent implements OnInit {
 
   @Input() dataSource: LandRegistryMap[];
   @Input() length: number;
+  @Input() selectedId: number;
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
   @Output() seledRecord: EventEmitter<LandRegistryMap> = new EventEmitter();
   @Output() downloadDeclaration: EventEmitter<LandRegistryMap> = new EventEmitter();
@@ -37,6 +38,9 @@ export class LandSummaryTableComponent implements OnInit {
         this.landSelected?.clear();
       }
     });
+    if (this.selectedId && this.dataSource?.length === 1) {
+      this.landSelected.add(this.dataSource[0]);
+    }
   }
 
   landSelection(landRecord: LandRegistryMap): void{

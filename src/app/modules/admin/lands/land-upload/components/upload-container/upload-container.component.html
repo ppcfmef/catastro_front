@@ -1,0 +1,91 @@
+<div class="flex-row w-full justify-center">
+  <div class="pb-4 block-upload w-full  justify-center"
+  [formGroup]="uploadForm" *ngIf="true">
+      <label for="uploadfile" class="flex flex-col w-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card justify-center">
+          <div class="aspect-w-9 aspect-h-6 ">
+              <div class="flex items-center justify-center">
+                  <div class="relative">
+                      <mat-icon *ngIf="!fileUpload?.value" class="notranslate icon-size-14 text-hint"
+                                svgIcon="iconsmind:file_upload"></mat-icon>
+                      <ng-container *ngIf="fileUpload?.value">
+                          <mat-icon class="notranslate icon-size-14 text-hint" svgIcon="iconsmind:file"></mat-icon>
+                          <div
+                              class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white bg-green-600">
+                              XLS
+                          </div>
+                      </ng-container>
+  
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="!fileUpload?.value"  class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+              <div class="mat-tooltip-trigger truncate text-primary-500">Seleccionar archivo</div>
+          </div>
+          <input type="file" (change)="uploadFile($event)" hidden name="uploadfile" id="uploadfile" #uploadfile>
+      </label>
+      <div class="flex ml-4">
+          <div class="block-data-file">
+              <div class="flex items-center justify-between py-3">
+                  <h3 class="text-secondary font-bold text-2xl">{{ fileName? fileName : "Nombre del Archivo"}}</h3>
+              </div>
+              <ng-container ><!--*ngIf="recordSumary"-->
+                  <div>
+                      <div class="text-secondary">Cantidad de Registros:</div>
+                      <div class="font-semibold">{{ recordSumary?.total || 0 }}</div>
+                  </div>
+                  <div>
+                      <div class="text-secondary ">Registros válidos</div>
+                      <div class="text-green-500 font-semibold">{{ recordSumary?.corrects || 0 }}</div>
+                  </div>
+                  <div>
+                      <div class="text-secondary">Registros inválidos</div>
+                      <div class="text-red-500 font-semibold">{{ recordSumary?.errors || 0 }}</div>
+                  </div>
+              </ng-container>
+              
+              <!---->
+          </div>
+      </div>                    
+  </div>
+  <div class="flex w-full justify-center" *ngIf="isUpload || recordSumary?.status === 'INITIAL'">
+      <button class="mat-focus-indicator mat-flat-button mat-button-base mat-primary mr-10"
+      [disabled]="uploadForm.invalid"
+      (click)="parseFormFile()">
+          <mat-icon svgIcon="heroicons_outline:plus-sm"></mat-icon>
+          <span class="ml-2 mr-1">Cargar Registros</span>
+      </button>
+      <div
+      class="flex flex-row-reverse items-start justify-between" *ngIf="recordSumary">
+          <div class="flex flex-row">
+              <button class="mat-focus-indicator mat-flat-button mat-button-base mat-warn mr-10" (click)="onCancelUpload()">
+                  <mat-icon svgIcon="heroicons_outline:minus-sm"></mat-icon>
+                  <span class="ml-2 mr-1">Cancelar carga</span>
+              </button> 
+              <button class="mat-focus-indicator mat-flat-button mat-button-base bg-recepcionar" (click)="onValidSaveUpload()" *ngIf="recordSumary?.correctsData">
+                  <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
+                  <span class="ml-2 mr-1">Validar y Guardar</span>
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="flex-row w-full">
+  <div class="flex flex-col gap-4">
+      <ng-container *ngIf="recordSumary">
+          <app-upload-table-files styleTable="red" title="Registros Incorrectos"
+            [records]="recordSumary?.errorsData"
+            [posicionExcel]="true"
+            isDownload="true"
+            >
+          </app-upload-table-files>
+      </ng-container>
+      <ng-container *ngIf="recordSumary">
+          <app-upload-table-files styleTable="green" title="Registros Validos"
+            [records]="recordSumary?.correctsData"
+            [posicionExcel]="true"
+            isDownload="true">
+          </app-upload-table-files>
+      </ng-container>
+  </div>
+</div>

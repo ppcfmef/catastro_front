@@ -1,31 +1,56 @@
 
 
-<div  [ngStyle]="{'position':'absolute','z-index':1, 'top':'0px','rigth':'0px','width':'400px' }">
 
-    <select aria-placeholder="Departamento"  placeholder="Elegir"   (change)="selectDep($event)">
-        <ng-container *ngFor="let department of departments$ | async">
-            <option [value]="department.code">{{ department.name }}</option>
-        </ng-container>
+<div class="ubigeo-selection">
+    <div class="text-selection" (click)="openCloseUbigeo()">
+        <div>
+            {{selectionText.dep == ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }} 
+            {{selectionText.prov != '' ? '-':''}} 
+            {{ selectionText.prov}} 
+            {{selectionText.dist != '' ? '-':''}} 
+            {{selectionText.dist}}
+        </div>
+        <mat-icon *ngIf="hideUbigeo" svgIcon="heroicons_solid:chevron-down"></mat-icon>
+        <mat-icon *ngIf="!hideUbigeo" svgIcon="heroicons_solid:chevron-up"></mat-icon>
+    </div>
+    <div class="block-selects" [hidden]="hideUbigeo">
 
-    </select>
+        <mat-form-field  class="fuse-mat-dense fuse-mat-no-subscript" select aria-placeholder="Departamento" >
+            <mat-label>Departamento</mat-label>
+            <mat-select (selectionChange)="selectDep($event)" placeholder="Elegir">
+                <mat-option value="null">---</mat-option>
+                <ng-container *ngFor="let department of departments$ | async">
+                    <mat-option [value]="department">{{ department.name }}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field  class="fuse-mat-dense fuse-mat-no-subscript" select aria-placeholder="Departamento" >
+            <mat-label>Provincia</mat-label>
+            <mat-select (selectionChange)="selectProv($event)" placeholder="Elegir" [disabled]="(provinces$ | async) == undefined">
+                <mat-option value="null">---</mat-option>
+                <ng-container *ngFor="let province of provinces$ | async">
+                    <mat-option [value]="province">{{ province.name }}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field  class="fuse-mat-dense fuse-mat-no-subscript" select aria-placeholder="Departamento" >
+            <mat-label>Distrito</mat-label>
+            <mat-select (selectionChange)="selectDist($event)" placeholder="Elegir" [disabled]="(districts$ | async) == undefined">
+                <mat-option value="null">---</mat-option>
+                <ng-container *ngFor="let district of districts$ | async">
+                    <mat-option [value]="district">{{ district.name }}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
 
-    <select aria-placeholder="Provincia"  placeholder="Elegir"  (change)="selectProv($event)">
-        <ng-container *ngFor="let province of provinces$ | async">
-            <option [value]="province.code">{{ province.name }}</option>
-        </ng-container>
-
-    </select>
-
-
-    <select aria-placeholder="Distrito" placeholder="Elegir"  (change)="selectDist($event)" >
-        <ng-container *ngFor="let district of districts$ | async">
-            <option [value]="district.code">{{ district.name }}</option>
-        </ng-container>
-
-    </select>
-
-
-
+        <div class="btn-close">
+            <button (click)="openCloseUbigeo('close')">
+                <mat-icon svgIcon="mat_solid:close"></mat-icon>
+                <span> Cerrar</span>
+            </button>
+        </div>
+        
+    </div>
 </div>
 
 <div class="w-full h-full">

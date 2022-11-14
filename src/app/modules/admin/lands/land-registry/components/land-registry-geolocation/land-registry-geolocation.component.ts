@@ -1280,7 +1280,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 Graphic,
             ] = await loadModules(['esri/Graphic']);
 
-            this.view.graphics.removeAll();
+            this.view?.graphics?.removeAll();
 
             console.log('latitude,longitude>>>', latitude, longitude);
             const point = {
@@ -1294,7 +1294,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 symbol: symbol,
                 /*symbol: this.simpleMarkerSymbolUndefined*/
             });
-            this.view.graphics.addMany([pointGraphic]);
+            this.view?.graphics?.addMany([pointGraphic]);
             if(estado&& estado===Estado.LEER ){
                 console.log('open');
                 //this.displayPopupDiv='flex';
@@ -1308,7 +1308,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     className: "esri-icon-zoom-out-magnifying-glass"
                    };*/
 
-                this.view.popup.open({
+                this.view?.popup?.open({
                     title: 'Predio',
                     //content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
                     location: pointGraphic.geometry,

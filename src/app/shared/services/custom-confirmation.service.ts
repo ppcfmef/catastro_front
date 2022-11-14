@@ -12,8 +12,8 @@ export class CustomConfirmationService {
     private confirmation: FuseConfirmationService
   ) { }
 
-  success(title: string, message: string): void {
-    this.confirmation.open({
+  success(title: string, message: string): MatDialogRef<FuseConfirmationDialogComponent> {
+    return this.confirmation.open({
       title: title,
       message: message,
       icon: {

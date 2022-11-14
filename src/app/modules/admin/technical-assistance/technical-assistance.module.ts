@@ -29,6 +29,7 @@ import { TutorialItemComponent } from './components/tutorial-catalog-container/t
 import { TutorialService } from './services/tutorial.service';
 import { FaqService } from './services/faq.service';
 import { QuestionAnswerComponent } from './components/faq-container/question-answer/question-answer.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { QuestionAnswerComponent } from './components/faq-container/question-ans
     MatIconModule,
     MatPaginatorModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatExpansionModule
   ],
   providers: [
     DocumentCatalogService,

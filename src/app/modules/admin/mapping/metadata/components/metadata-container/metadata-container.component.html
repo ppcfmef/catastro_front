@@ -2,10 +2,11 @@
 [catalog]="catalogDetail"
 (closeDetail)="onCloseDetail()"
 ></app-gis-catalog-detail>
-<div class="flex">
+<div class="metadata-block">
   <app-gis-catalog class="p-5" *ngFor="let catalog of catalogs"
   [catalog]="catalog"
   (showDetail)="onShowDetail($event)"
+  [ngClass]="{activeCatalog : catalog?.id === catalogDetail?.id}"
   ></app-gis-catalog>
 </div>
 <mat-paginator *ngIf="catelogsPagination?.count > paginationLimit"
