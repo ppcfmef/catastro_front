@@ -71,10 +71,32 @@
                 <div class="inline-flex items-end justify-center w-full mt-1.5">
                     
                    <div>
-                    <re-captcha formControlName="captcha" errorMode="handled" required></re-captcha>
-                    <mat-error *ngIf="f.captcha.hasError('required') && signInForm.dirty">
-                        El captcha es obligatorio
+                    <!--<re-captcha formControlName="captcha" errorMode="handled" required></re-captcha>
+                    <input placeholder="Captcha image" [(ngModel)]="captcha">
+-->
+
+
+                    <img  *ngIf="captcha" src="data:image/png;base64,{{this.captcha.captchaImage}}">
+                    <mat-form-field class="w-full">
+
+                        <input
+                        id="captcha"
+                        matInput
+                        [formControlName]="'captcha'"
+                        >
+                      
+    
+                        <mat-error *ngIf="f.captcha.hasError('required') && signInForm.dirty">
+                            El captcha es obligatorio
+                        </mat-error>
+
+                        
+                    </mat-form-field>
+
+                    <mat-error >
+                        {{alertCaptcha.message}}
                     </mat-error>
+                   
                    </div>
                 </div>
 

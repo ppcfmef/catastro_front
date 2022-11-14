@@ -4,6 +4,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
+import { Captcha } from 'app/shared/interfaces/captcha.interface';
+import { CaptchaService } from 'app/shared/services/captcha.service';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -20,9 +22,15 @@ export class AuthSignInComponent implements OnInit
         type   : 'success',
         message: ''
     };
+
+    alertCaptcha: any = {
+        type   : 'success',
+        message: ''
+    };
     signInForm: FormGroup;
     showAlert: boolean = false;
-
+    captcha: Captcha;
+    captchaImage: any;
     /**
      * Constructor
      */
@@ -30,7 +38,8 @@ export class AuthSignInComponent implements OnInit
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
-        private _router: Router
+        private _router: Router,
+        private _captchaService: CaptchaService
     )
     {
     }
@@ -43,7 +52,7 @@ export class AuthSignInComponent implements OnInit
      * On init
      */
     ngOnInit(): void
-    {
+    {   this.getCaptcha();
         // Create the form
         this.signInForm = this._formBuilder.group({
             username  : ['', [Validators.required]],
@@ -75,7 +84,12 @@ export class AuthSignInComponent implements OnInit
         // Hide the alert
         this.showAlert = false;
 
-        const payload = this.signInForm.getRawValue();
+        const payload: any = this.signInForm.getRawValue();
+        if(this.captcha){
+            payload.captcha_key=this.captcha.captchaKey;
+            payload.captcha_value=payload.captcha;
+        }
+        
         payload.token = await this.getTokenByCaptcha();
         // Sign in
         this._authService.signIn(payload)
@@ -93,7 +107,8 @@ export class AuthSignInComponent implements OnInit
 
                 },
                 (response) => {
-
+                    console.log('response>>',response);
+                  
                     // Re-enable the form
                     this.signInForm.enable();
 
@@ -108,12 +123,33 @@ export class AuthSignInComponent implements OnInit
 
                     // Show the alert
                     this.showAlert = true;
+                    console.log(response?.error?.nonFieldErrors[0]);
+                    if( response && response.error && response.error.nonFieldErrors && response.error.nonFieldErrors[0]){
+                        this.alertCaptcha ={
+                            type   : 'error',
+                            message: 'Valor del Captcha Invalido'
+                        };
+                    }
+
+                    this.getCaptcha();
                 }
             );
     }
 
     async getTokenByCaptcha(): Promise<string> {
         return;
+    }
+    getCaptcha(): void{
+        this._captchaService.getCaptcha().subscribe((result: Captcha)=>{
+            if(result){
+                this.captcha = result;
+                
+                //this.captchaImage=btoa(String.fromCharCode.apply(null, new Uint8Array(this.captcha.captchaImage)));
+               
+                //this.captchaImage= btoa(JSON.stringify(this.captcha.captchaImage));
+                //console.log(' this.captchaImage>>', this.captchaImage);
+            }
+        });
     }
 
     get f(): {[key: string]: AbstractControl} {
