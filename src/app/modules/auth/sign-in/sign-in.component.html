@@ -70,13 +70,18 @@
                 <!-- Recapcha -->
                 <div class="inline-flex items-end justify-center w-full mt-1.5">
                     
-                   <div>
+                   <div >
                     <!--<re-captcha formControlName="captcha" errorMode="handled" required></re-captcha>
                     <input placeholder="Captcha image" [(ngModel)]="captcha">
 -->
-
-
-                    <img  *ngIf="captcha" src="data:image/png;base64,{{this.captcha.captchaImage}}">
+                    <div class="flex">
+                        <img  *ngIf="captcha" src="data:image/png;base64,{{this.captcha.captchaImage}}">
+                        <button mat-icon-button (click)="onUpdateCaptcha()">
+                            <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:refresh'"></mat-icon>
+                        </button>
+                    </div>
                     <mat-form-field class="w-full">
 
                         <input
@@ -100,19 +105,20 @@
                    </div>
                 </div>
 
-                <!-- Actions -->
+                <!-- Actions 
                 <div class="inline-flex items-end justify-center w-full mt-1.5">
                     
                     <a
                         class="text-md font-medium  hover:underline c-purple-mef"
                         [routerLink]="['/forgot-password']">Olvidaste contraseña?
                     </a>
-                </div>
+                </div>-->
 
                 <!-- Submit button -->
                 <button
                     class="fuse-mat-button-large w-full mt-6 bg-mef"
                     mat-flat-button
+                    type="submit"
                     [color]="'primary'"
                     [disabled]="signInForm.disabled"
                     (click)="signIn()">

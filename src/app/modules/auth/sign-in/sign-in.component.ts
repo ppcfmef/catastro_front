@@ -152,6 +152,10 @@ export class AuthSignInComponent implements OnInit
         });
     }
 
+    onUpdateCaptcha(): void {
+        this.getCaptcha();
+    }
+
     get f(): {[key: string]: AbstractControl} {
         return this.signInForm.controls;
     }
