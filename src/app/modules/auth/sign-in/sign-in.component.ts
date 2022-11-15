@@ -89,7 +89,7 @@ export class AuthSignInComponent implements OnInit
             payload.captcha_key=this.captcha.captchaKey;
             payload.captcha_value=payload.captcha;
         }
-        
+
         payload.token = await this.getTokenByCaptcha();
         // Sign in
         this._authService.signIn(payload)
@@ -108,7 +108,7 @@ export class AuthSignInComponent implements OnInit
                 },
                 (response) => {
                     console.log('response>>',response);
-                  
+
                     // Re-enable the form
                     this.signInForm.enable();
 
@@ -143,9 +143,9 @@ export class AuthSignInComponent implements OnInit
         this._captchaService.getCaptcha().subscribe((result: Captcha)=>{
             if(result){
                 this.captcha = result;
-                
+
                 //this.captchaImage=btoa(String.fromCharCode.apply(null, new Uint8Array(this.captcha.captchaImage)));
-               
+
                 //this.captchaImage= btoa(JSON.stringify(this.captcha.captchaImage));
                 //console.log(' this.captchaImage>>', this.captchaImage);
             }

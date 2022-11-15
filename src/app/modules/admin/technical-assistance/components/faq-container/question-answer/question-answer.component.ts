@@ -11,41 +11,31 @@ export class QuestionAnswerComponent implements OnInit, AfterViewInit, OnChanges
   @Input() documents: Document[] = [];
   @Input() categories = [];
   @Output() selectCategory = new EventEmitter<string>();
-  
 
-  
+
+
 
   constructor() {
 	}
 
-  ngOnInit(): void {
-     
-	}
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-     
-  }
-  
-  ngOnChanges(changes: SimpleChanges) {
-    if(changes.categories){
-      
-    }
+
   }
 
-  selectCategorie(id):void{
-    for(let i= 0; i< this.categories.length; i++ ){
-      if(this.categories[i].id==id){
+  ngOnChanges(changes: SimpleChanges): void {}
+
+  selectCategorie(id): void{
+    for (const i in  this.categories) {
+      if(this.categories[i].id === id){
         this.categories[i]['active'] = true;
       }else{
         this.categories[i]['active'] = false;
       }
     }
-
     this.selectCategory.emit(id);
   }
-  
-
-
 }
 
 

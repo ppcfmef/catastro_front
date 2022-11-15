@@ -30,13 +30,13 @@
             </div>
         </mat-accordion>
 
-        <div *ngIf="documents.length == 0" class="none-documents">
+        <div *ngIf="documents.length === 0" class="none-documents">
             <mat-icon class="icon-size-24" svgIcon="feather:search"></mat-icon>
             <div>
                 No se encontraron resultados
             </div>
         </div>
-        <div [hidden]="documents.length < 20 || documents.length == 0 ">
+        <div [hidden]="documents.length < 20 || documents.length === 0 ">
             <ng-content select="[paginator]"></ng-content>
         </div>
 

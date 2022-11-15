@@ -71,9 +71,6 @@
                 <div class="inline-flex items-end justify-center w-full mt-1.5">
                     
                    <div >
-                    <!--<re-captcha formControlName="captcha" errorMode="handled" required></re-captcha>
-                    <input placeholder="Captcha image" [(ngModel)]="captcha">
--->
                     <div class="flex">
                         <img  *ngIf="captcha" src="data:image/png;base64,{{this.captcha.captchaImage}}">
                         <button mat-icon-button (click)="onUpdateCaptcha()">
@@ -104,15 +101,6 @@
                    
                    </div>
                 </div>
-
-                <!-- Actions 
-                <div class="inline-flex items-end justify-center w-full mt-1.5">
-                    
-                    <a
-                        class="text-md font-medium  hover:underline c-purple-mef"
-                        [routerLink]="['/forgot-password']">Olvidaste contraseña?
-                    </a>
-                </div>-->
 
                 <!-- Submit button -->
                 <button

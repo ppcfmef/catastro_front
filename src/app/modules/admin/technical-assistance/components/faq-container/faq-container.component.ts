@@ -70,11 +70,11 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 			{name: 'Categoria 1', id:10},
 			{name: 'Categoria 2', id:12},
 			{name: 'Categoria 3', id:11},
-		  ]
-		
+		  ];
+
 	}
 
-	selecCategory(idCategory: string){
+	selecCategory(idCategory: string): void {
 		console.log(idCategory);
 	}
 

@@ -1,13 +1,10 @@
-
-
-
 <div class="ubigeo-selection">
     <div class="text-selection" (click)="openCloseUbigeo()">
         <div>
-            {{selectionText.dep == ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }} 
-            {{selectionText.prov != '' ? '-':''}} 
+            {{selectionText.dep === ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }} 
+            {{selectionText.prov !== '' ? '-':''}} 
             {{ selectionText.prov}} 
-            {{selectionText.dist != '' ? '-':''}} 
+            {{selectionText.dist !== '' ? '-':''}} 
             {{selectionText.dist}}
         </div>
         <mat-icon *ngIf="hideUbigeo" svgIcon="heroicons_solid:chevron-down"></mat-icon>
@@ -26,7 +23,7 @@
         </mat-form-field>
         <mat-form-field  class="fuse-mat-dense fuse-mat-no-subscript" select aria-placeholder="Departamento" >
             <mat-label>Provincia</mat-label>
-            <mat-select (selectionChange)="selectProv($event)" placeholder="Elegir" [disabled]="(provinces$ | async) == undefined">
+            <mat-select (selectionChange)="selectProv($event)" placeholder="Elegir" [disabled]="(provinces$ | async) === undefined">
                 <mat-option value="null">---</mat-option>
                 <ng-container *ngFor="let province of provinces$ | async">
                     <mat-option [value]="province">{{ province.name }}</mat-option>
@@ -35,7 +32,7 @@
         </mat-form-field>
         <mat-form-field  class="fuse-mat-dense fuse-mat-no-subscript" select aria-placeholder="Departamento" >
             <mat-label>Distrito</mat-label>
-            <mat-select (selectionChange)="selectDist($event)" placeholder="Elegir" [disabled]="(districts$ | async) == undefined">
+            <mat-select (selectionChange)="selectDist($event)" placeholder="Elegir" [disabled]="(districts$ | async) === undefined">
                 <mat-option value="null">---</mat-option>
                 <ng-container *ngFor="let district of districts$ | async">
                     <mat-option [value]="district">{{ district.name }}</mat-option>

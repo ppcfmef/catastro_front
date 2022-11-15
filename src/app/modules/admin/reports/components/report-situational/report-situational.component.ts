@@ -80,7 +80,7 @@ export class ReportSituationalComponent implements OnInit {
 
 
 selectDep(event: any): void {
-   
+
   this.paramsUbigeo.dpto = event.value.code;
   this.selectionText={
     dep:event.value.name,
@@ -94,7 +94,7 @@ selectDep(event: any): void {
 }
 
 selectProv(event: any): void {
-  console.log(event)
+  console.log(event);
   this.paramsUbigeo.prov = event.value.code;
   this.selectionText.prov = event.value.name;
   this.selectionText.dist= '';
@@ -114,6 +114,14 @@ selectDist(event: any): void {
     this.formEdit = this.fb.group({
       ubigeo: [null],
     });
+  }
+
+  openCloseUbigeo(close = ''): void{
+    if(close === 'close'){
+      this.hideUbigeo = true;
+      return;
+    }
+    this.hideUbigeo = !this.hideUbigeo;
   }
 
   private getLand(ubigeo: any): any {
@@ -154,13 +162,4 @@ selectDist(event: any): void {
       this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
     }*/
   }
-
-  openCloseUbigeo(close = ''):void{
-    if(close == 'close'){
-      this.hideUbigeo = true;
-      return
-    }
-    this.hideUbigeo = !this.hideUbigeo;
-  }
-
 }
