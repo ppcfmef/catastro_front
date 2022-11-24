@@ -39,7 +39,8 @@
                                 "glob": "_redirects",
                                 "input": "src",
                                 "output": "/"
-                            }
+                            },
+                            "src/web.config"
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": [
