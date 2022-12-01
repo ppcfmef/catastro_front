@@ -1,0 +1,19 @@
+<article class="flex ml-8">
+    <ng-container *ngIf="isHome; else notIsHome">
+        <a [routerLink]="'/home'">
+            <mat-icon svgIcon="heroicons_outline:home"></mat-icon> 
+            <span>Inicio</span>
+        </a>
+    </ng-container>
+    <ng-template #notIsHome>
+        <a [routerLink]="'/home'">
+            <mat-icon svgIcon="heroicons_outline:home"></mat-icon> 
+            <span>Inicio</span></a>
+        <a *ngFor="let bread of breadCrumbTemplate; let i = index"
+        [routerLink]="bread.link" class="bread-mid" [ngClass]="{active : (breadCrumbTemplate.length -1) === i }">
+            <span>{{ bread.title}}</span>
+        </a>
+    </ng-template>
+    
+</article>
+

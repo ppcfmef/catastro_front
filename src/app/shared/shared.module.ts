@@ -21,6 +21,7 @@ import { GeoLocationComponent } from './components/geo-location/geo-location.com
 import { TabsComponent } from './components/tabs/tabs.component';
 
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
+import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.component';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
         GeoLocationComponent,
         TabsComponent,
         OnlyNumbersDirective,
+        BreadCrumbsComponent,
     ],
     declarations: [
         AlertConfirmComponent,
@@ -61,6 +63,7 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
         GeoLocationComponent,
         TabsComponent,
         OnlyNumbersDirective,
+        BreadCrumbsComponent,
     ]
 })
 export class SharedModule
