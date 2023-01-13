@@ -7,6 +7,7 @@ import {
     OnInit,
     ViewChild,
     OnChanges,
+    OnDestroy,
 } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
@@ -17,7 +18,7 @@ import { LandRecord } from 'app/modules/admin/lands/land-registry/interfaces/lan
 import moment from 'moment';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
@@ -27,7 +28,7 @@ import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land
     templateUrl: './show-map-point.component.html',
     styleUrls: ['./show-map-point.component.scss'],
 })
-export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
+export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
     @Input() landOwner: LandOwner;
     @Input() landRecord: LandRecord;
     @Input() points: Coordinates[] = [
@@ -140,15 +141,21 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             ],
         },
     ];
-
+    subscription: Subscription
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
         private _userService: UserService
     ) {}
+    ngOnDestroy(): void {
+
+        this.subscription.unsubscribe();
+        //this._landRecordService.setLandRecordDownloadCroquis(false);
+        //throw new Error('Method not implemented.');
+    }
 
     ngOnInit(): void {
-        this._landRecordService
+        this.subscription   =this._landRecordService
             .getLandRecordDownloadCroquis()
             .subscribe((res: boolean) => {
                 if (res) {
