@@ -43,7 +43,8 @@
             </mat-paginator>
         </div>
         <div class="flex flex-row-reverse" *ngIf="isDownload && dataSource">
-            <button class="justify-end mat-focus-indicator mat-flat-button mat-button-base mat-primary" (click)="eventDownload.emit()">
+            <button class="justify-end mat-focus-indicator mat-flat-button mat-button-base mat-primary"
+            (click)="eventDownload.emit()">
                 <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon>
                 <span class="ml-2 mr-1">Descargar</span>
             </button>

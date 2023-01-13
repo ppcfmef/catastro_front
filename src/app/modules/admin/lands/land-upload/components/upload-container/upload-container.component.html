@@ -77,6 +77,7 @@
             [records]="recordSumary?.errorsData"
             [posicionExcel]="true"
             isDownload="true"
+            (eventDownload)="onDownloadRecordsUpload('ERROR')"
             >
           </app-upload-table-files>
       </ng-container>
@@ -84,7 +85,9 @@
           <app-upload-table-files styleTable="green" title="Registros Validos"
             [records]="recordSumary?.correctsData"
             [posicionExcel]="true"
-            isDownload="true">
+            isDownload="true"
+            (eventDownload)="onDownloadRecordsUpload('OK')"
+            >
           </app-upload-table-files>
       </ng-container>
   </div>
