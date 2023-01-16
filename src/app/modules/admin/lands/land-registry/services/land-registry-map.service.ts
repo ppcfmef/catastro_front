@@ -24,8 +24,16 @@ export class LandRegistryMapService {
 
   layersInfo = [
 
+    {
 
-     {
+        id: 0,
+        idServer: 0,
+        urlBase:
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            utm: null,
+
+    },
+   /*  {
 
          id: 0,
          idServer: 0,
@@ -53,7 +61,7 @@ export class LandRegistryMapService {
             'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
             utm: 19,
 
-    },
+    },*/
 
 
 
@@ -162,7 +170,8 @@ export class LandRegistryMapService {
         const district =await this._commonService.getDistrictResource(ubigeo).toPromise();
         const utm=district.resources[0].utm;
 
-        const layerInfo=this.layersInfo.find(e=>e.utm === utm);
+        //const layerInfo=this.layersInfo.find(e=>e.utm === utm);
+        const layerInfo=this.layersInfo[0];
         const url=`${layerInfo.urlBase}/${layerInfo.idServer}`;
 
         const layer = new FeatureLayer(url);
@@ -204,7 +213,7 @@ export class LandRegistryMapService {
     //console.log('stats.max_COD_CPU.substring(8,12)',stats.max_COD_CPU.substring(8,12));
     //const unidadImb=stats.max_COD_CPU.substring(8,12) && stats.max_COD_CPU.substring(8,12)!=='NaNN'?stats.max_COD_CPU.substring(8,12):'0000';
     let unidadImbNew = '0001';
-    if(response.features.length>0){
+    if(response.features.length>0 && stats.max_COD_CPU && stats.max_COD_CPU!==null ){
         const unidadImb=stats.max_COD_CPU.split('-')[1];
         unidadImbNew = FormUtils.zeroPad(parseInt(unidadImb,10)+1,4);
     }

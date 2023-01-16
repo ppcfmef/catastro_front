@@ -72,7 +72,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
     proj4Src = this.proj4Catalog + ':' + String(this.proj4Wkid);
     layerList: any;
     groupLayers = [
-        {
+       /* {
             id: 0,
             title: 'Zona 17',
             children: [0, 1, 2,101],
@@ -89,6 +89,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             title: 'Zona 19',
             children: [6, 7, 8,103],
         },
+*/
+
+{
+    id: 0,
+    title: 'Cartografia Fiscal',
+    children: [0, 1, 2,101],
+},
 
         {
             id: 3,
@@ -137,72 +144,72 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         },*/
 
         {
-            title: 'Lotes Zona 17',
+            title: 'Lotes Zona',
             id: 0,
             idServer: 1,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Lotes Poligono Zona 17',
+            title: 'Lotes Poligono Zona',
             id: 1,
             idServer: 5,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Via Zona 17',
+            title: 'Via Zona',
             id: 2,
             idServer: 2,
 
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Manzana Urbana Zona 17',
+            title: 'Manzana Urbana Zona',
             id: 101,
             idServer: 9,
 
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
-
+/*
         {
             title: 'Lotes Zona 18',
             id: 3,
@@ -331,7 +338,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: 19,
             projection: 32719,
             visible:true,
-        },
+        },*/
         {
             title: 'Arancel',
             id: 9,
@@ -1704,17 +1711,22 @@ async saveNewPointGestionPredio(): Promise<void>{
                 /*.subscribe((data: DistrictResource) => {
                     this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
                 });*/
-
+/*
         const _layer = this.layersInfo.find(
                     e =>  e.utm === utm
                 );
+*/
+        const _urlBase = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
 
-        const wkid = parseInt('327' + utm, 10);
+
+
+        //const wkid = parseInt('327' + utm, 10);
+        const wkid = 4326;
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
 
-            const urlBase=`${_layer.urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
+            const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
 
