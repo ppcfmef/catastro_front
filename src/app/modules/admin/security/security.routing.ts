@@ -28,6 +28,12 @@ const routes: Routes = [
         loadChildren: () => import('app/modules/admin/security/modules/permissions/permissions.module')
             .then(m => m.PermissionsModule)
     },
+    {
+        path: 'monitoring',
+        loadChildren: () => import('app/modules/admin/security/modules/user-monitoring/user-monitoring.module')
+            .then(m => m.UserMonitoringModule)
+    },
+
 ];
 
 @NgModule({

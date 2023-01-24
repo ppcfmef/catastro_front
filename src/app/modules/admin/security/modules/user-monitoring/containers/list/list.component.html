@@ -1,0 +1,77 @@
+<ng-container>
+  <h2>Jurisdición disponible</h2>
+  <p class="mb-7">
+    <b class="mr-2">Departamento:</b>  Lima    
+    <b class="mr-2 ml-8">Provincia:</b> Lima
+  </p>
+
+  <section>
+      <form class="example-form">
+          <mat-form-field class="w-80 mb-7" appearance="fill">
+            <mat-label>Buscar por institución </mat-label>
+            <input type="text"
+                  placeholder="Ingrese nombre de institución"
+                  floatLabel="always"
+                  aria-label="Number"
+                  matInput
+                  [formControl]="myControl"
+                  [matAutocomplete]="auto">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
+                <div class="mb-0">{{option.dist}}</div>
+                <div> {{'Lima - Lima - Miraflores'}}</div>
+
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+  </section>
+
+  <section>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full max-w-3xl">
+
+      <ng-container matColumnDef="nro">
+        <th mat-header-cell *matHeaderCellDef>Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+      </ng-container>
+    
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>Usuarios</th>
+        <td mat-cell *matCellDef="let element">{{element.user}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="names">
+        <th mat-header-cell *matHeaderCellDef>Nombres y apellidos</th>
+        <td mat-cell *matCellDef="let element">{{element.nombres}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Rol</th>
+        <td mat-cell *matCellDef="let element">{{element.rol}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let element">{{element.acciones}}</td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator class="w-full max-w-3xl" [length]="length"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"
+            >
+    </mat-paginator>
+  </section>
+</ng-container>
+
+
+<ng-container>
+  <app-detail></app-detail>
+</ng-container>
