@@ -394,7 +394,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
-
+        urlSearchDireccionesMunicipales =
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0';
     /*urlGestionPredios =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';*/
 
@@ -681,7 +682,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 this.urlSearchDirecciones
             );
 
-
+            const featureDireccionesMunicipales = new FeatureLayer(
+                this.urlSearchDireccionesMunicipales
+            );
             const labelClassVias = {
                 // autocasts as new LabelClass()
                 symbol: {
@@ -1042,15 +1045,54 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
                               },
 
-                            {
+                              {
                                 layer: featureDirecciones,
                                 searchFields: ['DIR_MUN'],
                                 displayField: 'DIR_MUN',
                                 exactMatch: false,
                                 outFields: ['DIR_MUN'],
-                                name: 'DIRECCIONES',
+                                name: 'DIRECCION INEI',
+                                filter:searchFilter
+                            },
+                            {
+                                layer: this.featureZonaUrbana,
+                                searchFields: ['DISTRITO', 'UBIGEO'],
+                                displayField: 'DISTRITO',
+                                exactMatch: false,
+                                outFields: ['UBIGEO', 'DISTRITO'],
+                                name: 'DISTRITOS',
+                                filter:searchFilter
+                            },
+
+
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['DIR_MUN'],
+                                displayField: 'DIR_MUN',
+                                exactMatch: false,
+                                outFields: ['DIR_MUN'],
+                                name: 'DIRECCION MUNICIPAL',
                                 filter:searchFilter
 
+                            },
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['COD_PRE'],
+                                displayField: 'COD_PRE',
+                                exactMatch: false,
+                                outFields: ['COD_PRE'],
+                                name: 'CODIGO DE PREDIO',
+                                filter:searchFilter
+
+                            },
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['COD_CPU'],
+                                displayField: 'COD_CPU',
+                                exactMatch: false,
+                                outFields: ['COD_CPU'],
+                                name: 'CODIGO CPU',
+                                filter:searchFilter
                             },
                         ];
 
@@ -1102,7 +1144,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             displayField: 'DIR_MUN',
                             exactMatch: false,
                             outFields: ['DIR_MUN'],
-                            name: 'DIRECCIONES',
+                            name: 'DIRECCION INEI',
                         },
                         {
                             layer: this.featureZonaUrbana,
@@ -1111,6 +1153,34 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['UBIGEO', 'DISTRITO'],
                             name: 'DISTRITOS',
+                        },
+
+
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['DIR_MUN'],
+                            displayField: 'DIR_MUN',
+                            exactMatch: false,
+                            outFields: ['DIR_MUN'],
+                            name: 'DIRECCION MUNICIPAL',
+
+                        },
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['COD_PRE'],
+                            displayField: 'COD_PRE',
+                            exactMatch: false,
+                            outFields: ['COD_PRE'],
+                            name: 'CODIGO DE PREDIO',
+
+                        },
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['COD_CPU'],
+                            displayField: 'COD_CPU',
+                            exactMatch: false,
+                            outFields: ['COD_CPU'],
+                            name: 'CODIGO CPU',
                         },
                     ];
 
