@@ -38,7 +38,6 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import moment from 'moment';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
-import { threadId } from 'worker_threads';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 @Component({
     selector: 'app-land-registry-geolocation',
