@@ -93,7 +93,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [0, 1, 2,101],
+    children: [-1,0, 1, 2,101],
 },
 
         {
@@ -141,6 +141,24 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: 17,
             projection: 32717,
         },*/
+
+
+        {
+            title: 'Predios',
+            id: -1,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible:false,
+        },
+
 
         {
             title: 'Lotes Zona',
@@ -195,7 +213,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             title: 'Manzana Urbana Zona',
             id: 101,
             idServer: 9,
-
+//https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,

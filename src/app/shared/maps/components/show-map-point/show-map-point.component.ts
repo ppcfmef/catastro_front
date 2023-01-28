@@ -52,7 +52,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     };
 
     layersInfo = [
-        {
+      /*  {
             idServer: 0,
             title: 'Zona 17',
             id: 0,
@@ -96,6 +96,22 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             legend: null,
             sublayers: 'all',
         },
+*/
+
+{
+    title: 'Cartografia Fiscal',
+    id: 0,
+    idServer: 0,
+    urlBase:
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+    order: 0,
+    featureLayer: null,
+    definitionExpression: '1=1',
+    featureTable: null,
+    popupTemplate: null,
+    legend: null,
+    sublayers: 'all',
+},
 
         {
             idServer: 0,
@@ -141,7 +157,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             ],
         },
     ];
-    subscription: Subscription
+    subscription: Subscription;
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
