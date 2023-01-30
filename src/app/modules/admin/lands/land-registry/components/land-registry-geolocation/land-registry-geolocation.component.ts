@@ -1058,8 +1058,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 countryCode:'PE',
                                 singleLineFieldName: 'SingleLine',
                                 url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
-                                filter:searchFilter
-
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                               },
 
                               {
@@ -1069,7 +1075,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 exactMatch: false,
                                 outFields: ['DIR_MUN'],
                                 name: 'DIRECCION INEI',
-                                filter:searchFilter
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                             },
                             {
                                 layer: this.featureZonaUrbana,
@@ -1078,7 +1091,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 exactMatch: false,
                                 outFields: ['UBIGEO', 'DISTRITO'],
                                 name: 'DISTRITOS',
-                                filter:searchFilter
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                             },
 
 
@@ -1089,7 +1109,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 exactMatch: false,
                                 outFields: ['DIR_MUN'],
                                 name: 'DIRECCION MUNICIPAL',
-                                filter:searchFilter
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
 
                             },
                             {
@@ -1099,7 +1126,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 exactMatch: false,
                                 outFields: ['COD_PRE'],
                                 name: 'CODIGO DE PREDIO',
-                                filter:searchFilter
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
 
                             },
                             {
@@ -1109,7 +1143,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 exactMatch: false,
                                 outFields: ['COD_CPU'],
                                 name: 'CODIGO CPU',
-                                filter:searchFilter
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                             },
                         ];
 
@@ -1121,7 +1162,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         });
 
                         searchWidget.on('select-result', (event) => {
-                            this.view.zoom = 16;
+                            this.view.zoom = 19;
                             const template =event.getEffectivePopupTemplate();
                             console.log(template);
                         });
@@ -1151,7 +1192,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             countryCode:'PE',
                             singleLineFieldName: 'SingleLine',
                             url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
-
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
 
                           },
 
@@ -1162,6 +1209,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['DIR_MUN'],
                             name: 'DIRECCION INEI',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
                         },
                         {
                             layer: this.featureZonaUrbana,
@@ -1170,6 +1224,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['UBIGEO', 'DISTRITO'],
                             name: 'DISTRITOS',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
                         },
 
 
@@ -1180,6 +1241,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['DIR_MUN'],
                             name: 'DIRECCION MUNICIPAL',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
 
                         },
                         {
@@ -1189,6 +1257,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['COD_PRE'],
                             name: 'CODIGO DE PREDIO',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
 
                         },
                         {
@@ -1198,6 +1273,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['COD_CPU'],
                             name: 'CODIGO CPU',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
                         },
                     ];
 
@@ -1209,7 +1291,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     });
 
                     searchWidget.on('select-result', (event) => {
-                        this.view.zoom = 16;
+                        this.view.zoom = 19;
                         console.log('event>>',event);
                     });
 
