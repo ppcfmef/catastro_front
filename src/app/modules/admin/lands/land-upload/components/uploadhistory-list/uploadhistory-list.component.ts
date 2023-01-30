@@ -39,7 +39,7 @@ export class UploadhistoryListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   _initPagination(): void {
-    this.uploadHistorySubscription = merge(this.paginator.page, this.changesSubject)
+    this.uploadHistorySubscription = merge(this.paginator?.page, this.changesSubject)
         .pipe(
             switchMap(() => {
               const limit = this.paginator.pageSize;

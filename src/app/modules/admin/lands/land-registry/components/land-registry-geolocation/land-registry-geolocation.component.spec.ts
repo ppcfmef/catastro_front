@@ -22,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LandRegistryGeolocationComponent } from './land-registry-geolocation.component';
 import { MatDialogModule , MatDialogRef, MatDialog} from '@angular/material/dialog';
+import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
 describe('LandRegistryGeolocationComponent', () => {
   let component: LandRegistryGeolocationComponent;
   let fixture: ComponentFixture<LandRegistryGeolocationComponent>;
@@ -57,6 +58,7 @@ describe('LandRegistryGeolocationComponent', () => {
         MessageProviderService,
 
         LandRegistryService ,
+        FuseConfirmationService,
         CustomConfirmationService
     ]
     })
