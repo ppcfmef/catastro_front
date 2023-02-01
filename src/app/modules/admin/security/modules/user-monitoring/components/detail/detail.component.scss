@@ -1,0 +1,19 @@
+@import "~styles/mixins";
+
+:host ::ng-deep{
+    @include mat-form-field-style;
+    @include btn-confirm;
+    @include btn-danger;
+    @include btn-success;
+}
+
+:host{
+    h2{
+      color: #DE3F43;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+   }
+   

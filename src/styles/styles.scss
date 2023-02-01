@@ -111,3 +111,13 @@ button.mat-flat-button.mat-primary{
         color: white!important;
     }
 }
+
+mat-option.option-multiple-lines{
+    height: auto;
+    line-height: normal;
+    padding: 10px;
+    &:hover:not(.mat-option-disabled){
+        background: rgb(192 231 255 / 46%) !important;
+    }
+  }
+ 

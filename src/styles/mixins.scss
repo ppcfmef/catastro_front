@@ -203,6 +203,11 @@
       color:white;
       margin-left: 10px;
     }
+    mat-icon.right{
+      color:white;
+      margin-left: 0;
+      margin-right: 10px;
+    }
 }
 
 @mixin btn-success() {
