@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
 import { NewOwnerLandPage } from './new-owner-land.page';
 
 describe('NewOwnerLandPage', () => {
@@ -8,7 +8,9 @@ describe('NewOwnerLandPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NewOwnerLandPage ]
+      declarations: [ NewOwnerLandPage ]      ,
+      imports:[
+        HttpClientModule,],
     })
     .compileComponents();
   });

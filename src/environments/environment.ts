@@ -7,8 +7,8 @@
 /*const host = 'https://c37b-38-25-18-121.ngrok.io/';*/
 
 //const host ='http://localhost:8001/';
+//const host = 'http://54.83.44.96/';
 const host = 'http://54.83.44.96/';
-
 //const host ='http://90c7-38-25-18-121.ngrok.io';
 
 //const host = 'http://05f8-38-25-18-121.ngrok.io/';
@@ -18,7 +18,7 @@ export const environment = {
     url: host,
     apiUrl: host + 'api/v1',
     portalUrl: 'https://ws.mineco.gob.pe/portaldf',
-    exportUrl: 'http://localhost:8001/export',
+    exportUrl: host + 'export',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv'
 };
 
