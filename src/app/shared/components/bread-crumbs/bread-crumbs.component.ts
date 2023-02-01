@@ -25,7 +25,8 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       "icon": "heroicons_outline:receipt-refund",
       "link": "/land/registry/search/search-owner",
       "order": 4150,
-      "children": []
+      "children": [],
+      "hidden": true,
     },
   ];
 
