@@ -145,6 +145,7 @@ selectDist(event: any): void {
     /*const baseUrl = this.getBaseUrl(land?.zone);
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
+
     */
     const land: any=this.getLand(ubigeo);
     console.log('land>>',land);
