@@ -12,15 +12,15 @@
             <input type="text"
                   placeholder="Ingrese nombre de institución"
                   floatLabel="always"
-                  aria-label="Number"
+                  aria-label="Search"
                   matInput
                   [formControl]="myControl"
                   [matAutocomplete]="auto">
             <mat-icon matSuffix>search</mat-icon>
-            <mat-autocomplete #auto="matAutocomplete">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event.option.value)" [displayWith]="displayTextAutocompleteFn.bind(this)">
               <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
-                <div class="mb-0">{{option.dist}}</div>
-                <div> {{'Lima - Lima - Miraflores'}}</div>
+                <div class="mb-0">{{option.name}}</div>
+                <div> {{option.department_name || ''}} - {{option.province_name || ''}} - {{option.district_name || ''}}</div>
 
               </mat-option>
             </mat-autocomplete>
