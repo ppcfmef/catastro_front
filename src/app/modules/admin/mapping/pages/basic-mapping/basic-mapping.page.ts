@@ -69,10 +69,10 @@ urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=47e
             console.log(this.x,this.y);
 
             if(this.urlString.includes('?')){
-              this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
+              this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}&userPcf=${this.user.username}`;
           }
           else{
-              this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
+              this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}&userPcf=${this.user.username}`;
           }
            /* this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
             console.log('this.urlString',this.urlString);*/
