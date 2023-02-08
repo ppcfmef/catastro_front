@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
+import { UserMonitoringServiceService } from '../../services/user-monitoring-service.service';
+import { partitionArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-list',
@@ -13,12 +15,7 @@ import {MatTable} from '@angular/material/table';
 export class ListComponent implements OnInit {
 
   myControl = new FormControl('');
-  options: any[] = [
-    {dist:'Municipalidad de San Borja'},
-    {dist:'Municipalidad de Jesus María'},
-    {dist:'Municipalidad de Breña'},
-    {dist:'Municipalidad de Santiago de Surco'}
-     ];
+  options: any[] = [];
   filteredOptions: Observable<string[]>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
 
@@ -35,21 +32,49 @@ export class ListComponent implements OnInit {
   ];
   defaultPaginator;
 
-  constructor() { }
+  displayTextAutocomplete ='';
 
-  
+  constructor(
+    private userMonitoringService: UserMonitoringServiceService,
+  ) { }
+
+
 
   ngOnInit() {
+    this.userMonitoringService.getInstitutions().subscribe((res)=>{
+      console.log(res);
+      this.options = res;
+
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+      );
+    });
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+
   }
 
   private _filter(value: string): any[] {
+    if(typeof value === 'object'){
+      value = value['name'];
+    }
     const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.dist.toLowerCase().includes(filterValue));
+    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  selectValue(value): void{
+    this.displayTextAutocomplete = value.name;
+    // Parametros para el servicio de lista de usuarios filtrado por la seleccion del option del search.
+    const params = {
+      department: value.department,
+      province: value.province,
+      district: value.district,
+      institution: value.institution
+    }
+  }
+
+  displayTextAutocompleteFn(value): any{
+    return value.name;
   }
 }
