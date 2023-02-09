@@ -39,6 +39,8 @@ export class ReportCartographicComponent implements OnInit {
 
   hideUbigeo = true;
   idView='repocarto';
+  hideSelectUbigeo= true;
+  _emailUserAdmin='jcramireztello@gmail.com';
   constructor(
     private domSanitizer: DomSanitizer,
     private _userService: UserService,
@@ -59,8 +61,13 @@ export class ReportCartographicComponent implements OnInit {
         const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
         this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
 
-          if(readAll){
+          if(readAll.length>0 || this.user.email==this._emailUserAdmin){
             this.initUbigeoParams(data.code);
+            this.hideSelectUbigeo = false;
+           }
+
+          else {
+            this.hideSelectUbigeo = true;
           }
           this.makeReportUrl(data.code);
 

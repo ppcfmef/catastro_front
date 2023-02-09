@@ -1,4 +1,4 @@
-<div class="ubigeo-selection">
+<div class="ubigeo-selection"    *ngIf="!hideSelectUbigeo">
     <div class="text-selection" (click)="openCloseUbigeo()">
         <div>
             {{selectionText.dep === ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }}
