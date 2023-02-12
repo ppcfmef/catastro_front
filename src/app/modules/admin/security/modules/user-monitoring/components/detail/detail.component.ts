@@ -9,7 +9,6 @@ import {MatTable} from '@angular/material/table';
 })
 export class DetailComponent implements OnInit {
 
-  constructor() { }
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
 
   length: number = 0;
@@ -25,6 +24,8 @@ export class DetailComponent implements OnInit {
 
   ];
   defaultPaginator;
+
+  constructor() { }
 
   ngOnInit(): void {
   }

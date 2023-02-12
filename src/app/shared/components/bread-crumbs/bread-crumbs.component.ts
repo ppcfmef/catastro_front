@@ -19,29 +19,23 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
   rutasAdicionales=[
     {
       'id': 'gprpregistUsuer',
-      'title': 'Registros cargados',
+      'title': 'Registros cargados - Contribuyentes',
       'subtitle': null,
       'type': 'basic',
       'icon': 'heroicons_outline:receipt-refund',
       'link': '/land/registry/search/search-owner',
       'order': 4150,
       'children': [],
-      'hidden': true,
+      'hidden': (item): boolean => item?.id === 'gprpregistUsuer'
     },
   ];
 
-
   constructor(
-
-
     private _navigationService: NavigationService,
     public router: Router,
   ) { }
 
-  ngOnInit(): void {
-
-
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void{
     this._navigationService.get().subscribe((resp) =>{
@@ -63,16 +57,15 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
 
   separarUrl(cadenaUrl): void{
     const cadenaSeparada = cadenaUrl.split('/');
-
     if(cadenaSeparada.length === 0 ){
       return;
     }
-
-      for (let index = 0; index < cadenaSeparada.length; index++) {
+      for (const index in cadenaSeparada) {
         if(cadenaSeparada[index] === ''){
           cadenaSeparada.splice(index, 1);
         }
       }
+
       if(cadenaSeparada.length > 0 ){
         this.obtenerLabelsDeRutas(cadenaSeparada);
       }
@@ -85,11 +78,7 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       for (let index = 0; index < path.length; index++) {
         const element = path[index];
         if( !isNaN(element) || element === '?' ){
-          console.log(path);
-          console.log(index);
-          console.log(isNaN(element));
           cadenaLimpia = path.substring(0,index-1);
-
           break;
         }
 
@@ -97,68 +86,52 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       if(cadenaLimpia=== undefined){
         cadenaLimpia = path;
       }
-
-      console.log(cadenaLimpia);
-
       this.obtenerLabelsDeRutas(cadenaLimpia);
-
-
-
   }
 
   obtenerLabelsDeRutas(urlString): void{
-    console.log(urlString);
     this.breadCrumPath = [];
-    for (let index = 0; index < this.menuNavegacion.length; index++) {
-       const item = this.menuNavegacion[index];
+    for (const item of this.menuNavegacion) {
       this.obtenerHijosDeRutasRecursivo(item, urlString);
     }
     this.limpiarBreadCrumbs(this.breadCrumPath);
   }
 
-  obtenerHijosDeRutasRecursivo(itemMenu, urlString, pathParent = null){
+  obtenerHijosDeRutasRecursivo(itemMenu, urlString, pathParent = null): void{
 
     if(itemMenu.link === urlString){
       let pathSend = [];
       if(pathParent !== null){
         pathSend = [pathParent];
       }
-        console.log('Encontrado');
         pathSend.push(itemMenu);
         this.breadCrumPath =  pathSend;
         return;
 
     }else{
      if(itemMenu.children.length  > 0){
-
-      for (let index = 0; index < itemMenu.children.length; index++) {
-        let pathSendFor = [];
-        if(pathParent !== null){
-          pathSendFor = [pathParent];
-        }
-        const element = itemMenu.children[index];
+      for (const element of itemMenu.children) {
+        const pathSendFor = pathParent !== null ? [pathParent] : [];
         pathSendFor.push(itemMenu);
         this.obtenerHijosDeRutasRecursivo(element,urlString, pathSendFor);
       }
-
      }
     }
   }
 
-  limpiarBreadCrumbs(breadCrumbs){
+  limpiarBreadCrumbs(breadCrumbs): void{
     this.breadCrumbTemplate = [];
-    for (let index = 0; index < breadCrumbs.length; index++) {
-       this.isArrayReturnValue(breadCrumbs[index]);
+    for (const item of breadCrumbs) {
+      this.isArrayReturnValue(item);
     }
-
   }
-  isArrayReturnValue(item){
+
+  isArrayReturnValue(item): void{
 
     if(Array.isArray(item)){
       this.isArrayReturnValue(item[0]);
     }else{
       this.breadCrumbTemplate.push(item);
-      console.log(this.breadCrumbTemplate);
     }
 
   }
