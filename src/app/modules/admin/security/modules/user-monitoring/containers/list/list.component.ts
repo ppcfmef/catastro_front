@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserMonitoringServiceService } from '../../services/user-monitoring-service.service';
+import {UserService} from '../../../../../../../core/user/user.service';
 
 @Component({
   selector: 'app-list',
@@ -14,39 +15,38 @@ export class ListComponent implements OnInit {
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   myControl = new FormControl('');
   options: any[] = [];
+  userLogged: any = null;
   filteredOptions: Observable<string[]>;
 
   length: number = 0;
   pageIndex = 0;
   pageSize = 10;
   displayedColumns: string[] = ['nro', 'user', 'names', 'role', 'actions'];
-  dataSource = [
-    {user: '45797127', nombres: 'Adán Mateos-Gallart', rol: 'Operador cartográfico', acciones: 6},
-    {user: '45797127', nombres: 'Adán Mateos-Gallart', rol: 'Operador cartográfico', acciones: 6},
-    {user: '45797127', nombres: 'Adán Mateos-Gallart', rol: 'Operador cartográfico', acciones: 6},
-    {user: '45797127', nombres: 'Adán Mateos-Gallart', rol: 'Operador cartográfico', acciones: 6},
-    {user: '45797127', nombres: 'Adán Mateos-Gallart', rol: 'Operador cartográfico', acciones: 6},
-  ];
-  defaultPaginator;
+  dataSource = [];
+  showDetail = false;
+  defaultPaginator = null;
 
   displayTextAutocomplete ='';
 
   constructor(
     private userMonitoringService: UserMonitoringServiceService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
     this.userMonitoringService.getInstitutions().subscribe((res)=>{
-      console.log(res);
       this.options = res;
-
       this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
       );
     });
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
-
+    this.userService.user$.subscribe((user) => {
+        this.userService.getUserById(user.id).subscribe((res) => {
+            this.userLogged = res;
+        });
+    });
   }
 
   selectValue(value): void{

@@ -22,4 +22,7 @@ export class UserMonitoringServiceService {
     return this.http.get(`${this.apiUrl}/users/institutions/`, {params: queryParams});
   }
 
+  getHistoryAcctions(queryParams = null): Observable<any> {
+      return this.http.get(`${this.apiUrl}/users/history_actions/`, {params: queryParams});
+  }
 }

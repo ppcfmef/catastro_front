@@ -1,8 +1,8 @@
 <ng-container>
   <h2>Jurisdición disponible</h2>
   <p class="mb-7">
-    <b class="mr-2">Departamento:</b>  Lima    
-    <b class="mr-2 ml-8">Provincia:</b> Lima
+    <b class="mr-2">Departamento:</b>  {{ userLogged?.department.name || '' }}
+    <b class="mr-2 ml-8">Provincia:</b> {{ userLogged?.province.name || '' }}
   </p>
 
   <section>
@@ -20,8 +20,7 @@
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event.option.value)" [displayWith]="displayTextAutocompleteFn.bind(this)">
               <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
                 <div class="mb-0">{{option.name}}</div>
-                <div> {{option.department_name || ''}} - {{option.province_name || ''}} - {{option.district_name || ''}}</div>
-
+                <div> {{option.departmentName || ''}} - {{option.provinceName || ''}} - {{option.districtName || ''}}</div>
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
@@ -37,7 +36,7 @@
           {{ (pageIndex * pageSize) + i + 1 }}
         </td>
       </ng-container>
-    
+
 
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef>Usuarios</th>
@@ -58,7 +57,7 @@
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let element">{{element.acciones}}</td>
       </ng-container>
-    
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
