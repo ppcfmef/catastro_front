@@ -23,8 +23,10 @@ export class ListComponent implements OnInit {
   pageSize = 10;
   displayedColumns: string[] = ['nro', 'user', 'names', 'role', 'actions'];
   dataSource = [];
+  detailDataSource = [];
   showDetail = false;
   defaultPaginator = null;
+  user = null;
 
   displayTextAutocomplete ='';
 
@@ -51,17 +53,47 @@ export class ListComponent implements OnInit {
 
   selectValue(value): void{
     this.displayTextAutocomplete = value.name;
-    // Parametros para el servicio de lista de usuarios filtrado por la seleccion del option del search.
     const params = {
       department: value.department,
       province: value.province,
       district: value.district,
       institution: value.institution
     };
+    this.userMonitoringService.getHistoryAcctions(params).subscribe((res) => {
+        this.dataSource = res;
+    });
   }
 
   displayTextAutocompleteFn(value): any{
     return value.name;
+  }
+
+  handlerShowDetail(flag: boolean): void {
+    this.showDetail = !flag;
+  }
+
+  showHistoryDetail(user: any): void {
+    this.showDetail = !this.showDetail;
+    this.userService.getUserById(user.id).subscribe((detailUser) => {
+        this.user = detailUser;
+        let nameOf = '';
+        if (this.user.placeScope.id === 2) {
+            nameOf = `${this.user.institution.name} de ${this.user.department.name}`;
+        }
+        else if (this.user.placeScope.id === 3) {
+            nameOf = `${this.user.institution.name} de ${this.user.province.name}`;
+        }
+        else if (this.user.placeScope.id === 4){
+            nameOf = `${this.user.institution.name} de ${this.user.district.name}`;
+        }
+        this.user.institutionLabel = nameOf;
+        const params = {
+            username: this.user.username
+        };
+        this.userMonitoringService.getHistoryDetail(params).subscribe((data) => {
+            this.detailDataSource = data;
+        });
+    });
   }
 
   private _filter(value: string): any[] {
