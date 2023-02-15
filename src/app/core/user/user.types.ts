@@ -14,6 +14,7 @@ export interface Institute {
 export interface User {
     id?: number;
     username: string;
+    dni?: string;
     name?: string;
     fullName?: string;
     firstName?: string;

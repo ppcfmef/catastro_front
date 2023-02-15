@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
+import {Role, User, UserCreate} from 'app/core/user/user.types';
 
 @Component({
   selector: 'app-detail',
@@ -9,20 +9,16 @@ import {MatTable} from '@angular/material/table';
 })
 export class DetailComponent implements OnInit {
 
+  @Input() showMe = false;
+  @Input() dataSource = [];
+  @Input() selectedUser: User;
+  @Output() showList = new EventEmitter<boolean>();
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
 
   length: number = 0;
   pageIndex = 0;
   pageSize = 10;
   displayedColumns: string[] = ['nro', 'module', 'action', 'date'];
-  dataSource = [
-    {module: 'Gestión cartográfica - Carga de cartografia base', action: 'Carga zona nueva', date: '03-05-2022'},
-    {module: 'Gestión cartográfica - Carga de cartografia base', action: 'Carga zona nueva', date: '03-05-2022'},
-    {module: 'Gestión cartográfica - Carga de cartografia base', action: 'Carga zona nueva', date: '03-05-2022'},
-    {module: 'Gestión cartográfica - Carga de cartografia base', action: 'Carga zona nueva', date: '03-05-2022'},
-    {module: 'Gestión cartográfica - Carga de cartografia base', action: 'Carga zona nueva', date: '03-05-2022'},
-
-  ];
   defaultPaginator;
 
   constructor() { }
@@ -30,4 +26,7 @@ export class DetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  showHistoryList(): void {
+    this.showList.emit(!this.showMe);
+  }
 }
