@@ -12,7 +12,6 @@ import {
 import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import html2canvas from 'html2canvas'; // Todavía no lo usamos
 import { LandRecordService } from 'app/modules/admin/lands/land-registry/services/land-record.service';
 import { LandRecord } from 'app/modules/admin/lands/land-registry/interfaces/land-record.interface';
 import moment from 'moment';

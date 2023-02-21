@@ -1,7 +1,6 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { environment } from 'environments/environment';
 
 
@@ -22,11 +21,12 @@ export class UserMonitoringServiceService {
     return this.http.get(`${this.apiUrl}/users/institutions/`, {params: queryParams});
   }
 
-  getHistoryAcctions(queryParams = null): Observable<any> {
-      return this.http.get(`${this.apiUrl}/users/history_actions/`, {params: queryParams});
+  getHistoricalRecords(queryParams = null): Observable<any> {
+      return this.http.get(`${this.apiUrl}/historical-records/`, {params: queryParams});
   }
 
-  getHistoryDetail(queryParams = null): Observable<any> {
-    return this.http.get(`${this.apiUrl}/lands/records/history_detail/`, {params: queryParams});
+  getHistoricalByUser(queryParams = null): Observable<any> {
+    return this.http.get(`${this.apiUrl}/historical-records/by-user/`, {params: queryParams});
   }
+
 }

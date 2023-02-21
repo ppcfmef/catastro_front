@@ -11,6 +11,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { DetailComponent } from './components/detail/detail.component';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 
 
@@ -30,7 +31,8 @@ import { DetailComponent } from './components/detail/detail.component';
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTableExporterModule
   ]
 })
 export class UserMonitoringModule { }

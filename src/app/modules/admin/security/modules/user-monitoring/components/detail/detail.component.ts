@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angu
 import { MatPaginator } from '@angular/material/paginator';
 import {Role, User, UserCreate} from 'app/core/user/user.types';
 
+
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -28,5 +29,9 @@ export class DetailComponent implements OnInit {
 
   showHistoryList(): void {
     this.showList.emit(!this.showMe);
+  }
+
+  print(){
+    window.print();
   }
 }

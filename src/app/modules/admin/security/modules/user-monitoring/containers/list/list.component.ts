@@ -59,8 +59,8 @@ export class ListComponent implements OnInit {
       district: value.district,
       institution: value.institution
     };
-    this.userMonitoringService.getHistoryAcctions(params).subscribe((res) => {
-        this.dataSource = res;
+    this.userMonitoringService.getHistoricalRecords(params).subscribe((res) => {
+        this.dataSource = res.results;
     });
   }
 
@@ -90,8 +90,8 @@ export class ListComponent implements OnInit {
         const params = {
             username: this.user.username
         };
-        this.userMonitoringService.getHistoryDetail(params).subscribe((data) => {
-            this.detailDataSource = data;
+        this.userMonitoringService.getHistoricalByUser(params).subscribe((data) => {
+            this.detailDataSource = data.results;
         });
     });
   }
