@@ -7,7 +7,8 @@ import {SecurityRouting} from './security.routing';
     declarations: [],
     imports: [
         CommonModule,
-        SecurityRouting    ]
+        SecurityRouting
+    ]
 })
 export class SecurityModule {
 }

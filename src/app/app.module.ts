@@ -17,6 +17,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
+
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
