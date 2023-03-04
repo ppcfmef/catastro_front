@@ -1,8 +1,8 @@
 <ng-container>
   <h2 [hidden]="showDetail">Jurisdición disponible</h2>
   <p [hidden]="showDetail" class="mb-7">
-    <b class="mr-2">Departamento:</b>  {{ userLogged?.department.name || '' }}
-    <b class="mr-2 ml-8">Provincia:</b> {{ userLogged?.province.name || '' }}
+    <b class="mr-2">Departamento:</b>  {{ userLogged?.department?.name || '' }}
+    <b class="mr-2 ml-8">Provincia:</b> {{ userLogged?.province?.name || '' }}
   </p>
 
   <section [hidden]="showDetail">
@@ -19,8 +19,8 @@
             <mat-icon matSuffix>search</mat-icon>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event.option.value)" [displayWith]="displayTextAutocompleteFn.bind(this)">
               <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
-                <div class="mb-0">{{option.name}}</div>
-                <div> {{option.departmentName || ''}} - {{option.provinceName || ''}} - {{option.districtName || ''}}</div>
+                <div class="mat-body-1 mb-0">{{option.name}}</div>
+                <div class="mat-body-1">{{option.ubigeoScope || ''}}</div>
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>

@@ -29,4 +29,8 @@ export class UserMonitoringServiceService {
     return this.http.get(`${this.apiUrl}/historical-records/by-user/`, {params: queryParams});
   }
 
+  getHistoricalObjectDetail(idRecord = null): Observable<any> {
+    return this.http.get(`${this.apiUrl}/historical-records/${idRecord}/`);
+  }
+
 }

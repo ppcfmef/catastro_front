@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import {Role, User, UserCreate} from 'app/core/user/user.types';
+import {User} from 'app/core/user/user.types';
+import {HistoricalRecordDetailComponent} from '../detail/historical-record-detail/historical-record-detail.component';
+import { UserMonitoringServiceService } from '../../services/user-monitoring-service.service';
 
 
 @Component({
@@ -22,7 +25,10 @@ export class DetailComponent implements OnInit {
   displayedColumns: string[] = ['nro', 'module', 'action', 'date'];
   defaultPaginator;
 
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+    private userMonitoringService: UserMonitoringServiceService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -31,7 +37,17 @@ export class DetailComponent implements OnInit {
     this.showList.emit(!this.showMe);
   }
 
-  print(){
+  print(): void{
     window.print();
+  }
+
+  showHistoricalRecordDetail(data: any): void {
+    this.userMonitoringService.getHistoricalObjectDetail(data.id).subscribe((res) => {
+        this.dialog.open(HistoricalRecordDetailComponent, {
+            data: res.contentObject,
+            width: '550px'
+        });
+    });
+
   }
 }

@@ -10,7 +10,7 @@
 </h2>
 <p *ngIf="selectedUser">
     <b>{{ selectedUser.institutionLabel || "" }},</b>
-    {{selectedUser.department.name}} - {{selectedUser.province.name}} - {{selectedUser.district.name}} <br>
+    {{selectedUser?.department?.name}} - {{selectedUser?.province?.name}} - {{selectedUser?.district?.name}} <br>
     <b>Rol: </b> {{selectedUser.role?.name || ""}}
 </p>
 
@@ -53,7 +53,8 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            (click)="showHistoricalRecordDetail(row)"></tr>
     </table>
     <mat-paginator class="w-full max-w-3xl" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize"
         [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]">
