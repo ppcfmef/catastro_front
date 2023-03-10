@@ -1,4 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { OwnerLandCreateAndEditComponent } from './owner-land-create-and-edit.component';
 
@@ -8,7 +14,9 @@ describe('OwnerLandCreateAndEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OwnerLandCreateAndEditComponent ]
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, MatDialogModule],
+      declarations: [ OwnerLandCreateAndEditComponent ],
+      providers: [FormBuilder, CustomConfirmationService, FuseSplashScreenService, FuseConfirmationService]
     })
     .compileComponents();
   });

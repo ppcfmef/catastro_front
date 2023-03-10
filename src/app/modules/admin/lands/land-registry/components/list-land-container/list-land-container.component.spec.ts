@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ListLandContainerComponent } from './list-land-container.component';
 
@@ -8,6 +9,7 @@ describe('ListLandContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule ],
       declarations: [ ListLandContainerComponent ]
     })
     .compileComponents();

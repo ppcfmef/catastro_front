@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { NewOwnerContainerComponent } from './new-owner-container.component';
 
@@ -8,7 +12,9 @@ describe('NewOwnerContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NewOwnerContainerComponent ]
+      imports: [HttpClientTestingModule, MatDialogModule],
+      declarations: [ NewOwnerContainerComponent ],
+      providers: [CustomConfirmationService, FuseConfirmationService]
     })
     .compileComponents();
   });

@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {ListComponent} from '../list/list.component';
+import { FuseMediaWatcherService } from '@fuse/services/media-watcher/media-watcher.service';
+import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
+import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AddEditComponent } from './add-edit.component';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('AddEditComponent', () => {
   let component: AddEditComponent;
@@ -8,7 +16,9 @@ describe('AddEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddEditComponent ]
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, MatDialogModule, RouterModule.forRoot([])],
+      declarations: [ AddEditComponent ],
+      providers: [ListComponent, FormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService]
     })
     .compileComponents();
   });

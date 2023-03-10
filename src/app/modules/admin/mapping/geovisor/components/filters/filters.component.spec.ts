@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FiltersComponent } from './filters.component';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { RouterModule } from '@angular/router';
 
 describe('FiltersComponent', () => {
   let component: FiltersComponent;
@@ -10,7 +11,8 @@ describe('FiltersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ FiltersComponent ],
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule, RouterModule.forRoot([])],
+      providers: [FuseSplashScreenService]
     })
     .compileComponents();
   });

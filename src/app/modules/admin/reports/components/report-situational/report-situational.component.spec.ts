@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 
 import { ReportSituationalComponent } from './report-situational.component';
 
@@ -8,7 +10,9 @@ describe('ReportSituationalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportSituationalComponent ]
+      imports: [HttpClientTestingModule, ReactiveFormsModule, FormsModule],
+      declarations: [ ReportSituationalComponent ],
+      providers: [FormBuilder]
     })
     .compileComponents();
   });

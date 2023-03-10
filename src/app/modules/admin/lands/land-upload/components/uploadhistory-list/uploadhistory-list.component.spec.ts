@@ -1,22 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { UploadhistoryListComponent } from './uploadhistory-list.component';
-import { UploadhistoryService } from '../../services/uploadhistory.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+
+import { UploadhistoryListComponent } from './uploadhistory-list.component';
+
 describe('UploadhistoryListComponent', () => {
   let component: UploadhistoryListComponent;
   let fixture: ComponentFixture<UploadhistoryListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UploadhistoryListComponent ],
-      imports:[
-        HttpClientModule,RouterTestingModule
-      ],
-
-      providers: [
-        UploadhistoryService,]
-
+      imports: [ HttpClientTestingModule, RouterTestingModule ],
+      declarations: [ UploadhistoryListComponent ]
     })
     .compileComponents();
   });

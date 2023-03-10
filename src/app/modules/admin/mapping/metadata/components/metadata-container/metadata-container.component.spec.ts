@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 import { MetadataContainerComponent } from './metadata-container.component';
-import { GisMetadataService } from '../../services/gis-metadata.service';
 
 describe('MetadataContainerComponent', () => {
   let component: MetadataContainerComponent;
@@ -9,11 +9,8 @@ describe('MetadataContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MetadataContainerComponent ],
-      imports:[
-        HttpClientModule,],
-        providers: [
-          GisMetadataService,]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ MetadataContainerComponent ]
     })
     .compileComponents();
   });
