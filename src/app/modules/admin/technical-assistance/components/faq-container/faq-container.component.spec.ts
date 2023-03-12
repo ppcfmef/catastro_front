@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FaqService } from '../../services/faq.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {MatPaginator} from '@angular/material/paginator';
 
 import { FaqContainerComponent } from './faq-container.component';
 
@@ -11,7 +12,7 @@ describe('FaqContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [ FaqContainerComponent ],
+      declarations: [ FaqContainerComponent, MatPaginator ],
       providers: [FaqService]
     })
     .compileComponents();

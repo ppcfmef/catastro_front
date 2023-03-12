@@ -24,4 +24,9 @@ describe('ShowMapPointComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should functions', () => {
+    expect(component.initializeMap()).toBeTruthy();
+    expect(component.downloadPDF()).toBeTruthy();
+  });
 });

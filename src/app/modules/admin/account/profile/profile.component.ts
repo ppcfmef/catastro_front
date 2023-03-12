@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../../core/user/user.service';
 import {switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {DELETE} from '@angular/cdk/keycodes';
 
 @Component({
     selector: 'app-profile',

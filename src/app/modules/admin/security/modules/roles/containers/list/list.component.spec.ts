@@ -7,26 +7,24 @@ import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { AddEditComponent } from './add-edit.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-describe('AddEditComponent', () => {
-  let component: AddEditComponent;
-  let fixture: ComponentFixture<AddEditComponent>;
+describe('ListComponent', () => {
+  let component: ListComponent;
+  let fixture: ComponentFixture<ListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, MatDialogModule, RouterModule.forRoot([])],
-      declarations: [ AddEditComponent ],
+      declarations: [ ListComponent ],
       providers: [FormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService, ListComponent]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddEditComponent);
+    fixture = TestBed.createComponent(ListComponent);
     component = fixture.componentInstance;
-
     fixture.detectChanges();
   });
 

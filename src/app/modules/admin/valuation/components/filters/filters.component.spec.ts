@@ -27,4 +27,22 @@ describe('FiltersComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should test', () => {
+    component.params = {
+        department: '14',
+        province: '01',
+        district: '01',
+        namedistrict: '',
+        projection: 0,
+        fileToUpload: null
+    };
+    expect(component.initParams()).toBeUndefined();
+    expect(component.selectDep()).toBeUndefined();
+    expect(component.selectProv()).toBeUndefined();
+    expect(component.selectDist()).toBeUndefined();
+    expect(component.buscar()).toBeUndefined();
+    expect(component.descargar()).toBeUndefined();
+    expect(component.subirDato()).toBeUndefined();
+  });
 });

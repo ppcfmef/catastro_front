@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {MatPaginator} from '@angular/material/paginator';
 
 import { TutorialCatalogContainerComponent } from './tutorial-catalog-container.component';
 import { TutorialService } from '../../services/tutorial.service';
@@ -11,7 +12,7 @@ describe('TutorialCatalogContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [ TutorialCatalogContainerComponent ],
+      declarations: [ TutorialCatalogContainerComponent, MatPaginator ],
       providers: [TutorialService]
     })
     .compileComponents();

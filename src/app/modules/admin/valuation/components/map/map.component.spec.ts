@@ -29,5 +29,12 @@ describe('MapComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.initializeMap()).toBeTruthy();
+    expect(component.zoomToUbigeo("140101")).toBeTruthy();
+    component.descargar({namedistrict: "Lima", projection: 1, district: "140101"});
+    component.downloadFile("", "application/pdf", "test.pdf", false);
+    component.createArcgisJSON([]);
+    //component.cargar();
+    // expect(component.buscar({district: "140101"})).toBeUndefined();
   });
 });

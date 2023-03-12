@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {DocumentCatalogService} from '../../services/document-catalog.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {MatPaginator} from '@angular/material/paginator';
 
 import { DocumentCatalogContainerComponent } from './document-catalog-container.component';
 
@@ -10,9 +11,9 @@ describe('DocumentCatalogContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocumentCatalogContainerComponent ],
+      declarations: [ DocumentCatalogContainerComponent, MatPaginator ],
       providers: [DocumentCatalogService],
-      imports: [HttpClientTestingModule]  
+      imports: [HttpClientTestingModule]
     })
     .compileComponents();
   });
