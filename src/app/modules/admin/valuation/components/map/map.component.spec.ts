@@ -34,7 +34,5 @@ describe('MapComponent', () => {
     component.descargar({namedistrict: "Lima", projection: 1, district: "140101"});
     component.downloadFile("", "application/pdf", "test.pdf", false);
     component.createArcgisJSON([]);
-    //component.cargar();
-    // expect(component.buscar({district: "140101"})).toBeUndefined();
   });
 });

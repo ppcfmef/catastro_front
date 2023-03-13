@@ -17,7 +17,7 @@ describe('ListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, MatDialogModule, RouterModule.forRoot([])],
       declarations: [ ListComponent ],
-      providers: [FormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService, ListComponent]
+      providers: [FormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService]
     })
     .compileComponents();
   });
