@@ -103,6 +103,7 @@
         "karma-jasmine": "4.0.1",
         "karma-jasmine-html-reporter": "1.7.0",
         "lodash": "4.17.21",
+        "ng-mocks": "^14.7.1",
         "path-browserify": "^1.0.1",
         "postcss": "8.3.6",
         "tailwindcss": "2.2.7",
