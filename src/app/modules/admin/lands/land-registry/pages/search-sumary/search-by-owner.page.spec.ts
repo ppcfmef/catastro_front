@@ -43,7 +43,7 @@ describe('NewSearchSumaryPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call search-owner-container', () => {
+  it('should valid sumary records', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     const sumaryElements = compiled.querySelectorAll('.block-text > h5');
