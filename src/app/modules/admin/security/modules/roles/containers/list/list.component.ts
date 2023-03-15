@@ -68,7 +68,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         });
 
         // Subscribe to MatDrawer opened change
-        this.matDrawer.openedChange.subscribe((opened) => {
+        this.matDrawer?.openedChange?.subscribe((opened) => {
             if (!opened) {
                 // Remove the selected contact when drawer closed
                 // this.selectedContact = null;
@@ -112,14 +112,14 @@ export class ListComponent implements OnInit, AfterViewInit {
      * Init pagination results
      */
     initPagination(): void {
-        merge(this.paginator.page, this.changesSubject, this.filters.valueChanges)
+        merge(this.paginator?.page, this.changesSubject, this.filters.valueChanges)
             .pipe(
                 debounceTime(300),
                 switchMap(() => {
                     const rawValueFilter = CommonUtils.deleteKeysNullInObject(this.filters.getRawValue());
                     const queryParamsByPaginator = {...rawValueFilter} as any;
-                    queryParamsByPaginator.limit = this.paginator.pageSize;
-                    queryParamsByPaginator.offset = queryParamsByPaginator.limit * this.paginator.pageIndex;
+                    queryParamsByPaginator.limit = this.paginator?.pageSize;
+                    queryParamsByPaginator.offset = queryParamsByPaginator.limit * this.paginator?.pageIndex;
                     return this._userService.getRoles(queryParamsByPaginator);
                 })
             ).subscribe((response) => {

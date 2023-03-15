@@ -554,7 +554,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             _layer.urlBase + '/' + _layer.idServer
         );
 
-        const query = _featureLayer.createQuery();
+        const query = _featureLayer?.createQuery();
         const ubigeo = params.district;
         query.where = `UBIGEO='${ubigeo}'`;
         query.outSpatialReference = this.proj4DestWkid;

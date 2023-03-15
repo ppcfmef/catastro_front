@@ -1035,7 +1035,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     );
 
                     const layer = new FeatureLayer(this.urlSearchDistrito);
-                    const queryLayer = layer.createQuery();
+                    const queryLayer = layer?.createQuery();
                     queryLayer.where = where;
                     queryLayer.outSpatialReference = outSpatialReference;
 
@@ -1518,7 +1518,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
 
 async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>{
-    const query = layer.createQuery();
+    const query = layer?.createQuery();
     query.where = `UBIGEO='${land.ubigeo}'`;
 
     const maxCPU={
@@ -1529,7 +1529,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
     };
 
     query.outStatistics = [ maxCPU ];
-    const response=await layer.queryFeatures(query);
+    const response=await layer?.queryFeatures(query);
     const stats = response.features[0].attributes;
     console.log('Total Population in WA:' ,stats.max_SECUEN);
     const maxSecuen=(stats.max_SECUEN)?stats.max_SECUEN:0;
@@ -2036,7 +2036,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             outFields: ['UBIGEO'],
         };
 
-        const results = await layer.queryFeatures(parcelQuery);
+        const results = await layer?.queryFeatures(parcelQuery);
         let feature = {};
         if (results.features && results.features.length > 0) {
             feature = results.features[0];

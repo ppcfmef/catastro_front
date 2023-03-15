@@ -52,7 +52,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   ngAfterViewInit(): void {
     this.dataTable.sort = this.tableSort;
 
-    merge(this.tableSort.sortChange, this.tablePaginator.page)
+    merge(this.tableSort?.sortChange, this.tablePaginator?.page)
     .subscribe((res: any) => {
       if(res?.direction) {
         this.tableFilters.sort = res;

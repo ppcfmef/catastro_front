@@ -49,7 +49,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   ngAfterViewInit(): void {
     this.dataTable.sort = this.tableSort;
 
-    merge(this.tableSort.sortChange, this.tablePaginator.page)
+    merge(this.tableSort?.sortChange, this.tablePaginator?.page)
     .subscribe((res: any) => {
       if(res?.direction) {
         this.tableFilters.sort = res;
@@ -58,7 +58,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
       if (res?.pageSize) {
         this.tableFilters.paginator = res;
       }
-      this.pageIndex = this.tableFilters.paginator.pageIndex;
+      this.pageIndex = this.tableFilters.paginator?.pageIndex;
       this.changePage.emit(this.tableFilters);
     });
   }

@@ -133,7 +133,7 @@ export class MapUtils {
 
     static async zoomToFeature(view: any, layer: any, query: string): Promise<any> {
 
-        const queryLayer = layer.createQuery();
+        const queryLayer = layer?.createQuery();
         queryLayer.where = query;
         queryLayer.outSpatialReference = view.spatialReference;
 
@@ -156,10 +156,7 @@ export class MapUtils {
 
   static async queryFeaturesInLayer(layer, query): Promise<any[]> {
     let features = [];
-    console.log('query>>>',query);
-    const queryResult = await layer.queryFeatures(query);
-
-    console.log('queryResult>>>',queryResult);
+    const queryResult = await layer?.queryFeatures(query);
     /*if (abortFunction && abortFunction()){
         return false;
     }*/

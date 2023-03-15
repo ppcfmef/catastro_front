@@ -62,8 +62,8 @@ export class GeoLocationComponent implements OnInit,AfterViewInit {
 
       const graphicsLayer = new GraphicsLayer();
 
-      const x=inputPoints[0].longitude;
-      const y=inputPoints[0].latitude;
+      const x=inputPoints[0]?.longitude;
+      const y=inputPoints[0]?.latitude;
       const point = { //Create a point
         type: 'point',
         longitude : x,

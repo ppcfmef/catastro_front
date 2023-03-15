@@ -176,9 +176,7 @@ export class LandRegistryMapService {
 
         const layer = new FeatureLayer(url);
 
-        const query = layer.createQuery();
-        console.log('ubigeo>>',value.ubigeo);
-        console.log('rangCup>>',value.rangCup);
+        const query = layer?.createQuery();
 
         if(value.ubigeo && value.rangCup && parseInt(value.rangCup,10)>0 ){
             query.where = `UBIGEO='${value.ubigeo}' and RAN_CPU='${value.rangCup}'`;
@@ -203,7 +201,7 @@ export class LandRegistryMapService {
 
 
 
-        const response=await layer.queryFeatures(query);
+        const response=await layer?.queryFeatures(query);
 
     const stats = response.features[0].attributes;
     console.log('Max cpu:' ,stats.max_COD_CPU);
