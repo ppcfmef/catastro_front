@@ -1,5 +1,6 @@
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandRecord } from '../../interfaces/land-record.interface';
 
 export const landRecordMock: LandRegistryMap = {
   id: 5657,
@@ -82,4 +83,30 @@ export const landRecordPaginateMock: IPagination<LandRegistryMap> = {
   next: '',
   previous: '',
   results: [landRecordMock]
+};
+
+
+export const landRecordItemMock: LandRecord = {
+  cup: '30806893-0002-10',
+  cpm: '',
+  idPlot: '123',
+  idCartographicImg: '1234',
+  ubigeo: '150101',
+  habilitacionName: '',
+  steetName: 'Av. Arica',
+  urbanMza: '',
+  urbanLotNumber: null,
+  roadBlockNumber: null,
+  site: null,
+  municipalNumber: null,
+  alternateNumber: null,
+  dptoNumber: 624,
+  indoor: 1501,
+  block: '',
+  latitude: null,
+  longitude: null,
+  landArea: null,
+  builtArea: null,
+  owner: 1,
+  creationDate: '',
 };

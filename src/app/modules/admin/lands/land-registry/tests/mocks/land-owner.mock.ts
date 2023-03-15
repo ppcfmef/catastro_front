@@ -1,3 +1,4 @@
+import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 
 export const landOwnerMock: LandOwner = {
@@ -10,4 +11,11 @@ export const landOwnerMock: LandOwner = {
   descriptionOwner: '',
   phone: '',
   email: 'jcramireztello@gmail.com'
+};
+
+export const landOwnerPaginateMock: IPagination<LandOwner> = {
+  count: 1,
+  next: '',
+  previous: '',
+  results: [landOwnerMock]
 };
