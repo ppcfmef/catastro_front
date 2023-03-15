@@ -10,4 +10,5 @@ export interface MasterDomain {
   codStreet: MasterDomainItem[];
   propertyType: MasterDomainItem[];
   codSide: MasterDomainItem[];
+  resolutionType?: MasterDomainItem[];
 }
