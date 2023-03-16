@@ -110,3 +110,11 @@ export const landRecordItemMock: LandRecord = {
   owner: 1,
   creationDate: '',
 };
+
+
+export const landRecordItemPaginateMock: IPagination<LandRecord> = {
+  count: 1,
+  next: '',
+  previous: '',
+  results: [landRecordItemMock]
+};

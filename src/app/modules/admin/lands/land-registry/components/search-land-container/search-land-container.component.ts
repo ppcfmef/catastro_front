@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
@@ -38,6 +38,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   constructor(
     private router: Router,
+    private cdRef: ChangeDetectorRef,
     private _landOwnerService: LandOwnerService,
     private landRecordService: LandRecordService,
     private exportReportService: ExportReportService,
@@ -55,6 +56,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       (response: IPagination<LandRecord>) => {
         this.dataSourceLands = response.results;
         this.lengthLandsOwner = response.count;
+        this.cdRef.detectChanges();
     });
   }
 

@@ -183,7 +183,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             .subscribe((user: User) => {
                 this.user = user;
                 const ubigeo =
-                    this.user.placeScope && this.user.placeScope.ubigeo
+                    this.user.placeScope && this.user.placeScope?.ubigeo
                         ? this.user.placeScope.ubigeo
                         : '150101';
                 /* this._commonService
@@ -372,7 +372,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
         const legendJson = [];
 
         this.layersInfo
-            .filter(l => l.title.includes(utm.toString()))
+            .filter(l => l.title.includes(utm?.toString()))
             .forEach((l) => {
                 const legendLayers = l.legend.layers;
                 legendLayers.forEach((lf) => {
@@ -409,7 +409,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
                 [
                     {
-                        content: `MUNICIPALIDAD DE ${_districtResource.name} UBIGEO  ${this.landRecord.ubigeo}`,
+                        content: `MUNICIPALIDAD DE ${_districtResource?.name} UBIGEO  ${this.landRecord.ubigeo}`,
                         colSpan: 2,
                         styles: { halign: 'center' },
                     },
@@ -417,7 +417,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
                 [
                     { content: `Fecha ${moment().format('DD/MM/YYYY')}` },
-                    { content: `Usuario ${this.user.name}` },
+                    { content: `Usuario ${this.user?.name}` },
                 ],
 
                 [
@@ -455,12 +455,12 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             ],
         });
 
-        const screenshot = await this.view.takeScreenshot({
+        const screenshot = await this.view?.takeScreenshot({
             format: 'jpg',
             quality: 100,
         });
 
-        doc.addImage(screenshot.dataUrl, 'JPEG', 35, 100, 135, 75);
+        doc.addImage(screenshot?.dataUrl, 'JPEG', 35, 100, 135, 75);
         const x: number = 35;
         const y: number = 185;
         const bodyLegend = [];
