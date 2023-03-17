@@ -43,5 +43,9 @@ export interface GestionPredio {
     ESTADO: number;
     ID_IMG: string;
     SECUEN: number;
+    NOM_USER: string;
+    NOM_PC: string;
+
+
 }
 /* eslint-enable @typescript-eslint/naming-convention  */

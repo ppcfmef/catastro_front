@@ -39,6 +39,7 @@ import moment from 'moment';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
+import { Lote } from '../../interfaces/lote.interface';
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -70,6 +71,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
     /*proj4ScrWkid=4326;*/
     proj4Src = this.proj4Catalog + ':' + String(this.proj4Wkid);
     layerList: any;
+    lote: Lote;
     groupLayers = [
        /* {
             id: 0,
@@ -911,14 +913,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
                                     dialogRef.afterClosed().toPromise().then( (option) => {
                                         if (option === 'confirmed') {
-                                            latitude =
+
+                                            /*latitude =
                                             graphic.attributes['COORD_Y'];
                                         longitude =
-                                            graphic.attributes['COORD_X'];
-                                        const lote = graphic.attributes;
-                                        console.log('lote>>',lote);
+                                            graphic.attributes['COORD_X'];*/
+                                            graphic.attributes['COORD_X'] = longitude;
+                                            graphic.attributes['COORD_Y'] =latitude;
 
-                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
+
+                                        this.lote = graphic.attributes;
+                                        console.log('lote>>',this.lote);
+
+                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
 
                                         this._landRegistryMapService.setEstado(Estado.LEER);
                                         this._landRegistryMapService.landOut = this.landRegistryMapModel;
@@ -1035,7 +1042,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     );
 
                     const layer = new FeatureLayer(this.urlSearchDistrito);
-                    const queryLayer = layer?.createQuery();
+                    const queryLayer = layer.createQuery();
                     queryLayer.where = where;
                     queryLayer.outSpatialReference = outSpatialReference;
 
@@ -1518,7 +1525,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
 
 async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>{
-    const query = layer?.createQuery();
+    const query = layer.createQuery();
     query.where = `UBIGEO='${land.ubigeo}'`;
 
     const maxCPU={
@@ -1529,7 +1536,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
     };
 
     query.outStatistics = [ maxCPU ];
-    const response=await layer?.queryFeatures(query);
+    const response=await layer.queryFeatures(query);
     const stats = response.features[0].attributes;
     console.log('Total Population in WA:' ,stats.max_SECUEN);
     const maxSecuen=(stats.max_SECUEN)?stats.max_SECUEN:0;
@@ -1894,7 +1901,9 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
-
+            _predio.NOM_USER = this.user.username;
+            _predio.NOM_PC = 'PLATAFORMA';
+            _predio.ID_LOTE_P =this.lote.ID_LOTE_P;
             const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
@@ -1920,8 +1929,10 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         }else{
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
+            _gestionPredio.NOM_USER = this.user.username;
+            _gestionPredio.NOM_PC = 'PLATAFORMA';
             _gestionPredio.ESTADO=0;
-            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
+            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
@@ -1956,6 +1967,9 @@ async saveNewPointGestionPredio(): Promise<void>{
 
 
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
+            _gestionPredio.NOM_USER = this.user.username;
+            _gestionPredio.NOM_PC = 'PLATAFORMA';
+
             const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
@@ -2036,7 +2050,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             outFields: ['UBIGEO'],
         };
 
-        const results = await layer?.queryFeatures(parcelQuery);
+        const results = await layer.queryFeatures(parcelQuery);
         let feature = {};
         if (results.features && results.features.length > 0) {
             feature = results.features[0];

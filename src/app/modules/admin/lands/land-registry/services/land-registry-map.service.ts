@@ -74,6 +74,7 @@ export class LandRegistryMapService {
   }
 
     set landIn(value: LandRegistryMap){
+        console.log('value>>>',value);
         this._landIn.next(value);
     }
 

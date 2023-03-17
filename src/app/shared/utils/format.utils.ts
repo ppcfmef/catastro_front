@@ -136,7 +136,9 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         PARTIDA: land.departure,
         LADO: land.side,
         RAN_NUM : land.ranNum,
-        CUADRA : land.streetBlock
+        CUADRA : land.streetBlock,
+        NOM_USER:'',
+        NOM_PC:''
     };
     return gestion;
 }
@@ -214,6 +216,7 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         AREA: 0,
 
 
+
          PARTIDA: land.departure,
 
          LADO: land.side,
@@ -221,7 +224,10 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
          CUADRA : land.streetBlock,
          RAN_CPU : land.cup? parseInt(land.cup.split('-')[0],10):null,
          COD_UI: land.cup? parseInt(land.cup.split('-')[1],10):null,
-         COD_VER :land.cup? parseInt(land.cup.split('-')[2],10):null
+         COD_VER :land.cup? parseInt(land.cup.split('-')[2],10):null,
+         NOM_USER:'',
+         NOM_PC:'',
+         ID_LOTE_P:0,
     };
     return predio;
 

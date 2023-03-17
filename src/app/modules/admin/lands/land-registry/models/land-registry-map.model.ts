@@ -80,6 +80,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     ranNum: string;
     streetBlock: string;
     rangCup: string;
+
     //RAN_CPU
     //DEPARTURE
     constructor(l?: LandRegistryMap){
