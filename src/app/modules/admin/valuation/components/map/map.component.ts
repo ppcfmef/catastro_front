@@ -27,7 +27,8 @@ import {
     Extension,
 } from 'app/core/common/interfaces/common.interface';
 import { MapUtils } from 'app/shared/utils/map.utils';
-
+import { setDefaultOptions } from 'esri-loader';
+setDefaultOptions({ version: '4.22' });
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
