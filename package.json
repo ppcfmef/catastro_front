@@ -10,7 +10,8 @@
         "start": "ng serve",
         "build": "ng build",
         "test": "ng test",
-        "lint": "ng lint"
+        "lint": "ng lint",
+        "covertest": "ng test --no-watch --code-coverage"
     },
     "dependencies": {
         "@angular/animations": "12.1.4",
