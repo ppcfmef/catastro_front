@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { FormUtils } from './form.utils';
 import {FormatUtils} from './format.utils';
 import { LandRegistryMapModel } from 'app/modules/admin/lands/land-registry/models/land-registry-map.model';
 import { MapUtils } from './map.utils';
+import { Lote } from 'app/modules/admin/lands/land-registry/interfaces/lote.interface';
 
 describe('UtilsTest', () => {
 
@@ -29,38 +31,39 @@ describe('UtilsTest', () => {
     });
 
     it('should test FormatUtils', () => {
-        const lote = {
+        const lote: Lote= {
             ANIO_CART: 1,
-            BLOCK: "",
-            COD_LOTE: "",
-            COD_MZN: "",
-            COD_SECT: "",
-            COD_UU: "",
-            COD_VIA: "",
+            BLOCK: '',
+            COD_LOTE: '',
+            COD_MZN: '',
+            COD_SECT: '',
+            COD_UU: '',
+            COD_VIA: '',
             COORD_X: 1,
             COORD_Y: 1,
-            CUADRA: "",
-            FUENTE: "",
-            ID_ARANC: "",
-            ID_LOTE: "",
-            INTERIOR: "",
-            KM: "",
-            LADO: "",
+            CUADRA: '',
+            FUENTE: '',
+            ID_ARANC: '',
+            ID_LOTE: '',
+            INTERIOR: '',
+            KM: '',
+            LADO: '',
             LOT_URB: 1,
-            MZN_URB: "",
-            NOM_UU: "",
-            NOM_VIA: "",
-            NUM_MUN: "",
+            MZN_URB: '',
+            NOM_UU: '',
+            NOM_VIA: '',
+            NUM_MUN: '',
             OBJECTID: 1,
-            PARTIDA: "",
-            PISO: "",
-            RAN_NUM: "",
-            REFEREN: "",
-            TIPO_UU: "",
-            TIP_VIA: "",
-            UBIGEO: "",
+            PARTIDA: '',
+            PISO: '',
+            RAN_NUM: '',
+            REFEREN: '',
+            TIPO_UU: '',
+            TIP_VIA: '',
+            UBIGEO: '',
             AREA: 1,
-            RAN_CPU: "123-123-123"
+            RAN_CPU:'123-123-123',
+            ID_LOTE_P:1
         };
         const land = FormatUtils.formatLoteToLandRegistryMapModel(lote);
         expect(land).toBeInstanceOf(LandRegistryMapModel);

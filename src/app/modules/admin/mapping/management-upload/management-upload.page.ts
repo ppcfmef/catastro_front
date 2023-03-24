@@ -26,16 +26,10 @@ export class ManagementUploadPage implements OnInit {
     url: SafeResourceUrl;
 
     urls=[
-     /*   {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=f3764f9245d046f89078bed24b7ae670', utm: 17},
-        {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=6417eb15e5a342d8a74a4dca41d5e6e0', utm: 18},
-        {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=09e986dd996d4fbbabbea13083619035', utm: 19}
-        */
-
-        /*{urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=e64744d6454b4ad19e95bcc97a32e1e1'}*/
 
     ];
-        urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=e64744d6454b4ad19e95bcc97a32e1e1';
-
+        //urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=e64744d6454b4ad19e95bcc97a32e1e1';
+    urlString='https://ws.mineco.gob.pe/portaldfvisor/carga/';
     constructor(     private _userService: UserService,
         private _commonService: CommonService,
         public sanitizer: DomSanitizer) {}
@@ -45,26 +39,35 @@ export class ManagementUploadPage implements OnInit {
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: any) => {
             this.user = user;
-            //console.log('this.user>>', this.user);
+            console.log('user>>>',user);
+            let paramsUbigeo ='';
             this.userUbigeo =
-                this.user.ubigeo && this.user.ubigeo
+                this.user.ubigeo
                     ? this.user.ubigeo
-                    : '140204';
+                    : '150101';
+
               this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
-                //console.log(data);
-                const utm = data.resources[0].utm;
-                //this.urlString=this.urls.find(e=>e.utm ===utm).urlString;
+                console.log(data);
+
                 const ext: any=data.extensions[0];
                 this.x=ext.x;
                 this.y=ext.y;
-                //console.log(this.x,this.y);
-                if(this.urlString.includes('?')){
-                    this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
+
+                if(!this.user.ubigeo){
+                    paramsUbigeo='';
                 }
                 else{
-                    this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
+                    paramsUbigeo=`&ubigeo=${this.userUbigeo}`;
                 }
-                //console.log('this.urlString',this.urlString);
+
+
+                if(this.urlString.includes('?')){
+                    this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}${paramsUbigeo}`;
+                }
+                else{
+                    this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}${paramsUbigeo}`;
+                }
+                console.log('this.urlString',this.urlString);
                 this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlString);
 
             });
