@@ -1,0 +1,24 @@
+<div class="absolute inset-0">
+  <!-- Main -->
+  <div class="flex flex-col flex-auto items-center justify-center h-full p-6 sm:p-10">
+      <!-- @formatter:off -->
+      <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+        <div>
+          <img class="mb-8" src="assets/images/logo/logo_mef.jpg">
+          <img src="assets/images/logo/logoCatastroFiscal.png">
+        </div>
+      </div>
+      <!-- @formatter:on -->
+      <div class="mt-12 sm:mt-24 text-4xl md:text-7xl font-extrabold tracking-tight leading-tight md:leading-none text-center">
+        Página restringida!
+      </div>
+      <div class="mt-2 text-lg md:text-xl font-medium tracking-tight text-center text-secondary">
+        No tiene permisos para acceder a esta página, contacte al administrador.
+      </div>
+      <a
+          class="mt-12 font-medium underline text-primary-500"
+          [routerLink]="['/']">
+          Retornar a página de Inicio
+      </a>
+  </div>
+</div>
