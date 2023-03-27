@@ -6,31 +6,44 @@ import { TutorialManagePage } from './pages/tutorial-manage/tutorial-manage.page
 import { TutorialCatalogPage } from './pages/tutorial-catalog/tutorial-catalog.page';
 import { FaqManagePage } from './pages/faq-manage/faq-manage.page';
 import { FaqPage } from './pages/faq/faq.page';
+import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-authorization.guard';
 
 const routes: Routes = [
   {
     path: 'document',
-    component: DocumentCatalogPage
+    component: DocumentCatalogPage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asismanual', permissionType: 'read' },
   },
   {
     path: 'document-manage',
-    component: DocumentManagePage
+    component: DocumentManagePage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asismanual', permissionType: 'edit' },
   },
   {
     path: 'tutorial',
-    component: TutorialCatalogPage
+    component: TutorialCatalogPage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asistutori', permissionType: 'read' },
   },
   {
     path: 'tutorial-manage',
-    component: TutorialManagePage
+    component: TutorialManagePage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asistutori', permissionType: 'edit' },
   },
   {
     path: 'faq',
-    component: FaqPage
+    component: FaqPage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asisfaq', permissionType: 'read' },
   },
   {
     path: 'faq-manage',
-    component: FaqManagePage
+    component: FaqManagePage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'asisfaq', permissionType: 'edit' },
   },
 ];
 

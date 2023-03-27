@@ -3,10 +3,21 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BasicMappingPage } from './pages/basic-mapping/basic-mapping.page';
 import { MappingComponent } from './mapping.component';
+import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-authorization.guard';
 
 const routes: Routes = [
-  {path: '', component: MappingComponent},
-  {path: 'basic', component: BasicMappingPage},
+  {
+    path: '',
+    component: MappingComponent,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'gescargeo', permissionType: 'read' },
+  },
+  {
+    path: 'basic',
+    component: BasicMappingPage,
+    canActivate: [NavigationAuthorizationGuard],
+    data: { id: 'gescardato', permissionType: 'read' },
+  },
   {
       path: 'update',
       loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
