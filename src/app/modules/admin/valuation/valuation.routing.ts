@@ -3,8 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { ValuationComponent } from './valuation.component';
 
 const routes: Routes = [
-    {path: '', component: ValuationComponent}
-    //{path: 'test', component: ValuationComponent}
+    {
+      path: '',
+      component: ValuationComponent,
+      data: { id: 'gesvalo', permissionType: 'read' },
+    }
 ];
 
 @NgModule({

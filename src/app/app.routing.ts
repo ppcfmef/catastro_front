@@ -53,7 +53,11 @@ export const appRoutes: Route[] = [
             {
                 path: 'unlock-session',
                 loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)
-            }
+            },
+            {
+                path: 'errors',
+                loadChildren: () => import('app/modules/errors/errors.module').then(m => m.ErrorsModule)
+            },
         ]
     },
 
