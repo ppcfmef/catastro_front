@@ -183,8 +183,8 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             .subscribe((user: User) => {
                 this.user = user;
                 const ubigeo =
-                    this.user.placeScope && this.user.placeScope?.ubigeo
-                        ? this.user.placeScope.ubigeo
+                    this.user.placeScope && this.user?.ubigeo
+                        ? this.user?.ubigeo
                         : '150101';
                 /* this._commonService
             .getDistrictResource(ubigeo)
