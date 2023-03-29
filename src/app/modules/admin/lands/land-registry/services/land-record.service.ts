@@ -39,7 +39,7 @@ export class LandRecordService {
     return this._landRecordDownloadCroquis$;
   }
 
-  getSummary(): Observable<LandRecordSummary> {
-    return this.http.get<LandRecordSummary>(`${this.apiUrl}/lands/summary/`);
+  getSummary(queryParams = {}): Observable<LandRecordSummary> {
+    return this.http.get<LandRecordSummary>(`${this.apiUrl}/lands/summary/`, {params: queryParams});
   }
 }
