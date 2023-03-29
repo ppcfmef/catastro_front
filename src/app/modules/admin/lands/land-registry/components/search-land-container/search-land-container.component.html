@@ -37,6 +37,13 @@
         <mat-option [value]="3">Inactivo</mat-option>
     </mat-select>
   </mat-form-field>
+  <!-- select ubigeo -->
+  <div class="fuse-mat-no-subscript fuse-mat-dense w-4/12">
+    <select-ubigeo *ngIf="!hideSelectUbigeo"
+    (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
+  </div>
+  
+  <!-- fin select ubigeo -->
   <div style="width: 100%; padding-top: 20px;">
     <button mat-flat-button [color]="'primary'" style="float: right;"
     (click)="onDownloadReport()"
@@ -68,7 +75,5 @@
 
   <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
-
   </div>
-  
 </div>
