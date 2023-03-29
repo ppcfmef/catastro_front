@@ -76,7 +76,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnDestroy(): void {
-    this.ownerLandSubscription.unsubscribe();
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 
   onChangePage(data: {paginator: any; sort: Sort}): void {
@@ -89,7 +90,9 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    this._landOwnerService.getDetail(landRecord.owner).subscribe(
+    this._landOwnerService.getDetail(landRecord.owner)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(
       (response) => {
         this.dataSource = response.results;
         this.lengthOwner = response.count;

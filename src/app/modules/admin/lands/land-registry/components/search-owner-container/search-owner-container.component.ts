@@ -1,5 +1,5 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { FormControl, FormGroup } from '@angular/forms';
@@ -12,6 +12,8 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
 import { LandRecord } from '../../interfaces/land-record.interface';
 import { LandOwnerService } from '../../services/land-owner.service';
 import { LandRecordService } from '../../services/land-record.service';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -37,11 +39,17 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   lengthLandsOwner: number = 0;
   landOwner: LandOwner;
   landRecord: LandRecord;
+  ubigeo: string;
+  unsubscribeAll: Subject<any> = new Subject<any>();
+  idView = 'gprpregist';
+  hideSelectUbigeo = true;
 
   constructor(
     private router: Router,
+    private cdRef: ChangeDetectorRef,
     private _landOwnerService: LandOwnerService,
     private landRecordService: LandRecordService,
+    private navigationAuthorizationService: NavigationAuthorizationService,
   ) {
     this.createFormFilters();
   }
@@ -50,16 +58,63 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit(): void {
-    this.ownerLandSubscription = this._landOwnerService.getList({limit: 10})
-    .subscribe(
-      (response: IPagination<LandOwner>) => {
-        this.dataSource = response.results;
-        this.lengthOwner = response.count;
+
+    this.navigationAuthorizationService.userScopePermission(this.idView)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((data: any) => {
+      if(!data?.limitScope){
+        this.ubigeo = null;
+        this.hideSelectUbigeo = false;
+      }
+      else {
+        this.hideSelectUbigeo = true;
+        this.ubigeo = data?.ubigeo;
+      }
+
+      this.cdRef.detectChanges();
+      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+
+      const queryParams = this.makeQueryParams();
+      this.getLandOwnerRecords({limit: 10, ...queryParams});
     });
   }
 
   ngOnDestroy(): void {
-    this.ownerLandSubscription.unsubscribe();
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
+  }
+
+  onSelectUbigeo(ubigeo: string): void {
+    this.ubigeo = ubigeo;
+    this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+    const queryParams = this.makeQueryParams();
+    this.getLandOwnerRecords(queryParams);
+  }
+
+  getLandOwnerRecords(queryParams): void {
+    this._landOwnerService.getList(queryParams)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(
+      (response: IPagination<LandOwner>) => {
+        this.dataSource = response.results;
+        this.lengthOwner = response.count;
+        this.cdRef.detectChanges();
+    });
+  }
+
+  makeQueryParams(): {[key: string]: string | number} {
+    const rawValue = this.formFilters.getRawValue();
+    const queryParams = {};
+    const search = rawValue?.search || null;
+    const ubigeo = this.ubigeo;
+    if (search !== null) {
+      queryParams['search'] = search;
+    }
+
+    if (ubigeo !== null && ubigeo !== undefined) {
+      queryParams['ubigeo'] = ubigeo;
+    }
+    return queryParams;
   }
 
   onClickSearch(): void {
