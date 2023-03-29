@@ -1,0 +1,56 @@
+.ubigeo-selection{
+  display: flex;
+  flex-direction: column;
+  padding: 6px 20px 6px 20px;
+  border-radius: 8px;
+  background-color: white;
+  position: absolute;
+  z-index: 1;
+  min-width: 300px;
+  border-width: 1px;
+  border-color: rgba(var(--fuse-border-rgb), var(--tw-border-opacity));
+  cursor: pointer;
+  .text-selection{
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      mat-icon{
+          margin-left: 10px;
+      }
+  }
+  .block-selects{
+      flex-direction: column;
+      display: flex;
+      margin-top: 20px;
+      mat-form-field{
+          margin-bottom: 10px;
+          min-width: 220px;
+      }
+      &[hidden]{
+          display: none !important;
+      }
+
+      .btn-close{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          button{
+              width: 75%;
+              background-color: #c23a3a;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              padding: 6px;
+              justify-content: center;
+              mat-icon{
+                  color: white;
+                  margin-right: 4px;
+              }
+          }
+      }
+  }
+}

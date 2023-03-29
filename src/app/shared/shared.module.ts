@@ -22,6 +22,9 @@ import { TabsComponent } from './components/tabs/tabs.component';
 
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.component';
+import { SelectUbigeoComponent } from './components/select-ubigeo/select-ubigeo.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -30,12 +33,14 @@ import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.com
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        MatFormFieldModule,
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
         MatDialogModule,
         MatSnackBarModule,
         MatTabsModule,
+        MatSelectModule,
         FuseConfirmationModule,
     ],
     exports: [
@@ -52,6 +57,7 @@ import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.com
         TabsComponent,
         OnlyNumbersDirective,
         BreadCrumbsComponent,
+        SelectUbigeoComponent,
     ],
     declarations: [
         AlertConfirmComponent,
@@ -64,6 +70,7 @@ import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.com
         TabsComponent,
         OnlyNumbersDirective,
         BreadCrumbsComponent,
+        SelectUbigeoComponent,
     ]
 })
 export class SharedModule

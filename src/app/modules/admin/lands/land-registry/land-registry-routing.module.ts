@@ -18,19 +18,19 @@ const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'search-owner',
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'guuser', permissionType: 'read' },
+        data: { id: 'gprpregist', permissionType: 'read' },
       },
       {
         path: 'search-owner',
         component: SearchByOwnerPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'guuser', permissionType: 'read' },
+        data: { id: 'gprpregist', permissionType: 'read' },
       },
       {
         path: 'search-land',
         component: SearchByLandPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'guuser', permissionType: 'read' },
+        data: { id: 'gprpregist', permissionType: 'read' },
       },
     ]
   },

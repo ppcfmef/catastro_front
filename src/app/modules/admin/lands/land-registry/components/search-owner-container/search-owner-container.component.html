@@ -21,6 +21,11 @@
         <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
       </button>
   </mat-form-field>
+
+  <div class="fuse-mat-no-subscript fuse-mat-dense w-4/12">
+    <select-ubigeo *ngIf="!hideSelectUbigeo"
+    (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
+  </div>
   
 </div>
 <app-search-owner-table
