@@ -25,4 +25,8 @@ export class LandOwnerService {
   getDetail(landOwnerId: number): Observable<IPagination<LandOwner>> {
     return this.getList({id: landOwnerId});
   }
+
+  getLandDetail(landId: number): Observable<IPagination<LandOwner>> {
+    return this.http.get<IPagination<LandOwner>>(`${this.apiUrl}/lands/owners/by-land/${landId}/`);
+  }
 }
