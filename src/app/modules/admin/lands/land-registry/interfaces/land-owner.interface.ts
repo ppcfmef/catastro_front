@@ -16,6 +16,8 @@ export interface OwnerAddress {
 
 export interface LandOwner {
   id: number;
+  ubigeo?: string;
+  code?: string;
   documentType: string;
   dni: string;
   name: string;
@@ -24,7 +26,6 @@ export interface LandOwner {
   descriptionOwner: string;
   phone: string;
   email: string;
-  code?: string;
   taxAddress?: string;  // ToDo: resume for address
   numberLands?: number;
   address?: OwnerAddress;

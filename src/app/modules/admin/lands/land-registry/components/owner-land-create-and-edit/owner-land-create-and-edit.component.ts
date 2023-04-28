@@ -7,6 +7,8 @@ import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 import { IntegrationService } from 'app/shared/services/integration.service';
+import { User } from 'app/core/user/user.types';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 
 
 @Component({
@@ -26,15 +28,36 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   ];
 
   showAddres = false;
+  user: User;
+  ubigeo: string;
+  hideSelectUbigeo= true;
+  unsubscribeAll: Subject<any> = new Subject<any>();
+  idView = 'regnrewcon';
 
   constructor(
     private fb: FormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
     private integrationService: IntegrationService,
+    private navigationAuthorizationService: NavigationAuthorizationService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.navigationAuthorizationService.userScopePermission(this.idView)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((data: any) => {
+      if(!data?.limitScope){
+        this.ubigeo = null;
+        this.hideSelectUbigeo = false;
+      }
+      else {
+        this.hideSelectUbigeo = true;
+        this.ubigeo = data?.ubigeo;
+      }
+
+      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     const ownerCurentValue = changes?.landOwnerIn?.currentValue;
@@ -46,6 +69,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   createFormEdit(): void{
     this.formEdit = this.fb.group({
+      ubigeo: [{ value: this.landOwner.ubigeo, disabled: !this.isCreate}],
+      code: [{ value: this.landOwner.code, disabled: !this.isCreate}],
       documentType: [{ value: this.landOwner.documentType, disabled: !this.isCreate}],
       dni: [{ value: this.landOwner.dni, disabled: !this.isCreate}],
       name: [this.landOwner.name],
@@ -146,6 +171,14 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   get isCreate(): boolean {
     return !this.landOwner.id;
+  }
+
+  onSelectUbigeo(ubigeo: string): void {
+    this.ubigeo = ubigeo;
+    console.log('this.ubigeo >>>', this.ubigeo);
+    this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+    this.formEdit.get('ubigeo').setValue(this.ubigeo);
+    console.log('create user >>>', this.formEdit.value);
   }
 
   ngOnDestroy(): void {
