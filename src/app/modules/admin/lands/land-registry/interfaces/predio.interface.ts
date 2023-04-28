@@ -75,6 +75,13 @@ export interface Predio {
     COD_UI: number;
 // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_VER: number;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    NOM_USER: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    NOM_PC: string;
+
+     // eslint-disable-next-line @typescript-eslint/naming-convention
+     ID_LOTE_P: number;
 }
 
 

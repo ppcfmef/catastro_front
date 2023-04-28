@@ -39,6 +39,8 @@ export class ReportSituationalComponent implements OnInit {
   provinces$: Observable<Province[]>;
   districts$: Observable<District[]>;
   _unsubscribeAll: Subject<any> = new Subject<any>();
+  hideSelectUbigeo= true;
+  _emailUserAdmin='jcramireztello@gmail.com';
   constructor(
     private domSanitizer: DomSanitizer,
     private _commonService: CommonService,
@@ -47,6 +49,7 @@ export class ReportSituationalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user: User) => {
@@ -58,14 +61,18 @@ export class ReportSituationalComponent implements OnInit {
         const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
         this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
 
-          if(readAll){
+          if(readAll.length>0 || this.user.email === this._emailUserAdmin){
             this.initUbigeoParams(data.code);
+            this.hideSelectUbigeo = false;
+           }
+
+          else {
+            this.hideSelectUbigeo = true;
           }
           this.makeReportUrl(data.code);
 
         });
     });
-
     /*this.makeReportUrl();*/
   }
 
@@ -145,6 +152,7 @@ selectDist(event: any): void {
     /*const baseUrl = this.getBaseUrl(land?.zone);
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
+
     */
     const land: any=this.getLand(ubigeo);
     console.log('land>>',land);

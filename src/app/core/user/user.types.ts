@@ -11,9 +11,15 @@ export interface Institute {
     name: string;
 }
 
+export interface PlaceScope {
+    id: number;
+    name: string;
+}
+
 export interface User {
     id?: number;
     username: string;
+    dni?: string;
     name?: string;
     fullName?: string;
     firstName?: string;
@@ -29,7 +35,8 @@ export interface User {
     department?: Department;
     province?: Province;
     district?: District;
-    placeScope?: any;
+    placeScope?: PlaceScope;
+    isSuperuser?: boolean;
     ubigeo: string;
     permissionsNavigation: any[];
 }

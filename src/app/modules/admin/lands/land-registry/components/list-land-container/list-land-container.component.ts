@@ -81,7 +81,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
     //this.landRegistryMapService.landIn = null;
   }
 
-  onChangePage(paginator: MatPaginator): void {
+  onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;

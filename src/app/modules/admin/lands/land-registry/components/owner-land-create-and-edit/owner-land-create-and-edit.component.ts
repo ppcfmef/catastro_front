@@ -105,7 +105,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   emitShowFormEdit(value: boolean): void {
     if (this.isCreate) {
-      this.formEdit.reset();
+      this.formEdit?.reset();
     }else {
       this.showFormEdit.emit(value);
     }
@@ -113,7 +113,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   resetForm(): void {
     if (this.formEdit) {
-      this.formEdit.reset();
+      this.formEdit?.reset();
     }
   }
 
@@ -149,6 +149,6 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   }
 
   ngOnDestroy(): void {
-    this.formEdit.reset();
+    this.formEdit?.reset();
   }
 }

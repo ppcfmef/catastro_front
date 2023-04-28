@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { LandSummaryTableComponent } from './land-summary-table.component';
 
@@ -8,6 +9,7 @@ describe('LandSummaryTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule ],
       declarations: [ LandSummaryTableComponent ]
     })
     .compileComponents();

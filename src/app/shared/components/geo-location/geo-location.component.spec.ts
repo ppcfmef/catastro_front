@@ -22,4 +22,7 @@ describe('GeoLocationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should test', () => {
+    expect(component.initializeMap([])).toBeTruthy();
+  });
 });

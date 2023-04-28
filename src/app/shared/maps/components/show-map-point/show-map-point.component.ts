@@ -7,17 +7,17 @@ import {
     OnInit,
     ViewChild,
     OnChanges,
+    OnDestroy,
 } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import html2canvas from 'html2canvas'; // Todavía no lo usamos
 import { LandRecordService } from 'app/modules/admin/lands/land-registry/services/land-record.service';
 import { LandRecord } from 'app/modules/admin/lands/land-registry/interfaces/land-record.interface';
 import moment from 'moment';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
@@ -27,7 +27,7 @@ import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land
     templateUrl: './show-map-point.component.html',
     styleUrls: ['./show-map-point.component.scss'],
 })
-export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
+export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
     @Input() landOwner: LandOwner;
     @Input() landRecord: LandRecord;
     @Input() points: Coordinates[] = [
@@ -51,7 +51,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
     };
 
     layersInfo = [
-        {
+      /*  {
             idServer: 0,
             title: 'Zona 17',
             id: 0,
@@ -95,6 +95,22 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             legend: null,
             sublayers: 'all',
         },
+*/
+
+{
+    title: 'Cartografia Fiscal',
+    id: 0,
+    idServer: 0,
+    urlBase:
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+    order: 0,
+    featureLayer: null,
+    definitionExpression: '1=1',
+    featureTable: null,
+    popupTemplate: null,
+    legend: null,
+    sublayers: 'all',
+},
 
         {
             idServer: 0,
@@ -140,15 +156,21 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             ],
         },
     ];
-
+    subscription: Subscription;
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
         private _userService: UserService
     ) {}
+    ngOnDestroy(): void {
+
+        this.subscription.unsubscribe();
+        //this._landRecordService.setLandRecordDownloadCroquis(false);
+        //throw new Error('Method not implemented.');
+    }
 
     ngOnInit(): void {
-        this._landRecordService
+        this.subscription   =this._landRecordService
             .getLandRecordDownloadCroquis()
             .subscribe((res: boolean) => {
                 if (res) {
@@ -161,8 +183,8 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             .subscribe((user: User) => {
                 this.user = user;
                 const ubigeo =
-                    this.user.placeScope && this.user.placeScope.ubigeo
-                        ? this.user.placeScope.ubigeo
+                    this.user.placeScope && this.user?.ubigeo
+                        ? this.user?.ubigeo
                         : '150101';
                 /* this._commonService
             .getDistrictResource(ubigeo)
@@ -350,7 +372,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
         const legendJson = [];
 
         this.layersInfo
-            .filter(l => l.title.includes(utm.toString()))
+            .filter(l => l.title.includes(utm?.toString()))
             .forEach((l) => {
                 const legendLayers = l.legend.layers;
                 legendLayers.forEach((lf) => {
@@ -387,7 +409,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
 
                 [
                     {
-                        content: `MUNICIPALIDAD DE ${_districtResource.name} UBIGEO  ${this.landRecord.ubigeo}`,
+                        content: `MUNICIPALIDAD DE ${_districtResource?.name} UBIGEO  ${this.landRecord.ubigeo}`,
                         colSpan: 2,
                         styles: { halign: 'center' },
                     },
@@ -395,7 +417,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
 
                 [
                     { content: `Fecha ${moment().format('DD/MM/YYYY')}` },
-                    { content: `Usuario ${this.user.name}` },
+                    { content: `Usuario ${this.user?.name}` },
                 ],
 
                 [
@@ -433,12 +455,12 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges {
             ],
         });
 
-        const screenshot = await this.view.takeScreenshot({
+        const screenshot = await this.view?.takeScreenshot({
             format: 'jpg',
             quality: 100,
         });
 
-        doc.addImage(screenshot.dataUrl, 'JPEG', 35, 100, 135, 75);
+        doc.addImage(screenshot?.dataUrl, 'JPEG', 35, 100, 135, 75);
         const x: number = 35;
         const y: number = 185;
         const bodyLegend = [];

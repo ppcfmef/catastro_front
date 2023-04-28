@@ -27,7 +27,8 @@ import {
     Extension,
 } from 'app/core/common/interfaces/common.interface';
 import { MapUtils } from 'app/shared/utils/map.utils';
-
+import { setDefaultOptions } from 'esri-loader';
+setDefaultOptions({ version: '4.22' });
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -554,7 +555,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             _layer.urlBase + '/' + _layer.idServer
         );
 
-        const query = _featureLayer.createQuery();
+        const query = _featureLayer?.createQuery();
         const ubigeo = params.district;
         query.where = `UBIGEO='${ubigeo}'`;
         query.outSpatialReference = this.proj4DestWkid;

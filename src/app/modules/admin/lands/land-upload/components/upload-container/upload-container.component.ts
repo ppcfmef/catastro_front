@@ -6,6 +6,7 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UploadhistoryService } from '../../services/uploadhistory.service';
+import { ExportReportService } from 'app/shared/services/export-report.service';
 
 @Component({
   selector: 'app-upload-container',
@@ -32,6 +33,7 @@ export class UploadContainerComponent implements OnInit {
       private _messageProviderService: MessageProviderService,
       private uploadService: UploadhistoryService,
       private confirmationService: CustomConfirmationService,
+      private exportReportService: ExportReportService,
   ) {
   }
 
@@ -110,6 +112,12 @@ export class UploadContainerComponent implements OnInit {
 
   onValidSaveUpload(): void {
     this.changeUploadStatus('IN_PROGRESS');
+  }
+
+  onDownloadRecordsUpload(status: string): void {
+    const queryParams = {'status': status};
+    const exportUrl = this.exportReportService.getUrlExportReport(`/land/uploads/${this.recordSumary?.uploadHistoryId}/`, queryParams);
+    window.open(exportUrl, '_blank');
   }
 
   private changeUploadStatus(status: string): void {

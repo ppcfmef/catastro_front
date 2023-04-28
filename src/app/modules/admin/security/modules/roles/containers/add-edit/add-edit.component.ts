@@ -53,7 +53,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         this.permissions$ = this._permissionService.getSelectPermissions();
 
         // Open the drawer
-        this._listComponent.matDrawer.open();
+        this._listComponent.matDrawer?.open();
 
         // Create the contact form
         this.roleForm = this._formBuilder.group({
@@ -94,7 +94,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
      * Close the drawer
      */
     closeDrawer(): Promise<MatDrawerToggleResult> {
-        return this._listComponent.matDrawer.close();
+        return this._listComponent.matDrawer?.close();
     }
 
     /**

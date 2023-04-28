@@ -58,9 +58,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   createFormEdit(): void{
-    console.log('this.landMergeRecord>>',this.landMergeRecord);
     this.landActive = this.statusToToggle(this.landMergeRecord?.status);
-    console.log('this.landActive>>',this.landActive,'!this.landActive>>',!this.landActive);
     const disabled = !this.landActive;
     this.formEdit = this.fb.group({
       idObjectImg:[{ value: this.landMergeRecord?.idObjectImg, disabled}],
@@ -116,16 +114,12 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   saveLand(): void {
-    console.log('holass');
-    console.log('this.formEdit.valid>>',this.formEdit.valid);
-    console.log('this.formEdit.value>>',this.formEdit.value);
     if(this.formEdit.valid) {
       const data = this.formEdit.value;
       data.owner = this.ownerId;
       data.status = this.toggleToStatus(data.status);
       // ToDo: debe ser en el container
       if (data.idPlot && !data.cup) {
-        console.log('creando cpu');
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
       }else {
@@ -254,7 +248,6 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private statusToToggle(status: number): boolean {
-    console.log('status>>',status);
     if (status === LandStatus.inactive) {
       return false;
     }

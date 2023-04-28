@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEditComponent } from './add-edit.component';
+import { SelectUbigeoComponent } from './select-ubigeo.component';
 
-describe('AddEditComponent', () => {
-  let component: AddEditComponent;
-  let fixture: ComponentFixture<AddEditComponent>;
+describe('SelectUbigeoComponent', () => {
+  let component: SelectUbigeoComponent;
+  let fixture: ComponentFixture<SelectUbigeoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddEditComponent ]
+      declarations: [ SelectUbigeoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddEditComponent);
+    fixture = TestBed.createComponent(SelectUbigeoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

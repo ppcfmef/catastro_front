@@ -38,8 +38,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import moment from 'moment';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
-import { threadId } from 'worker_threads';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
+import { Lote } from '../../interfaces/lote.interface';
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -71,8 +71,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
     /*proj4ScrWkid=4326;*/
     proj4Src = this.proj4Catalog + ':' + String(this.proj4Wkid);
     layerList: any;
+    lote: Lote;
     groupLayers = [
-        {
+       /* {
             id: 0,
             title: 'Zona 17',
             children: [0, 1, 2,101],
@@ -89,6 +90,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             title: 'Zona 19',
             children: [6, 7, 8,103],
         },
+*/
+
+{
+    id: 0,
+    title: 'Cartografia Fiscal',
+    children: [-1,0, 1, 2,101],
+},
 
         {
             id: 3,
@@ -136,73 +144,91 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             projection: 32717,
         },*/
 
+
         {
-            title: 'Lotes Zona 17',
+            title: 'Predios',
+            id: -1,
+            idServer: 0,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible:false,
+        },
+
+
+        {
+            title: 'Lotes Zona',
             id: 0,
             idServer: 1,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Lotes Poligono Zona 17',
+            title: 'Lotes Poligono Zona',
             id: 1,
             idServer: 5,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Via Zona 17',
+            title: 'Via Zona',
             id: 2,
             idServer: 2,
 
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
         {
-            title: 'Manzana Urbana Zona 17',
+            title: 'Manzana Urbana Zona',
             id: 101,
             idServer: 9,
-
+//https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
-            utm: 17,
-            projection: 32717,
+            utm: null,
+            projection: null,
             visible:true,
         },
 
-
+/*
         {
             title: 'Lotes Zona 18',
             id: 3,
@@ -331,7 +357,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: 19,
             projection: 32719,
             visible:true,
-        },
+        },*/
         {
             title: 'Arancel',
             id: 9,
@@ -387,7 +413,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
-
+        urlSearchDireccionesMunicipales =
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0';
     /*urlGestionPredios =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';*/
 
@@ -674,7 +701,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 this.urlSearchDirecciones
             );
 
-
+            const featureDireccionesMunicipales = new FeatureLayer(
+                this.urlSearchDireccionesMunicipales
+            );
             const labelClassVias = {
                 // autocasts as new LabelClass()
                 symbol: {
@@ -884,14 +913,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
                                     dialogRef.afterClosed().toPromise().then( (option) => {
                                         if (option === 'confirmed') {
-                                            latitude =
+
+                                            /*latitude =
                                             graphic.attributes['COORD_Y'];
                                         longitude =
-                                            graphic.attributes['COORD_X'];
-                                        const lote = graphic.attributes;
-                                        console.log('lote>>',lote);
+                                            graphic.attributes['COORD_X'];*/
+                                            graphic.attributes['COORD_X'] = longitude;
+                                            graphic.attributes['COORD_Y'] =latitude;
 
-                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(lote);
+
+                                        this.lote = graphic.attributes;
+                                        console.log('lote>>',this.lote);
+
+                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
 
                                         this._landRegistryMapService.setEstado(Estado.LEER);
                                         this._landRegistryMapService.landOut = this.landRegistryMapModel;
@@ -1031,19 +1065,99 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 countryCode:'PE',
                                 singleLineFieldName: 'SingleLine',
                                 url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
-                                filter:searchFilter
-
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                               },
 
-                            {
+                              {
                                 layer: featureDirecciones,
                                 searchFields: ['DIR_MUN'],
                                 displayField: 'DIR_MUN',
                                 exactMatch: false,
                                 outFields: ['DIR_MUN'],
-                                name: 'DIRECCIONES',
-                                filter:searchFilter
+                                name: 'DIRECCION INEI',
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
+                            },
+                            {
+                                layer: this.featureZonaUrbana,
+                                searchFields: ['DISTRITO', 'UBIGEO'],
+                                displayField: 'DISTRITO',
+                                exactMatch: false,
+                                outFields: ['UBIGEO', 'DISTRITO'],
+                                name: 'DISTRITOS',
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
+                            },
 
+
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['DIR_MUN'],
+                                displayField: 'DIR_MUN',
+                                exactMatch: false,
+                                outFields: ['DIR_MUN'],
+                                name: 'DIRECCION MUNICIPAL',
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
+
+                            },
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['COD_PRE'],
+                                displayField: 'COD_PRE',
+                                exactMatch: false,
+                                outFields: ['COD_PRE'],
+                                name: 'CODIGO DE PREDIO',
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
+
+                            },
+                            {
+                                layer: featureDireccionesMunicipales,
+                                searchFields: ['COD_CPU'],
+                                displayField: 'COD_CPU',
+                                exactMatch: false,
+                                outFields: ['COD_CPU'],
+                                name: 'CODIGO CPU',
+                                filter:searchFilter,
+                                resultSymbol:{
+                                    type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                    url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',
+                                }
                             },
                         ];
 
@@ -1055,7 +1169,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         });
 
                         searchWidget.on('select-result', (event) => {
-                            this.view.zoom = 16;
+                            this.view.zoom = 19;
                             const template =event.getEffectivePopupTemplate();
                             console.log(template);
                         });
@@ -1085,7 +1199,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             countryCode:'PE',
                             singleLineFieldName: 'SingleLine',
                             url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
-
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
 
                           },
 
@@ -1095,7 +1215,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             displayField: 'DIR_MUN',
                             exactMatch: false,
                             outFields: ['DIR_MUN'],
-                            name: 'DIRECCIONES',
+                            name: 'DIRECCION INEI',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
                         },
                         {
                             layer: this.featureZonaUrbana,
@@ -1104,6 +1231,62 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             exactMatch: false,
                             outFields: ['UBIGEO', 'DISTRITO'],
                             name: 'DISTRITOS',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
+                        },
+
+
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['DIR_MUN'],
+                            displayField: 'DIR_MUN',
+                            exactMatch: false,
+                            outFields: ['DIR_MUN'],
+                            name: 'DIRECCION MUNICIPAL',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
+
+                        },
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['COD_PRE'],
+                            displayField: 'COD_PRE',
+                            exactMatch: false,
+                            outFields: ['COD_PRE'],
+                            name: 'CODIGO DE PREDIO',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
+
+                        },
+                        {
+                            layer: featureDireccionesMunicipales,
+                            searchFields: ['COD_CPU'],
+                            displayField: 'COD_CPU',
+                            exactMatch: false,
+                            outFields: ['COD_CPU'],
+                            name: 'CODIGO CPU',
+                            resultSymbol:{
+                                type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                                url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',
+                            }
                         },
                     ];
 
@@ -1115,7 +1298,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     });
 
                     searchWidget.on('select-result', (event) => {
-                        this.view.zoom = 16;
+                        this.view.zoom = 19;
                         console.log('event>>',event);
                     });
 
@@ -1704,17 +1887,24 @@ async saveNewPointGestionPredio(): Promise<void>{
                 /*.subscribe((data: DistrictResource) => {
                     this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
                 });*/
-
+/*
         const _layer = this.layersInfo.find(
                     e =>  e.utm === utm
                 );
+*/
+        const _urlBase = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
 
-        const wkid = parseInt('327' + utm, 10);
+
+
+        //const wkid = parseInt('327' + utm, 10);
+        const wkid = 4326;
 
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
-
-            const urlBase=`${_layer.urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
+            _predio.NOM_USER = this.user.username;
+            _predio.NOM_PC = 'PLATAFORMA';
+            _predio.ID_LOTE_P =this.lote.ID_LOTE_P;
+            const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
 
@@ -1739,8 +1929,10 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         }else{
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
+            _gestionPredio.NOM_USER = this.user.username;
+            _gestionPredio.NOM_PC = 'PLATAFORMA';
             _gestionPredio.ESTADO=0;
-            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;;
+            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();
@@ -1775,6 +1967,9 @@ async saveNewPointGestionPredio(): Promise<void>{
 
 
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
+            _gestionPredio.NOM_USER = this.user.username;
+            _gestionPredio.NOM_PC = 'PLATAFORMA';
+
             const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 

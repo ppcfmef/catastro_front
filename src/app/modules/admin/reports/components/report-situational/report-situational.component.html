@@ -1,10 +1,10 @@
-<div class="ubigeo-selection">
+<div class="ubigeo-selection" *ngIf="!hideSelectUbigeo">
     <div class="text-selection" (click)="openCloseUbigeo()">
         <div>
-            {{selectionText.dep === ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }} 
-            {{selectionText.prov !== '' ? '-':''}} 
-            {{ selectionText.prov}} 
-            {{selectionText.dist !== '' ? '-':''}} 
+            {{selectionText.dep === ''? 'Seleccione Ubigeo (ubicación)' : selectionText.dep }}
+            {{selectionText.prov !== '' ? '-':''}}
+            {{ selectionText.prov}}
+            {{selectionText.dist !== '' ? '-':''}}
             {{selectionText.dist}}
         </div>
         <mat-icon *ngIf="hideUbigeo" svgIcon="heroicons_solid:chevron-down"></mat-icon>
@@ -46,7 +46,7 @@
                 <span> Cerrar</span>
             </button>
         </div>
-        
+
     </div>
 </div>
 

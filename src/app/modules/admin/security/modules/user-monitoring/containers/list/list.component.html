@@ -1,0 +1,79 @@
+<ng-container>
+  <h2 [hidden]="showDetail">Jurisdición disponible</h2>
+  <p [hidden]="showDetail" class="mb-7">
+    <b class="mr-2">Departamento:</b>  {{ userLogged?.department?.name || '' }}
+    <b class="mr-2 ml-8">Provincia:</b> {{ userLogged?.province?.name || '' }}
+  </p>
+
+  <section [hidden]="showDetail">
+      <form class="example-form">
+          <mat-form-field class="w-80 mb-7" appearance="fill">
+            <mat-label>Buscar por institución </mat-label>
+            <input type="text"
+                  placeholder="Ingrese nombre de institución"
+                  floatLabel="always"
+                  aria-label="Search"
+                  matInput
+                  [formControl]="myControl"
+                  [matAutocomplete]="auto">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event.option.value)" [displayWith]="displayTextAutocompleteFn.bind(this)">
+              <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
+                <div class="mat-body-1 mb-0">{{option.name}}</div>
+                <div class="mat-body-1">{{option.ubigeoScope || ''}}</div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+  </section>
+
+  <section [hidden]="showDetail">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full max-w-3xl">
+
+      <ng-container matColumnDef="nro">
+        <th mat-header-cell *matHeaderCellDef>Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>Usuarios</th>
+        <td mat-cell *matCellDef="let element">{{element.dni}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="names">
+        <th mat-header-cell *matHeaderCellDef>Nombres y apellidos</th>
+        <td mat-cell *matCellDef="let element">{{element.fullName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Rol</th>
+        <td mat-cell *matCellDef="let element">{{element.role}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let element">{{element.actions || 0}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        (click)="showHistoryDetail(row)"></tr>
+    </table>
+    <mat-paginator class="w-full max-w-3xl" [length]="length"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]">
+    </mat-paginator>
+  </section>
+</ng-container>
+
+<ng-container>
+  <app-detail
+    [hidden]="!showDetail"
+    [showMe]="!showDetail"
+    [dataSource]="detailDataSource"
+    [selectedUser]="user"
+    (showList)="handlerShowDetail($event)"></app-detail>
+</ng-container>

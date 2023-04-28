@@ -27,20 +27,18 @@ export class BasicMappingPage implements OnInit {
     //urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=90568c02bd8c44789b16c200aab65d08';
     //https://frank:3344/webappbuilder/apps/3/?ubigeo=140201
 urls=[
+
+
 /*
-{urlString:'https://frank:3344/webappbuilder/apps/3/', utm: 17},
-{urlString:'https://frank:3344/webappbuilder/apps/3/', utm: 18},
-{urlString:'https://frank:3344/webappbuilder/apps/3/', utm: 19}*/
-
-
 {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=90568c02bd8c44789b16c200aab65d08', utm: 17},
 {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=5289ded8ea68461b951ece0fb395b3a6', utm: 18},
 {urlString:'https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=adbbe634ae2943e6ac85be2d8f635444', utm: 19}
-
+*/
 
 ];
-urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=f3764f9245d046f89078bed24b7ae670';
+//urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=90568c02bd8c44789b16c200aab65d08';
 
+urlString='https://ws.mineco.gob.pe/portaldfvisor/actcarto/';
 
 
   constructor(
@@ -55,29 +53,39 @@ urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=f37
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user: any) => {
+        let paramsUbigeo ='';
         this.user = user;
+
         console.log('this.user>>', this.user);
         this.userUbigeo =
             this.user.ubigeo && this.user.ubigeo
                 ? this.user.ubigeo
-                : '140204';
+                : '150101';
           this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
             console.log(data);
-            const utm = data.resources[0].utm;
-            this.urlString=this.urls.find(e=>e.utm ===utm).urlString;
+
             const ext: any=data.extensions[0];
             this.x=ext.x;
             this.y=ext.y;
             console.log(this.x,this.y);
 
+
+
+               if(!this.user.ubigeo){
+                    paramsUbigeo='';
+                }
+                else{
+                    paramsUbigeo=`&ubigeo=${this.userUbigeo}`;
+                }
+
+
             if(this.urlString.includes('?')){
-              this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
-          }
+              this.urlString=this.urlString+`&extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}${paramsUbigeo}&userPcf=${this.user.username}`;
+            }
           else{
-              this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
-          }
-           /* this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}&ubigeo=${this.userUbigeo}`;
-            console.log('this.urlString',this.urlString);*/
+              this.urlString=this.urlString+`?extent=${ext.xMin},${ext.yMin},${ext.xMax},${ext.yMax}${paramsUbigeo}&userPcf=${this.user.username}`;
+            }
+            console.log('this.urlString',this.urlString);
             this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlString);
 
         });

@@ -10,7 +10,8 @@
         "start": "ng serve",
         "build": "ng build",
         "test": "ng test",
-        "lint": "ng lint"
+        "lint": "ng lint",
+        "covertest": "ng test --no-watch --code-coverage"
     },
     "dependencies": {
         "@angular/animations": "12.1.4",
@@ -47,6 +48,7 @@
         "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.5.25",
         "lodash-es": "4.17.21",
+        "mat-table-exporter": "^10.2.4",
         "moment": "^2.29.1",
         "ng-apexcharts": "1.5.12",
         "ng-recaptcha": "^9.0.0",
@@ -82,10 +84,11 @@
         "@types/crypto-js": "3.1.47",
         "@types/highlight.js": "10.1.0",
         "@types/jasmine": "3.8.2",
+        "@types/jest": "^29.4.0",
         "@types/jspdf": "^2.0.0",
         "@types/lodash": "4.14.171",
         "@types/lodash-es": "4.17.4",
-        "@types/node": "^12.20.17",
+        "@types/node": "^12.20.55",
         "@typescript-eslint/eslint-plugin": "4.28.5",
         "@typescript-eslint/parser": "4.28.5",
         "autoprefixer": "10.3.1",
@@ -101,6 +104,7 @@
         "karma-jasmine": "4.0.1",
         "karma-jasmine-html-reporter": "1.7.0",
         "lodash": "4.17.21",
+        "ng-mocks": "^14.7.1",
         "path-browserify": "^1.0.1",
         "postcss": "8.3.6",
         "tailwindcss": "2.2.7",

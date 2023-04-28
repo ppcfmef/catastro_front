@@ -1,14 +1,61 @@
+import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { LandRegistryService } from '../../services/land-registry.service';
 import { LandCreateAndEditComponent } from './land-create-and-edit.component';
+import { masterDomainMock } from '../../tests/mocks/master-domain.mock';
+import { landRecordMock } from '../../tests/mocks/land-record.mock';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { CoreModule } from 'app/core/core.module';
 
 describe('LandCreateAndEditComponent', () => {
   let component: LandCreateAndEditComponent;
   let fixture: ComponentFixture<LandCreateAndEditComponent>;
+  let fakeLandRegistryService;
+  let fakeCustomConfirmationService;
+  let fakeLandRegistryMapService;
 
   beforeEach(async () => {
+    fakeLandRegistryService = jasmine.createSpyObj(
+      'LandRegistryService', ['getMasterDomain', 'getLandInactiveByCpu', 'saveLand']
+    );
+    fakeLandRegistryService.getMasterDomain.and.returnValue(of(masterDomainMock));
+    fakeLandRegistryService.getLandInactiveByCpu.and.returnValue(of(landRecordMock));
+    fakeLandRegistryService.saveLand.and.returnValue(of(landRecordMock));
+
+    fakeCustomConfirmationService = jasmine.createSpyObj(
+      'CustomConfirmationService', ['error', 'success']
+    );
+
+    fakeLandRegistryMapService = jasmine.createSpyObj(
+      'LandRegistryMapService', ['createCpu']
+    );
+    fakeLandRegistryMapService.createCpu.and.returnValue(of(landRecordMock));
+
     await TestBed.configureTestingModule({
-      declarations: [ LandCreateAndEditComponent ]
+      imports: [
+        ReactiveFormsModule, FormsModule, BrowserAnimationsModule, HttpClientTestingModule,
+        CoreModule, MatFormFieldModule, MatDialogModule, MatSelectModule, MatIconModule,
+        MatButtonModule, MatInputModule, MatSlideToggleModule
+      ],
+      declarations: [ LandCreateAndEditComponent ],
+      providers: [
+        FormBuilder,
+        { provide: CustomConfirmationService, useValue: fakeCustomConfirmationService },
+        { provide: LandRegistryService, useValue: fakeLandRegistryService },
+        { provide: LandRegistryMapService, useValue: fakeLandRegistryMapService },
+      ]
     })
     .compileComponents();
   });
@@ -21,5 +68,32 @@ describe('LandCreateAndEditComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call LandRegistryService.searchLandByCPU', () => {
+    component.createFormEdit();
+    component.formEdit.get('cup').setValue(landRecordMock.cup);
+    component.searchLandByCPU();
+    fixture.detectChanges();
+    expect(fakeLandRegistryService.getLandInactiveByCpu).toHaveBeenCalled();
+  });
+
+  it('Save land should save', () => {
+    component.createFormEdit();
+    component.formEdit.get('idPlot').setValue(null);
+    component.formEdit.get('cup').setValue(landRecordMock.cup);
+    fixture.detectChanges();
+    component.saveLand();
+    fixture.detectChanges();
+    expect(fakeLandRegistryService.saveLand).toHaveBeenCalled();
+  });
+
+  it('Save land should create CPU', () => {
+    component.createFormEdit();
+    component.formEdit.get('idPlot').setValue('123456');
+    component.formEdit.get('cup').setValue(null);
+    component.saveLand();
+    fixture.detectChanges();
+    expect(fakeLandRegistryMapService.createCpu).toHaveBeenCalled();
   });
 });

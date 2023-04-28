@@ -16,6 +16,13 @@ describe('GisCatalogDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GisCatalogDetailComponent);
     component = fixture.componentInstance;
+    component.catalog = {
+        id: 1,
+        title: "test catalog",
+        category: 1,
+        thumbnail: "thumb",
+        description: ""
+    };
     fixture.detectChanges();
   });
 
