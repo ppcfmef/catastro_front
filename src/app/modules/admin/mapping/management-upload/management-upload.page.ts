@@ -28,8 +28,8 @@ export class ManagementUploadPage implements OnInit {
     urls=[
 
     ];
-        //urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=e64744d6454b4ad19e95bcc97a32e1e1';
-    urlString='https://ws.mineco.gob.pe/portaldfvisor/carga/';
+        urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=e64744d6454b4ad19e95bcc97a32e1e1';
+    //urlString='https://ws.mineco.gob.pe/portaldfvisor/carga/';
     constructor(     private _userService: UserService,
         private _commonService: CommonService,
         public sanitizer: DomSanitizer) {}
