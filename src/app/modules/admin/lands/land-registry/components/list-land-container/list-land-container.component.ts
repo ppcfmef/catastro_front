@@ -49,12 +49,12 @@ export class ListLandContainerComponent implements OnInit, OnDestroy {
           this.landOwnerId = registerLand?.owner;
         }
         if (this.landOwnerId) {
-          const queryParams = { limit: this.defaultTableLimit, owner: this.landOwnerId };
+          const queryParams = { limit: this.defaultTableLimit };
           if (this.landId) {
             queryParams['id'] = this.landId;
           }
           this.landRegistryService
-          .getLandList(queryParams)
+          .getLandbyOwner(this.landOwnerId, queryParams)
           .toPromise()
           .then(
             (landResult) => {
