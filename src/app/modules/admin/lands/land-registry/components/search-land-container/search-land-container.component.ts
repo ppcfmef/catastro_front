@@ -90,7 +90,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    this._landOwnerService.getDetail(landRecord.owner)
+    this._landOwnerService.getLandDetail(landRecord.id)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
       (response) => {
@@ -100,6 +100,11 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.landRecord = landRecord;
         this.showOwnerTable = true;
         this.showLandsMap = true;
+        setTimeout(() => {
+          document.querySelector('#mapLandDetail').scrollIntoView(
+            { behavior: 'smooth', block: 'center' }
+          );
+        }, 1000);
       }
     );
   }

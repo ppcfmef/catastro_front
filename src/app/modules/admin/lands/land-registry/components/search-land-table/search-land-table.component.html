@@ -98,25 +98,16 @@
     <ng-container matColumnDef="map">
         <th mat-header-cell *matHeaderCellDef>Predios</th>
         <td mat-cell *matCellDef="let element; let i = index">
-            <ng-container *ngIf="element.owner; else noLandOwner">
-                <ng-container *ngIf="element.status === 0; else withOutCarto">
-                    <a [routerLink]="['/land/registry/edit-owner', element.owner, 'land', element.id]"
-                    mat-button class="button-style-icons-2" matTooltip="ver detalle">
-                        <mat-icon class="mr-2" svgIcon="feather:external-link"></mat-icon>
-                        Asignar Cartografía
-                    </a>
-                </ng-container>
-                <ng-template #withOutCarto>
-                    <button mat-button class="button-style-icons-2"
-                        (click)="onshowLandMap(element)"
-                        matTooltip="ver detalle">
-                        <mat-icon class="mr-2" svgIcon="feather:map-pin"></mat-icon>
-                        Ver detalle
-                        <mat-icon class="ml-4" svgIcon="mat_solid:arrow_forward_ios"></mat-icon>
-                    </button>
-                </ng-template>
-                
+            <ng-container *ngIf="element.hasOwners; else noLandOwner">
+                <button mat-button class="button-style-icons-2"
+                    (click)="onshowLandMap(element)"
+                    matTooltip="ver detalle">
+                    <mat-icon class="mr-2" svgIcon="feather:map-pin"></mat-icon>
+                    Ver detalle
+                    <mat-icon class="ml-4" svgIcon="mat_solid:arrow_forward_ios"></mat-icon>
+                </button>
             </ng-container>
+            
         </td>
     </ng-container>
     

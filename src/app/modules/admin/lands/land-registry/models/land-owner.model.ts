@@ -19,6 +19,7 @@ export class LandOwnerModel implements LandOwner {
   taxAddress?: string;  // ToDo: resume for address
   numberLands?: number;
   address?: OwnerAddress;
+  ubigeo?: string;
 
   constructor() {
     this.documentType = DocumentType.dni;
@@ -40,6 +41,7 @@ export class LandOwnerModel implements LandOwner {
     return {
       id: this.id,
       code: this.code,
+      ubigeo: this.ubigeo,
       documentType: this.documentType,
       dni: this.dni,
       name: this.name,

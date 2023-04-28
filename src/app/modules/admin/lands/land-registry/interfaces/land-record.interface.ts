@@ -1,4 +1,5 @@
 export interface LandRecord {
+  id?: number;
   cup: string;  // codigo unico patrimonial
   cpm: string;  // codigo patrimonial municipio
   idPlot: string;
@@ -20,5 +21,6 @@ export interface LandRecord {
   landArea: number;
   builtArea: number;
   owner: number;
+  hasOwners?: boolean;
   creationDate?: string;
 }

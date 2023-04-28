@@ -78,6 +78,10 @@ export class LandRegistryService {
     return this.http.get<IPagination<LandRegistryMap>>(`${this.apiUrl}/lands/records/`, {params: queryParams});
   }
 
+  getLandbyOwner(ownerId, queryParams): Observable<IPagination<LandRegistryMap>> {
+    return this.http.get<IPagination<LandRegistryMap>>(`${this.apiUrl}/lands/records/by-owner/${ownerId}/`, {params: queryParams});
+  }
+
   getLandInactiveByCpu(cpu: string): Observable<LandRegistryMap> {
     return this.http.get<LandRegistryMap>(`${this.apiUrl}/lands/records/search-inactive/${cpu}/`);
   }

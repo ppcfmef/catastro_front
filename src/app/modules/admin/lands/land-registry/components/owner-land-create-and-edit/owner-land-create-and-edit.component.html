@@ -1,13 +1,30 @@
 <section class="container mt-4 gap-y-2.5" *ngIf="formEdit" [formGroup]="formEdit">
-    <h3 class="subtitle-card mb-2">Datos del contribuyente</h3>
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
+    <h3 class="subtitle-card mb-8 flex">
+        <div class="w-6/12">Datos del contribuyente</div>
+        <div class="w-6/12">
+            <select-ubigeo *ngIf="!hideSelectUbigeo" (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
+        </div>
+    </h3>
+    <div class="w-full">
+        <mat-form-field
+        class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+            <mat-label>Ubigeo</mat-label>
+            <input matInput type="text" formControlName="ubigeo" readonly>
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
+            <mat-label>Código de contribuyente</mat-label>
+            <input matInput type="text" formControlName="code">
+        </mat-form-field>
+    </div>
+    
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
         <mat-label>Tipo de documento</mat-label>
         <mat-select value="0" formControlName="documentType">
             <mat-option *ngFor="let typeDoc of typeDocs" [value]="typeDoc.val"> {{typeDoc.name}}</mat-option>
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
         <mat-label>Nro de documento</mat-label>
         <mat-icon
             class="icon-size-5 touched"

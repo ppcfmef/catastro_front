@@ -44,14 +44,12 @@
   <div class="map-container"> 
     <app-show-map-point *ngIf="showLandsMap" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
   </div>
-  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner">
+  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
-    <button   class=" mat-flat-button mat-button-base mat-primary" (click)="onDowloandCroquis()" > 
-      <mat-icon svgIcon="heroicons_outline:file_download"></mat-icon>
+    <button mat-flat-button [color]="'primary'"
+    (click)="onDowloandCroquis()" > 
+      <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
       <span class="ml-2 mr-1">CROQUIS</span>
-       
-  
-  
     </button>
   </div>
   
