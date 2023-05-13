@@ -1,0 +1,21 @@
+<div class="flex flex-row gap-4 justify-start my-4"   [formGroup]="search">
+    <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-full input-icon-form">
+      <mat-label>Municipalidad Distrital o Codigo Unico de predio(*)</mat-label>
+      <input type="text" matInput
+             placeholder=" Buscar por CPU "
+             autocomplete="off" formControlName="search" >
+
+          <mat-icon
+            [matTooltip]="'Limpiar buscador'"
+            class="hidden sm:flex icon-size-5"
+            [svgIcon]="'heroicons_solid:x'"
+            (click)="onCleanSearch()"
+          ></mat-icon>
+          <button mat-flat-button
+          [color]="'primary'"
+          (click)="onClickSearch()"
+          >
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          </button>
+    </mat-form-field>
+</div>

@@ -1,0 +1,74 @@
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+    <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+            {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cup">
+      <th mat-header-cell *matHeaderCellDef> Codigo único de predio </th>
+      <td mat-cell *matCellDef="let element" > {{element.cup}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="habilitacionName">
+      <th mat-header-cell *matHeaderCellDef> Nombre de habilitación </th>
+      <td mat-cell *matCellDef="let element" > {{element.habilitacionName}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="municipalAddress">
+      <th mat-header-cell *matHeaderCellDef> Dirección </th>
+      <td mat-cell *matCellDef="let element"  > {{element.municipalAddress}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef>Fecha de registro </th>
+      <td mat-cell *matCellDef="let element"  > {{element.creationDate| date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeApplication">
+        <th mat-header-cell *matHeaderCellDef></th>
+
+        <td mat-cell *matCellDef="let element; let i = index" >
+            <mat-form-field >
+
+                <mat-select [(value)]="element.typeApplication"
+                (selectionChange)="onChangeSolicitud(i,element)">
+               <mat-option [value]=0 disabled>Selecionar tipo de mantenimiento</mat-option>
+               <mat-option  *ngFor="let type of typesMaintenance " [value]="type.id">{{type.text}}</mat-option>
+                </mat-select>
+
+            </mat-form-field>
+
+
+
+
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element; let i = index" >
+
+            <button  mat-raised-button class="mat-primary" [disabled]="!(element.typeApplication>0)"  class="mat-primary"
+                    (click)="landSelection(element)"
+                    matTooltip="iniciar">
+                Iniciar
+                <mat-icon svgIcon="heroicons_outline:chevron-right"></mat-icon>
+            </button>
+
+
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+
+      ></tr>
+  </table>
+  <mat-paginator [length]="length"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          (page)="onPage($event)"
+          >
+  </mat-paginator>

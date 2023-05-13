@@ -1,0 +1,105 @@
+<h1 mat-dialog-title class="dialog-title">Informacion del predio</h1>
+<br>
+<div mat-dialog-content>
+    <div class="flex flex-wrap  " *ngIf="formLand" [formGroup]="formLand">
+
+
+        <mat-form-field
+        class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
+            <mat-label>Ubigeo</mat-label>
+            <input matInput type="text" formControlName="ubigeo">
+        </mat-form-field>
+
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Tipo Doc. Sustento</mat-label>
+            <!--<input matInput type="text" formControlName="resolutionType">-->
+            <mat-select formControlName="resolutionType">
+                <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id"> {{domain.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Nro. Doc. Sustento</mat-label>
+            <input matInput type="text" formControlName="resolutionDocument">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Tipo de Habilitación</mat-label>
+            <mat-select formControlName="uuType">
+                <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Código de Habilitación</mat-label>
+            <input matInput type="text" formControlName="codUu">
+        </mat-form-field>
+
+       <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Tipo vía</mat-label>
+            <mat-select formControlName="streetType" >
+                <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Codigo vía</mat-label>
+            <input matInput type="text" formControlName="codStreet">
+        </mat-form-field>
+
+      <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
+            <mat-label>Nombre de vía</mat-label>
+            <input matInput type="text" formControlName="streetName">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Mz. urbana</mat-label>
+            <input matInput type="text" formControlName="urbanMza">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+            <mat-label>Lt. urbano</mat-label>
+            <input matInput type="text" formControlName="urbanLotNumber">
+        </mat-form-field>
+
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Nro. Puerta</mat-label>
+            <input matInput type="text" formControlName="municipalNumber">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Nro. Bloque</mat-label>
+            <input matInput type="text" formControlName="block">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Interior</mat-label>
+            <input matInput type="text" formControlName="indoor">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Piso</mat-label>
+            <input matInput type="text" formControlName="floor">
+        </mat-form-field>
+
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Nro Dpto</mat-label>
+            <input matInput type="text" formControlName="apartmentNumber">
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+            <mat-label>Km</mat-label>
+            <input matInput type="text" formControlName="km">
+        </mat-form-field>
+
+    </div>
+    <br>
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button *ngIf="!readOnly" color="primary" (click)="save()">Guardar</button>
+      <button mat-raised-button color="primary" (click)="close()">Cerrar</button>
+    </div>
+</div>
