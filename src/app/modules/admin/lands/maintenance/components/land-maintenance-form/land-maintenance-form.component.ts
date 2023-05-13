@@ -80,7 +80,8 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       save(): void{
-
+        //results{}
+        this.dialogRef.close();
       }
 
 
