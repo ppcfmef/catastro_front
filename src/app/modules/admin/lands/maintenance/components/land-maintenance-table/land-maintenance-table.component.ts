@@ -11,8 +11,10 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
   styleUrls: ['./land-maintenance-table.component.scss']
 })
 export class LandMaintenanceTableComponent implements OnInit,OnChanges {
+    @Input() typeAction: string= Actions.LEER;
     @Input() dataSource: LandUI[];
     @Output() dataSourceUpdateEvent: EventEmitter<LandUI[]> = new EventEmitter();
+    leer=Actions.LEER;
     displayedColumns: string[] = ['nro','ubigeo', 'cup', 'cpm', 'idLote', 'habilitacionName','streetName','urbanMza','urbanLotNumber','creationDate','actions'];
     constructor(public dialog: MatDialog) {
 
@@ -30,14 +32,17 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
     }
 
     landSelection(land: LandUI): void{
+
         const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-            data: {land:land,action:Actions.LEER},
+            data: {land:land,action:this.typeAction},
             width: '600px',
           });
+
+          /*
           dialogRef.afterClosed().subscribe((result) => {
             console.log('The dialog was closed');
 
-          });
+          });*/
     }
     removeSelection(land: LandUI): void{
         const index=this.dataSource.indexOf(land);

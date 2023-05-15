@@ -38,7 +38,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     const offset = limit * paginator.pageIndex;
     const filterRawValue = { limit, offset, ...this.search };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
-    this.landMaintenanceService.getList(queryParams)
+    this.landMaintenanceService.getHasNotApplicationsList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
   }
@@ -46,7 +46,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
   onSearch( search: any ): void{
     this.search = search;
     /*console.log('queryParams>>',queryParams);*/
-    this.landMaintenanceService.getList(this.search)
+    this.landMaintenanceService.getHasNotApplicationsList(this.search)
     .toPromise()
     .then((result) => {
         this.landRecords = result.results;
@@ -61,7 +61,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
 
     const queryParams = { limit: this.defaultTableLimit };
 
-    this.landMaintenanceService.getList(queryParams)
+    this.landMaintenanceService.getHasNotApplicationsList(queryParams)
         .toPromise()
         .then(
         (landResult) => {

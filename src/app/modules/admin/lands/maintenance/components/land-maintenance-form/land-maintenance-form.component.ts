@@ -17,6 +17,7 @@ export class LandMaintenanceFormComponent implements OnInit {
     landModel = new LandModel();
     masterDomain: MasterDomain;
     readOnly= false;
+    action: string;
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -30,9 +31,9 @@ export class LandMaintenanceFormComponent implements OnInit {
         console.log('landModel>>',this.landModel);
         if(data){
             this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
-            const action=(data && data.action)?data.action:'';
+            this.action=(data && data.action)?data.action:'';
 
-            if(action=== Actions.LEER){
+            if(this.action=== Actions.LEER){
                 this.readOnly=true;
             }
         }
@@ -81,7 +82,13 @@ export class LandMaintenanceFormComponent implements OnInit {
 
       save(): void{
         //results{}
-        this.dialogRef.close();
+        if(this.action!== Actions.LEER){
+            this.dialogRef.close(this.formLand.value);
+        }
+        else{
+            this.dialogRef.close();
+        }
+
       }
 
 

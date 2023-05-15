@@ -34,7 +34,7 @@
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
             <mat-label>Código de Habilitación</mat-label>
-            <input matInput type="text" formControlName="codUu">
+            <input matInput type="text" formControlName="codUu" maxlength="4">
         </mat-form-field>
 
        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
@@ -98,8 +98,8 @@
 
     </div>
     <br>
-    <div mat-dialog-actions align="end">
-        <button mat-raised-button *ngIf="!readOnly" color="primary" (click)="save()"  >Guardar</button>
-      <button mat-raised-button color="primary" (click)="close()">Cerrar</button>
+    <div mat-dialog-actions align="end" class="flex flex-row space-x-4" >
+        <button mat-raised-button *ngIf="!readOnly" color="primary" (click)="save()"  class="bg-success"  > Guardar</button>
+       <button mat-raised-button color="primary" class ="bg-danger"  (click)="close()"><mat-icon svgIcon="heroicons_outline:x"  ></mat-icon> Cerrar</button>
     </div>
 </div>

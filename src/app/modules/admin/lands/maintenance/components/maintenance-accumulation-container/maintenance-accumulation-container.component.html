@@ -9,6 +9,18 @@
     </div>
 
     <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"></app-land-maintenance-table></div>
+    <div class="flex justify-center">
 
+            <button  mat-raised-button  class="bg-success"
+
+             [color]="'primary'" (click)="onGenerateAccumulation()" >
+            Generar Acumulación
+
+        <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
+        </button>
+
+
+
+    </div>
 </div>
 

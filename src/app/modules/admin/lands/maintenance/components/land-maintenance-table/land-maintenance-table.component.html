@@ -58,18 +58,26 @@
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element; let i = index" >
+            <ng-conteiner *ngIf="typeAction===leer; else edicion">
+                <button  mat-button
+                (click)="landSelection(element)"
+                >
+                <mat-icon svgIcon="heroicons_outline:eye" [ngClass]=" 'c-success'" ></mat-icon>
+                </button>
+            </ng-conteiner>
+            <ng-template #edicion>
+                <button  mat-button
+                (click)="landSelection(element)"
+                >
+                <mat-icon svgIcon="heroicons_outline:pencil" [ngClass]=" 'c-success'" ></mat-icon>
+                </button>
+            </ng-template>
 
-            <button  mat-button
-                    (click)="landSelection(element)"
-                    >
-                    <mat-icon svgIcon="heroicons_outline:eye" [ngClass]=" 'c-success'" ></mat-icon>
-            </button>
+
             <button  mat-button
             (click)="removeSelection(element)"
-
-
             >
-            <mat-icon svgIcon="heroicons_outline:trash" [ngClass]=" 'c-danger'" ></mat-icon>
+            <mat-icon svgIcon="heroicons_outline:x" [ngClass]=" 'c-danger'" ></mat-icon>
     </button>
 
         </td>

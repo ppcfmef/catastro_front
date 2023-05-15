@@ -4,8 +4,8 @@
 
       <input type="text" matInput
       placeholder=" Buscar por CPU "
-      [matAutocomplete]="auto" formControlName="search" >
-      <mat-autocomplete  #auto="matAutocomplete" (optionSelected)='onSelectedPredio($event)'>
+      [matAutocomplete]="auto" formControlName="search"  (keyup)="onChangeSearchPredio($event)" >
+      <mat-autocomplete  #auto="matAutocomplete" (optionSelected)='onSelectedPredio($event)'  >
         <mat-option *ngFor="let option of landRecords " [value]="option.cup" >
           <b><small >{{option.cup}}|{{option.department}} - {{option.habilitacionName}}</small></b>
           <small> {{option.streetName}}</small>

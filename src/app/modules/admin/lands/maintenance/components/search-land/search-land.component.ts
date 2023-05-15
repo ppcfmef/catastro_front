@@ -36,12 +36,21 @@ export class SearchLandComponent implements OnInit {
        .then(
        (landResult) => {
            this.landRecords = landResult.results;
+           if(!this.landRecords || this.landRecords.length===0 ){
+
+            this.cupSelect=null;
+           }
+
        }
        );
     }
 
-
+    onChangeSearchPredio(event: any): void{
+        this.landRecords=[];
+        this.cupSelect=null;
+    }
     onSelectedPredio(event: any): void{
+
         this.cupSelect=event.option.value;
     }
 

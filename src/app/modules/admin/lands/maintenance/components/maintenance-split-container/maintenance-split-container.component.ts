@@ -1,6 +1,19 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
+import { Actions } from 'app/shared/enums/actions.enum';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ApplicationUI } from '../../interfaces/application';
 import { LandUI } from '../../interfaces/land.interface';
+import { ResultUI } from '../../interfaces/result.interface';
+import { ApplicationModel } from '../../models/application.model';
+import { ResultModel } from '../../models/result.model';
+import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
+import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 
 @Component({
   selector: 'app-maintenance-split-container',
@@ -10,7 +23,26 @@ import { LandMaintenanceService } from '../../services/land-maintenance.service'
 export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     @Input() idLand: number;
     landRecords: LandUI[];
-    constructor(private landMaintenanceService: LandMaintenanceService) {
+    application: ApplicationModel;
+    results: ResultUI[]=[];
+    user: User;
+    leer=Actions.LEER;
+    editar= Actions.EDITAR;
+    _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    constructor(
+        private landMaintenanceService: LandMaintenanceService,
+        private _userService: UserService,
+        public dialog: MatDialog,
+        private applicationMaintenaceService: ApplicationMaintenanceService,
+        private _router: Router,
+        ) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: any) => {
+                this.user = user;
+            });
     }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -26,7 +58,57 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
        );
     }
 }
+
+
   ngOnInit(): void {
   }
 
+
+
+  onAgregarResult(): void{
+    const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
+        data: {action:Actions.CREAR},
+        width: '600px',
+      });
+
+      dialogRef.afterClosed().subscribe((res) => {
+        //console.log('result>>',result);
+
+
+        if(res){
+            const copy=[... this.results];
+            copy.push(new ResultModel(res));
+            this.results = copy;
+        }
+
+
+      });
+
+
+
+
+  }
+  ondataSourceUpdate(landRecords: LandUI[]): void{
+    this.landRecords =landRecords;
+  }
+  onGenerateSplit(): void {
+    const application = new ApplicationModel();
+    application.idStatus=1;
+    application.idType=3;
+    application.ubigeo=this.landRecords[0].ubigeo;
+    application.username = this.user.id;
+    const body = {
+        application:application,
+        results: this.results,
+        lands:this.landRecords
+    };
+
+    this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
+        if(res){
+            this._router.navigate(['/land/maintenance']);
+        }
+
+
+    });
+  }
 }

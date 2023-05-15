@@ -18,7 +18,10 @@ export class LandMaintenanceService {
   ) { }
 
   getList(queryParams): Observable<IPagination<any>> {
-    return this.http.get<IPagination<any>>(`${this.apiUrl}/lands/landapplication/`, {params: queryParams});
+    return this.http.get<IPagination<any>>(`${this.apiUrl}/maintenance/land/`, {params: queryParams});
   }
 
+    getHasNotApplicationsList(queryParams): Observable<IPagination<any>> {
+    return this.http.get<IPagination<any>>(`${this.apiUrl}/maintenance/land/has-not-applications/`, {params: queryParams});
+  }
 }
