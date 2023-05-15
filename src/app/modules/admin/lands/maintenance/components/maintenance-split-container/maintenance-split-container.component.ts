@@ -23,7 +23,6 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
 export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     @Input() idLand: number;
     landRecords: LandUI[];
-<<<<<<< HEAD
     application: ApplicationModel;
     results: ResultUI[]=[];
     user: User;
@@ -44,9 +43,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
             .subscribe((user: any) => {
                 this.user = user;
             });
-=======
-    constructor(private landMaintenanceService: LandMaintenanceService) {
->>>>>>> develop
     }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -62,7 +58,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
        );
     }
 }
-<<<<<<< HEAD
 
 
   ngOnInit(): void {
@@ -116,9 +111,4 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
     });
   }
-=======
-  ngOnInit(): void {
-  }
-
->>>>>>> develop
 }
