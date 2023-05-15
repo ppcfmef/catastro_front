@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'geovisor',
     loadChildren: () => import('./geovisor/geovisor.module').then(m => m.GeovisorModule)
+  },
+  {
+    path: 'repository',
+    loadChildren: () => import('./map-repository/map-repository.module').then(m => m.MapRepositoryModule)
   }
 ];;
 

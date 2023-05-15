@@ -11,10 +11,15 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
   styleUrls: ['./land-maintenance-table.component.scss']
 })
 export class LandMaintenanceTableComponent implements OnInit,OnChanges {
+<<<<<<< HEAD
     @Input() typeAction: string= Actions.LEER;
     @Input() dataSource: LandUI[];
     @Output() dataSourceUpdateEvent: EventEmitter<LandUI[]> = new EventEmitter();
     leer=Actions.LEER;
+=======
+    @Input() dataSource: LandUI[];
+    @Output() dataSourceUpdateEvent: EventEmitter<LandUI[]> = new EventEmitter();
+>>>>>>> develop
     displayedColumns: string[] = ['nro','ubigeo', 'cup', 'cpm', 'idLote', 'habilitacionName','streetName','urbanMza','urbanLotNumber','creationDate','actions'];
     constructor(public dialog: MatDialog) {
 
