@@ -1,4 +1,4 @@
-const host = 'http://54.83.44.96/';
+const host = 'https://catastro-fiscal.codtree.com/';
 
 export const environment = {
     production: true,
