@@ -20,6 +20,10 @@ export class UploadContainerComponent implements OnInit {
     fileUpload: new FormControl(null, [Validators.required]),
   });
 
+  selectForm = new FormGroup({
+    selectType: new FormControl(null, [Validators.required]),
+  });
+
   isUpload = false;
 
   recordSumary: any;
@@ -47,7 +51,14 @@ export class UploadContainerComponent implements OnInit {
             this.isUpload = true;
         }
     });
+
+    this.selectForm.get('selectType').valueChanges.subscribe((value) =>{
+        if(value === null){
+            this.resetControls(true);
+        }
+    });
   }
+
 
 
   get fileUpload(): FormControl {
@@ -155,7 +166,7 @@ export class UploadContainerComponent implements OnInit {
       this._ngxSpinner.hide();
       if (isResetAll) {
         this.uploadId = null;
-        this.recordSumary = {};
+        this.recordSumary = null;
        }
     }
 }

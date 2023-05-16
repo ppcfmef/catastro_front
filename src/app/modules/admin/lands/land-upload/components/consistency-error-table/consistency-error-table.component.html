@@ -1,0 +1,41 @@
+<div class="flex flex-row w-full items-center justify-between container-table-block b-gold">
+    <h4>Errores de formato:</h4>
+    <button class="btn-green">
+        <mat-icon svgIcon="mat_outline:file_download"></mat-icon>
+        <span class="mr-2">Registro de errores</span>
+    </button>
+</div>
+<div class="flex flex-row w-full mt-8">
+    <table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+
+        <ng-container matColumnDef="nro">
+            <th mat-header-cell *matHeaderCellDef> Nro. Fila</th>
+            <td mat-cell *matCellDef="let element; let i = index;" class="text-center"> {{element.nro}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="error">
+            <th mat-header-cell *matHeaderCellDef> Error </th>
+            <ng-container>
+                <td mat-cell *matCellDef="let element"> {{element.error}} </td>
+            </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Acciones  </th>
+            <ng-container>
+                <td mat-cell *matCellDef="let element" class="text-center justify-center">
+                    <div class="flex items-center">
+                        <button class="btn-red">
+                            <span>Eliminar Registro</span>
+                        </button>
+                    </div>
+
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
