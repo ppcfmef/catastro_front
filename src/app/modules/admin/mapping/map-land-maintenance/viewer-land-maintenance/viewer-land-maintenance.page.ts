@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { environment } from 'environments/environment';
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './viewer-land-maintenance.page.html',
   styleUrls: ['./viewer-land-maintenance.page.scss']
 })
-export class ViewerLandMaintenancePage implements OnInit {
+export class ViewerLandMaintenancePage implements OnInit, OnDestroy {
   rawUrl: URL;
   url: SafeResourceUrl;
   hideSelectUbigeo = false;
@@ -52,6 +52,11 @@ export class ViewerLandMaintenancePage implements OnInit {
     this.rawUrl.searchParams.set('ubigeo', ubigeo);
     this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     this.setUrl();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 
   private setUrl(): void {
