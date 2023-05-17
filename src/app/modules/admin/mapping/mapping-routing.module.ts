@@ -38,6 +38,10 @@ const routes: Routes = [
   {
     path: 'repository',
     loadChildren: () => import('./map-repository/map-repository.module').then(m => m.MapRepositoryModule)
+  },
+  {
+    path: 'land-maintenance',
+    loadChildren: () => import('./map-land-maintenance/map-land-maintenance.module').then(m => m.MapLandMaintenanceModule)
   }
 ];;
 

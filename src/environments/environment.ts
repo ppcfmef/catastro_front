@@ -1,15 +1,17 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-const host = 'http://54.83.44.96/';
+const host = 'https://catastro-fiscal.codtree.com/';
 
 export const environment = {
     production: false,
     url: host,
     apiUrl: host + 'api/v1',
     portalUrl: 'https://ws.mineco.gob.pe/portaldf',
+    customViewerUrl: 'https://dbba5g81vmncq.cloudfront.net',
     exportUrl: host + 'export',
-    captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv'
+    captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv',
+    defaultUbigeo: '150101'
 };
 
 /*
