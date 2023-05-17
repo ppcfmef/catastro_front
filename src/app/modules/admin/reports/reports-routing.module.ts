@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReportPage } from './pages/report/report.page';
 import { ReportCartographicComponent } from './components/report-cartographic/report-cartographic.component';
 import { ReportSituationalComponent } from './components/report-situational/report-situational.component';
+import { ReportControlNationalComponent } from './components/report-control-national/report-control-national.component';
 import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-authorization.guard';
 
 const routes: Routes = [
@@ -10,6 +11,12 @@ const routes: Routes = [
     path: 'report',
     component: ReportPage,
     children: [
+      {
+        path: 'control-national',
+        component: ReportControlNationalComponent,
+        canActivate: [NavigationAuthorizationGuard],
+        data: { id: 'repoconnat', permissionType: 'read' },
+      },
       {
         path: 'cartographic',
         component: ReportCartographicComponent,
