@@ -13,4 +13,21 @@
         }
 
     }
+
+    .integrated-search-button{
+        width: 360px;
+        .mat-form-field-flex{
+            border-radius:11px !important;
+            button{
+                border-radius: 11px !important;
+            }
+        }
+
+
+    }
+
+    .c-red{
+        color: #DE3F43;
+    }
+
 }

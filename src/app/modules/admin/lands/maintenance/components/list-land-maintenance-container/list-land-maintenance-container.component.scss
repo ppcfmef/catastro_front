@@ -1,0 +1,17 @@
+:host {
+    .subtitle-text{
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .btn-success{
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 6px;
+        color: white;
+        mat-icon{
+            color: white;
+        }
+    }
+}
