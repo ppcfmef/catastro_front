@@ -12,8 +12,11 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./viewer-land-maintenance.page.scss']
 })
 export class ViewerLandMaintenancePage implements OnInit {
+  rawUrl: URL;
   url: SafeResourceUrl;
   user: User;
+  hideSelectUbigeo = false;
+  idView = 'gesmapmain';
   private customViewerUrl = environment.customViewerUrl;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -29,10 +32,20 @@ export class ViewerLandMaintenancePage implements OnInit {
       this.user = user;
       const username = this.user.username;
       const ubigeo = this.user.ubigeo ? this.user.ubigeo : environment.defaultUbigeo;
-      this.url = this.sanitizer.bypassSecurityTrustResourceUrl(
+      this.rawUrl = new URL(
         `${this.customViewerUrl}/index.html?username=${username}&ubigeo=${ubigeo}`
       );
+      this.setUrl();
     });
+  }
+
+  onSelectUbigeo(ubigeo: string): void {
+    this.rawUrl.searchParams.set('ubigeo', ubigeo);
+    this.setUrl();
+  }
+
+  private setUrl(): void {
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.rawUrl.href);
   }
 
 }

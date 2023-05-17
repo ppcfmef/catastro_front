@@ -1,3 +1,7 @@
 <div class="w-full h-full"  >
+  <div style="right: 5px;">
+    <select-ubigeo *ngIf="!hideSelectUbigeo"
+    (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
+  </div>
   <iframe class="w-full h-full" [src]="url" frameborder="0"></iframe>
 </div>
