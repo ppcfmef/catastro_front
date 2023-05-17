@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.types';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { environment } from 'environments/environment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,33 +13,44 @@ import { takeUntil } from 'rxjs/operators';
 export class ViewerLandMaintenancePage implements OnInit {
   rawUrl: URL;
   url: SafeResourceUrl;
-  user: User;
   hideSelectUbigeo = false;
+  ubigeo: string;
   idView = 'gesmapmain';
   private customViewerUrl = environment.customViewerUrl;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private sanitizer: DomSanitizer,
-    private userService: UserService,
+    private navigationAuthorizationService: NavigationAuthorizationService,
   ) { }
 
   ngOnInit(): void {
-    this.userService.user$
+
+    this.navigationAuthorizationService.userScopePermission(this.idView)
     .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((user: any) => {
-      this.user = user;
-      const username = this.user.username;
-      const ubigeo = this.user.ubigeo ? this.user.ubigeo : environment.defaultUbigeo;
+    .subscribe((data: any) => {
+      if(!data?.limitScope){
+        this.ubigeo = environment.defaultUbigeo;
+        this.hideSelectUbigeo = false;
+      }
+      else {
+        this.hideSelectUbigeo = true;
+        this.ubigeo = data?.ubigeo;
+      }
+
+      const username = data?.username;
       this.rawUrl = new URL(
-        `${this.customViewerUrl}/index.html?username=${username}&ubigeo=${ubigeo}`
+        `${this.customViewerUrl}/index.html?username=${username}&ubigeo=${this.ubigeo}`
       );
       this.setUrl();
+
+      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     });
   }
 
   onSelectUbigeo(ubigeo: string): void {
     this.rawUrl.searchParams.set('ubigeo', ubigeo);
+    this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     this.setUrl();
   }
 
