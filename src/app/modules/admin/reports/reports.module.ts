@@ -9,12 +9,14 @@ import { ReportCartographicComponent } from './components/report-cartographic/re
 import { ReportSituationalComponent } from './components/report-situational/report-situational.component';
 import {MatIconModule} from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { ReportControlNationalComponent } from './components/report-control-national/report-control-national.component';
 
 @NgModule({
   declarations: [
     ReportPage,
     ReportCartographicComponent,
     ReportSituationalComponent,
+    ReportControlNationalComponent,
   ],
   imports: [
     CommonModule,
