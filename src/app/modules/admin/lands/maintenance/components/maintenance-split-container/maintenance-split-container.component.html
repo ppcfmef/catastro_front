@@ -1,16 +1,19 @@
 <div class="flex flex-col space-y-4 ">
     <div class="flex flex-row space-x-4 ">
         <div class="w-1/2"> <app-back-list-land></app-back-list-land> </div>
+        <div class="w-1/2" >
+            <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
 
+        </div>
     </div>
 
     <div class="w-full">
         <div class="text-xl font-extrabold "><h1>Predio Original</h1> </div>
-        <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer"></app-land-maintenance-table></div>
+        <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer" [ubigeo]="ubigeo"></app-land-maintenance-table></div>
     <div class="w-full">
         <div class="text-xl font-extrabold "><h1>Predios divididos</h1> </div>
 
-        <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"></app-land-maintenance-table>
+        <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo"></app-land-maintenance-table>
     </div>
 
     <div class="flex flex-row justify-center  space-x-4">
@@ -18,7 +21,7 @@
         <button mat-raised-button class="mat-primary"   (click)="onAgregarResult()" ><mat-icon svgIcon="heroicons_outline:plus"></mat-icon>  Agregar Predio  </button>
 
 
-        <button  mat-raised-button  class="bg-success"
+        <button  mat-raised-button  class="bg-success" *ngIf="results.length>1 && file"
 
          [color]="'primary'" (click)="onGenerateSplit()" >
         Generar División

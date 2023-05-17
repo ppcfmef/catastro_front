@@ -1,0 +1,14 @@
+<div class="flex flex-col  my-4" >
+<mat-label> Seleccionar Sustento(*)</mat-label>
+
+<input type="file" (change)="uploadFile($event)" hidden name="uploadfile"
+id="uploadfile"  #uploadfile>
+
+<button mat-flat-button
+[color]="'primary'"
+(click)="uploadfile.click()"
+> Archivo
+<mat-icon svgIcon="heroicons_outline:document-text"></mat-icon>
+<label *ngif="this.fileName">{{fileName}}</label>
+</button>
+</div>

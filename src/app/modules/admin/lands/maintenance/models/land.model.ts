@@ -21,6 +21,7 @@ export class LandModel implements LandUI{
     urbanLotNumber: number;
     codStreet: string;
     streetType: string;
+    streetTypeName: string;
     streetName: string;
     streetNameAlt: string;
     municipalNumber: string;
@@ -100,6 +101,7 @@ export class LandModel implements LandUI{
         this.urbanMza=l?.urbanMza;
         this.urbanLotNumber=l?.urbanLotNumber;
         this.streetType=l?.streetType;
+        this.streetTypeName = l?.streetTypeName;
         this.streetName=l?.streetName;
         this.streetNameAlt=l?.streetNameAlt;
         this.municipalNumber=l?.municipalNumber;

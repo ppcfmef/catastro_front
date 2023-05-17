@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Actions } from 'app/shared/enums/actions.enum';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ApplicationUI } from '../../interfaces/application';
@@ -22,12 +23,15 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
 })
 export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     @Input() idLand: number;
+    ubigeo: string;
     landRecords: LandUI[];
     application: ApplicationModel;
     results: ResultUI[]=[];
     user: User;
     leer=Actions.LEER;
     editar= Actions.EDITAR;
+    fileName: string;
+    file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -36,6 +40,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
         public dialog: MatDialog,
         private applicationMaintenaceService: ApplicationMaintenanceService,
         private _router: Router,
+        private _messageProviderService:MessageProviderService
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this._userService.user$
@@ -54,6 +59,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
        .then(
        (landResult) => {
            this.landRecords = landResult.results;
+           this.ubigeo = this.landRecords[0].ubigeo;
        }
        );
     }
@@ -67,7 +73,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
   onAgregarResult(): void{
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR},
+        data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
         width: '600px',
       });
 
@@ -105,10 +111,48 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
         if(res){
-            this._router.navigate(['/land/maintenance']);
+            const dataForm: any= {};
+            dataForm.id_app= res.id;
+            dataForm.file= this.file;
+            this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
+                if(r && r.success){
+                    this._messageProviderService.showAlert(
+                        'Solicitud registrada'
+                    );
+                    this._router.navigate(['/land/maintenance']);
+                }
+            });
+
+
         }
 
 
     });
+
+
+
+    /**
+          this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
+            if(res){
+                const dataForm: any= {};
+                dataForm.id_app= res.id;
+                dataForm.file= this.file;
+                this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
+                    if(r && r.success){
+                        this._messageProviderService.showConfirm(
+                            'Solicitud registrada'
+                        );
+                        this._router.navigate(['/land/maintenance']);
+                    }
+                });
+            }
+        });
+     *
+     */
+  }
+
+  fileUpload(file: any): void{
+
+    this.file = file;
   }
 }

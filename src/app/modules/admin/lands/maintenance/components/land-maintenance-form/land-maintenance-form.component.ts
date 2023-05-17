@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
@@ -7,28 +7,40 @@ import { LandRegistryService } from '../../../land-registry/services/land-regist
 import { LandModel } from '../../models/land.model';
 import { takeUntil } from 'rxjs/operators';
 import { Actions } from 'app/shared/enums/actions.enum';
+import { CommonService } from 'app/core/common/services/common.service';
+import { DistrictService } from '../../services/district.service';
+import { District } from 'app/core/common/interfaces/common.interface';
 @Component({
   selector: 'app-land-maintenance-form',
   templateUrl: './land-maintenance-form.component.html',
   styleUrls: ['./land-maintenance-form.component.scss']
 })
 export class LandMaintenanceFormComponent implements OnInit {
+    ubigeo: string;
     formLand: FormGroup;
     landModel = new LandModel();
     masterDomain: MasterDomain;
     readOnly= false;
     action: string;
+    districts: District[];
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private landRegistryService: LandRegistryService,
+
         //public dialogRef: MatDialogRef<HistoricalRecordDetailComponent>,
         private fb: FormBuilder,
+        private _districtService: DistrictService,
+        //private _commonService: CommonService,
         public dialogRef: MatDialogRef<LandMaintenanceFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
+
       ) {
 
+        this.landModel= new LandModel();
         console.log('landModel>>',this.landModel);
+
+
         if(data){
             this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
             this.action=(data && data.action)?data.action:'';
@@ -36,6 +48,16 @@ export class LandMaintenanceFormComponent implements OnInit {
             if(this.action=== Actions.LEER){
                 this.readOnly=true;
             }
+
+            this.ubigeo = (data && data.ubigeo)?data.ubigeo:null;
+            if(this.ubigeo){
+                this._districtService.getDistrict(this.ubigeo).subscribe((result: any)=>{
+                    this.districts = [result];
+                    console.log('ubigeos>>>',result);
+                    this.landModel.ubigeo = this.ubigeo;
+                });
+            }
+
         }
 
        }
@@ -56,9 +78,10 @@ export class LandMaintenanceFormComponent implements OnInit {
 
       initForm(): void{
         this.formLand = this.fb.group({
-            ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly}],
-            resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}],
-            resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}],
+            ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
+            cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required]],
+            resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
+            resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
             uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
             codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
             habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],

@@ -97,7 +97,9 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 
         ID_PRED: land.idLandCartographic,
 
-        COD_PRE: '',
+        NUM_MUN: land.municipalNumber,
+
+        COD_PRE: land.cpm,
 
         SEC_EJEC: '',
 
@@ -108,10 +110,8 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         COD_VIA: land.codStreet,
 
 
-
         MZN_URB: land.urbanMza,
 
-        NUM_MUN: '',
 
 
         TIP_DOC: '',
@@ -206,9 +206,9 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
         MZN_URB: land.urbanMza,
 
-        NUM_MUN: '',
+        NUM_MUN: land.municipalNumber,
 
-        COD_PRE: '',
+        COD_PRE: land.cpm,
 
 
         COD_CUC: '',

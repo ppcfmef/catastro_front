@@ -19,6 +19,7 @@ export interface LandUI{
     urbanLotNumber: number;
     codStreet?: string;
     streetType: string;
+    streetTypeName: string;
     streetName: string;
     streetNameAlt: string;
     municipalNumber: string;

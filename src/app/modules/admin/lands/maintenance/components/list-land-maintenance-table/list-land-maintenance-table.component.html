@@ -7,8 +7,8 @@
     </ng-container>
 
     <ng-container matColumnDef="cup">
-      <th mat-header-cell *matHeaderCellDef> Codigo único de predio </th>
-      <td mat-cell *matCellDef="let element" class="text-center" > {{element.cup}} </td>
+      <th mat-header-cell *matHeaderCellDef> Codigo de Predio Municipal </th>
+      <td mat-cell *matCellDef="let element" class="text-center"> {{element.cpm}} </td>
     </ng-container>
 
     <ng-container matColumnDef="habilitacionName">
@@ -17,9 +17,9 @@
     </ng-container>
 
 
-    <ng-container matColumnDef="municipalAddress">
+    <ng-container matColumnDef="direccion">
       <th mat-header-cell *matHeaderCellDef> Dirección </th>
-      <td mat-cell *matCellDef="let element"  > {{element.municipalAddress}} </td>
+      <td mat-cell *matCellDef="let element"  > {{element?.streetTypeName}} {{element?.streetName}} {{element?.municipalNumber}} </td>
     </ng-container>
 
     <ng-container matColumnDef="creationDate">

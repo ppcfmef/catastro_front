@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Actions } from 'app/shared/enums/actions.enum';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ApplicationUI } from '../../interfaces/application';
@@ -27,12 +28,16 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     results: ResultUI[];
     user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    ubigeo: string;
+    fileName: string;
+    file: any;
   constructor(
     private landMaintenanceService: LandMaintenanceService,
     private _userService: UserService,
     public dialog: MatDialog,
     private applicationMaintenaceService: ApplicationMaintenanceService,
     private _router: Router,
+    protected _messageProviderService: MessageProviderService,
     ) {
 
     this._userService.user$
@@ -52,6 +57,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
        .then(
        (landResult) => {
            this.landRecords = landResult.results;
+           this.ubigeo = this.landRecords[0].ubigeo;
        }
        );
     }
@@ -85,7 +91,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     application.username = this.user.id;
 
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR},
+        data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
         width: '600px',
       });
 
@@ -101,15 +107,28 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
 
         this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
             if(res){
-                this._router.navigate(['/land/maintenance']);
+                const dataForm: any= {};
+                dataForm.id_app= res.id;
+                dataForm.file= this.file;
+                this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
+                    if(r && r.success){
+                        this._messageProviderService.showAlert(
+                            'Solicitud registrada'
+                        );
+                        this._router.navigate(['/land/maintenance']);
+                    }
+                });
             }
-
-
         });
 
       });
 
 
+  }
+
+  fileUpload(file: any): void{
+
+    this.file = file;
   }
 
 }

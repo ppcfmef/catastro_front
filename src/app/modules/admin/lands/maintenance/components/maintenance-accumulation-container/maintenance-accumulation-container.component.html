@@ -2,18 +2,38 @@
     <div class="flex flex-row space-x-4 ">
         <div class="w-1/2"> <app-back-list-land></app-back-list-land> </div>
 
+
     </div>
-    <div class="flex flex-row space-x-4 ">
-        <div class="w-full" ><app-search-land (agregarPredioEvent)="onAgregarPredio($event)"></app-search-land> </div>
+    <div class="flex flex-row space-x-4  ">
+        <div class="w-1/2" ><app-search-land (agregarPredioEvent)="onAgregarPredio($event)"></app-search-land> </div>
+        <div class="w-1/2" >
+<app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
+
+<div>
+
+</div>
+
+
+
+
+        <!--</label>-->
+
+
+
+        </div>
 
     </div>
 
-    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"></app-land-maintenance-table></div>
+    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo"></app-land-maintenance-table></div>
+
+
+
+
     <div class="flex justify-center">
 
             <button  mat-raised-button  class="bg-success"
 
-             [color]="'primary'" (click)="onGenerateAccumulation()" >
+             [color]="'primary'" (click)="onGenerateAccumulation()" *ngIf="landRecords.length>1 && file" >
             Generar Acumulación
 
         <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
