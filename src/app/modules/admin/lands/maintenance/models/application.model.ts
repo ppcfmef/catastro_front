@@ -7,7 +7,8 @@ export class ApplicationModel implements ApplicationUI{
     date: string;
     idStatus: number;
     ubigeo: string;
-
+    lands: any[];
+    landsFlat: string;
     constructor( a?: ApplicationUI){
         this.id = a?.id;
         this.username = a?.username;
@@ -15,5 +16,7 @@ export class ApplicationModel implements ApplicationUI{
         this.date = a?.date;
         this.idStatus = a?.idStatus;
         this.ubigeo = a?.ubigeo;
+        this.lands = a?.lands;
     }
+
 }

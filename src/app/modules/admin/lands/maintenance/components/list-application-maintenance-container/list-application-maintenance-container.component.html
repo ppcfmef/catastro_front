@@ -1,0 +1,21 @@
+
+<div class="flex flex-col space-y-4 ">
+    <div class="flex flex-row space-x-4 ">
+
+
+    </div>
+    <div class="flex flex-row justify-between ">
+        <button mat-raised-button class="primary"
+
+        [color]="'primary'"  (click)="onAddApplication()" >Añadir  <mat-icon svgIcon="heroicons_outline:plus" ></mat-icon> </button>
+       <!-- <button mat-raised-button class="bg-success"
+        [color]="'primary'"   (click)="onDownload()"  >Descargar  <mat-icon svgIcon="heroicons_outline:document-download" ></mat-icon> </button>-->
+    </div>
+    <div class="w-full">
+        <section *ngIf="applicationRecords" class="container">
+            <app-list-application-maintenance-table     [dataSource]="applicationRecords"
+            [length]="tableLength"
+            (changePage)="onChangePage($event)"></app-list-application-maintenance-table>
+        </section>
+    </div>
+</div>

@@ -5,5 +5,7 @@ export interface ApplicationUI{
     date: string;
     idStatus: number;
     ubigeo: string;
+    lands: any[];
+    landsFlat: string;
 }
 

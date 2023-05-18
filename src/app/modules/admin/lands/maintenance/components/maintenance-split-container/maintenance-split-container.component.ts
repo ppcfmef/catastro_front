@@ -40,7 +40,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
         public dialog: MatDialog,
         private applicationMaintenaceService: ApplicationMaintenanceService,
         private _router: Router,
-        private _messageProviderService:MessageProviderService
+        private _messageProviderService: MessageProviderService
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this._userService.user$
@@ -97,6 +97,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
   ondataSourceUpdate(landRecords: LandUI[]): void{
     this.landRecords =landRecords;
   }
+
   onGenerateSplit(): void {
     const application = new ApplicationModel();
     application.idStatus=1;
@@ -129,26 +130,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
     });
 
-
-
-    /**
-          this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
-            if(res){
-                const dataForm: any= {};
-                dataForm.id_app= res.id;
-                dataForm.file= this.file;
-                this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
-                    if(r && r.success){
-                        this._messageProviderService.showConfirm(
-                            'Solicitud registrada'
-                        );
-                        this._router.navigate(['/land/maintenance']);
-                    }
-                });
-            }
-        });
-     *
-     */
   }
 
   fileUpload(file: any): void{

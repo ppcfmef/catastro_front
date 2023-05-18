@@ -33,9 +33,12 @@ import { MaintenanceReassignmentPage } from './pages/maintenance-reassignment/ma
 import { MaintenanceSplitPage } from './pages/maintenance-split/maintenance-split.page';
 import { LandMaintenanceFormComponent } from './components/land-maintenance-form/land-maintenance-form.component';
 import { UploadSupportComponent } from './components/upload-support/upload-support.component';
-import { MaintenanceApplicationContainerComponent } from './components/maintenance-application-container/maintenance-application-container.component';
+
 import { ListApplicationMaintenanceTableComponent } from './components/list-application-maintenance-table/list-application-maintenance-table.component';
-import { MaintenanceApplicationComponent } from './pages/maintenance-application/maintenance-application.component';
+
+import { ListApplicationMaintenanceContainerComponent } from './components/list-application-maintenance-container/list-application-maintenance-container.component';
+
+import { ListApplicationMaintenancePage } from './pages/list-application-maintenance/list-application-maintenance.page';
 
 
 @NgModule({
@@ -56,9 +59,11 @@ import { MaintenanceApplicationComponent } from './pages/maintenance-application
     SearchLandComponent,
     LandMaintenanceFormComponent,
     UploadSupportComponent,
-    MaintenanceApplicationContainerComponent,
+
     ListApplicationMaintenanceTableComponent,
-    MaintenanceApplicationComponent,
+
+    ListApplicationMaintenanceContainerComponent,
+      ListApplicationMaintenancePage,
   ],
   imports: [
     CommonModule,
