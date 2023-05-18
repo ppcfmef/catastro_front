@@ -24,6 +24,10 @@ export class UploadContainerComponent implements OnInit {
     selectType: new FormControl(null, [Validators.required]),
   });
 
+  typesUpload = [
+      { code: 1, text: 'Carga de TB_PREDIO_T'}
+  ];
+
   isUpload = false;
 
   recordSumary: any;
@@ -118,10 +122,10 @@ export class UploadContainerComponent implements OnInit {
 
   onCancelUpload(): void {
     this.changeUploadStatus('CANCEL');
-    this.resetControls(true);
   }
 
   onValidSaveUpload(): void {
+    this.recepcionarValidos();
     this.changeUploadStatus('IN_PROGRESS');
   }
 
@@ -131,22 +135,31 @@ export class UploadContainerComponent implements OnInit {
     window.open(exportUrl, '_blank');
   }
 
+  onGoToHistory(): void {
+    this._router.navigate(['/land/upload/history']);
+  }
+
+  onGoToLandRecords(): void {
+    this._router.navigate(['/land/registry/search/search-land']);
+  }
+
+  onReloadPage(): void {
+    window.location.reload();
+  }
+
   private changeUploadStatus(status: string): void {
     if (this.recordSumary) {
         this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status)
         .subscribe(
             (res) => {
-                this._router.navigate(['/land/upload/history']);
-                const dialogRef = this.confirmationService.success(
-                    'Registro de Predios',
-                    'Se guardo el estado de la carga correctamente'
-                );
-
-                dialogRef.afterClosed().toPromise().then( (option) => {
-                    this._router.navigate(['/land/upload/history']);
-                });
+                this._ngxSpinner.hide();
+                this.recordSumary.status = res.status;
+                if (status === 'CANCEL') {
+                    this.onReloadPage();
+                }
             },
             (error) => {
+                this._ngxSpinner.hide();
                 this.confirmationService.error(
                     'Registro de usuarios',
                     'Error al guardar el estado de la carga'
