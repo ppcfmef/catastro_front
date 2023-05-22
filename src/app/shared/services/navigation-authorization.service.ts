@@ -40,7 +40,7 @@ export class NavigationAuthorizationService {
     return this.userService.user$
     .pipe(
       switchMap((user: User) => {
-        const data = {ubigeo: user.ubigeo, limitScope: true};
+        const data = {ubigeo: user.ubigeo, limitScope: true, username: user.username };
         const permissionsNavigation: any[] = user?.permissionsNavigation || [];
         const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView === idView && p?.type === permissionType));
         if(readAll.length>0 || user.isSuperuser || user.placeScope?.id === 1){

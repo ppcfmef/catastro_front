@@ -229,8 +229,8 @@ export class LandRegistryMapService {
     }
     /* eslint-enable @typescript-eslint/prefer-for-of */
     //let v = 11-s%11;
-    const v=([11,10].includes(s%11))?s%11: 11-s%11;
-
+    let v=([11,10].includes(s%11))?s%11: 11-s%11;
+    v= (v>9)?11-(v):v;
 
     //const maxCPU =(stats.max_COD_CPU)? parseInt(stats.max_COD_CPU, 10) +1 :1;
     const maxCPU =`${rangCPU}-${unidadImbNew}-${v}`;

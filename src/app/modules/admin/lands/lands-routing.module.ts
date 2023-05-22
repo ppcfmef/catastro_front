@@ -10,6 +10,10 @@ const routes: Routes = [
   {
     path: 'upload',
     loadChildren: () => import('./land-upload/land-upload.module').then(m => m.LandUploadModule)
+  },
+  {
+    path: 'maintenance',
+    loadChildren: () => import('./maintenance/maintenance.module').then(m => m.MaintenanceModule)
   }
 ];
 

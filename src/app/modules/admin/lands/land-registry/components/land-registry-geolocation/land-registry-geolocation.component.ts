@@ -811,6 +811,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     }
 
                     if(this.estado === Estado.EDITAR || this.estado === Estado.CREAR || this.estado === Estado.NUEVO_PUNTO){
+                        //let graphic = event.mapPoint;
                         let graphic = event.mapPoint;
                         let longitude = graphic.longitude;
                         let latitude = graphic.latitude;
@@ -849,7 +850,11 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                     results[resultsLen].graphic.geometry
                                 ) {
                                     graphic = results[resultsLen].graphic;
-                                    //console.log('graphic>>', graphic);
+                                    console.log('graphic>>', graphic);
+
+                                    //let graphic = event.mapPoint;
+                                    longitude = graphic.geometry.longitude;
+                                    latitude = graphic.geometry.latitude;
 
                                     if (
                                         graphic &&
@@ -1900,10 +1905,14 @@ async saveNewPointGestionPredio(): Promise<void>{
         const wkid = 4326;
 
         if (data.idPlot) {
-            const _predio= FormatUtils.formatLandRegistryMapModelToPredio( data);
+            const _predio= FormatUtils.formatLandRegistryMapModelToPredio(data);
             _predio.NOM_USER = this.user.username;
             _predio.NOM_PC = 'PLATAFORMA';
             _predio.ID_LOTE_P =this.lote.ID_LOTE_P;
+            _predio.COD_MZN = this.lote.COD_MZN;
+            _predio.COD_SECT = this.lote.COD_SECT;
+
+
             const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 
             const json = await this.createArcgisJSON([_predio],wkid);
@@ -1928,10 +1937,13 @@ async saveNewPointGestionPredio(): Promise<void>{
                 }
 
         }else{
-            const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio( data);
+            const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
+
             _gestionPredio.NOM_USER = this.user.username;
             _gestionPredio.NOM_PC = 'PLATAFORMA';
             _gestionPredio.ESTADO=0;
+            _gestionPredio.COD_MZN = this.lote.COD_MZN;
+            _gestionPredio.COD_SECT = this.lote.COD_SECT;
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 

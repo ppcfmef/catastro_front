@@ -16,7 +16,6 @@
             <input matInput type="text" formControlName="code">
         </mat-form-field>
     </div>
-    
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
         <mat-label>Tipo de documento</mat-label>
         <mat-select value="0" formControlName="documentType">
@@ -50,7 +49,7 @@
                 <input matInput type="text" formControlName="maternalSurname">
             </mat-form-field>
         </ng-container>
-    
+
         <ng-container *ngSwitchCase="'06'">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full">
                 <mat-label>Contibuyente</mat-label>
@@ -59,7 +58,7 @@
         </ng-container>
     </ng-container>
 
-   
+
     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
         <mat-label>Teléfono</mat-label>
         <input matInput type="text"  formControlName="phone">
@@ -76,7 +75,7 @@
             <mat-icon [svgIcon]="showAddres? 'heroicons_solid:chevron-up':'heroicons_solid:chevron-down'">
             </mat-icon>
         </div>
-       
+
     </h3>
     <ng-container *ngIf="showAddres" formGroupName="address">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-2/12 pr-2.5">
@@ -90,7 +89,7 @@
         </mat-form-field>
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
             <mat-label>Código de Habilitación</mat-label>
-            <input matInput type="text" formControlName="codUu">
+            <input matInput type="text" formControlName="codUu" maxlength="4">
         </mat-form-field>
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12">
             <mat-label>Nombre de Habilitación</mat-label>

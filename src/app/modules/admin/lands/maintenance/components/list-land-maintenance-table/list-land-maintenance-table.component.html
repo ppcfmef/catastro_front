@@ -1,0 +1,73 @@
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+    <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+            {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cup">
+      <th mat-header-cell *matHeaderCellDef> Codigo de Predio Municipal </th>
+      <td mat-cell *matCellDef="let element" class="text-center"> {{element.cpm}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="habilitacionName">
+      <th mat-header-cell *matHeaderCellDef> Nombre de habilitación </th>
+      <td mat-cell *matCellDef="let element" > {{element.habilitacionName}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="direccion">
+      <th mat-header-cell *matHeaderCellDef> Dirección </th>
+      <td mat-cell *matCellDef="let element"  > {{element?.streetTypeName}} {{element?.streetName}} {{element?.municipalNumber}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef>Fecha de registro </th>
+      <td mat-cell *matCellDef="let element" class="text-center" > {{element.creationDate| date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeApplication">
+        <th mat-header-cell *matHeaderCellDef class="w-50"></th>
+
+        <td mat-cell *matCellDef="let element; let i = index" class="w-50" >
+            <mat-form-field class="m-auto select-ui w-full" floatLabel="always" >
+                <mat-select [(value)]="element.typeApplication" placeholder="Tipo de mantenimiento"
+                (selectionChange)="onChangeSolicitud(i,element)">
+               <mat-option [value]=0 disabled>Selecionar tipo de mantenimiento</mat-option>
+               <mat-option  *ngFor="let type of typesMaintenance " [value]="type.id">{{type.text}}</mat-option>
+                </mat-select>
+
+            </mat-form-field>
+
+
+
+
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+
+            <button [disabled]="!(element.typeApplication>0)" class="button-success"
+                    (click)="landSelection(element)"
+                    matTooltip="iniciar">
+                Iniciar
+                <mat-icon  svgIcon="heroicons_outline:chevron-right"></mat-icon>
+            </button>
+
+
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+
+      ></tr>
+  </table>
+  <mat-paginator [length]="length"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          (page)="onPage($event)"
+          >
+  </mat-paginator>
