@@ -90,8 +90,20 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
 
+    /*const dataOrigin = {
+        ubigeo: this.landRecords[0]?.ubigeo,
+        uuType : this.landRecords[0]?.uuType,
+        streetType: this.landRecords[0]?.streetType,
+        codStreet : this.landRecords[0]?.codStreet,
+        streetName : this.landRecords[0]?.streetName,
+        urbanMza : this.landRecords[0]?.urbanMza,
+        urbanLotNumber :this.landRecords[0]?.urbanLotNumber
+    };
+*/
+
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
+        //data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
+        data: {action:Actions.CREAR,land:this.landRecords[0]},
         width: '600px',
       });
 

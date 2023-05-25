@@ -32,7 +32,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
     this._applicationMaintenanceService.getList(queryParams).toPromise().then((result)=> {
         this.applicationRecords=result.results;
         this.applicationRecords.map((a)=> {
-            //console.log(a.lands.map(l=>l.cpm).join(','));
+
             a.landsFlat= a.lands.map(l=>l.cpm).join(',');
         });
     }
