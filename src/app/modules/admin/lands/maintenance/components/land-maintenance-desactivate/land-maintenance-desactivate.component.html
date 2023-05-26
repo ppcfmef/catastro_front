@@ -1,0 +1,25 @@
+
+<div mat-dialog-content class="flex flex-col items-center space-y-4">
+    <div  class="relative">
+
+        <mat-icon  class="notranslate icon-size-20 c-danger" svgIcon="heroicons_outline:exclamation-circle"     ></mat-icon>
+
+    </div>
+        <div class="flex flex-row ">Esta seguro de desactivar el predio {{land.cpm}}?</div>
+    <div mat-dialog-actions  class="flex flex-row justify-between space-x-4" >
+        <button mat-raised-button  color="primary" (click)="save()"  class="bg-success"   ><mat-icon svgIcon="heroicons_outline:trash"  ></mat-icon>Confirmar</button>
+       <button mat-raised-button color="primary" class ="bg-danger"  (click)="close()"><mat-icon svgIcon="heroicons_outline:x"  ></mat-icon> Cancelar</button>
+    </div>
+</div>
+
+<!--
+<div class="aspect-w-9 aspect-h-6 ">
+    <div class="flex items-center justify-center">
+        <div class="relative">
+            <mat-icon class="notranslate icon-size-14 text-hint"
+                      svgIcon="iconsmind:file_download"></mat-icon>
+
+
+        </div>
+    </div>
+</div>-->

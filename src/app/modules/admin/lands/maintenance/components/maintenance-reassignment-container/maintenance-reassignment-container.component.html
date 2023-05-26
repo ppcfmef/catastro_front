@@ -2,10 +2,29 @@
 <div class="flex flex-col space-y-4 ">
     <div class="flex flex-row space-x-4 ">
         <div class="w-1/2"> <app-back-list-land></app-back-list-land> </div>
+        <div class="w-1/2" >
+            <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
+
+
+            </div>
 
     </div>
 
-    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords"></app-land-maintenance-table></div>
 
+    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="'editar'" [isRemove]="false" ></app-land-maintenance-table></div>
+
+    <div class="flex justify-center">
+
+        <button  mat-raised-button  class="bg-success"
+
+         [color]="'primary'" (click)="onGenerateApplication()" *ngIf="landRecords.length>0 && file" >
+        Generar Solicitud
+
+    <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
+    </button>
+
+
+
+</div>
 </div>
 

@@ -15,7 +15,7 @@ export class ListApplicationMaintenanceTableComponent implements OnInit {
     @Input() dataSource: ApplicationUI[];
     @Output() dataSourceUpdateEvent: EventEmitter<ApplicationUI[]> = new EventEmitter();
     @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
-    displayedColumns: string[] = ['nro','ubigeo', 'c_predios','type', 'status','date'];//,'username'
+    displayedColumns: string[] = ['nro','ubigeo', 'c_predios','type','date', 'status'];//,'username'
     pageIndex = 0;
     pageSize = 5;
     pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];

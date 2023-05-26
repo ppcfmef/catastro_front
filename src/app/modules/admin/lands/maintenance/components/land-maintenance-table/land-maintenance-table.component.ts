@@ -11,6 +11,7 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
   styleUrls: ['./land-maintenance-table.component.scss']
 })
 export class LandMaintenanceTableComponent implements OnInit,OnChanges {
+    @Input() isRemove: boolean=true;
     @Input() ubigeo: string ;
     @Input() typeAction: string= Actions.LEER;
     @Input() dataSource: LandUI[];
@@ -38,6 +39,20 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
             data: {land:land,action:this.typeAction,ubigeo :this.ubigeo},
             width: '600px',
           });
+
+          if(this.typeAction===Actions.EDITAR){
+
+            dialogRef.afterClosed().subscribe((result) => {
+                console.log('result>>',result);
+                //land={... result};
+
+                Object.assign(land, result);
+                //let landReplaced=this.dataSource.find(a=>a.id===land.id);
+                //landReplaced=result;
+
+                });
+
+          }
 
     }
 

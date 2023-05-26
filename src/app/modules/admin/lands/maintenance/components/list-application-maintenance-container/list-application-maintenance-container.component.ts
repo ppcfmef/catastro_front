@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { ApplicationUI } from '../../interfaces/application';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-list-application-maintenance-container',
@@ -14,20 +15,72 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
     applicationRecords: ApplicationUI[];
     tableLength: number;
     search={};
-    private defaultTableLimit = 5;
+    filters={};
+    formFilters: FormGroup;
+    typesMaintenance =[
+        {
+        id:1 , text :'Reasignar ubicación'
+        },
+        {
+            id:2 , text :'Acumulación'
+            },
+            {
+                id:3 , text :'División'
+                },
+                {
+                    id:4 , text :'Desactivar'
+                    },
+
+    ];
+
+    status =[
+        {
+        id:1 , text :'Por atender',
+        },
+        {
+            id:2 , text :'Atendido',
+            },
+            {
+                id:3 , text :'Observado',
+                },
+
+
+    ];
+     defaultTableLimit = 5;
+     offset=null;
+     limit =this.defaultTableLimit;
+     ordering='';
   constructor(
     private _applicationMaintenanceService: ApplicationMaintenanceService,
-    private _router: Router
-    ) { }
+    private _router: Router,
+    private fb: FormBuilder,
+    ) {
+
+        this.createFormFilters();
+    }
 
   ngOnInit(): void {
     this.getInitList();
   }
+
+   createFormFilters(): void {
+
+    this.formFilters =  new FormGroup({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_status:new FormControl(),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_type:new FormControl(),
+    });
+
+  }
+
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     //const ownerFilter = { owner: this.landOwnerId };
-    const limit = paginator.pageSize;
-    const offset = limit * paginator.pageIndex;
-    const filterRawValue = { limit, offset, ...this.search };
+    this.limit = paginator.pageSize;
+    this.offset = this.limit * paginator.pageIndex;
+    this.getList();
+    /*const ordering='-date';
+    const filterRawValue = { limit, offset, ordering,...this.search };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     this._applicationMaintenanceService.getList(queryParams).toPromise().then((result)=> {
         this.applicationRecords=result.results;
@@ -39,13 +92,29 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
 
 
-        );
+        );*/
 
   }
 
   getInitList(): void {
+    this.limit = this.defaultTableLimit;
+    this.offset = null;
+    this.filters = {};
+    this.search = {};
+    this.ordering='-date';
+    this.getList();
+  }
 
-    const queryParams = { limit: this.defaultTableLimit };
+  getList(): void {
+
+    const limit = this.limit;
+    const offset = this.offset;
+    const filters = this.formFilters.getRawValue();
+    const ordering=this.ordering;
+    const search = this.search;
+
+    const filterRawValue = { limit, offset, ordering,...filters,...search };
+    const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
 
     this._applicationMaintenanceService.getList(queryParams)
         .toPromise()
@@ -66,6 +135,11 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
     this._router.navigate(['/land/maintenance/list']);
   }
 
+  onFilter(event: any): void{
+    const rawValue = this.formFilters.getRawValue();
+    console.log('rawValue>>',rawValue);
+    this.getList();
+  }
   onDownload(): void {
 
   }
