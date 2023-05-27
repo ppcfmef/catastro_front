@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { LandUploadRoutingModule } from './land-upload-routing.module';
 
@@ -48,6 +49,7 @@ import { ConsistencyErrorTableComponent } from './components/consistency-error-t
     MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
+    MatRadioModule,
   ]
 })
 export class LandUploadModule { }
