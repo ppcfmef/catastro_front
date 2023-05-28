@@ -22,10 +22,29 @@ export class UploadContainerComponent implements OnInit {
 
   selectForm = new FormGroup({
     selectType: new FormControl(null, [Validators.required]),
+    checkFormatList: new FormControl(null)
   });
 
   typesUpload = [
-      { code: 1, text: 'Carga de TB_PREDIO_T'}
+      { code: 1, text: 'Carga de TB_PREDIO_T'},
+      { code: 99, text: 'Carga Multiple'}
+  ];
+
+  listFormatMultiple = [
+
+        { code: 1, text: 'Formato 01' },
+        { code: 2, text: 'Formato 02' },
+        { code: 3, text: 'Formato 03' },
+        { code: 4, text: 'Formato 04' },
+        { code: 5, text: 'Formato 05' },
+        { code: 6, text: 'Formato 06' },
+        { code: 7, text: 'Formato 07' },
+        { code: 8, text: 'Formato 08' },
+        { code: 9, text: 'Formato 09' },
+        { code: 10, text: 'Formato 10' },
+        { code: 11, text: 'Formato 11' },
+        { code: 12, text: 'Formato 12' },
+        { code: 13, text: 'Formato 13' }
   ];
 
   isUpload = false;
@@ -59,6 +78,9 @@ export class UploadContainerComponent implements OnInit {
     this.selectForm.get('selectType').valueChanges.subscribe((value) =>{
         if(value === null){
             this.resetControls(true);
+        }
+        if(value !== 99){
+            this.selectForm.get('checkFormatList').reset();
         }
     });
   }

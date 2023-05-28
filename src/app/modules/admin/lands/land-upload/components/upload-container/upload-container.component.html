@@ -21,10 +21,10 @@
     </mat-form-field>
 </div>
 
-<div class="flex-row w-full justify-center">
-  
+<div class="flex-row w-full items-start flex">
+
     <!-- Widget upload-->
-    <div class="pb-4 block-upload w-full"
+    <div class="pb-4 mr-8 block-upload"
     [ngClass]="{ active_block: this.selectForm.valid, 'pointer-events-none': !this.selectForm.valid }"
     [formGroup]="uploadForm" >
         <label for="uploadfile"
@@ -53,25 +53,47 @@
 
         <div class="flex ml-4">
             <div class="block-data-file">
-                <div class="flex items-center justify-between py-3">
+                <div class="flex py-3 flex-col">
+                    <h2 *ngIf="selectForm.get('selectType').value === 99" class="format-name-selected">
+                        {{selectForm.get('checkFormatList').value ? selectForm.get('checkFormatList').value.text :'Nombre Formato Seleccionado'}}
+                    </h2>
                     <h3 class="text-secondary font-bold text-xl">{{ fileName? fileName : "Nombre del Archivo"}}</h3>
                 </div>
                 <div class="flex w-full flex-wrap">
                 <div class="text-secondary">Tipo de archivo: XLSX</div>
                 <div class="flex w-full">
                     <ng-container *ngIf="isUpload || recordSumary?.status === 'INITIAL'">
-                        <button *ngIf="fileUpload?.value"
-                        class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
-                        [disabled]="uploadForm.invalid"
-                        (click)="parseFormFile()">
-                            <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
-                            <span class="ml-2 mr-1 text-white">Verificar Registros</span>
-                        </button>
+                        <ng-container *ngIf="selectForm.get('selectType').value === 99; else buttonNormal">
+                            <button *ngIf="fileUpload?.value && selectForm.get('checkFormatList').value"
+                            class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
+                            [disabled]="uploadForm.invalid"
+                            (click)="parseFormFile()">
+                                <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
+                                <span class="ml-2 mr-1 text-white">Verificar Registros</span>
+                            </button>
+                        </ng-container >
+                        <ng-template  #buttonNormal>
+                            <button *ngIf="fileUpload?.value"
+                            class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
+                            [disabled]="uploadForm.invalid"
+                            (click)="parseFormFile()">
+                                <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
+                                <span class="ml-2 mr-1 text-white">Verificar Registros</span>
+                            </button>
+                        </ng-template>
+
                     </ng-container>
                 </div>
             </div>
             </div>
         </div>
+    </div>
+    <div [formGroup]="selectForm" *ngIf="selectForm.get('selectType').value === 99">
+
+          <mat-radio-group formControlName="checkFormatList" class="radio-button-container">
+            <mat-radio-button class="radio-button"
+            *ngFor="let option of listFormatMultiple" [value]="option">{{ option.text }}</mat-radio-button>
+          </mat-radio-group>
     </div>
     <!-- end widget upload-->
 </div>
@@ -116,7 +138,7 @@
         </div>
         </div>
 
-        
+
         <div class="flex flex-row w-full gap-4 mt-8">
             <div class="flex w-1/2 flex-col ">
                 <ng-container *ngIf="recordSumary">
@@ -151,7 +173,7 @@
         <div class="flex w-1/2 flex-col ">
         <app-consistency-error-table></app-consistency-error-table>
         </div>
-        
+
         </div>
         -->
     </ng-container>
@@ -159,7 +181,7 @@
     <!-- Mensaje de archivo sin errores -->
     <ng-container *ngIf="recordSumary && recordSumary?.status === 'INITIAL' && recordSumary.errors === 0">
     <div class="flex flex-row w-full gap-4 mt-8">
-    
+
     </div>
     <div class="flex flex-row w-full mt-8 items-center">
         <mat-icon class="notranslate icon-size-18 c-green"

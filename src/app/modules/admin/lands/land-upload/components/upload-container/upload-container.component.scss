@@ -242,5 +242,43 @@
         color:#66BB6A
     }
 
+    .format-name-selected{
+        color: #219EF9;
+        font-size: 20px;
+        font-weight: bold;
+    }
 
+    .radio-button-container{
+        display: grid;
+        grid-template-columns: minmax(0, 220px) minmax(0, 220px);
+        grid-gap: 16px;
+    }
+    .radio-button{
+        padding: 8px 12px;
+        background-color: #fbfbfb;
+        border-radius: 8px;
+        box-shadow: 0 0 5px #999;
+        min-width: 197px;
+        color:#666;
+        ::ng-deep{
+            .mat-radio-outer-circle{
+                border-color: #219EF9 !important;
+            }
+
+        }
+    }
+
+    mat-radio-button.mat-radio-checked  {
+        background-color: #219EF9;
+        color: white;
+        ::ng-deep{
+            .mat-radio-outer-circle{
+                border-color: white !important;
+            }
+            .mat-radio-inner-circle{
+                background-color: white;
+            }
+        }
+
+      }
 }
