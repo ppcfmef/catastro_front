@@ -24,6 +24,10 @@ import { UploadTableFilesComponent } from './components/upload-table-files/uploa
 import { UploadContainerComponent } from './components/upload-container/upload-container.component';
 import { FormatErrorTableComponent } from './components/format-error-table/format-error-table.component';
 import { ConsistencyErrorTableComponent } from './components/consistency-error-table/consistency-error-table.component';
+import { UploadConsistencyPage } from './pages/upload-consistency/upload-consistency.page';
+import { UploadConditioningPage } from './pages/upload-conditioning/upload-conditioning.page';
+import { ConditioningContainerComponent } from './components/conditioning-container/conditioning-container.component';
+import { ConsistencyContainerComponent } from './components/consistency-container/consistency-container.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,10 @@ import { ConsistencyErrorTableComponent } from './components/consistency-error-t
     UploadContainerComponent,
     FormatErrorTableComponent,
     ConsistencyErrorTableComponent,
+    UploadConsistencyPage,
+    UploadConditioningPage,
+    ConditioningContainerComponent,
+    ConsistencyContainerComponent,
   ],
   imports: [
     CommonModule,
