@@ -84,5 +84,8 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
 
       });
   }
+  onRefreshPage(event: any): void{
+    this.getInitList();
+  }
 }
 

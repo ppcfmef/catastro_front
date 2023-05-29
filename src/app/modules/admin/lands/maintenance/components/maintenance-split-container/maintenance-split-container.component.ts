@@ -24,7 +24,7 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
 export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     @Input() idLand: number;
     ubigeo: string;
-    landRecords: LandUI[];
+    landRecords: LandUI[]=[];
     application: ApplicationModel;
     results: ResultUI[]=[];
     user: User;
@@ -72,8 +72,9 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
 
   onAgregarResult(): void{
+
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
+        data: {action:Actions.CREAR,land:this.landRecords[0]},
         width: '600px',
       });
 
@@ -91,11 +92,10 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
       });
 
 
-
-
   }
+
   ondataSourceUpdate(landRecords: LandUI[]): void{
-    this.landRecords =landRecords;
+    this.results =landRecords;
   }
 
   onGenerateSplit(): void {

@@ -18,6 +18,7 @@ import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
 
+
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
@@ -39,7 +40,8 @@ const MY_DATE_FORMAT = {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+
     ],
     imports     : [
         BrowserModule,

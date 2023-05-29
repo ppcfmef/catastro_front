@@ -10,6 +10,7 @@ import { Actions } from 'app/shared/enums/actions.enum';
 import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictService } from '../../services/district.service';
 import { District } from 'app/core/common/interfaces/common.interface';
+import { keys } from 'lodash';
 @Component({
   selector: 'app-land-maintenance-form',
   templateUrl: './land-maintenance-form.component.html',
@@ -39,22 +40,45 @@ export class LandMaintenanceFormComponent implements OnInit {
 
         this.landModel= new LandModel();
         console.log('landModel>>',this.landModel);
-
+        this.action=(data && data.action)?data.action:Actions.CREAR;
+        console.log('Actions>>',Actions.CREAR);
 
         if(data){
-            this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
-            this.action=(data && data.action)?data.action:'';
+            if(this.action!==Actions.CREAR){
+                this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
+            }
+            else{
+                this.landModel = new LandModel();
+            }
+
+
+            this.ubigeo = (data && data.land && data.land.ubigeo)?data.land.ubigeo:null;
 
             if(this.action=== Actions.LEER){
                 this.readOnly=true;
             }
 
-            this.ubigeo = (data && data.ubigeo)?data.ubigeo:null;
+            else if (this.action=== Actions.CREAR){
+                const keysData=['ubigeo','uuType','streetType','codStreet','streetName','urbanMza','urbanLotNumber'];
+                keysData.forEach((key)=> {
+                    if(this.landModel.hasOwnProperty(key)){
+                        this.landModel[key] = data.land[key];
+                    }
+
+                });
+
+
+            }
+
+
+
+
+
+
             if(this.ubigeo){
                 this._districtService.getDistrict(this.ubigeo).subscribe((result: any)=>{
                     this.districts = [result];
-                    console.log('ubigeos>>>',result);
-                    this.landModel.ubigeo = this.ubigeo;
+
                 });
             }
 

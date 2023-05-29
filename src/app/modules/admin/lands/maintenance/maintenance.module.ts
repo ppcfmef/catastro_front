@@ -39,6 +39,7 @@ import { ListApplicationMaintenanceTableComponent } from './components/list-appl
 import { ListApplicationMaintenanceContainerComponent } from './components/list-application-maintenance-container/list-application-maintenance-container.component';
 
 import { ListApplicationMaintenancePage } from './pages/list-application-maintenance/list-application-maintenance.page';
+import { LandMaintenanceDesactivateComponent } from './components/land-maintenance-desactivate/land-maintenance-desactivate.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { ListApplicationMaintenancePage } from './pages/list-application-mainten
 
     ListApplicationMaintenanceContainerComponent,
       ListApplicationMaintenancePage,
+      LandMaintenanceDesactivateComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +83,7 @@ import { ListApplicationMaintenancePage } from './pages/list-application-mainten
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    MatSortModule,
   ]
 })
 export class MaintenanceModule { }

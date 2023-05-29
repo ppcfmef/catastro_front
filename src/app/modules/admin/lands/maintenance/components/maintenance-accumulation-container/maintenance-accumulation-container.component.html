@@ -7,19 +7,14 @@
     <div class="flex flex-row space-x-4  ">
         <div class="w-1/2" ><app-search-land (agregarPredioEvent)="onAgregarPredio($event)"></app-search-land> </div>
         <div class="w-1/2" >
-<app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
-
-<div>
-
-</div>
-
+        <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
 
 
         </div>
 
     </div>
 
-    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo"></app-land-maintenance-table></div>
+    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [isRemove]="false" [typeAction]="'leer'"></app-land-maintenance-table></div>
 
 
 

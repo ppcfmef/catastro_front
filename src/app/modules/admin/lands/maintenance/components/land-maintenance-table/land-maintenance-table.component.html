@@ -68,13 +68,15 @@
                 <mat-icon svgIcon="heroicons_outline:pencil" [ngClass]=" 'c-success'" ></mat-icon>
                 </button>
             </ng-template>
+            <ng-conteiner *ngIf="isRemove">
 
+                <button  mat-button
+                (click)="removeSelection(element)"
+                >
+                <mat-icon svgIcon="heroicons_outline:x" [ngClass]=" 'c-danger'" ></mat-icon>
+        </button>
 
-            <button  mat-button
-            (click)="removeSelection(element)"
-            >
-            <mat-icon svgIcon="heroicons_outline:x" [ngClass]=" 'c-danger'" ></mat-icon>
-    </button>
+            </ng-conteiner>
 
         </td>
     </ng-container>
