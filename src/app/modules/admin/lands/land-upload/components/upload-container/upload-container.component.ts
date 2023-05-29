@@ -107,8 +107,17 @@ export class UploadContainerComponent implements OnInit {
           this.uploadService.uploadFile(payload)
           .subscribe(
               (res) => {
-                  this.recordSumary = res;
+                this.recordSumary = res;
                 this._messageProviderService.showSnack('Cargado correctamente');
+                const timerId = setInterval(() => {
+                  this.uploadService.uploadHistorySummary(Number(this.recordSumary.uploadHistoryId))
+                  .subscribe((resSumary) => {
+                    this.recordSumary = resSumary;
+                    if (this.recordSumary.status === 'LOADED_TMP' || this.recordSumary.status === 'CANCEL') {
+                      clearInterval(timerId);
+                    }
+                  });
+                }, 5000);
               },
               (err) => {
                 this._messageProviderService.showSnackError('Error al cargar el archivo');
@@ -166,7 +175,9 @@ export class UploadContainerComponent implements OnInit {
   }
 
   onReloadPage(): void {
-    window.location.reload();
+    this._router.routeReuseStrategy.shouldReuseRoute = (): boolean => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate(['/land/upload/new']);
   }
 
   private changeUploadStatus(status: string): void {
@@ -178,6 +189,18 @@ export class UploadContainerComponent implements OnInit {
                 this.recordSumary.status = res.status;
                 if (status === 'CANCEL') {
                     this.onReloadPage();
+                }
+
+                if (this.recordSumary.status === 'IN_PROGRESS') {
+                  const timerValidId = setInterval(() => {
+                    this.uploadService.uploadHistorySummary(Number(this.recordSumary.uploadHistoryId))
+                    .subscribe((resSumary) => {
+                      this.recordSumary = resSumary;
+                      if (this.recordSumary.status === 'LOADED' || this.recordSumary.status === 'CANCEL') {
+                        clearInterval(timerValidId);
+                      }
+                    });
+                  }, 10000);
                 }
             },
             (error) => {
