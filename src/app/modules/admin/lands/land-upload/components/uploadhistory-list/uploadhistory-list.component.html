@@ -16,8 +16,8 @@
     <ng-container matColumnDef="fileUpload">
         <th mat-header-cell *matHeaderCellDef> Archivo Cargado</th>
         <td mat-cell *matCellDef="let element">
-            <a [href]="element.fileUpload" 
-            class="text-blue-400 underline underline-offset-1">
+            <a [href]="element.fileUpload"
+            class="download-green">
                 <mat-icon [svgIcon]="'heroicons_solid:document-download'"></mat-icon>
                 Descargar Archivo
             </a>
@@ -32,7 +32,7 @@
                     <mat-icon svgIcon="heroicons_solid:clock"
                     matTooltip="Por iniciar"
                     matTooltipPosition="right"
-                    style="color: blue!important;"
+                    style="color: #0090f8 !important;"
                     ></mat-icon>
                 </ng-container>
                 <ng-container *ngSwitchCase="'IN_PROGRESS'" class="flex">
@@ -99,9 +99,10 @@
         <th mat-header-cell *matHeaderCellDef>*</th>
         <td mat-cell *matCellDef="let element; let i = index">
             <button mat-icon-button class="mat-primary"
+
                     (click)="onGoToUploadRecordDetail(element.id)"
                     matTooltip="ver detalle">
-                <mat-icon [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon [svgIcon]="'heroicons_solid:eye'"  style="color: #0090f8 !important;"></mat-icon>
             </button>
         </td>
     </ng-container>
