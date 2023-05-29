@@ -33,21 +33,20 @@ export class ConsistencyContainerComponent implements OnInit {
     ];
 
     listFormatMultiple = [
-
-          { code: 1, text: 'Formato 01', success:true },
-          { code: 2, text: 'Formato 02', success:false},
-          { code: 3, text: 'Formato 03', success:false},
-          { code: 4, text: 'Formato 04', success:false},
-          { code: 5, text: 'Formato 05', success:false},
-          { code: 6, text: 'Formato 06', success:false},
-          { code: 7, text: 'Formato 07', success:false},
-          { code: 8, text: 'Formato 08', success:false},
-          { code: 9, text: 'Formato 09', success:false},
-          { code: 10, text: 'Formato 10', success:false},
-          { code: 11, text: 'Formato 11', success:false},
-          { code: 12, text: 'Formato 12', success:false},
-          { code: 13, text: 'Formato 13', success:false},
-    ];
+        { code: 1, text: 'Tabla RT_Contribuyente' },
+        { code: 2, text: 'Tabla RT_MarcoPredio' },
+        { code: 3, text: 'Tabla RT_Arancel' },
+        { code: 4, text: 'Tabla RT_Predio_dato' },
+        { code: 5, text: 'Tabla RT_Predio_caract' },
+        { code: 6, text: 'Tabla RT_Recaudacion' },
+        { code: 7, text: 'Tabla RT_Deuda' },
+        { code: 8, text: 'Tabla RT_Emision' },
+        { code: 9, text: 'Tabla RT_BImponible' },
+        { code: 10, text: 'Tabla RT_Alicuota' },
+        { code: 11, text: 'Tabla RT_AmnContribuyente' },
+        { code: 12, text: 'Tabla RT_AmnMunicipal' },
+        { code: 13, text: 'Tabla RT_VarEm_muni' }
+  ];
 
     isUpload = false;
 

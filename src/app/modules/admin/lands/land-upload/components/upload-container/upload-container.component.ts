@@ -32,19 +32,19 @@ export class UploadContainerComponent implements OnInit {
 
   listFormatMultiple = [
 
-        { code: 1, text: 'Formato 01' },
-        { code: 2, text: 'Formato 02' },
-        { code: 3, text: 'Formato 03' },
-        { code: 4, text: 'Formato 04' },
-        { code: 5, text: 'Formato 05' },
-        { code: 6, text: 'Formato 06' },
-        { code: 7, text: 'Formato 07' },
-        { code: 8, text: 'Formato 08' },
-        { code: 9, text: 'Formato 09' },
-        { code: 10, text: 'Formato 10' },
-        { code: 11, text: 'Formato 11' },
-        { code: 12, text: 'Formato 12' },
-        { code: 13, text: 'Formato 13' }
+        { code: 1, text: 'Tabla RT_Contribuyente' },
+        { code: 2, text: 'Tabla RT_MarcoPredio' },
+        { code: 3, text: 'Tabla RT_Arancel' },
+        { code: 4, text: 'Tabla RT_Predio_dato' },
+        { code: 5, text: 'Tabla RT_Predio_caract' },
+        { code: 6, text: 'Tabla RT_Recaudacion' },
+        { code: 7, text: 'Tabla RT_Deuda' },
+        { code: 8, text: 'Tabla RT_Emision' },
+        { code: 9, text: 'Tabla RT_BImponible' },
+        { code: 10, text: 'Tabla RT_Alicuota' },
+        { code: 11, text: 'Tabla RT_AmnContribuyente' },
+        { code: 12, text: 'Tabla RT_AmnMunicipal' },
+        { code: 13, text: 'Tabla RT_VarEm_muni' }
   ];
 
   isUpload = false;
@@ -178,6 +178,10 @@ export class UploadContainerComponent implements OnInit {
     this._router.routeReuseStrategy.shouldReuseRoute = (): boolean => false;
     this._router.onSameUrlNavigation = 'reload';
     this._router.navigate(['/land/upload/new']);
+  }
+
+  onGoToconditioning(): void {
+    this._router.navigate(['/land/upload/conditioning']);
   }
 
   private changeUploadStatus(status: string): void {
