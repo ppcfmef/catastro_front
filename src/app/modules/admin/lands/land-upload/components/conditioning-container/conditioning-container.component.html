@@ -1,1 +1,148 @@
-<p>conditioning-container works!</p>
+<div class="flex-row w-auto">
+    <section >
+        <div class="c-info">
+            Desde aqui podra descargar y visualizar la documentación existente y esquemas de datos tabular, <br>
+            espacial disponible de plataforma Catastro asi como verificar si su archivo Excel cumple con el formato requerido
+        </div>
+        <div class="flex mt-4 mb-4">
+            <div class="pb-4 mr-8 block-upload">
+                <div
+                class="flex flex-col w-40 m-2 p-4 shadow rounded-2xl cursor-pointer justify-center bg-white">
+                    <div class="aspect-w-9 aspect-h-6 ">
+                        <div class="flex items-center justify-center">
+                            <div class="relative">
+                                <mat-icon class="notranslate icon-size-18 color-blue-icon"
+                                        svgIcon="mat_solid:book"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                        <div class="mat-tooltip-trigger truncate">
+                        <span>Manual de <br>
+                            capacitación</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="pb-4 mr-8 block-upload">
+                <div
+                class="flex flex-col w-40 m-2 p-4 shadow rounded-2xl cursor-pointer justify-center bg-white">
+                    <div class="aspect-w-9 aspect-h-6 ">
+                        <div class="flex items-center justify-center">
+                            <div class="relative">
+                                <mat-icon class="notranslate icon-size-18 color-blue-icon"
+                                        svgIcon="mat_solid:folder"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                        <div class="mat-tooltip-trigger truncate">
+                        <span>Esquemas CF</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+<div class="flex-row w-auto">
+    <h2 class="subtitle-h2 mb-8">Carga para acondicionamiento</h2>
+</div>
+<ng-container >
+<div class="flex-row w-auto">
+    <mat-form-field [formGroup]="selectForm" class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-60 pr-2.5">
+        <mat-label>Tipo de carga <span class="text-red-600">(*)</span></mat-label>
+        <mat-select formControlName="selectType" placeholder="Seleccione tipo de carga">
+            <mat-option [value]="typeUpload.code" *ngFor="let typeUpload of typesUpload">{{ typeUpload.text }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<div class="flex-row w-full items-start flex">
+
+    <!-- Widget upload-->
+    <div class="pb-4 mr-8 block-upload"
+    [ngClass]="{ active_block: this.selectForm.valid, 'pointer-events-none': !this.selectForm.valid }"
+    [formGroup]="uploadForm" >
+        <label for="uploadfile"
+        [ngClass]="{'bg-gray-200':!this.selectForm.valid, 'bg-white':this.selectForm.valid }"
+        class="flex flex-col w-40 m-2 p-4 shadow rounded-2xl cursor-pointer justify-center">
+            <div class="aspect-w-9 aspect-h-6 ">
+                <div class="flex items-center justify-center">
+                    <div class="relative">
+                        <mat-icon *ngIf="!fileUpload?.value" class="notranslate icon-size-18"
+                                svgIcon="mat_solid:upload_file"></mat-icon>
+                        <ng-container *ngIf="fileUpload?.value">
+                            <mat-icon class="notranslate icon-size-18 text-green-600" svgIcon="mat_solid:task"></mat-icon>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                <div class="mat-tooltip-trigger truncate">
+                <span *ngIf="!fileUpload?.value">Seleccionar archivo</span>
+                <span *ngIf="fileUpload?.value">Seleccionado</span>
+            </div>
+            </div>
+            <input type="file" (change)="uploadFile($event)" hidden name="uploadfile" id="uploadfile" #uploadfile>
+        </label>
+
+        <div class="flex ml-4">
+            <div class="block-data-file">
+                <div class="flex py-3 flex-col">
+                    <h2 *ngIf="selectForm.get('selectType').value === 99" class="format-name-selected">
+                        {{selectForm.get('checkFormatList').value ? selectForm.get('checkFormatList').value.text :'Nombre Formato Seleccionado'}}
+                    </h2>
+                    <h3 class="text-secondary font-bold text-xl">{{ fileName? fileName : "Nombre del Archivo"}}</h3>
+                </div>
+                <div class="flex w-full flex-wrap">
+                <div class="text-secondary">Tipo de archivo: XLSX</div>
+                <div class="flex w-full">
+                    <ng-container>
+                        <ng-container *ngIf="selectForm.get('selectType').value === 99; else buttonNormal">
+                            <button *ngIf="fileUpload?.value && selectForm.get('checkFormatList').value"
+                            class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
+                            [disabled]="uploadForm.invalid"
+                            (click)="parseFormFile()">
+                                <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
+                                <span class="ml-2 mr-1 text-white">Enviar a consistencia</span>
+                            </button>
+                        </ng-container >
+                        <ng-template  #buttonNormal>
+                            <button *ngIf="fileUpload?.value"
+                            class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
+                            [disabled]="uploadForm.invalid"
+                            (click)="parseFormFile()">
+                                <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
+                                <span class="ml-2 mr-1 text-white">Enviar a consistencia</span>
+                            </button>
+                        </ng-template>
+
+                    </ng-container>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div [formGroup]="selectForm" *ngIf="selectForm.get('selectType').value === 99">
+
+          <mat-radio-group formControlName="checkFormatList" class="radio-button-container">
+
+            <!-- Se usa la propiedad success para saber si ya subio correctamente, en caso contrario debera mostrar el mensaje de error -->
+            <mat-radio-button class="radio-button"
+            *ngFor="let option of listFormatMultiple" [value]="option"
+            [ngClass]="{'loaded-correct':option.success}">
+
+            <span class="mr-4">{{ option.text }}</span>
+            <mat-icon *ngIf="option.success" class="text-white" svgIcon="mat_solid:done"></mat-icon>
+            </mat-radio-button>
+          </mat-radio-group>
+    </div>
+    <!-- end widget upload-->
+</div>
+</ng-container>
+
