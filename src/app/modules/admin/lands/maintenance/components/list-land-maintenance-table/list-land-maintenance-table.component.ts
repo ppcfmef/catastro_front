@@ -92,10 +92,10 @@ export class ListLandMaintenanceTableComponent implements OnInit {
             width: '600px',data:{land: landRecord}
           });
 
-          dialogRef.afterClosed().subscribe((result) => {
+          dialogRef.afterClosed().subscribe((result: any) => {
 
             console.log(result);
-            if(result){
+            if(result && result.option){
 
                 const application = new ApplicationModel();
                 application.idStatus=1;
@@ -110,16 +110,38 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                 };
 
                 this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
-                    if(res){
-                        //this.onRefreshPage();
-                        this._messageProviderService.showAlert(
-                            'Solicitud registrada'
-                        );
-                        this._router.navigate(['/land/maintenance']);
+                    if(result.file){
+
+                        const dataForm: any= {};
+                        dataForm.id_app= res.id;
+                        dataForm.file= result.file;
+
+                        this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
+                            if(r && r.success){
+                                this._messageProviderService.showAlert(
+                                    'Solicitud registrada'
+                                );
+                                this._router.navigate(['/land/maintenance']);
+                            }
+                        });
                     }
+
+                    else{
+                        if(res ){
+
+                            this._messageProviderService.showAlert(
+                                'Solicitud registrada'
+                            );
+                            this._router.navigate(['/land/maintenance']);
+                        }
+                    }
+
                 });
 
+
             }
+
+
 
             /*const body = {
                 application:application,

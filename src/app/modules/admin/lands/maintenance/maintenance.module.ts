@@ -83,6 +83,7 @@ import { LandMaintenanceDesactivateComponent } from './components/land-maintenan
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    MatSortModule,
   ]
 })
 export class MaintenanceModule { }

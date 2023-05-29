@@ -5,6 +5,7 @@ import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { ApplicationUI } from '../../interfaces/application';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-list-application-maintenance-container',
@@ -74,25 +75,17 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
   }
 
-  onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
+  //onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
+    onChangePage(data: {paginator: MatPaginator | {pageSize: number; pageIndex: number}; sort: Sort}): void {
     //const ownerFilter = { owner: this.landOwnerId };
-    this.limit = paginator.pageSize;
-    this.offset = this.limit * paginator.pageIndex;
-    this.getList();
-    /*const ordering='-date';
-    const filterRawValue = { limit, offset, ordering,...this.search };
-    const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
-    this._applicationMaintenanceService.getList(queryParams).toPromise().then((result)=> {
-        this.applicationRecords=result.results;
-        this.applicationRecords.map((a)=> {
 
-            a.landsFlat= a.lands.map(l=>l.cpm).join(',');
-        });
+    if(data.paginator){
+        this.limit = data.paginator.pageSize;
+        this.offset = this.limit * data.paginator.pageIndex;
     }
 
-
-
-        );*/
+    this.ordering = this.orderingFormater(data.sort);
+    this.getList();
 
   }
 
@@ -142,5 +135,11 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
   }
   onDownload(): void {
 
+  }
+
+
+  private orderingFormater(sort: Sort): string {
+    const orderingActive = sort?.active;
+    return (sort?.direction === 'desc') ? '-'+orderingActive : orderingActive;
   }
 }
