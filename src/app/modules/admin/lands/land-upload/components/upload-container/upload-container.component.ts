@@ -222,7 +222,6 @@ export class UploadContainerComponent implements OnInit {
 
   private resetControls(isResetAll = false): void {
       this.uploadfileElement.nativeElement.value = null;
-      this.fileName = null;
       this.uploadForm.get('fileUpload').reset();
       this.uploadForm.markAsPristine();
       this._ngxSpinner.hide();

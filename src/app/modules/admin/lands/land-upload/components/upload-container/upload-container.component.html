@@ -227,7 +227,7 @@
     </div>
 
     <!-- Resultado Final estado Cargado -->
-    <ng-container *ngIf="recordSumary?.status === 'LOADED'">
+    <ng-container *ngIf="recordSumary?.status === 'LOADED' || recordSumary?.status === 'LOADED_START'">
         <div class="flex flex-row w-full mt-8 items-center">
             <mat-icon class="notranslate icon-size-18 c-green"
             svgIcon="mat_solid:done">
