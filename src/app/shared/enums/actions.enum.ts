@@ -10,6 +10,6 @@ export enum Actions {
 
     CREAR = 'crear',
 
-    DESACTIVAR= 'desactivar'
+    INACTIVAR= 'inactivar'
 
 };

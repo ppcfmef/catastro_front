@@ -1909,8 +1909,8 @@ async saveNewPointGestionPredio(): Promise<void>{
             _predio.NOM_USER = this.user.username;
             _predio.NOM_PC = 'PLATAFORMA';
             _predio.ID_LOTE_P =this.lote.ID_LOTE_P;
-            _predio.COD_MZN = this.lote.COD_MZN;
-            _predio.COD_SECT = this.lote.COD_SECT;
+            _predio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
+            _predio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;
 
 
             const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
@@ -1942,8 +1942,8 @@ async saveNewPointGestionPredio(): Promise<void>{
             _gestionPredio.NOM_USER = this.user.username;
             _gestionPredio.NOM_PC = 'PLATAFORMA';
             _gestionPredio.ESTADO=0;
-            _gestionPredio.COD_MZN = this.lote.COD_MZN;
-            _gestionPredio.COD_SECT = this.lote.COD_SECT;
+            _gestionPredio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
+            _gestionPredio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
