@@ -29,7 +29,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
                 id:3 , text :'División'
                 },
                 {
-                    id:4 , text :'Desactivar'
+                    id:4 , text :'Inactivar'
                     },
 
     ];

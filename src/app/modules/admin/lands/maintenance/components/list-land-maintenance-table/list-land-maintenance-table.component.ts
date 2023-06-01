@@ -44,7 +44,7 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                 id:3 , text :'División',routerLink:'split',
                 },
                 {
-                    id:4 , text :'Desactivar',routerLink:null,
+                    id:4 , text :'Inactivar',routerLink:null,
                     },
 
 ];
