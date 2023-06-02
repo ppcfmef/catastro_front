@@ -318,6 +318,24 @@
                                 <ng-container *ngIf="f.isActive.hasError('required')">Debe elegir un estado</ng-container>
                             </mat-error>
                         </div>
+
+                        <div class="flex">
+                            <mat-slide-toggle class="mat-toggle-confirm" [formControlName]="'isWebStaff'">
+                                Acceso Web <span>*</span>
+                            </mat-slide-toggle>
+                            <mat-error>
+                                <ng-container *ngIf="f.isWebStaff.hasError('required')">Debe elegir un estado</ng-container>
+                            </mat-error>
+                        </div>
+
+                        <div class="flex">
+                            <mat-slide-toggle class="mat-toggle-confirm" [formControlName]="'isMobileStaff'">
+                                Acceso Móvi <span>*</span>
+                            </mat-slide-toggle>
+                            <mat-error>
+                                <ng-container *ngIf="f.isMobileStaff.hasError('required')">Debe elegir un estado</ng-container>
+                            </mat-error>
+                        </div>
                     </div>
                 </div>
 
