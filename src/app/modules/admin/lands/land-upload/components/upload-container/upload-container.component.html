@@ -1,14 +1,28 @@
 <div class="flex-row w-auto">
     <section class="block-information">
         <div>
-            Verifique que el archivo a cargar cumpla con los requisitos para la carga, puede ingresar al módulo de acondicionamiento información.
+            Verifique que el archivo a cargar tenga la estructura requerida, puede ingresar al módulo de acondicionamiento información.
         </div>
-        <button (click)="onGoToconditioning()">
-            <mat-icon class="notranslate icon-size-12" svgIcon="mat_solid:checklist"></mat-icon>
+        <a class="bg-conditioning" 
+        [routerLink]="'/land/upload/conditioning'">
+            <mat-icon class="notranslate icon-size-6" svgIcon="mat_solid:checklist"></mat-icon>
             <span>
-                Acondicionamiento de Información
+                Acondicionamiento
             </span>
-        </button>
+        </a>
+    </section>
+
+    <section class="block-information">
+        <div>
+            Valide que los datos a cargar cumpla con los requisitos, puede ingresar al módulo de consistencia de información.
+        </div>
+        <a class="bg-consistency"
+        [routerLink]="'/land/upload/consistency'">
+            <mat-icon class="notranslate icon-size-6" svgIcon="mat_solid:done_all"></mat-icon>
+            <span>
+                Consistencia
+            </span>
+        </a>
     </section>
 </div>
 <ng-container *ngIf="!recordSumary || recordSumary.status === 'INITIAL'">

@@ -180,10 +180,6 @@ export class UploadContainerComponent implements OnInit {
     this._router.navigate(['/land/upload/new']);
   }
 
-  onGoToconditioning(): void {
-    this._router.navigate(['/land/upload/conditioning']);
-  }
-
   private changeUploadStatus(status: string): void {
     if (this.recordSumary) {
         this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status)
