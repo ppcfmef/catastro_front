@@ -27,6 +27,8 @@ export interface User {
     email?: string;
     avatar?: string;
     isActive: boolean;
+    isWebStaff?: boolean;
+    isMobileStaff?: boolean;
     dateJoined: string;
     jobTitle?: string;
     observation?: string;

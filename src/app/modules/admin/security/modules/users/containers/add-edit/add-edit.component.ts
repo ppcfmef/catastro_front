@@ -117,6 +117,8 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
             district: [{value: '', disabled: true}],
             observation: [''],
             isActive: [true, [Validators.required]],
+            isWebStaff: [true, [Validators.required]],
+            isMobileStaff: [false, [Validators.required]]
         },{
             validators: [UserValidator.passwordRequired],
             updateOn: 'blur' // todo: change submit

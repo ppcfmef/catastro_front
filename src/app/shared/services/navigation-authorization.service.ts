@@ -2,7 +2,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 
@@ -51,4 +51,8 @@ export class NavigationAuthorizationService {
       })
     );
   };
+
+  userScopePermissionLast(idView: string, permissionType = 'read_all'): Promise<{ubigeo: string | null; limitScope: boolean}> {
+    return this.userScopePermission(idView, permissionType).pipe(take(1)).toPromise();
+  }
 }

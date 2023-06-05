@@ -1,5 +1,4 @@
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, OnInit, OnChanges, Output, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
@@ -42,24 +41,21 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
     private navigationAuthorizationService: NavigationAuthorizationService,
   ) {}
 
-  ngOnInit(): void {
-    this.navigationAuthorizationService.userScopePermission(this.idView)
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((data: any) => {
-      if(!data?.limitScope){
-        this.ubigeo = null;
-        this.hideSelectUbigeo = false;
-      }
-      else {
-        this.hideSelectUbigeo = true;
-        this.ubigeo = data?.ubigeo;
-      }
+  ngOnInit(): void {}
 
-      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
-    });
-  }
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    const navigation = await this.navigationAuthorizationService.userScopePermissionLast(this.idView);
+    if(!navigation?.limitScope){
+      this.ubigeo = null;
+      this.hideSelectUbigeo = false;
+    }
+    else {
+      this.hideSelectUbigeo = true;
+      this.ubigeo = navigation?.ubigeo;
+    }
 
-  ngOnChanges(changes: SimpleChanges): void {
+    this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+
     const ownerCurentValue = changes?.landOwnerIn?.currentValue;
     if (ownerCurentValue) {
       this.landOwner.setValue(ownerCurentValue);
@@ -68,8 +64,9 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   }
 
   createFormEdit(): void{
+    const ubigeo = this.landOwner.ubigeo || this.ubigeo;
     this.formEdit = this.fb.group({
-      ubigeo: [{ value: this.landOwner.ubigeo, disabled: !this.isCreate}],
+      ubigeo: [{ value: ubigeo, disabled: !this.isCreate}],
       code: [{ value: this.landOwner.code, disabled: !this.isCreate}],
       documentType: [{ value: this.landOwner.documentType, disabled: !this.isCreate}],
       dni: [{ value: this.landOwner.dni, disabled: !this.isCreate}],
