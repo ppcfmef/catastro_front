@@ -19,25 +19,25 @@ const routes: Routes = [
     path: 'consistency',
     component: UploadConsistencyPage,
     canActivate: [NavigationAuthorizationGuard],
-    data: { id: 'gprpconsis', permissionType: 'read' },
+    data: { id: 'gprpnewupl', permissionType: 'read' },
   },
   {
     path: 'conditioning',
     component: UploadConditioningPage,
     canActivate: [NavigationAuthorizationGuard],
-    data: { id: 'gprpcondit', permissionType: 'read' },
+    data: { id: 'gprpnewupl', permissionType: 'read' },
   },
   {
     path: 'history',
     component: UploadHistoryPage,
     canActivate: [NavigationAuthorizationGuard],
-    data: { id: 'gprphistor', permissionType: 'read' },
+    data: { id: 'gprpnewupl', permissionType: 'read' },
   },
   {
     path: 'history/:uploadHistoryId',
     component: UploadNewPage,
     canActivate: [NavigationAuthorizationGuard],
-    data: { id: 'gprphistor', permissionType: 'edit' },
+    data: { id: 'gprpnewupl', permissionType: 'edit' },
   },
 ];
 
