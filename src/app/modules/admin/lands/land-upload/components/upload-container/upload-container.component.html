@@ -81,7 +81,7 @@
                             <button *ngIf="fileUpload?.value && selectForm.get('checkFormatList').value"
                             class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
                             [disabled]="uploadForm.invalid"
-                            (click)="parseFormFile()">
+                            (click)="parseMultipleFile()">
                                 <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>
                                 <span class="ml-2 mr-1 text-white">Verificar Registros</span>
                             </button>
@@ -220,12 +220,20 @@
 
     <!-- Estado carga temporal en progreso -->
     <div class="flex flex-row w-full mt-4" *ngIf="recordSumary?.status === 'LOADED_TMP'">
-        <button
+        <button *ngIf="selectForm.get('selectType').value === 99; else btnValidSave"
         class="btn-blue" [disabled]="false"
-        (click)="onValidSaveUpload()">
+        (click)="onValidSaveMultipleUpload()">
             <mat-icon svgIcon="mat_solid:upload"></mat-icon>
             <span class="mr-2">Realizar Carga de datos</span>
         </button> <!-- [disabled]="recordSumary?.correctsData ? false : true"-->
+        <ng-template #btnValidSave>
+            <button
+            class="btn-blue" [disabled]="false"
+            (click)="onValidSaveUpload()">
+                <mat-icon svgIcon="mat_solid:upload"></mat-icon>
+                <span class="mr-2">Realizar Carga de datos</span>
+            </button>
+        </ng-template>
     </div>
 
     <!-- Estado carga final en progreso -->

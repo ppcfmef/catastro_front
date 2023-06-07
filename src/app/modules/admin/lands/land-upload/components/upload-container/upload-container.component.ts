@@ -7,6 +7,7 @@ import {MessageProviderService} from '../../../../../../shared/services/message-
 import { ActivatedRoute, Router } from '@angular/router';
 import { UploadhistoryService } from '../../services/uploadhistory.service';
 import { ExportReportService } from 'app/shared/services/export-report.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-upload-container',
@@ -32,19 +33,19 @@ export class UploadContainerComponent implements OnInit {
 
   listFormatMultiple = [
 
-        { code: 1, text: 'Tabla RT_Contribuyente' },
-        { code: 2, text: 'Tabla RT_MarcoPredio' },
-        { code: 3, text: 'Tabla RT_Arancel' },
-        { code: 4, text: 'Tabla RT_Predio_dato' },
-        { code: 5, text: 'Tabla RT_Predio_caract' },
-        { code: 6, text: 'Tabla RT_Recaudacion' },
-        { code: 7, text: 'Tabla RT_Deuda' },
-        { code: 8, text: 'Tabla RT_Emision' },
-        { code: 9, text: 'Tabla RT_BImponible' },
-        { code: 10, text: 'Tabla RT_Alicuota' },
-        { code: 11, text: 'Tabla RT_AmnContribuyente' },
-        { code: 12, text: 'Tabla RT_AmnMunicipal' },
-        { code: 13, text: 'Tabla RT_VarEm_muni' }
+        { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente' },
+        { code: 'RT_MARCOPREDIO', text: 'Tabla RT_MarcoPredio' },
+        { code: 'RT_ARANCEL', text: 'Tabla RT_Arancel' },
+        { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato' },
+        { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract' },
+        { code: 'RT_RECAUDACION', text: 'Tabla RT_Recaudacion' },
+        { code: 'RT_DEUDA', text: 'Tabla RT_Deuda' },
+        { code: 'RT_EMISION', text: 'Tabla RT_Emision' },
+        { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible' },
+        { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota' },
+        { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente' },
+        { code: 'RT_AMNMUNICIPA', text: 'Tabla RT_AmnMunicipal' },
+        { code: 'RT_VAREM_MUN', text: 'Tabla RT_VarEm_muni' }
   ];
 
   isUpload = false;
@@ -52,6 +53,8 @@ export class UploadContainerComponent implements OnInit {
   recordSumary: any;
 
   fileName: string;
+
+  uploadMultiple = false;
 
   constructor(
       private _router: Router,
@@ -95,16 +98,39 @@ export class UploadContainerComponent implements OnInit {
       if (this.uploadForm.valid && this.uploadForm.dirty) {
           const rawValue = this.uploadForm.getRawValue();
           const payload = FormUtils.parseToFormData(rawValue);
-          await this.uploadFormFile(payload);
+          await this.uploadFormFile(false, payload);
       } else {
           this.uploadForm.markAsTouched();
       }
   }
 
-  async uploadFormFile(payload: FormData): Promise<void> {
+  async parseMultipleFile(): Promise<void> {
+    if (this.uploadForm.valid && this.uploadForm.dirty) {
+        const rawValue = this.uploadForm.getRawValue();
+        const selectRawValue = this.selectForm.getRawValue();
+        const typeUpload = selectRawValue.checkFormatList?.code;
+        const payload = FormUtils.parseToFormData({
+          fileUpload: rawValue.fileUpload,
+          typeUpload: typeUpload
+        });
+        await this.uploadFormFile(true, payload);
+    } else {
+        this.uploadForm.markAsTouched();
+    }
+}
+
+  getUploadFile(uploadMultiple: boolean, payload: FormData): Observable<any> {
+    if (uploadMultiple) {
+      return this.uploadService.uploadMultipleFile(payload);
+    }else {
+      return this.uploadService.uploadFile(payload);
+    }
+  }
+
+  async uploadFormFile(uploadMultiple: boolean, payload: FormData): Promise<void> {
       try {
           this._ngxSpinner.show();
-          this.uploadService.uploadFile(payload)
+          this.getUploadFile(uploadMultiple, payload)
           .subscribe(
               (res) => {
                 this.recordSumary = res;
@@ -130,7 +156,7 @@ export class UploadContainerComponent implements OnInit {
       } catch (err) {
           this.resetControls();
           this._messageProviderService.showSnackError('Error al cargar el archivo');
-          throw new Error('Err:' + err.error.statusText);
+          throw new Error('Err:' + err?.error?.statusText);
       }
   }
 
@@ -152,12 +178,17 @@ export class UploadContainerComponent implements OnInit {
 
 
   onCancelUpload(): void {
-    this.changeUploadStatus('CANCEL');
+    this.changeUploadStatus(false, 'CANCEL');
   }
 
   onValidSaveUpload(): void {
     this.recepcionarValidos();
-    this.changeUploadStatus('IN_PROGRESS');
+    this.changeUploadStatus(false, 'IN_PROGRESS');
+  }
+
+  onValidSaveMultipleUpload(): void {
+    this.recepcionarValidos();
+    this.changeUploadStatus(true, 'IN_PROGRESS');
   }
 
   onDownloadRecordsUpload(status: string): void {
@@ -180,9 +211,17 @@ export class UploadContainerComponent implements OnInit {
     this._router.navigate(['/land/upload/new']);
   }
 
-  private changeUploadStatus(status: string): void {
+  private getUploadStatus(uploadMultiple: boolean, status: string): Observable<any> {
+    if (uploadMultiple) {
+      return this.uploadService.changeMultipleStatus(this.recordSumary?.uploadHistoryId, status);
+    }else {
+      return this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status);
+    }
+  }
+
+  private changeUploadStatus(uploadMultiple: boolean, status: string): void {
     if (this.recordSumary) {
-        this.uploadService.changeStatus(this.recordSumary?.uploadHistoryId, status)
+        this.getUploadStatus(uploadMultiple, status)
         .subscribe(
             (res) => {
                 this._ngxSpinner.hide();
