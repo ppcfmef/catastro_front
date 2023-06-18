@@ -8,11 +8,12 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-rtcontribuyente-container',
-  templateUrl: './rtcontribuyente-container.component.html',
-  styleUrls: ['./rtcontribuyente-container.component.scss']
+  selector: 'app-rtarancel-container',
+  templateUrl: './rtarancel-container.component.html',
+  styleUrls: ['./rtarancel-container.component.scss']
 })
-export class RTContribuyenteContainerComponent implements OnInit, AfterViewInit {
+export class RTArancelContainerComponent implements OnInit, AfterViewInit {
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   formFilters: FormGroup;
   displayedColumns = ['nro', 'ubigeo', 'documentoDesc', 'numDoc', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'estado'];
@@ -70,4 +71,5 @@ export class RTContribuyenteContainerComponent implements OnInit, AfterViewInit 
   onChangeIncomePage(itemSelect): void {
     this.router.navigate([`/land/incomes${itemSelect.value}`]);
   }
+
 }
