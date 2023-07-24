@@ -5,7 +5,7 @@ const routes: Routes = [
     {
         path: 'gap-analisys',
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-        loadChildren: () => import('./gap-analisys/gap-analisys-routing.module').then(m => m.GapAnalisysRoutingModule)
+        loadChildren: () => import('./gap-analisys/gap-analisys.module').then(m => m.GapAnalisysModule)
       },
 
 ];

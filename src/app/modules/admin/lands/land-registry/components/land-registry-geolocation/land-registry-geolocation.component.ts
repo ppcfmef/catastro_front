@@ -396,7 +396,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             id: 11,
             idServer: 0,
             urlBase:
-                'hhttps://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',

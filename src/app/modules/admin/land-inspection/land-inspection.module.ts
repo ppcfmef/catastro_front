@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { LandInspectionRoutingModule } from './land-inspection-routing.module';
 
 
+
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    LandInspectionRoutingModule
+    LandInspectionRoutingModule,
   ]
 })
 export class LandInspectionModule { }
