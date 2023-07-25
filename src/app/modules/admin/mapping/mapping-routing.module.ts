@@ -42,6 +42,10 @@ const routes: Routes = [
   {
     path: 'land-maintenance',
     loadChildren: () => import('./map-land-maintenance/map-land-maintenance.module').then(m => m.MapLandMaintenanceModule)
+  },
+  {
+    path: 'assignment-of-load',
+    loadChildren: () => import('./assignment-of-load/assignment-of-load.module').then(m => m.AssignmentOfLoadModule)
   }
 ];;
 
