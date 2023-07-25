@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FuseNavigationItem } from '@fuse/components/navigation';
+import { LandUI } from 'app/modules/admin/lands/maintenance/interfaces/land.interface';
 
 @Component({
   selector: 'app-land-without-georeferencing',
@@ -9,6 +10,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 export class LandWithoutGeoreferencingComponent implements OnInit {
     item: FuseNavigationItem;
     items: FuseNavigationItem[];
+    dataSource: LandUI[]=[];
   constructor() { }
 
   ngOnInit(): void {

@@ -15,8 +15,8 @@
 
     </div>
   <!-- Main -->
-  <div class="flex flex-col flex-auto p-6 sm:p-10">
-    <div class="w-full">
+  <div class="flex flex-col">
+    <div class="flex flex-row">
         <app-card-gap-menu-item
         [bgColor]="'#67b4f1'" [item]="item" >
 
@@ -26,5 +26,32 @@
 
 
     </div>
+
+<!--
+<div class="flex flex-row space-x-4  ">
+        <div class="w-1/2" ><app-search-land (agregarPredioEvent)="onAgregarPredio($event)"></app-search-land> </div>
+        <div class="w-1/2" >
+        <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
+
+
+        </div>
+
+    </div>
+
+    <div class="w-full"> <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [isRemove]="false" [typeAction]="'leer'"></app-land-maintenance-table></div>
+
+
+--> <div class="flex flex-row ">
+    <div class="w-1/2"><app-search-land-without-geo-table></app-search-land-without-geo-table></div>
+    </div>
+
+    <div class="flex flex-row  ">
+
+        <div class="w-full">
+
+            <app-land-without-geo-table [dataSource]="dataSource"></app-land-without-geo-table>
+        </div>
+    </div>
+
 </div>
 </div>

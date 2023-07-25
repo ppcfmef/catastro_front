@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+
 @NgModule({
   declarations: [
     GapAnalisysMenuComponent,
@@ -38,6 +39,8 @@ import { MatInputModule } from '@angular/material/input';
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
+    MatInputModule,
+    MatButtonModule
   ]
 })
 export class GapAnalisysModule { }
