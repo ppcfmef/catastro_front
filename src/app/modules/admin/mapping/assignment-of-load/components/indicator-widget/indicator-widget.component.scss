@@ -10,29 +10,27 @@
     gap: 0 1.25rem;
     padding: 9px;
     border-radius: 0.5rem;
-     
-        flex-direction: row;
-     
+    flex-direction: row;
+
+
 
     .number {
-      font-size: 32px;
-      color:  #0090F8 ;
-      font-weight: bold;
+        font-size: 32px;
+        color:  #0090F8 ;
+        font-weight: bold;
     }
 
     .title {
-      font-size: 11px;
-      color: #7A7878;
-      font-weight: bold;
-      line-height: 12px;
-      text-align: center;
-      width: 81px;
-
-    
-    text-align: justify;
+        font-size: 11px;
+        color: #7A7878;
+        font-weight: bold;
+        line-height: 12px;
+        text-align: center;
+        width: 85px;
+        text-align: justify;
 
 
-    
+
     }
 
-  }
+}

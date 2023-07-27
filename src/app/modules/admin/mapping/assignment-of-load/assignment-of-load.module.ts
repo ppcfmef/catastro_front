@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { TableComponent } from './components/table/table.component';
 
 
 
@@ -20,7 +21,8 @@ import { MatTableModule } from '@angular/material/table';
     AssignmentOfLoadContainerComponent,
     IndicatorWidgetComponent,
     LoadListComponent,
-    MapComponent
+    MapComponent,
+    TableComponent
   ],
   imports: [
     CommonModule,
