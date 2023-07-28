@@ -12,7 +12,15 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
+import {MatDialogModule} from '@angular/material/dialog';
+import { AssignmentOfLoadPendingComponent } from './components/assignment-of-load-pending/assignment-of-load-pending.component';
+import { LoadPendingAssignmentComponent } from './components/load-pending-assignment/load-pending-assignment.component';
+import { MatDialogDeletedComponent } from './components/alert-confirm/mat-dialog-deleted.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -22,7 +30,10 @@ import { TableComponent } from './components/table/table.component';
     IndicatorWidgetComponent,
     LoadListComponent,
     MapComponent,
-    TableComponent
+    TableComponent,
+    AssignmentOfLoadPendingComponent,
+    LoadPendingAssignmentComponent,
+    MatDialogDeletedComponent
   ],
   imports: [
     CommonModule,
@@ -32,6 +43,11 @@ import { TableComponent } from './components/table/table.component';
     MatIconModule,
     MatTabsModule,
     MatTableModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
   ]
 })
 export class AssignmentOfLoadModule { }

@@ -1,0 +1,86 @@
+
+<div class="flex flex-col p-4 w-100">
+    <div class="flex  flex-row gap-x-4">
+        <button class="green-button-solid">
+            <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
+        </button>
+        <span class="title-primary">Asignacion de carga</span>
+
+    </div>
+
+    <span class="text-black mt-3 text-base">Manzanas asignadas:</span>
+
+    <div class="w-full mt-4">
+        <app-table
+        [dataSource]="dataSource"
+        [columns]="tableColumns"
+        [config] = true
+        [zoom]="true"
+        (action)="onTableAction($event)"
+        >
+        </app-table>
+    </div>
+
+    <div class="flex items-center justify-between">
+        <span class="text-base font-bold">Fecha estimada de entrega: </span>
+        <mat-form-field class="h-11">
+            <input matInput [matDatepicker]="picker" autocomplete="off" type="text" placeholder="Fecha">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="mt-2">
+        <span class="text-base">Seleccione operador</span>
+
+        <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
+          <input class="w-full" placeholder="Operador">
+          <span class="flex" >
+            <mat-icon svgIcon="mat_outline:search"></mat-icon>
+          </span>
+        </div>
+    </div>
+    <ng-container *ngIf="user" >
+        <div class="mt-4">
+            <span class="font-bold">DETALLES DEL OPERADOR DE CAMPO</span>
+            <div class="mt-2 flex flex-col gap-1">
+                <div>
+                    <span class="font-bold">Nombre:</span>
+                    <span class="p-2">usuario apellido</span>
+                </div>
+                <div >
+                    <span class="font-bold">Zona residencia:</span>
+                    <span class="p-2">sector F</span>
+                </div>
+                <div >
+                    <span class="font-bold">Telefono:</span>
+                    <span class="p-2">9123123</span>
+                </div>
+                <div >
+                    <span class="font-bold">Correo:</span>
+                    <span class="p-2">correo@correo.com</span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="flex w-full pt-3 gap-4 py-3 justify-between">
+            <div class="card shadow-md">
+            <span class="number">23</span>
+            <span class="title">PREDIOS ASIGNADOS PENDIENTES</span>
+            </div>
+            <div class="card shadow-md">
+            <span class="number">23</span>
+            <span class="title">PUNTOS LOTES ASIGNADOS PENDIENTE</span>
+            </div>
+        </div>
+
+        <button  mat-button class="button-assignment">
+            Asignar operador
+        </button>
+    </ng-container>
+</div>
+
+
+

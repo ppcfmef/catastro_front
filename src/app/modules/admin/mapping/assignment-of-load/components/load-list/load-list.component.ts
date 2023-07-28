@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../interfaces/table-columns.interface';
 import { TableActions } from '../../interfaces/table-actions.interface';
 import { TableAction } from '../../enum/table-action.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.component';
+
 
 
 @Component({
@@ -21,7 +24,7 @@ export class LoadListComponent implements OnInit {
     { nro: '04', codCarga: '4567845', operdor:'Diego Gavilan', fecha: '22/06/2023' }
 ];
 
-    constructor() { }
+    constructor(public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.setTableColumn();
@@ -63,7 +66,10 @@ export class LoadListComponent implements OnInit {
         console.log('Edit',);
     }
     onDelete(row: any): void {
-        console.log('Delete');
+            this.dialog.open(MatDialogDeletedComponent, {
+            width: '420px',
+            });
+
     }
 
 }

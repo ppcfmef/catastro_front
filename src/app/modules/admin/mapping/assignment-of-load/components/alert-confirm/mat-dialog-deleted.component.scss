@@ -1,0 +1,31 @@
+
+:host .mat-dialog-actions ::ng-deep {
+    justify-content: center;
+    gap: 20px;
+
+    .mat-button:first-child {
+        background-color: #DE3F43;
+        color: white;
+    }
+
+    .mat-button:last-child {
+        background-color: #0090F8;
+        color: white;
+    }
+
+}
+
+:host ::ng-deep .mat-dialog-container {
+    padding: 0;
+}
+
+
+.container-icon {
+    position: absolute;
+    left: 45%;
+    top: -55%;
+    background-color: #DE3F43;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}

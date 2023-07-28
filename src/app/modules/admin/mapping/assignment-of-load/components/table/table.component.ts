@@ -16,9 +16,10 @@ export class TableComponent implements OnInit {
 
     @Input() dataSource: [] ;
 
-    @Input() iseditable: boolean;
+    @Input() iseditable: boolean = false;
 
-    @Input() isdelete: boolean;
+    @Input() isdelete: boolean = false;
+    @Input() zoom: boolean =false;
 
     @Input()
     set columns(colums: TableColumn[]) {
