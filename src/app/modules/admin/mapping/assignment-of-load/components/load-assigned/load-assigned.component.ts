@@ -4,12 +4,11 @@ import { TableActions } from '../../interfaces/table-actions.interface';
 import { TableAction } from '../../enum/table-action.enum';
 
 @Component({
-  selector: 'app-load-pending-assignment',
-  templateUrl: './load-pending-assignment.component.html',
-  styleUrls: ['./load-pending-assignment.component.scss']
+  selector: 'app-load-assigned',
+  templateUrl: './load-assigned.component.html',
+  styleUrls: ['./load-assigned.component.scss']
 })
-export class LoadPendingAssignmentComponent implements OnInit {
-
+export class LoadAssignedComponent implements OnInit {
     tableColumns: TableColumn[] =[];
     dataSource = [
         { nro: '01', sector: '1', mzurb:'A', tipo: 'CF' },
@@ -19,7 +18,6 @@ export class LoadPendingAssignmentComponent implements OnInit {
     ];
 
     user: boolean=true;
-
     cards =[
         {
             num: 21,
@@ -31,24 +29,29 @@ export class LoadPendingAssignmentComponent implements OnInit {
         }
     ];
 
-    constructor() { }
+  constructor() { }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.setTableColumn();
+  }
+
+    desasignar(): void{
+        this.user= false;
     }
 
     setTableColumn(): void {
-        this.tableColumns = [
-            {matheaderdef:'Nro', matcolumndef:'nro', matcelldef: 'nro'},
-            {matheaderdef:'Sector', matcolumndef:'sector', matcelldef: 'sector'},
-            {matheaderdef:'Mz.Urb.', matcolumndef:'mzurb', matcelldef: 'mzurb'},
-            {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
-        ];
+    this.tableColumns = [
+        {matheaderdef:'Nro', matcolumndef:'nro', matcelldef: 'nro'},
+        {matheaderdef:'Sector', matcolumndef:'sector', matcelldef: 'sector'},
+        {matheaderdef:'Mz.Urb.', matcolumndef:'mzurb', matcelldef: 'mzurb'},
+        {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
+    ];
     }
 
-  //   Implementar logica
-onZoom(row: any): void {
-    console.log('zoom',);
-}
+
+      //   Implementar logica
+    onZoom(row: any): void {
+        console.log('zoom',);
+    }
 
 }

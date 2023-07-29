@@ -1,3 +1,6 @@
+:root {
+    ---black:#1E293B;
+}
 .title-primary {
     font-weight: bold;
     color: var(---black);
@@ -46,12 +49,25 @@
 
 }
 
-
 :host mat-tab-group ::ng-deep{
     .mat-tab-body-content{
         padding: 2px;
         padding-top:10px;
     }
 }
+
+
+:host app-table ::ng-deep{
+    thead .mat-header-cell{
+        text-align: left;
+    }
+
+    .mat-row{
+        height: 27px;
+        text-align: left ;
+    }
+}
+
+
 
 

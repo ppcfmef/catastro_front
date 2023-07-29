@@ -15,12 +15,15 @@ import { TableComponent } from './components/table/table.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import {MatDialogModule} from '@angular/material/dialog';
-import { AssignmentOfLoadPendingComponent } from './components/assignment-of-load-pending/assignment-of-load-pending.component';
 import { LoadPendingAssignmentComponent } from './components/load-pending-assignment/load-pending-assignment.component';
 import { MatDialogDeletedComponent } from './components/alert-confirm/mat-dialog-deleted.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { DetailOperadorComponent } from './components/detail-operador/detail-operador.component';
+import { WidgetComponent } from './components/widget/widget.component';
+import { LoadAssignedComponent } from './components/load-assigned/load-assigned.component';
+import { AssignLoadComponent } from './components/assign-load/assign-load.component';
 
 
 @NgModule({
@@ -31,9 +34,12 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     LoadListComponent,
     MapComponent,
     TableComponent,
-    AssignmentOfLoadPendingComponent,
     LoadPendingAssignmentComponent,
-    MatDialogDeletedComponent
+    MatDialogDeletedComponent,
+    DetailOperadorComponent,
+    WidgetComponent,
+    LoadAssignedComponent,
+    AssignLoadComponent
   ],
   imports: [
     CommonModule,
