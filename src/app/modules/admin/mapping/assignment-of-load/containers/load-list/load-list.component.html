@@ -3,7 +3,7 @@
       <div class="flex flex-col lg:flex-row justify-between">
         <span class="title-primary">Asignacion de carga</span>
         <!-- esto va cambiar con material  -->
-        <button class="green-button-solid">
+        <button class="green-button-solid" (click)="redirecto()">
             <mat-icon svgIcon="mat_outline:add"></mat-icon>
             Nueva carga
         </button>
@@ -23,30 +23,24 @@
                 <app-table
                 [dataSource]="dataSource"
                 [columns]="tableColumns"
-                [config] = true
-                [isdelete]=true
-                iseditable=true
-                (action)="onTableAction($event)"
+                [config]="tableConfig"
+                (action)="onAction($event)"
                 ></app-table>
             </mat-tab>
             <mat-tab label="Asignado" >
                 <app-table
                 [dataSource]="dataSource"
                 [columns]="tableColumnsAssignment"
-                [config] = true
-                [isdelete]=true
-                iseditable=true
-                (action)="onTableAction($event)"
+                [config] = "tableConfig"
+                (action)="onTableAction2($event)"
                 ></app-table>
             </mat-tab>
             <mat-tab label="Atendido">
                 <app-table
                     [dataSource]="dataSource"
                     [columns]="tableColumnsAssignment"
-                    [config] = true
-                    [isdelete]=false
-                    [iseditable]=true
-                    (action)="onTableAction($event)"
+                    [config] = "tableConfigAttend"
+                    (action)="onEditattend($event)"
                     ></app-table>
             </mat-tab>
           </mat-tab-group>

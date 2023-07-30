@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../interfaces/table-columns.interface';
 import { TableActions } from '../../interfaces/table-actions.interface';
 import { TableAction } from '../../enum/table-action.enum';
+import { Router } from '@angular/router';
+import { TableConifg } from '../../interfaces/table-config.interface';
 
 @Component({
   selector: 'app-load-pending-assignment',
@@ -18,6 +20,11 @@ export class LoadPendingAssignmentComponent implements OnInit {
         { nro: '01', sector: '1', mzurb:'A', tipo: 'CF' },
     ];
 
+    tableConfig: TableConifg = {
+        isAction: true,
+        isEdit: true
+    };
+
     user: boolean=true;
 
     cards =[
@@ -31,7 +38,7 @@ export class LoadPendingAssignmentComponent implements OnInit {
         }
     ];
 
-    constructor() { }
+    constructor(private _router: Router) { }
 
     ngOnInit(): void {
     this.setTableColumn();
@@ -49,6 +56,10 @@ export class LoadPendingAssignmentComponent implements OnInit {
   //   Implementar logica
 onZoom(row: any): void {
     console.log('zoom',);
+}
+
+redirecto(): void {
+    this._router.navigate(['./mapping/assignment-of-load']);
 }
 
 }

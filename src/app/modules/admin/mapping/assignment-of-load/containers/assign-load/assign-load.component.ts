@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../interfaces/table-columns.interface';
 import { TableActions } from '../../interfaces/table-actions.interface';
 import { TableAction } from '../../enum/table-action.enum';
+import { Router } from '@angular/router';
+import { TableConifg } from '../../interfaces/table-config.interface';
 
 @Component({
   selector: 'app-assign-load',
@@ -11,7 +13,12 @@ import { TableAction } from '../../enum/table-action.enum';
 export class AssignLoadComponent implements OnInit {
 
     user: boolean = true;
+    tableConfig: TableConifg = {
+        isAction: true,
+        isZoom: true,
+        isSelect: true,
 
+    };
     tableColumns: TableColumn[] =[];
     dataSource = [
         { nro: '01', sector: '1', mzurb:'A', tipo: 'CF' },
@@ -30,7 +37,7 @@ export class AssignLoadComponent implements OnInit {
             text: 'TICKETS ATENDIDOS'
         }
     ];
-  constructor() { }
+  constructor(private _router: Router) { }
 
   ngOnInit(): void {
     this.setTableColumn();
@@ -47,10 +54,15 @@ export class AssignLoadComponent implements OnInit {
 
 
   //   Implementar logica
-onZoom(row: any): void {
-    console.log('zoom',);
+    onZoom(row: any): void {
+        console.log('zoom',);
+    }
+    redirecto(): void {
+        this._router.navigate(['/mapping/assignment-of-load']);
+    }
+
+    onSelect(data: any): void {
+        console.log('select', data);
+    }
 }
 
-
-
-}
