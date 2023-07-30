@@ -1,30 +1,39 @@
-
 <div class="flex flex-col p-4 pb-2 w-100">
-    <div class="flex  flex-row gap-x-4">
+    <div class="flex flex-row gap-x-4">
         <button class="green-button-solid" (click)="redirecto()">
             <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
         </button>
         <span class="title-primary">Asignacion de carga</span>
-
     </div>
 
     <span class="text-secundary mt-3">Manzanas asignadas:</span>
 
     <div class="w-full mt-4">
         <app-table
-        [dataSource]="dataSource"
-        [columns]="tableColumns"
-        [config] = "tableConfig"
-        (action)="onZoom($event)"
+            [dataSource]="dataSource"
+            [columns]="tableColumns"
+            [config]="tableConfig"
+            (action)="onZoom($event)"
         >
         </app-table>
     </div>
 
     <div class="flex items-center justify-between">
-        <span class="text-secundary font-bold">Fecha estimada de entrega: </span>
+        <span class="text-secundary font-bold"
+            >Fecha estimada de entrega:
+        </span>
         <mat-form-field class="h-11">
-            <input matInput [matDatepicker]="picker" autocomplete="off" type="text" placeholder="Fecha">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <input
+                matInput
+                [matDatepicker]="picker"
+                autocomplete="off"
+                type="text"
+                placeholder="Fecha"
+            />
+            <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+            ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
     </div>
@@ -33,11 +42,13 @@
         <div class="mt-2">
             <span class="text-base">Seleccione operador</span>
 
-            <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
-              <input class="w-full" placeholder="Operador">
-              <span class="flex" >
-                <mat-icon svgIcon="mat_outline:search"></mat-icon>
-              </span>
+            <div
+                class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base"
+            >
+                <input class="w-full" placeholder="Operador" />
+                <span class="flex">
+                    <mat-icon svgIcon="mat_outline:search"></mat-icon>
+                </span>
             </div>
         </div>
     </ng-container>
@@ -47,14 +58,16 @@
         <div class="flex w-full pt-3 gap-4 py-3 justify-between">
             <ng-container *ngFor="let card of cards">
                 <app-widget [card]="card"></app-widget>
-        </ng-container>
-
+            </ng-container>
         </div>
     </ng-container>
     <ng-container *ngIf="user">
-    <button  mat-button (click)="desasignar()">
-        <mat-icon svgIcon="mat_solid:close" class="text-white mr-3"></mat-icon>
-        Desasignar operador
-    </button>
+        <button mat-button (click)="desasignar()">
+            <mat-icon
+                svgIcon="mat_solid:close"
+                class="text-white mr-3"
+            ></mat-icon>
+            Desasignar operador
+        </button>
     </ng-container>
 </div>

@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { TableConifg } from '../../interfaces/table-config.interface';
 
 @Component({
-  selector: 'app-load-attend',
-  templateUrl: './load-attend.component.html',
-  styleUrls: ['./load-attend.component.scss']
+    selector: 'app-load-attend',
+    templateUrl: './load-attend.component.html',
+    styleUrls: ['./load-attend.component.scss']
 })
 export class LoadAttendComponent implements OnInit {
 
@@ -35,27 +35,27 @@ export class LoadAttendComponent implements OnInit {
         }
     ];
 
-  constructor( private _router: Router) { }
+    constructor( private _router: Router) { }
 
-  ngOnInit( ): void {
-    this.setTableColumn();
-  }
-
-  setTableColumn(): void {
-    this.tableColumns = [
-        {matheaderdef:'Nro', matcolumndef:'nro', matcelldef: 'nro'},
-        {matheaderdef:'Sector', matcolumndef:'sector', matcelldef: 'sector'},
-        {matheaderdef:'Mz.Urb.', matcolumndef:'mzurb', matcelldef: 'mzurb'},
-        {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
-    ];
+    ngOnInit( ): void {
+        this.setTableColumn();
     }
 
-    onZoom(row: any): void {
-        //
-    }
+    setTableColumn(): void {
+        this.tableColumns = [
+            {matheaderdef:'Nro', matcolumndef:'nro', matcelldef: 'nro'},
+            {matheaderdef:'Sector', matcolumndef:'sector', matcelldef: 'sector'},
+            {matheaderdef:'Mz.Urb.', matcolumndef:'mzurb', matcelldef: 'mzurb'},
+            {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
+        ];
+        }
 
-    redirecto(): void {
-        this._router.navigate(['./mapping/assignment-of-load']);
-    }
+        onZoom(row: any): void {
+            //
+        }
+
+        redirecto(): void {
+            this._router.navigate(['./mapping/assignment-of-load']);
+        }
 
 }

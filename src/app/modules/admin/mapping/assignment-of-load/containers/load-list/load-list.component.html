@@ -1,53 +1,49 @@
-
-    <div class="w-250 lg:w-full flex flex-col p-4">
-      <div class="flex flex-col lg:flex-row justify-between">
+<div class="w-250 lg:w-full flex flex-col p-4">
+    <div class="flex flex-col lg:flex-row justify-between">
         <span class="title-primary">Asignacion de carga</span>
         <!-- esto va cambiar con material  -->
         <button class="green-button-solid" (click)="redirecto()">
             <mat-icon svgIcon="mat_outline:add"></mat-icon>
             Nueva carga
         </button>
-      </div>
+    </div>
 
-      <span class="text-black mt-3 text-base">Buscar por:</span>
-      <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
-        <input class="w-full" placeholder="Cod. carga y/o Urbanización">
-        <span class="flex" >
-          <mat-icon svgIcon="mat_outline:search"></mat-icon>
+    <span class="text-black mt-3 text-base">Buscar por:</span>
+    <div
+        class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base"
+    >
+        <input class="w-full" placeholder="Cod. carga y/o Urbanización" />
+        <span class="flex">
+            <mat-icon svgIcon="mat_outline:search"></mat-icon>
         </span>
-      </div>
+    </div>
 
-      <div class="w-full">
+    <div class="w-full">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
             <mat-tab label="Por asignar">
                 <app-table
-                [dataSource]="dataSource"
-                [columns]="tableColumns"
-                [config]="tableConfig"
-                (action)="onAction($event)"
+                    [dataSource]="dataSource"
+                    [columns]="tableColumns"
+                    [config]="tableConfig"
+                    (action)="onAction($event)"
                 ></app-table>
             </mat-tab>
-            <mat-tab label="Asignado" >
+            <mat-tab label="Asignado">
                 <app-table
-                [dataSource]="dataSource"
-                [columns]="tableColumnsAssignment"
-                [config] = "tableConfig"
-                (action)="onTableAction2($event)"
+                    [dataSource]="dataSource"
+                    [columns]="tableColumnsAssignment"
+                    [config]="tableConfig"
+                    (action)="onTableAction2($event)"
                 ></app-table>
             </mat-tab>
             <mat-tab label="Atendido">
                 <app-table
                     [dataSource]="dataSource"
                     [columns]="tableColumnsAssignment"
-                    [config] = "tableConfigAttend"
+                    [config]="tableConfigAttend"
                     (action)="onEditattend($event)"
-                    ></app-table>
+                ></app-table>
             </mat-tab>
-          </mat-tab-group>
-
-      </div>
-
+        </mat-tab-group>
     </div>
-
-
-
+</div>

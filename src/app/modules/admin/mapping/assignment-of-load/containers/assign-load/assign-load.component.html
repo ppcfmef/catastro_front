@@ -1,18 +1,18 @@
 <div class="flex flex-col p-4 pb-3 w-full">
-    <div class="flex  flex-row gap-x-4 items-center">
+    <div class="flex flex-row gap-x-4 items-center">
         <button class="green-button-solid" (click)="redirecto()">
-            <mat-icon svgIcon="arrow_back_ios" class="arrow-back" ></mat-icon>
+            <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
         </button>
         <span class="title-primary">Nueva carga</span>
     </div>
 
     <div class="w-full mt-3">
         <app-table
-        [dataSource]="dataSource"
-        [columns]="tableColumns"
-        [config] = "tableConfig"
-        (action)="onZoom($event)"
-        (selected)="onSelect($event)"
+            [dataSource]="dataSource"
+            [columns]="tableColumns"
+            [config]="tableConfig"
+            (action)="onZoom($event)"
+            (selected)="onSelect($event)"
         >
         </app-table>
     </div>
@@ -20,39 +20,36 @@
     <div>
         <span class="text-base font-medium">Nombre de la carga</span>
 
-        <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-          <input class="w-full" placeholder="Ingrese un nombre">
+        <div
+            class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base"
+        >
+            <input class="w-full" placeholder="Ingrese un nombre" />
         </div>
     </div>
 
     <div class="mt-2">
         <span class="text-base font-medium">Seleccione operador</span>
 
-        <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
-          <input class="w-full" placeholder="Operador">
-          <span class="flex" >
-            <mat-icon svgIcon="mat_outline:search"></mat-icon>
-          </span>
+        <div
+            class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base"
+        >
+            <input class="w-full" placeholder="Operador" />
+            <span class="flex">
+                <mat-icon svgIcon="mat_outline:search"></mat-icon>
+            </span>
         </div>
     </div>
     <ng-container *ngIf="!user">
         <app-detail-operador></app-detail-operador>
-            <div class="flex w-full pt-3 gap-4 py-3 justify-between">
-                <ng-container *ngFor="let card of cards">
-                    <app-widget [card]="card"></app-widget>
-                </ng-container>
-            </div>
+        <div class="flex w-full pt-3 gap-4 py-3 justify-between">
+            <ng-container *ngFor="let card of cards">
+                <app-widget [card]="card"></app-widget>
+            </ng-container>
+        </div>
     </ng-container>
 
-    <button  mat-button>
+    <button mat-button>
         <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
         Registrar carga de trabajo
     </button>
-
-
-
 </div>
-
-
-
-

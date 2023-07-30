@@ -3,23 +3,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IndicatorWidgetComponent } from './indicator-widget.component';
 
 describe('IndicatorWidgetComponent', () => {
-  let component: IndicatorWidgetComponent;
-  let fixture: ComponentFixture<IndicatorWidgetComponent>;
+    let component: IndicatorWidgetComponent;
+    let fixture: ComponentFixture<IndicatorWidgetComponent>;
 
-  beforeEach(async () => {
+    beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IndicatorWidgetComponent ]
+        declarations: [ IndicatorWidgetComponent ]
     })
     .compileComponents();
-  });
+    });
 
-  beforeEach(() => {
+    beforeEach(() => {
     fixture = TestBed.createComponent(IndicatorWidgetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    });
 
-  it('should create', () => {
+    it('should create', () => {
     expect(component).toBeTruthy();
-  });
+    });
 });
