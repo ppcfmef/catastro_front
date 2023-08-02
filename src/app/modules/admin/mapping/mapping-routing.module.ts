@@ -46,6 +46,10 @@ const routes: Routes = [
   {
     path: 'assignment-of-load',
     loadChildren: () => import('./assignment-of-load/assignment-of-load.module').then(m => m.AssignmentOfLoadModule)
+  },
+  {
+    path: 'gap-analysis',
+    loadChildren: () => import('./gap-analysis/gap-analysis.module').then(m => m.GapAnalysisModule)
   }
 ];;
 
