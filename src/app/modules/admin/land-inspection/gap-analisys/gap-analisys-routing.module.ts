@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GapAnalisysMenuComponent } from './pages/gap-analisys-menu/gap-analisys-menu.component';
 import { LandWithoutGeoreferencingComponent } from './pages/land-without-georeferencing/land-without-georeferencing.component';
+import { LandPreGeoreferencingPage } from './pages/land-pre-georeferencing/land-pre-georeferencing.page';
 
 const routes: Routes = [
     {
@@ -11,6 +12,10 @@ const routes: Routes = [
     {
         path: 'landwithoutgeo',
         component: LandWithoutGeoreferencingComponent,
+    },
+    {
+        path: 'landpregeo/:idLand',
+        component: LandPreGeoreferencingPage,
     },
 ];
 

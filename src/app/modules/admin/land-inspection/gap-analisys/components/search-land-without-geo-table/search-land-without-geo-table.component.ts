@@ -16,7 +16,7 @@ export class SearchLandWithoutGeoTableComponent implements OnInit {
     @Output() searchEvent: EventEmitter<any> = new EventEmitter();
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() cleanSearchEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private _fb: FormBuilder,private _landMaintenanceService: LandMaintenanceService) { }
+  constructor(private _fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.search = this._fb.group({

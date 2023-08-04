@@ -19,6 +19,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { LandPreGeoreferencingPage } from './pages/land-pre-georeferencing/land-pre-georeferencing.page';
+import { LandDetailPreGeoreferencingComponent } from './components/land-detail-pre-georeferencing/land-detail-pre-georeferencing.component';
+import { LandMapPreGeoreferencingComponent } from './components/land-map-pre-georeferencing/land-map-pre-georeferencing.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { MatInputModule } from '@angular/material/input';
     LandWithoutGeoreferencingComponent,
     CardGapMenuItemComponent,
     SearchLandWithoutGeoTableComponent,
-    LandWithoutGeoTableComponent
+    LandWithoutGeoTableComponent,
+    LandPreGeoreferencingPage,
+    LandDetailPreGeoreferencingComponent,
+    LandMapPreGeoreferencingComponent
   ],
   imports: [
     CommonModule,
