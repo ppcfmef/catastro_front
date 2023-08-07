@@ -36,9 +36,13 @@ export class GeoreferencingComponent implements OnInit {
         },
     ];
 
-    displayedColumns: string[] = ['Nro', 'Código único de Predio', 'Contribuyente', 'Dirección', 'Estado', 'Acciones'];
+    displayedColumns: string[] = ['nro', 'cod', 'contribuyente', 'direction', 'estado', 'actions'];
     dataSource = [
-        {nro: 1, cod: 'Hydrogen', contribuyente: 1.0079, direction: 'H' , estado:'disponible'},
+        {nro: 1, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
+        {nro: 2, cod: '45678-4561381-22', contribuyente:'Romel Garcia Torres', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
+        {nro: 3, cod: '45678-4561381-22', contribuyente:'Carlos Fabian Sotelo Muñoz', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
+        {nro: 4, cod: '45678-4561381-22', contribuyente:'Marcelo Rodrigues Quispe', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
+        {nro: 5, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
     ];
   constructor() { }
 
@@ -47,10 +51,6 @@ export class GeoreferencingComponent implements OnInit {
 
   redirecto(): void {
     //
-  }
-
-  click(): void {
-    console.log('here');
   }
 
 }
