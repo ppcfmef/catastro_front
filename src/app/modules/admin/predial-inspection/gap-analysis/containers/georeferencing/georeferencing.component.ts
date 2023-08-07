@@ -38,11 +38,11 @@ export class GeoreferencingComponent implements OnInit {
 
     displayedColumns: string[] = ['nro', 'cod', 'contribuyente', 'direction', 'estado', 'actions'];
     dataSource = [
-        {nro: 1, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
-        {nro: 2, cod: '45678-4561381-22', contribuyente:'Romel Garcia Torres', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
-        {nro: 3, cod: '45678-4561381-22', contribuyente:'Carlos Fabian Sotelo Muñoz', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
-        {nro: 4, cod: '45678-4561381-22', contribuyente:'Marcelo Rodrigues Quispe', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
-        {nro: 5, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'disponible', actions: ''},
+        {nro: 1, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'pendiente', actions: ''},
+        {nro: 2, cod: '45678-4561381-22', contribuyente:'Romel Garcia Torres', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'ubicado', actions: ''},
+        {nro: 3, cod: '45678-4561381-22', contribuyente:'Carlos Fabian Sotelo Muñoz', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'ubicado', actions: ''},
+        {nro: 4, cod: '45678-4561381-22', contribuyente:'Marcelo Rodrigues Quispe', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'observado', actions: ''},
+        {nro: 5, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'ubicado', actions: ''},
     ];
   constructor() { }
 

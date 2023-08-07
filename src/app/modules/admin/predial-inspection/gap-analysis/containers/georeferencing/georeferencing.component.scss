@@ -41,19 +41,19 @@
 :host .mat-header-cell{
     color: white;
     background-color: #219EF9 ;
-    padding-right: 2px;
+    text-align: center;
+
 }
 
-tbody .mat-cell {
-    padding-left: 5px;
-    padding-right: 2px;
-}
 .mat-header-row {
     height: 48px;
-    padding-left: 5px;
+
+
 }
 .mat-row {
     height: 40px;
+    text-align: center;
+
 }
 
 

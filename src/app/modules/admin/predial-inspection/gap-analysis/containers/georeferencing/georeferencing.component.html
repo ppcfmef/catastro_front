@@ -39,10 +39,10 @@
                 <div class="circle__text">PENDIENTE</div>
             </button>
             <button class="circle green">
-                <div class="circle__text">PENDIENTE</div>
+                <div class="circle__text">UBICADO</div>
             </button>
             <button class="circle red">
-                <div class="circle__text">PENDIENTE</div>
+                <div class="circle__text">OBSERVADO</div>
             </button>
         </div>
     </div>
@@ -82,7 +82,7 @@
                     >
                         Contribuyente
                     </th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" class="text-left">
                         {{ element.contribuyente }}
                     </td>
                 </ng-container>
@@ -91,8 +91,6 @@
                     <th
                         mat-header-cell
                         *matHeaderCellDef
-                        mat-sort-header
-                        class="no-hide-arrow"
                     >
                         Direccion
                     </th>
@@ -104,19 +102,27 @@
                     <th
                         mat-header-cell
                         *matHeaderCellDef
-                        mat-sort-header
-                        class="no-hide-arrow"
                     >
                         Estado
                     </th>
-                    <td mat-cell *matCellDef="let element">
-                        {{ element.estado }}
+                    <td mat-cell *matCellDef="let element" class="pl-4" >
+                        <div [ngSwitch]="element.estado">
+                            <div *ngSwitchCase="'pendiente'">
+                                <div class="circle orange m-0"></div>
+                            </div>
+                            <div *ngSwitchCase="'ubicado'">
+                                <div class="circle green m-0"></div>
+                            </div>
+                            <div *ngSwitchCase="'observado'">
+                                <div class="circle red m-0"></div>
+                            </div>
+                        </div>
                     </td>
                 </ng-container>
 
                 <ng-container  matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                    <td mat-cell *matCellDef="let row">
+                    <td mat-cell *matCellDef="let row" class="px-6">
                         <ng-container>
                             <button class="button-map">
                             <mat-icon svgIcon="mat_outline:not_listed_location" class="text-white"></mat-icon>
@@ -130,8 +136,6 @@
                     *matRowDef="let row; columns: displayedColumns"
                 ></tr>
             </table>
-
-
     </div>
 
 </div>
