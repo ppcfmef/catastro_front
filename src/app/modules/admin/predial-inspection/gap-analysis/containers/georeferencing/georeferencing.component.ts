@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-georeferencing',
@@ -44,13 +45,13 @@ export class GeoreferencingComponent implements OnInit {
         {nro: 4, cod: '45678-4561381-22', contribuyente:'Marcelo Rodrigues Quispe', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'observado', actions: ''},
         {nro: 5, cod: '45678-4561381-22', contribuyente:'Abel Contreras Hinostroza', direction: 'Av. Los Ciruelos 728 Piso 2 Depto 89 int2' , estado:'ubicado', actions: ''},
     ];
-  constructor() { }
+  constructor(private _router: Router) { }
 
   ngOnInit(): void {
   }
 
   redirecto(): void {
-    //
+    this._router.navigate(['./inspection/gap-analysis/geo/44']);
   }
 
 }

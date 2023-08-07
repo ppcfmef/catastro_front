@@ -124,7 +124,7 @@
                     <th mat-header-cell *matHeaderCellDef>Acciones</th>
                     <td mat-cell *matCellDef="let row" class="px-6">
                         <ng-container>
-                            <button class="button-map">
+                            <button class="button-map" (click)="redirecto()">
                             <mat-icon svgIcon="mat_outline:not_listed_location" class="text-white"></mat-icon>
                             </button>
                         </ng-container>

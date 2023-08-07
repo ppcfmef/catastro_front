@@ -13,6 +13,8 @@ import { GapListComponent } from './containers/gap-list/gap-list.component';
 import { GeoreferencingComponent } from './containers/georeferencing/georeferencing.component';
 import { CardDeatailComponent } from './components/card-deatail/card-deatail.component';
 import { SharedModule } from '../shared/shared.module';
+import { DataPropertyComponent } from './containers/data-property/data-property.component';
+import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
 
 
 
@@ -23,6 +25,8 @@ import { SharedModule } from '../shared/shared.module';
     GapListComponent,
     CardDeatailComponent,
     GeoreferencingComponent,
+    DataPropertyComponent,
+    GrowthAppleComponent,
 
   ],
   imports: [

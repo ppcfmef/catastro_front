@@ -4,6 +4,8 @@ import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-autho
 import { GapAnalysisPage } from './pages/gap-analysis/gap-analysis.page';
 import { GapListComponent } from './containers/gap-list/gap-list.component';
 import { GeoreferencingComponent } from './containers/georeferencing/georeferencing.component';
+import { DataPropertyComponent } from './containers/data-property/data-property.component';
+import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
 
 const routes: Routes = [
     {
@@ -14,7 +16,9 @@ const routes: Routes = [
         children: [
             { path: '', component:GapListComponent},
             { path: 'gap-list', component:GapListComponent},
-            { path: 'geo', component: GeoreferencingComponent},
+            {path: 'geo',component: GeoreferencingComponent},
+            {path: 'geo/:id', component: DataPropertyComponent},
+            {path: 'growth-apple', component: GrowthAppleComponent}
         ],
     },
 ];
