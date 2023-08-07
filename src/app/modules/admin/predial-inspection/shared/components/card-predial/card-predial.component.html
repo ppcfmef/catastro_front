@@ -1,0 +1,11 @@
+<div class="card shadow-md" [routerLink]="[cardComponent.path || '.' ]" >
+    <div class="card__title">{{cardComponent.title}}</div>
+    <ng-container *ngIf="cardComponent.svg">
+        <mat-icon [svgIcon]= cardComponent.svg class="h-14 w-14"></mat-icon>
+    </ng-container>
+    <ng-container *ngIf="cardComponent.numb">
+        <div class="card__number">
+            {{cardComponent.numb}}
+        </div>
+    </ng-container>
+</div>

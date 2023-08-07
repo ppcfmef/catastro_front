@@ -104,6 +104,10 @@ export const appRoutes: Route[] = [
                 path: 'technical-assistance',
                 loadChildren: () => import('app/modules/admin/technical-assistance/technical-assistance.module').then(m => m.TechnicalAssistanceModule)
             },
+            {
+                path: 'inspection',
+                loadChildren: () => import('./modules/admin/predial-inspection/predial-inspection.module').then(m => m.PredialInspectionModule)
+            },
         ]
     }
 ];

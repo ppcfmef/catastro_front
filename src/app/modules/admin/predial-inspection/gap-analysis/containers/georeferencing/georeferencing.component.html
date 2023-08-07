@@ -1,0 +1,85 @@
+<div class="flex flex-col w-full">
+    <div class="flex flex-col bg-gray-100">
+        <div class="p-9 px-8 border-b bg-card text-5xl font-bold tracking-tight leading-none">
+            Predios sin georreferenciación
+            <mat-icon aria-hidden="false" fontIcon="home"></mat-icon>
+        </div>
+    </div>
+    <div class="flex gap-4 mt-14 w-100 px-8 " >
+        <ng-container *ngFor="let card of cards">
+            <app-card-deatail [styles] = "card"></app-card-deatail>
+        </ng-container>
+    </div>
+    <div class="flex gap-4 mt-7 w-full px-8">
+        <div class="w-100">
+            <div class="text">
+                Buscar predio
+            </div>
+            <div class="flex border bg-white border-gary-100 py-2 px-4 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
+                <input class="w-full" placeholder="Código de predio, calle, unidad urbana..." />
+                <span class="flex">
+                    <mat-icon svgIcon="mat_outline:search"></mat-icon>
+                </span>
+            </div>
+        </div>
+        <button mat-button (click)="redirecto()">
+            <mat-icon svgIcon="mat_solid:download" class="text-white"></mat-icon>
+            Descargar Excel
+        </button>
+        <div class="flex items-end py-2 gap-x-3">
+            <button class="circle orange">
+                <div class="circle__text">
+                    PENDIENTE
+                </div>
+            </button>
+            <button class="circle green">
+                <div class="circle__text">
+                    PENDIENTE
+                </div>
+            </button>
+            <button class="circle red">
+                <div class="circle__text">
+                    PENDIENTE
+                </div>
+            </button>
+        </div>
+        <div>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef> No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="weight">
+                  <th mat-header-cell *matHeaderCellDef> Weight </th>
+                  <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="symbol">
+                  <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                  <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+        </div>
+
+    </div>
+</div>
+
+
+
