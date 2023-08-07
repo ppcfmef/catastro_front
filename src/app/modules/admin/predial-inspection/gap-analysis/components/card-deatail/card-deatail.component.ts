@@ -11,14 +11,14 @@ import { Card } from '../../../shared/interfaces/card.interface';
 })
 export class CardDeatailComponent implements OnInit {
 
-    @ViewChild('button') button: ElementRef;
-    @HostBinding('style.color') color;
     cardComponent: Card;
+    color: string ;
+    border: string;
     @Input()
     set styles(card: Card){
         this.cardComponent = card;
         this.color =  this.cardComponent.color;
-        this.button.nativeElement.style['border'] = '2px solid #980895';
+        this.border = this.cardComponent.border;
     }
   constructor(public renderer: Renderer2) { }
 

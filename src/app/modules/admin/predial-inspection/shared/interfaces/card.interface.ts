@@ -4,5 +4,5 @@ export interface Card {
     numb?: string;
     color?: string;
     path?: string;
-    class?: string;
+    border?: string;
 }

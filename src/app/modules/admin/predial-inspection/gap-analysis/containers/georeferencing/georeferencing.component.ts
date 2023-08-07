@@ -10,24 +10,28 @@ export class GeoreferencingComponent implements OnInit {
         {
             title: 'predios sin cartografía inicial',
             numb: '400',
-            color: '#003052'
+            border: '#073E0A',
+            color:'#80C684',
 
         },
         {
             title: 'predios enlazados',
             numb: '200',
-            color: '#003052',
+            border: '#003052',
+            color:'#8BCDF9',
         },
         {
             title: 'predios faltantes',
             numb: '182',
-            color: '#003052',
+            border: '#523100',
+            color:'#FAC375',
             path: './geo'
         },
         {
             title: 'predios observados',
             numb: '20',
-            color: '#003052',
+            border: '#6D0000',
+            color:'#EB7070',
             path: './geo'
         },
     ];
@@ -43,6 +47,10 @@ export class GeoreferencingComponent implements OnInit {
 
   redirecto(): void {
     //
+  }
+
+  click(): void {
+    console.log('here');
   }
 
 }
