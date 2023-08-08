@@ -28,7 +28,7 @@ export class UploadContainerComponent implements OnInit {
 
   typesUpload = [
       { code: 1, text: 'Carga de TB_PREDIO_T'},
-      { code: 99, text: 'Carga Multiple'}
+      { code: 99, text: 'Carga de ESQUEMAS CF'}
   ];
 
   listFormatMultiple = [
