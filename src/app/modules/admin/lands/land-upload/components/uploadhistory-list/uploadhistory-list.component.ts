@@ -19,7 +19,7 @@ export class UploadhistoryListComponent implements OnInit, OnDestroy, AfterViewI
   @ViewChild(MatPaginator) paginator: MatPaginator;
   changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   uploadHistorySubscription: Subscription;
-  displayedColumns = ['nro', 'startDate', 'fileUpload', 'status', 'username', 'totalLand', 'totalLandMapping', 'totalNotLandMapping', 'actions'];
+  displayedColumns = ['nro', 'startDate', 'ubigeo', 'fileUpload', 'status', 'username', 'totalLand', 'totalLandMapping', 'totalNotLandMapping', 'actions'];
   dataSource: UploadHistory[] = [];
   count = 0;
   pageIndex = 0;

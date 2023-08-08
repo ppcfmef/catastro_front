@@ -28,6 +28,50 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       'children': [],
       'hidden': (item): boolean => item?.id === 'gprpregistUsuer'
     },
+    {
+      'id': 'gprphistor',
+      'title': 'Historial de Carga',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': 'heroicons_outline:archive',
+      'link': '/land/upload/history',
+      'order': 4130,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gprphistor'
+    },
+    {
+      'id': 'gprphistorDetail',
+      'title': 'Historial de Carga - Detalle',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': 'heroicons_outline:archive',
+      'link': '/land/upload/history',
+      'order': 4130,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gprphistorDetail'
+    },
+    {
+      'id': 'gprpconsis',
+      'title': 'Consistencia de Datos',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': 'heroicons_outline:clipboard-check',
+      'link': '/land/upload/consistency',
+      'order': 4132,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gprpconsis'
+    },
+    {
+      'id': 'gprpcondit',
+      'title': 'Acondicionamiento de Datos',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': 'heroicons_outline:adjustments',
+      'link': '/land/upload/conditioning',
+      'order': 4134,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gprpcondit'
+    },
   ];
 
   constructor(
@@ -40,7 +84,10 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(): void{
     this._navigationService.get().subscribe((resp) =>{
       this.menuNavegacion = resp.default;
-      this.menuNavegacion[5].children.push(this.rutasAdicionales[0]);
+
+      this.rutasAdicionales.map((navigation) => {
+        this.menuNavegacion[5].children.push(navigation);
+     });
 
       this.isHome = this.router.url.includes('home');
       this.limpiarUrl(this.router.url);

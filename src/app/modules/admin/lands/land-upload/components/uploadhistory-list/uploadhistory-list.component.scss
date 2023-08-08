@@ -1,0 +1,14 @@
+table{
+    tr th{
+        background-color: #0090F8;
+    }
+}
+
+.download-green{
+    color: #0090f8 !important;
+    display: flex;
+    align-items: center;
+    mat-icon{
+        color: #0090f8 !important;
+    }
+}

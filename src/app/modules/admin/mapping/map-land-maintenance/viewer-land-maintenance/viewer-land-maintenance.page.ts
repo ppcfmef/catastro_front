@@ -40,7 +40,7 @@ export class ViewerLandMaintenancePage implements OnInit, OnDestroy {
 
       const username = data?.username;
       this.rawUrl = new URL(
-        `${this.customViewerUrl}/index.html?username=${username}&ubigeo=${this.ubigeo}`
+        `${this.customViewerUrl}/index.html?id=3eb8e8e5765745949cbbb35524d85678&username=${username}&ubigeo=${this.ubigeo}`
       );
       this.setUrl();
 

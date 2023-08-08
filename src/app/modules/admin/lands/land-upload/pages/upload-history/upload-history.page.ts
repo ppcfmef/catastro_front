@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-history',
@@ -8,15 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class UploadHistoryPage implements OnInit {
 
-  constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _router: Router,
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  onGoToNewRecord(): void {
-    this._router.navigate(['/land/upload/new'], {relativeTo: this._activatedRoute});
   }
 }

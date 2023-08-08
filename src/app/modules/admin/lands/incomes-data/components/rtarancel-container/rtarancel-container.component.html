@@ -1,0 +1,89 @@
+<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
+
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12">
+    <mat-label>Tabla</mat-label>
+    <mat-icon
+        matPrefix
+        class="hidden sm:flex icon-size-5"
+        [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
+    <mat-select (selectionChange)="onChangeIncomePage($event)" formControlName="incomePage">
+      <mat-option [value]="item.path" *ngFor="let item of listFormatMultiple">
+          {{ item.text }}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="documentoDesc">
+    <th mat-header-cell *matHeaderCellDef> Tipo de Documento </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.documentoDesc }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="numDoc">
+    <th mat-header-cell *matHeaderCellDef> Num. Documento </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.numDoc }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef> Nombres </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nombre }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="apellidoPaterno">
+    <th mat-header-cell *matHeaderCellDef> A. Paterno </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.apellidoPaterno }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="apellidoMaterno">
+    <th mat-header-cell *matHeaderCellDef> A. Materno </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.apellidoMaterno }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="estado">
+    <th mat-header-cell *matHeaderCellDef> Estado </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.estado }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef> Usuario </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.username }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>

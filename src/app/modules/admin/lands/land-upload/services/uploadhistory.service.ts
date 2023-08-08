@@ -27,8 +27,16 @@ export class UploadhistoryService {
     return this.http.post(`${this.apiUrl}/lands/registry/`, payload);
   }
 
+  uploadMultipleFile(payload: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/incomes/upload/`, payload);
+  }
+
   changeStatus(uploadHistoryId: number, status: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/lands/upload/status/${uploadHistoryId}/`, { status });
+  }
+
+  changeMultipleStatus(uploadHistoryId: number, status: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/incomes/upload/status/${uploadHistoryId}/`, { status });
   }
 
   uploadHistorySummary(uploadHistoryId: number): Observable<any> {
