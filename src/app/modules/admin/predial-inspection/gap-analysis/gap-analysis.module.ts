@@ -15,6 +15,10 @@ import { CardDeatailComponent } from './components/card-deatail/card-deatail.com
 import { SharedModule } from '../shared/shared.module';
 import { DataPropertyComponent } from './containers/data-property/data-property.component';
 import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
+import { ImagenComponent } from './containers/imagen/imagen.component';
+import { WithoutBatchComponent } from './containers/apple-without-batch/without-batch.component';
+import { SubLandComponent } from './containers/sub-land/sub-land.component';
+import { PointsWithoutLandComponent } from './containers/points-without-land/points-without-land.component';
 
 
 
@@ -27,6 +31,10 @@ import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.com
     GeoreferencingComponent,
     DataPropertyComponent,
     GrowthAppleComponent,
+    ImagenComponent,
+    WithoutBatchComponent,
+    SubLandComponent,
+    PointsWithoutLandComponent,
 
   ],
   imports: [

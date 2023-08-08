@@ -12,3 +12,8 @@
     border-radius: 7px !important;
     width: 163px;
 }
+
+
+:host app-widget-main ::ng-deep .title {
+    width:94px !important;
+}

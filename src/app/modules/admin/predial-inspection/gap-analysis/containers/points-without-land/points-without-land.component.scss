@@ -1,0 +1,33 @@
+.container-list-load{
+    width:410px;
+    max-width: 440px;
+}
+
+:host .mat-button {
+    position: absolute;
+    bottom: 12px;
+    right: 15px;
+    background-color: #66BB6A ;
+    color: #FFFFFF;
+    border-radius: 7px !important;
+    width: 163px;
+}
+
+.tabs {
+    background-color: #219EF9;
+    height: 42px;
+    padding: 12px 0;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 1px;
+    border-radius: 5px 5px 0px 0px;
+
+}
+
+
+:host app-widget-main ::ng-deep .title {
+    width:57px !important;
+}
+
