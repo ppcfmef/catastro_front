@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { LandUI } from 'app/modules/admin/lands/maintenance/interfaces/land.interface';
-import { LandGapAnalisysService } from '../../services/land-maintenance.service';
+import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { UserService } from 'app/core/user/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';

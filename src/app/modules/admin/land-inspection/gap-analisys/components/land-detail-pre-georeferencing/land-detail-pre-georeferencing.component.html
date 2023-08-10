@@ -41,10 +41,10 @@
             <input matInput type="text" formControlName="referenceName">
         </mat-form-field>
 
-        <div class="w-full flex items-center gap-4 mt-4">
-            <button mat-flat-button  color="primary" (click)="saveLandNoReference()"><mat-icon svgIcon="heroicons_outline:search"></mat-icon> Predio no ubicable</button>
-            <button mat-flat-button color="primary" (click)="newPointImg()"> Generar Punto Imagen</button>
-            <button mat-flat-button  color="primary" (click)="asigLand()"> Asignar Predio</button>
+        <div class="flex flex-col md:flex-row   items-center gap-4 mt-4">
+            <button mat-flat-button class="w-full md:w-1/3 "  color="primary" (click)="guardarPuntoSinReferencia()"> Predio no ubicable</button>
+            <button mat-flat-button class="w-full md:w-1/3 "  color="primary" (click)="nuevoPuntoCampo()"> Generar Punto Imagen</button>
+            <button mat-flat-button class="w-full md:w-1/3 "  color="primary" (click)="asignarPredio()"> Asignar Predio</button>
 
 
         </div>

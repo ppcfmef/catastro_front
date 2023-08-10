@@ -5,8 +5,9 @@ export enum ActionsGapAnalisys {
 
     NUEVO_PUNTO_REFERENCIA = 'generar nuevo punto de referencia',
 
-    ASIGNAR_PREDIO = 'asignar predio',
+    ASIGNAR_PUNTO = 'asignar punto',
 
     ASIGNAR_PREDIO_NO_UBICABLE = 'asignar predio no ubicable',
+
 
 };

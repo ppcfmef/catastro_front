@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LandGapAnalisysService } from '../../services/land-maintenance.service';
+import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { LandAnalisysUI } from '../../interfaces/land.interface';
 import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
 
@@ -12,8 +12,8 @@ import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
 export class LandPreGeoreferencingPage implements OnInit {
     idLand: any;
     land: LandAnalisysUI;
-    event: string = ActionsGapAnalisys.ASIGNAR_PREDIO;
-
+    event: string = ActionsGapAnalisys.ASIGNAR_PUNTO;
+    dataPoint: any;
   constructor(private _activatedRoute: ActivatedRoute,private _landGapAnalisysService: LandGapAnalisysService) {
 
   }
@@ -34,5 +34,9 @@ export class LandPreGeoreferencingPage implements OnInit {
 
   asigLandEvent(e: any): void{
     this.event = e;
+  }
+
+  setPoint(e: any): void{
+    this.dataPoint= e;
   }
 }

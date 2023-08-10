@@ -25,4 +25,8 @@ export class LandGapAnalisysService {
     return this.http.get<any>(`${this.apiUrl}/gap-analisys/land/${id}`, );
   }
 
+  update(id,data): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/gap-analisys/land/${id}/`, data);
+  }
+
 }
