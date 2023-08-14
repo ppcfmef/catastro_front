@@ -29,11 +29,41 @@
 
 .polygonButtonCls {
     visibility: hidden;
+    border-radius: 8px;
     background-color: #219EF9;
     color: white;
 }
-
 .polygonButtonCls:hover {
-    background-color: #1b82cc;
+    background-color: #1b82cc ;
     color: white;
 }
+
+
+// //
+// @mixin styleBasic {
+//     background-color: #57585A;
+//         color: white;
+//         border-radius: 8px;
+//         padding: 12px;
+// }
+
+// :host ::ng-deep{
+//     .esri-widget.esri-interactive {
+//         @include styleBasic()
+//     }
+
+//     .esri-widget.esri-widget.esri-interactive:hover {
+//         background-color: #323334
+//     }
+//     .esri-component.esri-zoom.esri-widget {
+//         background-color: #57585A;
+//         border-radius: 8px;
+//     }
+
+//     .esri-component.esri-home.esri-widget.esri-widget {
+//         @include styleBasic()
+//     }
+//     .esri-component.esri-home.esri-widget.esri-widget:hover {
+//         background-color: #323334
+//     }
+// }
