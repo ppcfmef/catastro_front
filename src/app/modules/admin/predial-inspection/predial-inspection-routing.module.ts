@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PredialPage } from './pages/predial/predial.page';
@@ -10,22 +11,16 @@ const routes: Routes = [
         path: '',
         component: PredialPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'gescargeo', permissionType: 'read' },
-        children: [
-            {
-                path: '',
-                component: ListComponent
-            },
-            {
-                path: 'gap-analysis',
+        data: { id: 'inspre', permissionType: 'read' },
+      },
+      {
+        path: 'gap-analysis',
                 loadChildren: () => import('./gap-analysis/gap-analysis.module').then(m => m.GapAnalysisModule)
-            },
-            {
-                path: 'assignment-of-load',
+      },
+      {
+        path: 'assignment-of-load',
                 loadChildren: () => import('./assignment-of-load/assignment-of-load.module').then(m => m.AssignmentOfLoadModule)
-            },
-        ]
-    },
+      },
 
 ];
 
