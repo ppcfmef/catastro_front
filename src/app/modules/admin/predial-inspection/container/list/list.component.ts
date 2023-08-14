@@ -20,6 +20,7 @@ export class ListComponent implements OnInit {
         {
             title: 'GESTION DE RESULTADOS',
             svg: 'iconsmind:manageHistory',
+            path: './results-management'
         },
     ];
 

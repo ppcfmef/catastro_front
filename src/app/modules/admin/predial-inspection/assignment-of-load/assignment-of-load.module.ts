@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AssignmentOfLoadPage } from './pages/assignment-of-load/assignment-of-load.page';
 import { AssignmentOfLoadRoutingModule } from './assignment-of-load-routing.module';
 import { IndicatorWidgetComponent } from './components/indicator-widget/indicator-widget.component';
-import { MapComponent } from './components/map/map.component';
+import { MapComponent } from '../shared/components/map/map.component';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,7 +37,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 declarations: [
     AssignmentOfLoadPage,
     IndicatorWidgetComponent,
-    MapComponent,
     MatDialogDeletedComponent,
     DetailOperadorComponent,
     AssignLoadComponent,

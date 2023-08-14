@@ -15,11 +15,12 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { CardPredialComponent } from './components/card-predial/card-predial.component';
 import { RouterModule } from '@angular/router';
 import { WidgetMainComponent } from './components/widget-main/widget-main.component';
+import { MapComponent } from './components/map/map.component';
 
 
 
 @NgModule({
-    declarations: [TableComponent, WidgetComponent,CardPredialComponent, WidgetMainComponent],
+    declarations: [TableComponent, WidgetComponent,CardPredialComponent, WidgetMainComponent,MapComponent],
     imports: [
         CommonModule,
         MatDatepickerModule,
@@ -34,6 +35,6 @@ import { WidgetMainComponent } from './components/widget-main/widget-main.compon
         RouterModule
 
     ],
-    exports: [TableComponent, WidgetComponent, CardPredialComponent,WidgetMainComponent],
+    exports: [TableComponent, WidgetComponent, CardPredialComponent,WidgetMainComponent,MapComponent],
 })
 export class SharedModule {}
