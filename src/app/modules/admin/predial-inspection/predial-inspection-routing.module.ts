@@ -12,7 +12,13 @@ const routes: Routes = [
         component: PredialPage,
         canActivate: [NavigationAuthorizationGuard],
         data: { id: 'inspre', permissionType: 'read' },
-      },
+        children: [
+            {
+                path: '',
+                component: PredialPage,
+              },
+        ]
+    },
       {
         path: 'gap-analysis',
                 loadChildren: () => import('./gap-analysis/gap-analysis.module').then(m => m.GapAnalysisModule)
@@ -20,11 +26,11 @@ const routes: Routes = [
       {
         path: 'assignment-of-load',
                 loadChildren: () => import('./assignment-of-load/assignment-of-load.module').then(m => m.AssignmentOfLoadModule)
-            },
-            {
-                path: 'results-management',
-                loadChildren: () => import('./results-management/results-management.module').then(m => m.ResultsManagementModule)
-            },
+        },
+        {
+            path: 'results-management',
+            loadChildren: () => import('./results-management/results-management.module').then(m => m.ResultsManagementModule)
+        },
 
     ];
 @NgModule({
