@@ -19,6 +19,14 @@ import { ImagenComponent } from './containers/imagen/imagen.component';
 import { WithoutBatchComponent } from './containers/apple-without-batch/without-batch.component';
 import { SubLandComponent } from './containers/sub-land/sub-land.component';
 import { PointsWithoutLandComponent } from './containers/points-without-land/points-without-land.component';
+import { SearchLandWithoutGeoTableComponent } from './components/search-land-without-geo-table/search-land-without-geo-table.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { LandWithoutGeoTableComponent } from './components/land-without-geo-table/land-without-geo-table.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { LandMapPreGeoreferencingComponent } from './components/land-map-pre-georeferencing/land-map-pre-georeferencing.component';
+import { LandDetailPreGeoreferencingComponent } from './components/land-detail-pre-georeferencing/land-detail-pre-georeferencing.component';
 
 
 
@@ -35,7 +43,10 @@ import { PointsWithoutLandComponent } from './containers/points-without-land/poi
     WithoutBatchComponent,
     SubLandComponent,
     PointsWithoutLandComponent,
-
+SearchLandWithoutGeoTableComponent,
+ LandWithoutGeoTableComponent,
+ LandMapPreGeoreferencingComponent,
+ LandDetailPreGeoreferencingComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +54,13 @@ import { PointsWithoutLandComponent } from './containers/points-without-land/poi
     MatIconModule,
     SharedModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    MatInputModule,
+    MatTooltipModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatPaginatorModule,
+
   ]
 })
 export class GapAnalysisModule { }

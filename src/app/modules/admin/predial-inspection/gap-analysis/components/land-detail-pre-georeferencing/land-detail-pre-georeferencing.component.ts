@@ -63,8 +63,8 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
 
     guardarPuntoSinReferencia(): void {
         this.dialogRef = this._confirmationService.info(
-            'Guardar Sin referencia',
-            'Esta seguro de guardar el punto sin referencia?'
+            'Predio no ubicable',
+            'Esta seguro de guardar el punto sin ubicacion?'
         );
 
         this.dialogRef
@@ -72,14 +72,23 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
             .toPromise()
             .then((option) => {
                 if (option === 'confirmed') {
-                    this.land.status = StatusGapAnalisys.OBSERVADO;
+                    this.land.statusGapAnalisys = StatusGapAnalisys.OBSERVADO;
                     this.land = FormUtils.deleteKeysNullInObject(this.land);
                     this._landService.update(this.land.id, this.land).subscribe(
                         (resp) => {
                             this._confirmationService.success(
                                 'Exito',
-                                'punto guardado'
-                            );
+                                'Datos guardados'
+                            ).afterClosed().toPromise()
+                            .then(
+                                (e) => {
+                                    this._router.navigate(
+                                        [
+                                            '/inspection/gap-analysis/geo',
+                                        ]
+                                    );
+                                }
+                            );;
                         },
                         (error) => {
                             this._confirmationService.error(
@@ -128,7 +137,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         puntoCampo.REFEREN = this.land.referenceName;
                         this.land.longitude = puntoCampo.COORD_X;
                         this.land.latitude = puntoCampo.COORD_Y;
-                        this.land.status = StatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
+                        this.land.statusGapAnalisys = StatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
                         this._puntoCampoService
                             .crearPuntoCampo(puntoCampo)
@@ -146,7 +155,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                                     (e) => {
                                                         this._router.navigate(
                                                             [
-                                                                '/land-inspection/gap-analisys/landwithoutgeo',
+                                                                '/inspection/gap-analysis/geo',
                                                             ]
                                                         );
                                                     }
@@ -209,8 +218,9 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                     this.land.cup = res.COD_CPU;
                                     this.land.longitude = predio.COORD_X;
                                     this.land.latitude = predio.COORD_Y;
-                                    this.land.status =
-                                        LandStatus.CON_CARTOGRAFIA_LOTE;
+                                    this.land.statusGapAnalisys =
+                                        StatusGapAnalisys.UBICADO_CON_PREDIO;
+                                        this.land.status = LandStatus.CON_CARTOGRAFIA_LOTE;
                                     this.land =
                                         FormUtils.deleteKeysNullInObject(
                                             this.land
@@ -232,7 +242,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                                                 (e) => {
                                                                     this._router.navigate(
                                                                         [
-                                                                            '/land-inspection/gap-analisys/landwithoutgeo',
+                                                                            '/inspection/gap-analysis/geo',
                                                                         ]
                                                                     );
                                                                 }

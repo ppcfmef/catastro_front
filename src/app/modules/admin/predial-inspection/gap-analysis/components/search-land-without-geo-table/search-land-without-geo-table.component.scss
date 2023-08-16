@@ -1,0 +1,33 @@
+@import '~styles/mixins';
+
+:host ::ng-deep{
+
+    .input-icon-form{
+        input{
+            width: calc(100% - 63px) !important;
+            margin-right: 25px;
+        }
+        button{
+            border-radius: 0 5px 5px 0 !important;
+            margin-right: -16px;
+        }
+
+    }
+
+    .integrated-search-button{
+        width: 360px;
+        .mat-form-field-flex{
+            border-radius:11px !important;
+            button{
+                border-radius: 11px !important;
+            }
+        }
+
+
+    }
+
+    .c-red{
+        color: #DE3F43;
+    }
+
+}

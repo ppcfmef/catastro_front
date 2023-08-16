@@ -8,8 +8,6 @@ export enum LandStatus {
 
     INACTIVO = 3,
 
-    CON_PUNTO_CAMPO=4,
 
-    OBSERVADO=5
 
 };

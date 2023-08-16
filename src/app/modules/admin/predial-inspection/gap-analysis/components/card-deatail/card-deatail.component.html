@@ -1,8 +1,8 @@
-<div class="flex py-1 px-4 justify-between border rounded-md shadow-md card" [style]="'background-color:'+cardComponent.color">
+<div (click)="onClick()" class="flex py-1 px-4 justify-between border rounded-md shadow-md card" [style]="'background-color:'+cardComponent.color">
     <div class="uppercase text-base font-bold w-24 leading-tight self-center">{{cardComponent.title}}</div>
     <div class="text-center">
         <span class="text-5xl font-bold text-white leading-tight">{{cardComponent.numb}}</span>
-        <button [style]="'border-color:'+cardComponent.border" button class="flex items-center px-2 gap-x-5 text-sm font-medium rounded-md ">
+        <button  [style]="'border-color:'+cardComponent.border" button class="flex items-center px-2 gap-x-5 text-sm font-medium rounded-md ">
             Mostar
             <mat-icon svgIcon="mat_solid:arrow_forward_ios" [style]="'color:'+cardComponent.border" ></mat-icon>
         </button>

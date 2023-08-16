@@ -5,4 +5,5 @@ export interface Card {
     color?: string;
     path?: string;
     border?: string;
+    arrayStatus?: any[];
 }
