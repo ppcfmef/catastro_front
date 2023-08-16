@@ -1,0 +1,57 @@
+:root {
+    ---black: #1E293B;
+}
+
+.title-primary {
+    font-weight: bold;
+    color: var(---black);
+    font-size: 18px;
+}
+
+.arrow-back {
+    color: #0090F8;
+}
+
+
+mat-accordion {
+    .mat-expansion-panel {
+        border-radius: 1px !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #DAE8F2;
+        &.mat-expanded,
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+    .mat-expansion-panel-header-title {
+        color: #0D2753;
+        font-weight: bold ;
+    }
+
+}
+
+:host ::ng-deep .mat-expansion-indicator:after {
+    color: #0090F8 !important;
+    height: 12px;
+    width: 12px;
+}
+
+.mat-button {
+    background: #E54646 !important;
+    color: white!important;
+    width: 147px;
+    height: 38px;
+}
+
+.mat-button.btnGreen{
+    background: #66BB6A !important;
+}
+
+.container {
+    height: calc(100vh - 64px);
+    padding: 32px 16px;
+
+
+}
+
+

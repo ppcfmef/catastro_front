@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDialogDeletedComponent } from '../../components/alert-confirm/mat-dialog-deleted.component';
 import { Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
+import { StateService } from '../../services/state.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 
@@ -36,10 +39,11 @@ export class LoadListComponent implements OnInit {
     { nro: '04', codCarga: '4567845', operdor:'Diego Gavilan', fecha: '22/06/2023' }
     ];
 
-
+    private _unsuscribe = new Subject();
     constructor(
         public dialog: MatDialog,
         private _router: Router,
+        private _stateService: StateService,
         ) { }
 
     ngOnInit(): void {
@@ -109,10 +113,13 @@ export class LoadListComponent implements OnInit {
 
     redirecto(): void {
         this._router.navigate(['inspection/assignment-of-load/assign-load']);
+        this._stateService.state.emit(true);
     }
 
     onEditattend(row: any): void {
         this._router.navigate(['inspection/assignment-of-load/load-attend']);
     }
+
+
 
 }

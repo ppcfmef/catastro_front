@@ -13,6 +13,7 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { StateService } from '../../../assignment-of-load/services/state.service';
 
 @Component({
     selector: 'app-map',
@@ -56,7 +57,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     constructor(
         protected _fuseSplashScreenService: FuseSplashScreenService,
-        private _userService: UserService
+        private _userService: UserService,
+        private _stateService: StateService,
     ) {}
 
     ngAfterViewInit(): void {
@@ -160,7 +162,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
             view.ui.add(this.polygonButtonContainer.nativeElement, 'top-left');
             // change stile of the button
-            this.polygonButtonContainer.nativeElement.style ='visibility: visible;';
+            this._stateService.state
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(data =>
+                data
+                ? this.polygonButtonContainer.nativeElement.style ='visibility: visible;'
+                : this.polygonButtonContainer.nativeElement.style ='visibility: false');
             //view.ui.remove(this.polygonButtonContainer.nativeElement);
             const draw = new Draw({
                 view: view,
@@ -173,7 +180,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                     rings: vertices,
                     spatialReference: view.spatialReference,
                 };
-
                 let graphic = new Graphic({
                     geometry: polygon,
                     symbol: {
@@ -191,7 +197,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 view.graphics.add(graphic);
                 if (state === 'draw-complete') {
                     view.goTo(graphic.geometry.extent);
-                    console.log('here', vertices);
+                    console.log('here', polygon);
                 }
             }
 

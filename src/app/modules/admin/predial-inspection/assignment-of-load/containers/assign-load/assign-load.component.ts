@@ -4,6 +4,7 @@ import { TableActions } from '../../../shared/interfaces/table-actions.interface
 import { TableAction } from '../../../shared/enum/table-action.enum';
 import { Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
+import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-assign-load',
@@ -37,7 +38,10 @@ export class AssignLoadComponent implements OnInit {
             text: 'TICKETS ATENDIDOS'
         }
     ];
-  constructor(private _router: Router) { }
+  constructor(
+    private _router: Router,
+    private _stateService: StateService
+    ) { }
 
   ngOnInit(): void {
     this.setTableColumn();
@@ -58,7 +62,9 @@ export class AssignLoadComponent implements OnInit {
         console.log('zoom',);
     }
     redirecto(): void {
-        this._router.navigate(['/inspection/assignment-of-load']);
+        console.log('redirect'); this._router.navigate(['/inspection/assignment-of-load']);
+        this._stateService.state.emit(false);
+
     }
 
     onSelect(data: any): void {
