@@ -17,6 +17,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('mapViewAOL', { static: false }) mapViewAOLContainer: ElementRef;
   @ViewChild('pointButton', { static: false }) pointButtonContainer: ElementRef;
   @ViewChild('clearSelection', { static: false }) clearButtonContainer: ElementRef;
+  @ViewChild('createCarga', { static: false }) createCargaContainer: ElementRef;
   // create string to the id of the map element that will be created
 
   _queryUbigeo: string;
@@ -69,7 +70,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         Draw,
         Graphic,
         Point,
-        Query
+        Query,
+        Legend,
+        Polygon,
+        Extent,
+        webMercatorUtils
       ] = await loadModules([
         'esri/views/MapView',
         'esri/WebMap',
@@ -83,7 +88,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         "esri/views/draw/Draw",
         "esri/Graphic",
         "esri/geometry/Point",
-        "esri/rest/support/Query"
+        "esri/rest/support/Query",
+        "esri/widgets/Legend",
+        "esri/geometry/Polygon",
+        "esri/geometry/Extent",
+        "esri/geometry/support/webMercatorUtils",
       ]);
 
       // Properties of the map
@@ -113,6 +122,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       const _id_mz_inei = "CAPAS_INSPECCION_2907"
 
       const _id_predio_sin_mz = "CARTO_PUNTO_CAMPO_7359"
+      const _id_predios = "CARTO_PUNTO_CAMPO_3291"
+      const _id_lotes_sin_predio = "CAPAS_INSPECCION_7679"
+      const _id_punto_imagen = "CAPAS_INSPECCION_6966"
 
       const _id_carga = "carto_asignacion_carga_8124"
 
@@ -180,6 +192,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         content: basemapGallery
       });
 
+      view.ui.add(basemapGalleryExpand, 'top-right');
+
       const searchWidget = new Search({
         view: view
       });
@@ -189,22 +203,29 @@ export class MapComponent implements OnInit, AfterViewInit {
         index: 0
       });
 
-      view.ui.add(basemapGalleryExpand, 'top-right');
+      let legend = new Legend({
+        view: view
+      });
+
+      view.ui.add(legend, "bottom-right");
 
       this._stateService.state
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((state) => {
-        if(state) {
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((state) => {
+          if (state) {
             view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
             view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
+            view.ui.add(this.createCargaContainer.nativeElement, 'top-left');
             // change stile of the button
             this.pointButtonContainer.nativeElement.style = 'visibility: visible;';
             this.clearButtonContainer.nativeElement.style = 'visibility: visible;';
-        }else {
+            this.createCargaContainer.nativeElement.style = "visibility: visible;"
+          } else {
             this.pointButtonContainer.nativeElement.style = 'visibility: false;';
             this.clearButtonContainer.nativeElement.style = 'visibility: false;';
-        }
-      });
+            this.createCargaContainer.nativeElement.style = "visibility: false;"
+          }
+        });
 
       const draw = new Draw({
         view: view
@@ -396,12 +417,119 @@ export class MapComponent implements OnInit, AfterViewInit {
         for (let oid in graphicsIds) {
           view.graphics.remove(graphicsIds[oid])
         }
+        graphicsIds = {};
         self._stateService.deleteAll.emit(true);
       }
 
+      function createCargaTrabajo() {
+        self._fuseSplashScreenService.show(0)
+        const nombre_carga = "carga de prueba"
+        const descrip_carga = "descripcion de la carga"
+        const ubigeo = self._currentUserUbigeo
+
+        let xmin = Infinity;
+        let ymin = Infinity;
+        let xmax = -Infinity;
+        let ymax = -Infinity;
+
+        if (Object.keys(graphicsIds).length === 0) {
+          return
+        }
+
+        for (let key in graphicsIds) {
+          if (graphicsIds.hasOwnProperty(key)) {
+            let graphic = graphicsIds[key];
+            let extent = { xmin: 0, ymin: 0, xmax: 0, ymax: 0 }
+            if (graphic.geometry.type === 'point') {
+              extent = {
+                xmin: graphic.geometry.x - 5,
+                ymin: graphic.geometry.y - 5,
+                xmax: graphic.geometry.x + 5,
+                ymax: graphic.geometry.y + 5,
+              }
+            } else {
+              extent = graphic.geometry.extent;
+            }
+
+            xmin = Math.min(xmin, extent.xmin);
+            ymin = Math.min(ymin, extent.ymin);
+            xmax = Math.max(xmax, extent.xmax);
+            ymax = Math.max(ymax, extent.ymax);
+          }
+        }
+
+        let fullExtent = new Extent({
+          xmin: xmin,
+          ymin: ymin,
+          xmax: xmax,
+          ymax: ymax,
+          spatialReference: 102100
+        });
+
+        let fullExtent_g = webMercatorUtils.webMercatorToGeographic(fullExtent)
+
+        let queryCarga = new Query();
+        queryCarga.where = this._queryUbigeo
+        queryCarga.outStatistics = [{
+          onStatisticField: "COD_CARGA",
+          outStatisticFieldName: "resultado",
+          statisticType: "max"
+        }];
+
+        webmap.findLayerById(_id_carga).queryFeatures(queryCarga)
+          .then((response) => {
+            let cod_carga = response.features[0].attributes.resultado
+            if (!cod_carga) {
+              cod_carga = '00000'
+            }
+            let cod_carga_int = parseInt(cod_carga, 10);
+            cod_carga_int = cod_carga_int + 1;
+            cod_carga = cod_carga_int.toString().padStart(5, '0');
+            console.log(cod_carga)
+
+            let graphics = []
+            let graphic = new Graphic();
+            graphic.attributes = {
+              ID_CARGA: `${ubigeo}${cod_carga}`,
+              COD_CARGA: cod_carga,
+              COD_USUARIO: '',
+              NOM_CARGA: nombre_carga,
+              DESCRIP: descrip_carga,
+              FEC_ENTREGA: new Date(2023, 7, 17).valueOf(),
+              ESTADO: 1,
+              UBIGEO: ubigeo,
+              XMIN: fullExtent_g.xmin,
+              YMIN: fullExtent_g.ymin,
+              XMAX: fullExtent_g.xmax,
+              YMAX: fullExtent_g.ymax,
+              NOM_USUARIO: ''
+            };
+            graphic.geometry = Polygon.fromExtent(fullExtent_g)
+            graphics.push(graphic);
+
+            webmap.findLayerById(_id_carga).applyEdits({ addFeatures: graphics })
+              .then((add, update, del) => {
+                console.log(add)
+                clearSelection()
+                self._fuseSplashScreenService.hide();
+              })
+              .catch((error) => {
+                self._fuseSplashScreenService.hide();
+                console.log(error)
+              })
+
+          })
+          .catch((error) => {
+            self._fuseSplashScreenService.hide();
+            console.log(error)
+          })
+        // view.graphics.add(graphicExtent);
+        // view.goTo(fullExtent_g);
+      }
 
       this.pointButtonContainer.nativeElement.addEventListener('click', enableCreatePoint.bind(this));
       this.clearButtonContainer.nativeElement.addEventListener('click', clearSelection.bind(this));
+      this.createCargaContainer.nativeElement.addEventListener('click', createCargaTrabajo.bind(this));
 
       view.when(() => {
         // Filter layers by ubigeo
@@ -425,6 +553,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         webmap.findLayerById(_id_mz_inei).definitionExpression = this._queryUbigeo
         webmap.findLayerById(_id_carga).definitionExpression += ` AND (${this._queryUbigeo})`
         webmap.findLayerById(_id_predio_sin_mz).definitionExpression += ` AND (${this._queryUbigeo})`
+
+        webmap.findLayerById(_id_lotes_sin_predio).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_predios).definitionExpression += ` AND (${this._queryUbigeo})`
+        webmap.findLayerById(_id_punto_imagen).definitionExpression = this._queryUbigeo
 
         // zoom extent by ubigeo
         let limites_nacionales_url = webmap.findLayerById(_id_limites).url
