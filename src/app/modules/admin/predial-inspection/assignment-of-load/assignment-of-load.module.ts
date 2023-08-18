@@ -28,7 +28,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TableAssignedComponent } from './components/table-assigned/table-assigned.component';
 import { NewLoadComponent } from './components/new-load/new-load.component';
 
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { TablePendingComponent } from './components/table-pending/table-pending.component';
+import { TableAttendedComponent } from './components/table-attended/table-attended.component';
 
 
 
@@ -48,6 +50,8 @@ declarations: [
     LoadAttendComponent,
     TableAssignedComponent,
     NewLoadComponent,
+    TablePendingComponent,
+    TableAttendedComponent,
 ],
 imports: [
     CommonModule,
@@ -64,6 +68,7 @@ imports: [
     MatDatepickerModule,
     MatCheckboxModule,
     SharedModule,
+    ReactiveFormsModule,
 ]
 })
 export class AssignmentOfLoadModule { }

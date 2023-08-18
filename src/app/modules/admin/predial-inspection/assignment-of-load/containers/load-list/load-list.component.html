@@ -21,23 +21,13 @@
     <div class="w-full">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
             <mat-tab label="Por asignar">
-                <app-table
-                    [dataSource]="dataSource"
-                    [columns]="tableColumns"
-                    [config]="tableConfig"
-                    (action)="onAction($event)"
-                ></app-table>
+            <app-table-pending></app-table-pending>
             </mat-tab>
             <mat-tab label="Asignado">
                 <app-table-assigned></app-table-assigned>
             </mat-tab>
             <mat-tab label="Atendido">
-                <app-table
-                    [dataSource]="dataSource"
-                    [columns]="tableColumnsAssignment"
-                    [config]="tableConfigAttend"
-                    (action)="onEditattend($event)"
-                ></app-table>
+                <app-table-attended></app-table-attended>
             </mat-tab>
         </mat-tab-group>
     </div>
