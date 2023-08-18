@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { TableActions } from '../../../shared/interfaces/table-actions.interface';
-import { TableAction } from '../../../shared/enum/table-action.enum';
 import { Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
+
+
+
+
 
 @Component({
     selector: 'app-load-assigned',
     templateUrl: './load-assigned.component.html',
     styleUrls: ['./load-assigned.component.scss'],
 })
-export class LoadAssignedComponent implements OnInit {
+export class LoadAssignedComponent implements OnInit, AfterViewInit {
+
+
+     // Properties table
     tableColumns: TableColumn[] = [];
     dataSource = [
         { nro: '01', sector: '1', mzurb: 'A', tipo: 'CF' },
@@ -18,12 +25,12 @@ export class LoadAssignedComponent implements OnInit {
         { nro: '01', sector: '1', mzurb: 'A', tipo: 'CF' },
         { nro: '01', sector: '1', mzurb: 'A', tipo: 'CF' },
     ];
-
     tableConfig: TableConifg = {
         isAction: true,
         isZoom: true,
     };
 
+    // Properties widget
     user: boolean = true;
     cards = [
         {
@@ -36,10 +43,18 @@ export class LoadAssignedComponent implements OnInit {
         },
     ];
 
-    constructor(private _router: Router) {}
+    constructor(
+        private _router: Router,
+
+        ) {}
 
     ngOnInit(): void {
         this.setTableColumn();
+
+    }
+
+    ngAfterViewInit(): void {
+        // this.dataAssigned(this._currentUserUbigeo);
     }
 
     desasignar(): void {
@@ -48,23 +63,14 @@ export class LoadAssignedComponent implements OnInit {
 
     setTableColumn(): void {
         this.tableColumns = [
-            { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro' },
-            {
-                matheaderdef: 'Sector',
-                matcolumndef: 'sector',
-                matcelldef: 'sector',
-            },
-            {
-                matheaderdef: 'Mz.Urb.',
-                matcolumndef: 'mzurb',
-                matcelldef: 'mzurb',
-            },
+            { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro'},
+            { matheaderdef: 'Sector',matcolumndef: 'sector',matcelldef: 'sector'},
+            { matheaderdef: 'Mz.Urb.', matcolumndef: 'mzurb',matcelldef: 'mzurb'},
             { matheaderdef: 'Tipo', matcolumndef: 'tipo', matcelldef: 'tipo' },
         ];
     }
 
 
-    //   Implementar logica
     onZoom(row: any): void {
         console.log('zoom');
     }
@@ -72,4 +78,5 @@ export class LoadAssignedComponent implements OnInit {
     redirecto(): void {
         this._router.navigate(['./inspection/assignment-of-load']);
     }
+
 }

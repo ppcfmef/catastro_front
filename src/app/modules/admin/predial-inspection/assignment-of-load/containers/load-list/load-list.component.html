@@ -29,12 +29,7 @@
                 ></app-table>
             </mat-tab>
             <mat-tab label="Asignado">
-                <app-table
-                    [dataSource]="dataSource"
-                    [columns]="tableColumnsAssignment"
-                    [config]="tableConfig"
-                    (action)="onTableAction2($event)"
-                ></app-table>
+                <app-table-assigned></app-table-assigned>
             </mat-tab>
             <mat-tab label="Atendido">
                 <app-table

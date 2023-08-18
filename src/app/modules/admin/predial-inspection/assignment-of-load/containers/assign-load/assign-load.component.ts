@@ -1,33 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { TableActions } from '../../../shared/interfaces/table-actions.interface';
-import { TableAction } from '../../../shared/enum/table-action.enum';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { StateService } from '../../services/state.service';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-assign-load',
   templateUrl: './assign-load.component.html',
   styleUrls: ['./assign-load.component.scss']
 })
-export class AssignLoadComponent implements OnInit {
+export class AssignLoadComponent implements OnInit, AfterViewInit{
+
 
     user: boolean = true;
-    tableConfig: TableConifg = {
-        isAction: true,
-        isZoom: true,
-        isSelect: true,
-
-    };
-    tableColumns: TableColumn[] =[];
-    dataSource = [
-        { nro: '01', sector: '1', mzurb:'A', tipo: 'CF' },
-        { nro: '02', sector: '1', mzurb:'Z1', tipo: 'CF' },
-        { nro: '03', sector: '3', mzurb:'P', tipo: 'EU' },
-        { nro: '04', sector: '12', mzurb:'Z1', tipo: 'EU' },
-    ];
-
     cards =[
         {
             num: 21,
@@ -38,37 +24,24 @@ export class AssignLoadComponent implements OnInit {
             text: 'TICKETS ATENDIDOS'
         }
     ];
-  constructor(
-    private _router: Router,
-    private _stateService: StateService
-    ) { }
+    constructor(
+        private _router: Router,
+        private _stateService: StateService,
+        private _userService: UserService,
+        ) { }
 
-  ngOnInit(): void {
-    this.setTableColumn();
-  }
-
-  setTableColumn(): void {
-    this.tableColumns = [
-        {matheaderdef:'Nro', matcolumndef:'nro', matcelldef: 'nro'},
-        {matheaderdef:'Sector', matcolumndef:'sector', matcelldef: 'sector'},
-        {matheaderdef:'Mz.Urb.', matcolumndef:'mzurb', matcelldef: 'mzurb'},
-        {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
-    ];
-}
-
-
-  //   Implementar logica
-    onZoom(row: any): void {
-        console.log('zoom',);
+    ngOnInit(): void {
     }
+
+    ngAfterViewInit(): void {
+    }
+
     redirecto(): void {
         console.log('redirect'); this._router.navigate(['/inspection/assignment-of-load']);
         this._stateService.state.emit(false);
 
     }
 
-    onSelect(data: any): void {
-        console.log('select', data);
-    }
+
 }
 

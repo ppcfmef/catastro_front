@@ -1,20 +1,13 @@
 <div class="flex flex-col p-4 pb-3 w-full">
     <div class="flex flex-row gap-x-4 items-center">
-        <button class="green-button-solid" (click)="redirecto()">
+        <button (click)="redirecto()">
             <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
         </button>
         <span class="title-primary">Nueva carga</span>
     </div>
 
     <div class="w-full mt-3">
-        <app-table
-            [dataSource]="dataSource"
-            [columns]="tableColumns"
-            [config]="tableConfig"
-            (action)="onZoom($event)"
-            (selected)="onSelect($event)"
-        >
-        </app-table>
+        <app-new-load></app-new-load>
     </div>
 
     <div>
@@ -30,9 +23,7 @@
     <div class="mt-2">
         <span class="text-base font-medium">Seleccione operador</span>
 
-        <div
-            class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base"
-        >
+        <div class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
             <input class="w-full" placeholder="Operador" />
             <span class="flex">
                 <mat-icon svgIcon="mat_outline:search"></mat-icon>
@@ -52,4 +43,12 @@
         <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
         Registrar carga de trabajo
     </button>
+
+    <div class="mt-2">
+        <span class="text-base font-medium">Descripcion</span>
+
+        <div class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
+            <textarea name="" id="" cols="30" rows="4" placeholder="detalle"></textarea>
+        </div>
+    </div>
 </div>

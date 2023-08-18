@@ -25,6 +25,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { DetailOperadorComponent } from './containers/detail-operador/detail-operador.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { TableAssignedComponent } from './components/table-assigned/table-assigned.component';
+import { NewLoadComponent } from './components/new-load/new-load.component';
 
 
 
@@ -44,6 +46,8 @@ declarations: [
     LoadAssignedComponent,
     LoadListComponent,
     LoadAttendComponent,
+    TableAssignedComponent,
+    NewLoadComponent,
 ],
 imports: [
     CommonModule,

@@ -27,17 +27,27 @@
 }
 
 
-.polygonButtonCls {
+.pointButtonCls {
     visibility: hidden;
-    border-radius: 8px;
     background-color: #219EF9;
     color: white;
 }
-.polygonButtonCls:hover {
-    background-color: #1b82cc ;
+
+.pointButtonCls.active {
+    background-color: #013492;
+    color: white
+}
+
+.pointButtonCls:hover {
+    background-color: #013492;
     color: white;
 }
 
+.clearButtonCls {
+    visibility: hidden;
+    background-color: #ec404f;
+    color: white;
+}
 
 // //
 // @mixin styleBasic {

@@ -18,7 +18,7 @@ const routes: Routes = [
     children:[
         {path: '',component: LoadListComponent},
         {path:'assign-load',component: AssignLoadComponent,},
-        {path: 'load-assigned',component:LoadAssignedComponent},
+        {path: 'load-assigned/:cod',component:LoadAssignedComponent},
         {path:'load-pending-assigment', component:LoadPendingAssignmentComponent},
         {path:'load-attend',component:LoadAttendComponent}
 

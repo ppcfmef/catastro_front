@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-    Component,
-    OnInit,
-    ViewChild,
-    ElementRef,
-    Query,
-    AfterViewInit,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Query, AfterViewInit } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
@@ -16,259 +9,439 @@ import { Subject } from 'rxjs';
 import { StateService } from '../../../assignment-of-load/services/state.service';
 
 @Component({
-    selector: 'app-map',
-    templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss'],
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-    @ViewChild('mapViewAOL', { static: false }) mapViewAOLContainer: ElementRef;
-    @ViewChild('polygonButton', { static: false }) polygonButtonContainer: ElementRef;
-    // create string to the id of the map element that will be created
+  @ViewChild('mapViewAOL', { static: false }) mapViewAOLContainer: ElementRef;
+  @ViewChild('pointButton', { static: false }) pointButtonContainer: ElementRef;
+  @ViewChild('clearSelection', { static: false }) clearButtonContainer: ElementRef;
+  // create string to the id of the map element that will be created
 
-    // Properties of the map
-    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
-    _idWebMap = '66adf64572f7438c892056ad832ea39d';
-    _layersMap = [];
+  _queryUbigeo: string;
+  _field_ubigeo = 'UBIGEO';
+  // Properties app
+  _currentUser: User;
+  _currentUserUbigeo: string;
+  _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    // Properties of the layers ids
-    _id_limites = 'limites_nacional_6496';
-    _id_departamento = 'limites_nacional_6496_0';
-    _id_provincia = 'limites_nacional_6496_1';
-    _id_distrito = 'limites_nacional_6496_2';
-    _id_cf_sector = 'CARTO_FISCAL_6033';
-    _id_cf_manzana_urb = 'CARTO_FISCAL_3571';
-    _id_cf_manzana = 'CARTO_FISCAL_8574';
-    _id_cf_parques = 'CARTO_FISCAL_4241';
-    _id_cf_unidades_urbanas = 'CARTO_FISCAL_9795';
-    _id_cf_lotes = 'CARTO_FISCAL_8149';
-    _id_cf_arancel = 'CARTO_FISCAL_8360';
-    _id_cf_numeracion = 'CARTO_FISCAL_9596';
-    _id_cf_eje_vial = 'CARTO_FISCAL_8524';
-    _id_cf_lotes_pun = 'CARTO_FISCAL_2829';
-    _id_cf_predio = 'CARTO_FISCAL_869';
 
-    _queryUbigeo: string;
-    _field_ubigeo = 'UBIGEO';
+  constructor(
+    protected _fuseSplashScreenService: FuseSplashScreenService,
+    private _userService: UserService,
+    private _stateService: StateService,
+  ) { }
 
-    // Properties app
-    _currentUser: User;
-    _currentUserUbigeo: string;
-    _unsubscribeAll: Subject<any> = new Subject<any>();
+  ngAfterViewInit(): void {
+    this._fuseSplashScreenService.show(0);
+    setTimeout(() => {
+      this.initializeMapAOL();
+    }, 1000);
+  }
 
-    constructor(
-        protected _fuseSplashScreenService: FuseSplashScreenService,
-        private _userService: UserService,
-        private _stateService: StateService,
-    ) {}
+  ngOnInit(): void {
+    this._userService.user$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((user: User) => {
+        this._currentUser = user;
+        this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+        this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+      });
 
-    ngAfterViewInit(): void {
-        this._fuseSplashScreenService.show(0);
-        setTimeout(() => {
-            this.initializeMapAOL();
-        }, 1000);
-    }
+  }
 
-    ngOnInit(): void {
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this._currentUser = user;
-                this._currentUserUbigeo = this._currentUser.ubigeo
-                    ? this._currentUser.ubigeo
-                    : '150101';
-                this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-            });
-    }
 
-    async initializeMapAOL() {
-        try {
-            // add map to the view
-            const [
-                MapView,
-                WebMap,
-                esriConfig,
-                query,
-                Home,
-                LayerList,
-                Expand,
-                BasemapGallery,
-                Search,
-                Draw,
-                Graphic,
-            ] = await loadModules([
-                'esri/views/MapView',
-                'esri/WebMap',
-                'esri/config',
-                'esri/rest/query',
-                'esri/widgets/Home',
-                'esri/widgets/LayerList',
-                'esri/widgets/Expand',
-                'esri/widgets/BasemapGallery',
-                'esri/widgets/Search',
-                'esri/views/draw/Draw',
-                'esri/Graphic',
-            ]);
 
-            esriConfig.portalUrl = this._portalUrl;
+  async initializeMapAOL() {
+    try {
+      // add map to the view
+      const [
+        MapView,
+        WebMap,
+        esriConfig,
+        query,
+        Home,
+        LayerList,
+        Expand,
+        BasemapGallery,
+        Search,
+        Draw,
+        Graphic,
+        Point,
+        Query
+      ] = await loadModules([
+        'esri/views/MapView',
+        'esri/WebMap',
+        'esri/config',
+        "esri/rest/query",
+        "esri/widgets/Home",
+        "esri/widgets/LayerList",
+        "esri/widgets/Expand",
+        "esri/widgets/BasemapGallery",
+        "esri/widgets/Search",
+        "esri/views/draw/Draw",
+        "esri/Graphic",
+        "esri/geometry/Point",
+        "esri/rest/support/Query"
+      ]);
 
-            const webmap = new WebMap({
-                portalItem: {
-                    id: this._idWebMap,
-                },
-            });
+      // Properties of the map
+      const _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
+      const _idWebMap = "66adf64572f7438c892056ad832ea39d";
+      let _layersMap = [];
 
-            const view = new MapView({
-                map: webmap,
-                container: this.mapViewAOLContainer.nativeElement,
-            });
+      // Properties of the layers ids
+      const _id_limites = "limites_nacional_6496"
+      const _id_departamento = "limites_nacional_6496_0"
+      const _id_provincia = "limites_nacional_6496_1"
+      const _id_distrito = "limites_nacional_6496_2"
+      const _id_cf_sector = "CARTO_FISCAL_6033"
+      const _id_cf_manzana_urb = "CARTO_FISCAL_3571"
+      const _id_cf_manzana = "CARTO_FISCAL_8574"
+      const _id_cf_parques = "CARTO_FISCAL_4241"
+      const _id_cf_unidades_urbanas = "CARTO_FISCAL_9795"
+      const _id_cf_lotes = "CARTO_FISCAL_8149"
+      const _id_cf_arancel = "CARTO_FISCAL_8360"
+      const _id_cf_numeracion = "CARTO_FISCAL_9596"
+      const _id_cf_eje_vial = "CARTO_FISCAL_8524"
+      const _id_cf_lotes_pun = "CARTO_FISCAL_2829"
+      const _id_cf_predio = "CARTO_FISCAL_869"
 
-            const homeButton = new Home({
-                view: view,
-            });
+      const _id_mz_pred = "CAPAS_INSPECCION_9695"
+      const _id_mz_pimg = "CAPAS_INSPECCION_753"
+      const _id_mz_inei = "CAPAS_INSPECCION_2907"
 
-            view.ui.add(homeButton, 'top-left');
+      const _id_predio_sin_mz = "CARTO_PUNTO_CAMPO_7359"
 
-            const layerList = new LayerList({
-                view: view,
-            });
+      const _id_carga = "carto_asignacion_carga_8124"
 
-            const layerListExpand = new Expand({
-                expandIcon: 'layers',
-                view: view,
-                content: layerList,
-            });
 
-            view.ui.add(layerListExpand, 'top-right');
+      const self = this;
+      let graphicsIds = {};
 
-            const basemapGallery = new BasemapGallery({
-                view: view,
-            });
+      // symbol selected
+      const symbolSelectedPolygon = {
+        type: 'simple-fill', // autocasts as SimpleFillSymbol
+        color: [255, 0, 0, 0.5],
+        style: 'solid',
+        outline: {  // autocasts as SimpleLineSymbol
+          color: 'red',
+          width: 2
+        }
+      };
 
-            const basemapGalleryExpand = new Expand({
-                view: view,
-                content: basemapGallery,
-            });
+      const symbolSelectedPoint = {
+        type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
+        color: [255, 0, 0, 0.5],
+        outline: {
+          color: [255, 0, 0],
+          width: 2
+        }
+      };
 
-            const searchWidget = new Search({
-                view: view,
-            });
+      esriConfig.portalUrl = _portalUrl;
 
-            view.ui.add(searchWidget, {
-                position: 'top-left',
-                index: 0,
-            });
+      const webmap = new WebMap({
+        portalItem: {
+          id: _idWebMap
+        }
+      });
 
-            view.ui.add(basemapGalleryExpand, 'top-right');
+      const view = new MapView({
+        map: webmap,
+        container: this.mapViewAOLContainer.nativeElement
+      });
 
-            view.ui.add(this.polygonButtonContainer.nativeElement, 'top-left');
+      const homeButton = new Home({
+        view: view,
+      });
+
+      view.ui.add(homeButton, 'top-left');
+
+      const layerList = new LayerList({
+        view: view
+      });
+
+      const layerListExpand = new Expand({
+        expandIcon: 'layers',
+        view: view,
+        content: layerList
+      });
+
+      view.ui.add(layerListExpand, 'top-right');
+
+      const basemapGallery = new BasemapGallery({
+        view: view
+      });
+
+      const basemapGalleryExpand = new Expand({
+        view: view,
+        content: basemapGallery
+      });
+
+      const searchWidget = new Search({
+        view: view
+      });
+
+      view.ui.add(searchWidget, {
+        position: 'top-left',
+        index: 0
+      });
+
+      view.ui.add(basemapGalleryExpand, 'top-right');
+
+      this._stateService.state
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((state) => {
+        if(state) {
+            view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
+            view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
             // change stile of the button
-            this._stateService.state
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(data =>
-                data
-                ? this.polygonButtonContainer.nativeElement.style ='visibility: visible;'
-                : this.polygonButtonContainer.nativeElement.style ='visibility: false');
-            //view.ui.remove(this.polygonButtonContainer.nativeElement);
-            const draw = new Draw({
-                view: view,
-            });
+            this.pointButtonContainer.nativeElement.style = 'visibility: visible;';
+            this.clearButtonContainer.nativeElement.style = 'visibility: visible;';
+        }else {
+            this.pointButtonContainer.nativeElement.style = 'visibility: false;';
+            this.clearButtonContainer.nativeElement.style = 'visibility: false;';
+        }
+      });
 
-            function createPolygonGraphic(vertices, state = null) {
-                view.graphics.removeAll();
-                let polygon = {
-                    type: 'polygon', // autocasts as Polygon
-                    rings: vertices,
-                    spatialReference: view.spatialReference,
-                };
+      const draw = new Draw({
+        view: view
+      });
+
+      function createPointGraphics(evt) {
+        self._fuseSplashScreenService.show(0)
+        // view.graphics.removeAll();
+        let coordinates = evt.vertices.slice(-1)[0];
+        const point_g = new Point({
+          x: coordinates[0],
+          y: coordinates[1],
+          spatialReference: view.spatialReference
+        });
+
+        // query manzanas
+        // const urlManzanas = webmap.findLayerById(_id_mz_pred).url;
+        let queryManzanas = new Query();
+        queryManzanas.where = webmap.findLayerById(_id_mz_pred).definitionExpression;
+        queryManzanas.geometry = point_g;
+        queryManzanas.spatialRelationship = "intersects";
+        queryManzanas.returnGeometry = true;
+        queryManzanas.outFields = ['UBIGEO', 'COD_SECT', 'COD_MZN', 'ID_MZN_C'];
+
+        // query manzanas punto imagen
+        // const urlManzanasPuntoImagen = webmap.findLayerById(_id_mz_pimg).url;
+        // console.log(urlManzanasPuntoImagen)
+        let queryManzanasPuntoImagen = new Query();
+        queryManzanasPuntoImagen.where = webmap.findLayerById(_id_mz_pimg).definitionExpression;
+        queryManzanasPuntoImagen.geometry = point_g;
+        queryManzanasPuntoImagen.spatialRelationship = "intersects";
+        queryManzanasPuntoImagen.returnGeometry = true;
+        queryManzanasPuntoImagen.outFields = ['UBIGEO', 'ID_MZN_U'];
+
+        // query manzanas inei
+        // const urlManzanasInei = webmap.findLayerById(_id_mz_inei).url;
+        let queryManzanasInei = new Query();
+        queryManzanasInei.where = webmap.findLayerById(_id_mz_inei).definitionExpression;
+        queryManzanasInei.geometry = point_g;
+        queryManzanasInei.spatialRelationship = "intersects";
+        queryManzanasInei.returnGeometry = true;
+        queryManzanasInei.outFields = ['UBIGEO', 'ID_MZN_C'];
+
+        // query predios sin manzana
+        let queryPrediosSinManzana = new Query();
+        queryPrediosSinManzana.where = webmap.findLayerById(_id_predio_sin_mz).definitionExpression;
+        // generate buffer as point_g 10 meter
+        queryPrediosSinManzana.distance = 5;
+        queryPrediosSinManzana.units = "meters";
+        queryPrediosSinManzana.geometry = point_g;
+        queryPrediosSinManzana.spatialRelationship = "contains";
+        queryPrediosSinManzana.returnGeometry = true;
+        queryPrediosSinManzana.outFields = ['COD_PRE'];
+
+        // query promises
+        const promiseManzanas = webmap.findLayerById(_id_mz_pred).queryFeatures(queryManzanas)
+        const promiseManzanasPuntoImagen = webmap.findLayerById(_id_mz_pimg).queryFeatures(queryManzanasPuntoImagen)
+        const promiseManzanasInei = webmap.findLayerById(_id_mz_inei).queryFeatures(queryManzanasInei)
+        const promisePrediosSinManzana = webmap.findLayerById(_id_predio_sin_mz).queryFeatures(queryPrediosSinManzana)
+
+        evt.preventDefault();
+
+        return Promise.all([promiseManzanas, promiseManzanasPuntoImagen, promiseManzanasInei, promisePrediosSinManzana])
+          .then((results) => {
+            const responseManzanas = results[0].features.map((row) => {
+              const oid = `${row.attributes.UBIGEO}${row.attributes.COD_SECT}${row.attributes.COD_MZN}`;
+              let status = 1
+              if (graphicsIds[oid]) {
+                view.graphics.remove(graphicsIds[oid])
+                delete graphicsIds[oid]
+                status = 0
+              } else {
                 let graphic = new Graphic({
-                    geometry: polygon,
-                    symbol: {
-                        type: 'simple-fill', // autocasts as SimpleFillSymbol
-                        color: [4, 90, 141, 0.1],
-                        style: 'solid',
-                        outline: {
-                            // autocasts as SimpleLineSymbol
-                            color: 'red',
-                            width: 4,
-                            // style: "short-dot",
-                        },
-                    },
+                  geometry: row.geometry,
+                  symbol: symbolSelectedPolygon
                 });
                 view.graphics.add(graphic);
-                if (state === 'draw-complete') {
-                    view.goTo(graphic.geometry.extent);
-                    console.log('here', polygon);
-                }
-            }
+                graphicsIds[oid] = graphic;
+              }
 
-            function enableCreatePolygon(evt) {
-                let action = draw.create('polygon');
+              return {
+                oid: oid,
+                codigo: `${row.attributes.COD_SECT}-${row.attributes.COD_MZN}`,
+                tipo: 'Manzana',
+                fuente: 'CF',
+                status: status
+              }
+            })
 
-                // PolygonDrawAction.vertex-add
-                // Fires when user clicks, or presses the "F" key.
-                // Can also be triggered when the "R" key is pressed to redo.
-                action.on('vertex-add', function (evt) {
-                    createPolygonGraphic(evt.vertices);
+            const responseManzanasPuntoImagen = results[1].features.map((row) => {
+              const oid = `${row.attributes.ubigeo}${row.attributes.ID_MZN_U}`
+              let status = 1
+              if (graphicsIds[oid]) {
+                view.graphics.remove(graphicsIds[oid])
+                delete graphicsIds[oid]
+                status = 0
+              } else {
+                let graphic = new Graphic({
+                  geometry: row.geometry,
+                  symbol: symbolSelectedPolygon
                 });
+                view.graphics.add(graphic);
+                graphicsIds[oid] = graphic;
+              }
+              return {
+                oid: oid,
+                codigo: `${row.attributes.ID_MZN_U}`,
+                tipo: 'Manzana',
+                fuente: 'CFA',
+                status: status
+              }
+            })
 
-                // // PolygonDrawAction.vertex-remove
-                // // Fires when the "Z" key is pressed to undo the last added vertex
-                action.on('vertex-remove', function (evt) {
-                    createPolygonGraphic(evt.vertices);
+            const responseManzanasInei = results[2].features.map((row) => {
+              const oid = `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`
+              let status = 1
+              if (graphicsIds[oid]) {
+                view.graphics.remove(graphicsIds[oid])
+                delete graphicsIds[oid]
+                status = 0
+              } else {
+                let graphic = new Graphic({
+                  geometry: row.geometry,
+                  symbol: symbolSelectedPolygon
                 });
-                // // Fires when the pointer moves over the view
-                action.on('cursor-update', function (evt) {
-                    createPolygonGraphic(evt.vertices);
-                });
+                view.graphics.add(graphic);
+                graphicsIds[oid] = graphic;
+              }
+              return {
+                oid: oid,
+                codigo: `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`,
+                tipo: 'Manzana',
+                fuente: 'EU',
+                status: status
+              }
+            })
 
-                // Add a graphic representing the completed polygon
-                // when user double-clicks on the view or presses the "Enter" key
-                action.on('draw-complete', function (evt) {
-                    createPolygonGraphic(evt.vertices, 'draw-complete');
-                });
-            }
-
-            this.polygonButtonContainer.nativeElement.addEventListener(
-                'click',
-                enableCreatePolygon.bind(this)
-            );
-
-            view.when(() => {
-                // Filter layers by ubigeo
-                this._layersMap = webmap.allLayers;
-                webmap.findLayerById(this._id_cf_sector).definitionExpression =this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_manzana_urb).definitionExpression = this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_manzana).definitionExpression =this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_parques).definitionExpression =this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_unidades_urbanas).definitionExpression = this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_lotes).definitionExpression =this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_arancel).definitionExpression =this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_numeracion).definitionExpression = this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_eje_vial).definitionExpression = this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_lotes_pun).definitionExpression = this._queryUbigeo;
-                webmap.findLayerById(this._id_cf_predio).definitionExpression =this._queryUbigeo;
-
-                // zoom extent by ubigeo
-                const limites_nacionales_url = webmap.findLayerById(this._id_limites).url;
-
-                query
-                    .executeForExtent(`${limites_nacionales_url}/2`, {
-                        where: this._queryUbigeo,
-                    })
-                    .then((response) => {
-                        view.goTo(response.extent);
-                        homeButton.viewpoint = {
-                            targetGeometry: response.extent,
-                        };
-
-                        this._fuseSplashScreenService.hide();
-                    })
-                    .catch((error) => {
-                        console.log('EsriLoader: ', error);
-                    });
+            const responsePrediosSinManzana = results[3].features.map((row) => {
+              const oid = `${row.attributes.COD_PRE}`
+              let status = 1
+              if (graphicsIds[oid]) {
+                view.graphics.remove(graphicsIds[oid])
+                delete graphicsIds[oid]
+                status = 0
+              } else {
+                let graphic = new Graphic({
+                  geometry: row.geometry,
+                  symbol: symbolSelectedPoint
+                })
+                view.graphics.add(graphic);
+                graphicsIds[oid] = graphic;
+              }
+              return {
+                oid: oid,
+                codigo: `${row.attributes.COD_PRE}`,
+                tipo: 'Predio',
+                fuente: 'CF',
+                status: status
+              };
             });
-        } catch (error) {
-            console.log('EsriLoader: ', error);
+
+            let data = responseManzanas.concat(responseManzanasPuntoImagen).concat(responseManzanasInei).concat(responsePrediosSinManzana);
+            // Aqui se debe enviar la data al componente tabla
+            self._stateService.row.emit(data);
+            self._fuseSplashScreenService.hide();
+            return data;
+
+          })
+          .catch((error) => {
+            self._fuseSplashScreenService.hide();
+            console.log(error)
+          })
+      }
+
+      function enableCreatePoint(evt) {
+        evt.currentTarget.classList.toggle('active')
+        if (!evt.currentTarget.classList.contains('active')) {
+          draw.reset();
+          return
         }
+
+        let action = draw.create("point");
+        action.on("draw-complete", function (evt) {
+          createPointGraphics(evt);
+        });
+      }
+
+      function clearSelection() {
+        for (let oid in graphicsIds) {
+          view.graphics.remove(graphicsIds[oid])
+        }
+        self._stateService.deleteAll.emit(true);
+      }
+
+
+      this.pointButtonContainer.nativeElement.addEventListener('click', enableCreatePoint.bind(this));
+      this.clearButtonContainer.nativeElement.addEventListener('click', clearSelection.bind(this));
+
+      view.when(() => {
+        // Filter layers by ubigeo
+        _layersMap = webmap.allLayers
+        webmap.findLayerById(_id_cf_sector).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_manzana_urb).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_manzana).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_parques).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_unidades_urbanas).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_lotes).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_arancel).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_numeracion).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_eje_vial).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_lotes_pun).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_cf_predio).definitionExpression = this._queryUbigeo
+
+        // Para el caso de las manzanas de predios se debe mantener la expresion definida desde portal y agregar el ubigeo
+        webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
+        // console.log(webmap.findLayerById(_id_mz_pred).definitionExpression)
+        webmap.findLayerById(_id_mz_pimg).definitionExpression += ` AND (${this._queryUbigeo})`
+        webmap.findLayerById(_id_mz_inei).definitionExpression = this._queryUbigeo
+        webmap.findLayerById(_id_carga).definitionExpression += ` AND (${this._queryUbigeo})`
+        webmap.findLayerById(_id_predio_sin_mz).definitionExpression += ` AND (${this._queryUbigeo})`
+
+        // zoom extent by ubigeo
+        let limites_nacionales_url = webmap.findLayerById(_id_limites).url
+
+        query.executeForExtent(`${limites_nacionales_url}/2`, { where: this._queryUbigeo }).then((response) => {
+          view.goTo(response.extent);
+          homeButton.viewpoint = {
+            targetGeometry: response.extent,
+          };
+          this._fuseSplashScreenService.hide();
+        }).catch((error) => {
+          console.log('EsriLoader: ', error);
+        });
+      });
+
+    } catch (error) {
+      console.log('EsriLoader: ', error);
     }
+  }
 }
