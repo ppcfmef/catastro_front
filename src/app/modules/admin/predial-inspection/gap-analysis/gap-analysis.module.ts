@@ -25,8 +25,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { LandWithoutGeoTableComponent } from './components/land-without-geo-table/land-without-geo-table.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { LandMapPreGeoreferencingComponent } from './components/land-map-pre-georeferencing/land-map-pre-georeferencing.component';
-import { LandDetailPreGeoreferencingComponent } from './components/land-detail-pre-georeferencing/land-detail-pre-georeferencing.component';
+import { LandMapPreGeoreferencingComponent } from './components/land-map-geo/land-map-pre-georeferencing.component';
+import { LandDetailPreGeoreferencingComponent } from './components/land-detail-geo/land-detail-pre-georeferencing.component';
+import { GapAnalysisMapComponent } from './components/gap-analysis-map/gap-analysis-map.component';
+import { GapAnalysisBlockListComponent } from './components/gap-analysis-block-list/gap-analysis-block-list.component';
 
 
 
@@ -46,7 +48,9 @@ import { LandDetailPreGeoreferencingComponent } from './components/land-detail-p
 SearchLandWithoutGeoTableComponent,
  LandWithoutGeoTableComponent,
  LandMapPreGeoreferencingComponent,
- LandDetailPreGeoreferencingComponent
+ LandDetailPreGeoreferencingComponent,
+ GapAnalysisMapComponent,
+ GapAnalysisBlockListComponent
   ],
   imports: [
     CommonModule,

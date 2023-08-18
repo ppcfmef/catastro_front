@@ -25,7 +25,8 @@ import { LandStatus } from 'app/shared/enums/land-status.enum';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { Router } from '@angular/router';
-import { StatusGapAnalisys } from 'app/shared/enums/status-gap-analisys.enum';
+import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
+import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-georreferencing-status-gap-analisys.enum';
 @Component({
     selector: 'app-land-detail-pre-georeferencing',
     templateUrl: './land-detail-pre-georeferencing.component.html',
@@ -72,7 +73,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
             .toPromise()
             .then((option) => {
                 if (option === 'confirmed') {
-                    this.land.statusGapAnalisys = StatusGapAnalisys.OBSERVADO;
+                    this.land.statusGapAnalisys = LandGeorreferencingStatusGapAnalisys.OBSERVADO;
                     this.land = FormUtils.deleteKeysNullInObject(this.land);
                     this._landService.update(this.land.id, this.land).subscribe(
                         (resp) => {
@@ -135,9 +136,11 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         puntoCampo.COD_PRE = this.land.cpm;
                         puntoCampo.UBIGEO = this.land.ubigeo;
                         puntoCampo.REFEREN = this.land.referenceName;
+                        puntoCampo.Cod_Tipo_Ticket = String(TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION);
+                        puntoCampo.Estado_tra =0;
                         this.land.longitude = puntoCampo.COORD_X;
                         this.land.latitude = puntoCampo.COORD_Y;
-                        this.land.statusGapAnalisys = StatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
+                        this.land.statusGapAnalisys = LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
                         this._puntoCampoService
                             .crearPuntoCampo(puntoCampo)
@@ -219,7 +222,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                     this.land.longitude = predio.COORD_X;
                                     this.land.latitude = predio.COORD_Y;
                                     this.land.statusGapAnalisys =
-                                        StatusGapAnalisys.UBICADO_CON_PREDIO;
+                                        LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PREDIO;
                                         this.land.status = LandStatus.CON_CARTOGRAFIA_LOTE;
                                     this.land =
                                         FormUtils.deleteKeysNullInObject(

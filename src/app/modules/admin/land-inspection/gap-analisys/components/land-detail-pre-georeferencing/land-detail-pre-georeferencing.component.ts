@@ -25,7 +25,8 @@ import { LandStatus } from 'app/shared/enums/land-status.enum';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { Router } from '@angular/router';
-import { StatusGapAnalisys } from 'app/shared/enums/status-gap-analisys.enum';
+import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
+import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-georreferencing-status-gap-analisys.enum';
 @Component({
     selector: 'app-land-detail-pre-georeferencing',
     templateUrl: './land-detail-pre-georeferencing.component.html',
@@ -72,7 +73,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
             .toPromise()
             .then((option) => {
                 if (option === 'confirmed') {
-                    this.land.status = StatusGapAnalisys.OBSERVADO;
+                    this.land.status = LandGeorreferencingStatusGapAnalisys.OBSERVADO;
                     this.land = FormUtils.deleteKeysNullInObject(this.land);
                     this._landService.update(this.land.id, this.land).subscribe(
                         (resp) => {
@@ -128,7 +129,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         puntoCampo.REFEREN = this.land.referenceName;
                         this.land.longitude = puntoCampo.COORD_X;
                         this.land.latitude = puntoCampo.COORD_Y;
-                        this.land.status = StatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
+                        this.land.status = LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
                         this._puntoCampoService
                             .crearPuntoCampo(puntoCampo)

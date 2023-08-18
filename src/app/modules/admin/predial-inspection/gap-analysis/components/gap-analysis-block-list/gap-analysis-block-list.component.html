@@ -1,0 +1,28 @@
+<div
+
+class="flex flex-col bg-white container-list-load text py-6 px-5 w-full h-full relative"
+>
+<div class="flex w-full justify-between mb-5">
+    <ng-container *ngFor="let card of cards">
+        <app-widget-main [card]="card"></app-widget-main>
+    </ng-container>
+</div>
+<h2 class="text-xl font-bold">Predios subvaluados</h2>
+<div class="w-full mt-3">
+    <div class="tabs">MANZANAS</div>
+    <app-table
+        [dataSource]="dataSource"
+        [columns]="tableColumns"
+        [config]="tableConfig"
+        (action)="onZoom($event)"
+    >
+    </app-table>
+</div>
+<button mat-button>
+    <mat-icon
+        svgIcon="mat_solid:download"
+        class="text-white mr-2"
+    ></mat-icon>
+    Descargar Excel
+</button>
+</div>

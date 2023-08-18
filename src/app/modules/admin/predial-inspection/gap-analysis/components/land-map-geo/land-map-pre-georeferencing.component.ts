@@ -22,6 +22,7 @@ import { loadModules } from 'esri-loader';
 import { TypePoint } from 'app/shared/enums/type-point.enum';
 import { PuntoCampoUI } from '../../interfaces/punto-campo.interface';
 import { PredioUI } from '../../interfaces/predio.interface';
+import { MapUtils } from 'app/shared/utils/map.utils';
 
 @Component({
     selector: 'app-land-map-pre-georeferencing',
@@ -46,7 +47,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
         {
             id: 0,
             title: 'Cartografia Fiscal',
-            children: [-1, 0, 1, 2, 101],
+            children: [0, 1, 2, 3, 4],
         },
     ];
     urlPredio =
@@ -56,7 +57,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     layersInfo = [
         {
             title: 'Predios',
-            id: -1,
+            id: 0,
             idServer: 0,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
@@ -72,7 +73,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
         {
             title: 'Lotes Zona',
-            id: 0,
+            id: 1,
             idServer: 1,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
@@ -88,7 +89,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
         {
             title: 'Lotes Poligono Zona',
-            id: 1,
+            id: 2,
             idServer: 5,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
@@ -104,9 +105,8 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
         {
             title: 'Via Zona',
-            id: 2,
+            id: 3,
             idServer: 2,
-
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
@@ -119,7 +119,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             visible: true,
         },
 
-        {
+        /* {
             title: 'Manzana Urbana Zona',
             id: 101,
             idServer: 9,
@@ -134,11 +134,11 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             utm: null,
             projection: null,
             visible: true,
-        },
+        },*/
 
-        {
+        /*  {
             title: 'Arancel',
-            id: 9,
+            id: 4,
             idServer: 0,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
@@ -150,14 +150,14 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             utm: null,
             projection: 4326,
             visible: false,
-        },
+        },*/
 
         {
             title: 'Manzana',
-            id: 10,
-            idServer: 1,
+            id: 4,
+            idServer: 8,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/FeatureServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -168,9 +168,10 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             visible: false,
         },
 
+        /*
         {
             title: 'Punto Imagen',
-            id: 11,
+            id: 5,
             idServer: 0,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer',
@@ -182,7 +183,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             utm: null,
             projection: 4326,
             visible: false,
-        },
+        },*/
     ];
 
     listSourceSearchConfig = [
@@ -247,7 +248,9 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
         height: '30px',
         yoffset: '15px',
     };
-
+    layerIdSelectPoint = 1;
+    urlManzana =
+        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/8';
     constructor(private _confirmationService: CustomConfirmationService) {}
 
     ngOnInit(): void {
@@ -440,7 +443,8 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                     r &&
                                     r.graphic &&
                                     r.graphic.layer &&
-                                    r.graphic.layer.layerId === 1
+                                    r.graphic.layer.layerId ===
+                                        this.layerIdSelectPoint
                                 ) {
                                     return r;
                                 }
@@ -465,9 +469,14 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                         graphic.attributes &&
                                         graphic.attributes['ID_LOTE']
                                     ) {
+                                        const pointGeometry = {
+                                            //Create a point
+                                            type: 'point',
+                                            longitude: longitude,
+                                            latitude: latitude,
+                                        };
                                         this.addPoint(
-                                            latitude,
-                                            longitude,
+                                            pointGeometry,
                                             this.simpleMarkerSymbol
                                         );
 
@@ -478,7 +487,28 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
                                         const lote = graphic.attributes;
 
-                                        this.setPoint(lote, TypePoint.LOTE);
+                                        if(!lote['ID_MZN_C']){
+                                            const intersectFeature =
+                                            MapUtils.queryIntersectFeaturelayer(
+                                                new FeatureLayer(this.urlManzana),
+                                                point,5,'meters'
+                                            );
+
+                                        intersectFeature.then((data: any) => {
+
+                                            if (data && data.attributes) {
+                                                lote['ID_MZN_C']=data['ID_MZN_C'];
+                                            }
+
+                                                this.setPoint(
+                                                    data,
+                                                    TypePoint.NUEVO_PUNTO_CAMPO
+                                                );
+                                            });
+                                        }
+                                        else{
+                                            this.setPoint(lote, TypePoint.LOTE);
+                                        }
 
                                     }
                                 }
@@ -486,20 +516,42 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                 const graphic = event.mapPoint;
                                 const longitude = graphic.longitude;
                                 const latitude = graphic.latitude;
+                                // eslint-disable-next-line @typescript-eslint/no-shadow
+                                const pointGeometry = {
+                                    //Create a point
+                                    type: 'point',
+                                    longitude: longitude,
+                                    latitude: latitude,
+                                };
 
                                 this.addPoint(
-                                    latitude,
-                                    longitude,
+                                    pointGeometry,
                                     this.simpleMarkerSymbolUndefined
                                 );
 
-                                const lote: any = {};
-                                lote['COORD_X'] = longitude;
-                                lote['COORD_Y'] = latitude;
-                                this.setPoint(
-                                    lote,
-                                    TypePoint.NUEVO_PUNTO_CAMPO
-                                );
+                                const intersectFeature =
+                                    MapUtils.queryIntersectFeaturelayer(
+                                        new FeatureLayer(this.urlManzana),
+                                        point,20,'meters'
+                                    );
+
+                                intersectFeature.then((data: any) => {
+                                    const pointData: any = {};
+                                    pointData['COORD_X'] = longitude;
+                                    pointData['COORD_Y'] = latitude;
+
+                                    if (data && data.attributes) {
+                                        pointData['ID_MZN_C'] =
+                                            data['ID_MZN_C'];
+                                        pointData['UBIGEO'] =
+                                            data['ID_MZN_C'];
+                                    }
+
+                                    this.setPoint(
+                                        data,
+                                        TypePoint.NUEVO_PUNTO_CAMPO
+                                    );
+                                });
                             }
                         });
                     }
@@ -522,12 +574,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
         this.setPointEvent.emit({ point, type });
     }
 
-    async addPoint(
-        latitude,
-        longitude,
-        symbol,
-        estado: string = null
-    ): Promise<any> {
+    async addPoint(point, symbol, estado: string = null): Promise<any> {
         try {
             const [
                 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -536,12 +583,12 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
             this.view?.graphics?.removeAll();
 
-            const point = {
+            /*const point = {
                 //Create a point
                 type: 'point',
                 longitude: longitude,
                 latitude: latitude,
-            };
+            };*/
             const pointGraphic = new Graphic({
                 geometry: point,
                 symbol: symbol,
@@ -551,109 +598,5 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
-    }
-
-    async savePredio(data: PredioUI): Promise<void> {
-        const wkid = 4326;
-        const _predio = data;
-
-        const urlBase = `${this.urlPredio.replace(
-            'MapServer',
-            'FeatureServer'
-        )}/addFeatures`;
-
-        const json = await this.createArcgisJSON([_predio], wkid);
-
-        const formData = new FormData();
-        formData.append('features', JSON.stringify(json));
-        formData.append('F', 'json');
-
-        const response = await fetch(`${urlBase}`, {
-            method: 'POST',
-            body: formData,
-        });
-        const responseJson = await response.json();
-        //console.log('responseJson>>',responseJson);
-
-        if (responseJson?.addResults) {
-            const addFeature = responseJson?.addResults[0];
-        }
-    }
-
-    async savePuntoCampo(data: PuntoCampoUI): Promise<void> {
-        const wkid = 4326;
-        const _point = data;
-
-        const urlBase = `${this.urlPuntoCampo.replace(
-            'MapServer',
-            'FeatureServer'
-        )}/addFeatures`;
-
-        const json = await this.createArcgisJSON([_point], wkid);
-
-        const formData = new FormData();
-        formData.append('features', JSON.stringify(json));
-        formData.append('F', 'json');
-
-        const response = await fetch(`${urlBase}`, {
-            method: 'POST',
-            body: formData,
-        });
-        const responseJson = await response.json();
-
-        if (responseJson?.addResults) {
-            const addFeature = responseJson?.addResults[0];
-        }
-    }
-
-    async createArcgisJSON(
-        features: any[],
-        projectionWkid: number
-    ): Promise<any[]> {
-        const arcgisJson = [];
-        /* eslint-disable @typescript-eslint/naming-convention */
-        const [Graphic, Polyline, Point, projection, SpatialReference] =
-            await loadModules([
-                'esri/Graphic',
-                'esri/geometry/Polyline',
-                'esri/geometry/Point',
-                'esri/geometry/projection',
-                'esri/geometry/SpatialReference',
-            ]);
-        /* eslint-enable @typescript-eslint/naming-convention */
-        const outSpatialReference = new SpatialReference(projectionWkid);
-
-        return projection.load().then(() => {
-            features.forEach((feature: any) => {
-                if (projectionWkid !== 4326) {
-                    const geometryIni = new Point({
-                        x: feature.COORD_X,
-                        y: feature.COORD_Y,
-                        spatialReference: {
-                            wkid: 4326,
-                        },
-                    });
-                    const pointProject = projection.project(
-                        geometryIni,
-                        outSpatialReference
-                    );
-                    feature.COORD_X = pointProject.x;
-                    feature.COORD_Y = pointProject.y;
-                }
-
-                const geometry = {
-                    x: feature.COORD_X,
-                    y: feature.COORD_Y,
-                };
-
-                const attributes = FormUtils.deleteKeysNullInObject(feature);
-                const geoFeature = {
-                    geometry,
-                    attributes,
-                };
-                arcgisJson.push(geoFeature);
-            });
-            return Promise.all(arcgisJson);
-        });
     }
 }
