@@ -97,12 +97,12 @@ export class LoadListComponent implements OnInit {
     };
 
     onEdit(row: any): void {
-        this._router.navigate(['inspection/assignment-of-load/load-pending-assigment']);
+        this._router.navigate(['land-inspection/assignment-of-load/load-pending-assigment']);
     }
 
     //   Implementar logica
     onEditAssigned(row: any): void {
-        this._router.navigate(['inspection/assignment-of-load/load-assigned']);
+        this._router.navigate(['land-inspection/assignment-of-load/load-assigned']);
     }
     onDelete(row: any): void {
             this.dialog.open(MatDialogDeletedComponent, {
@@ -112,12 +112,12 @@ export class LoadListComponent implements OnInit {
     }
 
     redirecto(): void {
-        this._router.navigate(['inspection/assignment-of-load/assign-load']);
+        this._router.navigate(['land-inspection/assignment-of-load/assign-load']);
         this._stateService.state.emit(true);
     }
 
     onEditattend(row: any): void {
-        this._router.navigate(['inspection/assignment-of-load/load-attend']);
+        this._router.navigate(['land-inspection/assignment-of-load/load-attend']);
     }
 
 

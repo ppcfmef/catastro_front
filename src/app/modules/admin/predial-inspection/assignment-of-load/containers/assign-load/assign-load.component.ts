@@ -37,7 +37,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit{
     }
 
     redirecto(): void {
-        console.log('redirect'); this._router.navigate(['/inspection/assignment-of-load']);
+        console.log('redirect'); this._router.navigate(['/land-inspection/assignment-of-load']);
         this._stateService.state.emit(false);
 
     }
