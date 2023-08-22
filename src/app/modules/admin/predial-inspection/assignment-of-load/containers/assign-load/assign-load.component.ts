@@ -10,6 +10,7 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
+import { PassThrough } from 'stream';
 
 
 
@@ -105,6 +106,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const codUserWorkLoad = 'defaultUser'  // Reemplazar cuando se tenga el servicio de operador de campo
         const nomUserWorkLoad = 'defaultUser'  // Reemplazar cuando se tenga el servicio de operador de campo
         const id_carga = "carto_asignacion_carga_8124"
+        const id_predios = "CARTO_PUNTO_CAMPO_3291"
 
 
         try {
@@ -222,11 +224,39 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 .then((graphics) => {
                     return webMap.findLayerById(id_carga).applyEdits({ addFeatures: graphics })
                 })
-                .then((add, update, del) => {
-                    console.log(add)
-                    for (let key in dataWorkLoad) {
-                        console.log(key)
+                .then(async (add, update, del) => {
+
+                    const allPromises = []
+                    for (let key of dataWorkLoad) {
+                        switch (key.fuente) {
+                            case 'CF':
+                                const queryCF = new Query();
+                                queryCF.where = webMap.findLayerById(id_predios).definitionExpression;
+                                queryCF.outFields = ['*'];
+                                queryCF.returnGeometry = true;
+                                queryCF.geometry = graphicsId[key.oid].geometry;
+                                queryCF.spatialRelationship = 'intersects';
+                                const promiseCF = webMap.findLayerById(id_predios).queryFeatures(queryCF)
+                                allPromises.push(promiseCF);
+                                break
+                            case 'CFA':
+                                break
+                            case 'EU':
+                                break
+
+                            // if (key.fuente === 'CF') {
+                            //     const promise = (key);
+                            // } 
+
+                            // allPromises.push(promise);
+                        }
+
+                        await Promise.all(allPromises);
+                        return allPromises
                     }
+                })
+                .then((result) => {
+                    this._stateService.triggerClearAllGraphics();
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {

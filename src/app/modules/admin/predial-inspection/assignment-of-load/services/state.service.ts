@@ -18,6 +18,7 @@ export class StateService {
   private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
   private webMapSubject = new BehaviorSubject<any>(null);
   private graphicsIdSubject = new BehaviorSubject<any>(null);
+  public clearAllGraphics: EventEmitter<void> = new EventEmitter();
 
   constructor() { }
 
@@ -47,7 +48,9 @@ export class StateService {
     return this.graphicsIdSubject.asObservable();
   }
 
-
+  triggerClearAllGraphics() {
+    this.clearAllGraphics.emit();
+  }
 }
 
 

@@ -22,6 +22,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   _queryUbigeo: string;
   _field_ubigeo = 'UBIGEO';
+  _view = null;
+  _graphicsIds = {};
+  _webmap = null;
   // Properties app
   _currentUser: User;
   _currentUserUbigeo: string;
@@ -50,10 +53,18 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
       });
-
+    this._stateService.clearAllGraphics.subscribe(() => this.clearSelection());
   }
 
-
+  clearSelection(): void {
+    for (let oid in this._graphicsIds) {
+      this._view.graphics.remove(this._graphicsIds[oid])
+    }
+    this._graphicsIds = {};
+    this._stateService.deleteAll.emit(true);
+    this._stateService.setWebMap(this._webmap);
+    this._stateService.setGraphicsId(this._graphicsIds);
+  }
 
   async initializeMapAOL() {
     try {
@@ -131,7 +142,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
       const self = this;
-      let graphicsIds = {};
+      // let graphicsIds = {};
 
       // symbol selected
       const symbolSelectedPolygon = {
@@ -155,67 +166,67 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       esriConfig.portalUrl = _portalUrl;
 
-      const webmap = new WebMap({
+      self._webmap = new WebMap({
         portalItem: {
           id: _idWebMap
         }
       });
 
-      const view = new MapView({
-        map: webmap,
+      self._view = new MapView({
+        map: self._webmap,
         container: this.mapViewAOLContainer.nativeElement
       });
 
       const homeButton = new Home({
-        view: view,
+        view: self._view,
       });
 
-      view.ui.add(homeButton, 'top-left');
+      self._view.ui.add(homeButton, 'top-left');
 
       const layerList = new LayerList({
-        view: view
+        view: self._view
       });
 
       const layerListExpand = new Expand({
         expandIcon: 'layers',
-        view: view,
+        view: self._view,
         content: layerList
       });
 
-      view.ui.add(layerListExpand, 'top-right');
+      self._view.ui.add(layerListExpand, 'top-right');
 
       const basemapGallery = new BasemapGallery({
-        view: view
+        view: self._view
       });
 
       const basemapGalleryExpand = new Expand({
-        view: view,
+        view: self._view,
         content: basemapGallery
       });
 
-      view.ui.add(basemapGalleryExpand, 'top-right');
+      self._view.ui.add(basemapGalleryExpand, 'top-right');
 
       const searchWidget = new Search({
-        view: view
+        view: self._view
       });
 
-      view.ui.add(searchWidget, {
+      self._view.ui.add(searchWidget, {
         position: 'top-left',
         index: 0
       });
 
       let legend = new Legend({
-        view: view
+        view: self._view
       });
 
-      view.ui.add(legend, "bottom-right");
+      self._view.ui.add(legend, "bottom-right");
 
       this._stateService.state
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((state) => {
           if (state) {
-            view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
-            view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
+            self._view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
+            self._view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
             // view.ui.add(this.createCargaContainer.nativeElement, 'top-left');
             // change stile of the button
             this.pointButtonContainer.nativeElement.style = 'visibility: visible;';
@@ -229,7 +240,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
 
       const draw = new Draw({
-        view: view
+        view: self._view
       });
 
       function createPointGraphics(evt) {
@@ -239,13 +250,13 @@ export class MapComponent implements OnInit, AfterViewInit {
         const point_g = new Point({
           x: coordinates[0],
           y: coordinates[1],
-          spatialReference: view.spatialReference
+          spatialReference: self._view.spatialReference
         });
 
         // query manzanas
         // const urlManzanas = webmap.findLayerById(_id_mz_pred).url;
         let queryManzanas = new Query();
-        queryManzanas.where = webmap.findLayerById(_id_mz_pred).definitionExpression;
+        queryManzanas.where = self._webmap.findLayerById(_id_mz_pred).definitionExpression;
         queryManzanas.geometry = point_g;
         queryManzanas.spatialRelationship = "intersects";
         queryManzanas.returnGeometry = true;
@@ -255,7 +266,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         // const urlManzanasPuntoImagen = webmap.findLayerById(_id_mz_pimg).url;
         // console.log(urlManzanasPuntoImagen)
         let queryManzanasPuntoImagen = new Query();
-        queryManzanasPuntoImagen.where = webmap.findLayerById(_id_mz_pimg).definitionExpression;
+        queryManzanasPuntoImagen.where = self._webmap.findLayerById(_id_mz_pimg).definitionExpression;
         queryManzanasPuntoImagen.geometry = point_g;
         queryManzanasPuntoImagen.spatialRelationship = "intersects";
         queryManzanasPuntoImagen.returnGeometry = true;
@@ -264,7 +275,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         // query manzanas inei
         // const urlManzanasInei = webmap.findLayerById(_id_mz_inei).url;
         let queryManzanasInei = new Query();
-        queryManzanasInei.where = webmap.findLayerById(_id_mz_inei).definitionExpression;
+        queryManzanasInei.where = self._webmap.findLayerById(_id_mz_inei).definitionExpression;
         queryManzanasInei.geometry = point_g;
         queryManzanasInei.spatialRelationship = "intersects";
         queryManzanasInei.returnGeometry = true;
@@ -272,7 +283,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         // query predios sin manzana
         let queryPrediosSinManzana = new Query();
-        queryPrediosSinManzana.where = webmap.findLayerById(_id_predio_sin_mz).definitionExpression;
+        queryPrediosSinManzana.where = self._webmap.findLayerById(_id_predio_sin_mz).definitionExpression;
         // generate buffer as point_g 10 meter
         queryPrediosSinManzana.distance = 5;
         queryPrediosSinManzana.units = "meters";
@@ -282,10 +293,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         queryPrediosSinManzana.outFields = ['COD_PRE'];
 
         // query promises
-        const promiseManzanas = webmap.findLayerById(_id_mz_pred).queryFeatures(queryManzanas)
-        const promiseManzanasPuntoImagen = webmap.findLayerById(_id_mz_pimg).queryFeatures(queryManzanasPuntoImagen)
-        const promiseManzanasInei = webmap.findLayerById(_id_mz_inei).queryFeatures(queryManzanasInei)
-        const promisePrediosSinManzana = webmap.findLayerById(_id_predio_sin_mz).queryFeatures(queryPrediosSinManzana)
+        const promiseManzanas = self._webmap.findLayerById(_id_mz_pred).queryFeatures(queryManzanas)
+        const promiseManzanasPuntoImagen = self._webmap.findLayerById(_id_mz_pimg).queryFeatures(queryManzanasPuntoImagen)
+        const promiseManzanasInei = self._webmap.findLayerById(_id_mz_inei).queryFeatures(queryManzanasInei)
+        const promisePrediosSinManzana = self._webmap.findLayerById(_id_predio_sin_mz).queryFeatures(queryPrediosSinManzana)
 
         evt.preventDefault();
 
@@ -294,17 +305,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             const responseManzanas = results[0].features.map((row) => {
               const oid = `${row.attributes.UBIGEO}${row.attributes.COD_SECT}${row.attributes.COD_MZN}`;
               let status = 1
-              if (graphicsIds[oid]) {
-                view.graphics.remove(graphicsIds[oid])
-                delete graphicsIds[oid]
+              if (self._graphicsIds[oid]) {
+                self._view.graphics.remove(self._graphicsIds[oid])
+                delete self._graphicsIds[oid]
                 status = 0
               } else {
                 let graphic = new Graphic({
                   geometry: row.geometry,
                   symbol: symbolSelectedPolygon
                 });
-                view.graphics.add(graphic);
-                graphicsIds[oid] = graphic;
+                self._view.graphics.add(graphic);
+                self._graphicsIds[oid] = graphic;
               }
 
               return {
@@ -319,17 +330,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             const responseManzanasPuntoImagen = results[1].features.map((row) => {
               const oid = `${row.attributes.ubigeo}${row.attributes.ID_MZN_U}`
               let status = 1
-              if (graphicsIds[oid]) {
-                view.graphics.remove(graphicsIds[oid])
-                delete graphicsIds[oid]
+              if (self._graphicsIds[oid]) {
+                self._view.graphics.remove(self._graphicsIds[oid])
+                delete self._graphicsIds[oid]
                 status = 0
               } else {
                 let graphic = new Graphic({
                   geometry: row.geometry,
                   symbol: symbolSelectedPolygon
                 });
-                view.graphics.add(graphic);
-                graphicsIds[oid] = graphic;
+                self._view.graphics.add(graphic);
+                self._graphicsIds[oid] = graphic;
               }
               return {
                 oid: oid,
@@ -343,17 +354,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             const responseManzanasInei = results[2].features.map((row) => {
               const oid = `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`
               let status = 1
-              if (graphicsIds[oid]) {
-                view.graphics.remove(graphicsIds[oid])
-                delete graphicsIds[oid]
+              if (self._graphicsIds[oid]) {
+                self._view.graphics.remove(self._graphicsIds[oid])
+                delete self._graphicsIds[oid]
                 status = 0
               } else {
                 let graphic = new Graphic({
                   geometry: row.geometry,
                   symbol: symbolSelectedPolygon
                 });
-                view.graphics.add(graphic);
-                graphicsIds[oid] = graphic;
+                self._view.graphics.add(graphic);
+                self._graphicsIds[oid] = graphic;
               }
               return {
                 oid: oid,
@@ -367,17 +378,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             const responsePrediosSinManzana = results[3].features.map((row) => {
               const oid = `${row.attributes.COD_PRE}`
               let status = 1
-              if (graphicsIds[oid]) {
-                view.graphics.remove(graphicsIds[oid])
-                delete graphicsIds[oid]
+              if (self._graphicsIds[oid]) {
+                self._view.graphics.remove(self._graphicsIds[oid])
+                delete self._graphicsIds[oid]
                 status = 0
               } else {
                 let graphic = new Graphic({
                   geometry: row.geometry,
                   symbol: symbolSelectedPoint
                 })
-                view.graphics.add(graphic);
-                graphicsIds[oid] = graphic;
+                self._view.graphics.add(graphic);
+                self._graphicsIds[oid] = graphic;
               }
               return {
                 oid: oid,
@@ -392,14 +403,14 @@ export class MapComponent implements OnInit, AfterViewInit {
             // Aqui se debe enviar la data al componente tabla
             self._stateService.row.emit(data);
             self._fuseSplashScreenService.hide();
-            self._stateService.setWebMap(webmap);
-            self._stateService.setGraphicsId(graphicsIds);
+            self._stateService.setWebMap(self._webmap);
+            self._stateService.setGraphicsId(self._graphicsIds);
             return data;
 
           })
           .catch((error) => {
             self._fuseSplashScreenService.hide();
-            self._stateService.setWebMap(webmap);
+            self._stateService.setWebMap(self._webmap);
             console.log(error)
           })
       }
@@ -417,58 +428,48 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
       }
 
-      function clearSelection() {
-        for (let oid in graphicsIds) {
-          view.graphics.remove(graphicsIds[oid])
-        }
-        graphicsIds = {};
-        self._stateService.deleteAll.emit(true);
-        self._stateService.setWebMap(webmap);
-        self._stateService.setGraphicsId(graphicsIds);
-      }
-
       this.pointButtonContainer.nativeElement.addEventListener('click', enableCreatePoint.bind(this));
-      this.clearButtonContainer.nativeElement.addEventListener('click', clearSelection.bind(this));
+      this.clearButtonContainer.nativeElement.addEventListener('click', self.clearSelection.bind(this));
       // this.createCargaContainer.nativeElement.addEventListener('click', createCargaTrabajo.bind(this));
 
-      view.when(() => {
+      self._view.when(() => {
         // Filter layers by ubigeo
-        _layersMap = webmap.allLayers
-        webmap.findLayerById(_id_cf_sector).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_manzana_urb).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_manzana).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_parques).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_unidades_urbanas).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_lotes).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_arancel).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_numeracion).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_eje_vial).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_lotes_pun).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_cf_predio).definitionExpression = this._queryUbigeo
+        _layersMap = self._webmap.allLayers
+        self._webmap.findLayerById(_id_cf_sector).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_manzana_urb).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_manzana).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_parques).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_unidades_urbanas).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_lotes).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_arancel).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_numeracion).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_eje_vial).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_lotes_pun).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_cf_predio).definitionExpression = this._queryUbigeo
 
         // Para el caso de las manzanas de predios se debe mantener la expresion definida desde portal y agregar el ubigeo
-        webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
-        // console.log(webmap.findLayerById(_id_mz_pred).definitionExpression)
-        webmap.findLayerById(_id_mz_pimg).definitionExpression += ` AND (${this._queryUbigeo})`
-        webmap.findLayerById(_id_mz_inei).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_carga).definitionExpression += ` AND (${this._queryUbigeo})`
-        webmap.findLayerById(_id_predio_sin_mz).definitionExpression += ` AND (${this._queryUbigeo})`
+        self._webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
+        // console.log(self._webmap.findLayerById(_id_mz_pred).definitionExpression)
+        self._webmap.findLayerById(_id_mz_pimg).definitionExpression += ` AND (${this._queryUbigeo})`
+        self._webmap.findLayerById(_id_mz_inei).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_carga).definitionExpression += ` AND (${this._queryUbigeo})`
+        self._webmap.findLayerById(_id_predio_sin_mz).definitionExpression += ` AND (${this._queryUbigeo})`
 
-        webmap.findLayerById(_id_lotes_sin_predio).definitionExpression = this._queryUbigeo
-        webmap.findLayerById(_id_predios).definitionExpression += ` AND (${this._queryUbigeo})`
-        webmap.findLayerById(_id_punto_imagen).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_lotes_sin_predio).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_id_predios).definitionExpression += ` AND (${this._queryUbigeo})`
+        self._webmap.findLayerById(_id_punto_imagen).definitionExpression = this._queryUbigeo
 
         // zoom extent by ubigeo
-        let limites_nacionales_url = webmap.findLayerById(_id_limites).url
+        let limites_nacionales_url = self._webmap.findLayerById(_id_limites).url
 
         query.executeForExtent(`${limites_nacionales_url}/2`, { where: this._queryUbigeo }).then((response) => {
-          view.goTo(response.extent);
+          self._view.goTo(response.extent);
           homeButton.viewpoint = {
             targetGeometry: response.extent,
           };
           this._fuseSplashScreenService.hide();
 
-          self._stateService.setWebMap(webmap);
+          self._stateService.setWebMap(self._webmap);
         }).catch((error) => {
           console.log('EsriLoader: ', error);
         });
