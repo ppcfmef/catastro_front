@@ -53,9 +53,9 @@ export class TableComponent implements OnInit {
 
     selection = new SelectionModel<any>(true, []);
 
-    constructor() {}
+    constructor() { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     onSelect(): void {
         this.selected.emit(this.selection.selected);
@@ -100,8 +100,7 @@ export class TableComponent implements OnInit {
         if (!row) {
             return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
         }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
-            row.position + 1
-        }`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1
+            }`;
     }
 }

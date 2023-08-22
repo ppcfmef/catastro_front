@@ -9,46 +9,51 @@
     <div class="w-full mt-3">
         <app-new-load></app-new-load>
     </div>
+    <form [formGroup]="form">
+        <div>
+            <span class="text-base font-medium">Nombre de la carga</span>
 
-    <div>
-        <span class="text-base font-medium">Nombre de la carga</span>
+            <div
+                class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
+                <input formControlName="loadName" class="w-full" placeholder="Ingrese un nombre">
 
-        <div
-            class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base"
-        >
-            <input class="w-full" placeholder="Ingrese un nombre" />
+
+            </div>
         </div>
-    </div>
 
-    <div class="mt-2">
-        <span class="text-base font-medium">Seleccione operador</span>
+        <div class="mt-2">
+            <span class="text-base font-medium">Seleccione operador</span>
 
-        <div class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-            <input class="w-full" placeholder="Operador" />
-            <span class="flex">
-                <mat-icon svgIcon="mat_outline:search"></mat-icon>
-            </span>
+            <div
+                class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
+                <input class="w-full" placeholder="Operador" />
+                <span class="flex">
+                    <mat-icon svgIcon="mat_outline:search"></mat-icon>
+                </span>
+            </div>
         </div>
-    </div>
-    <ng-container *ngIf="!user">
-        <app-detail-operador></app-detail-operador>
-        <div class="flex w-full pt-3 gap-4 py-3 justify-between">
-            <ng-container *ngFor="let card of cards">
-                <app-widget [card]="card"></app-widget>
-            </ng-container>
+        <ng-container *ngIf="!user">
+            <app-detail-operador></app-detail-operador>
+            <div class="flex w-full pt-3 gap-4 py-3 justify-between">
+                <ng-container *ngFor="let card of cards">
+                    <app-widget [card]="card"></app-widget>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <button (click)="createWorkLoad()" mat-button>
+            <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
+            Registrar carga de trabajo
+        </button>
+
+        <div class="mt-2">
+            <span class="text-base font-medium">Descripcion</span>
+
+            <div
+                class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
+                <textarea formControlName="description" name="" id="" cols="30" rows="4"
+                    placeholder="detalle"></textarea>
+            </div>
         </div>
-    </ng-container>
-
-    <button mat-button>
-        <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
-        Registrar carga de trabajo
-    </button>
-
-    <div class="mt-2">
-        <span class="text-base font-medium">Descripcion</span>
-
-        <div class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-            <textarea name="" id="" cols="30" rows="4" placeholder="detalle"></textarea>
-        </div>
-    </div>
+    </form>
 </div>

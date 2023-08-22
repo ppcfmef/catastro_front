@@ -17,7 +17,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('mapViewAOL', { static: false }) mapViewAOLContainer: ElementRef;
   @ViewChild('pointButton', { static: false }) pointButtonContainer: ElementRef;
   @ViewChild('clearSelection', { static: false }) clearButtonContainer: ElementRef;
-  @ViewChild('createCarga', { static: false }) createCargaContainer: ElementRef;
+  // @ViewChild('createCarga', { static: false }) createCargaContainer: ElementRef;
   // create string to the id of the map element that will be created
 
   _queryUbigeo: string;
@@ -46,6 +46,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((user: User) => {
         this._currentUser = user;
+        // @SETUBIGEO
         this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
       });
@@ -215,15 +216,15 @@ export class MapComponent implements OnInit, AfterViewInit {
           if (state) {
             view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
             view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
-            view.ui.add(this.createCargaContainer.nativeElement, 'top-left');
+            // view.ui.add(this.createCargaContainer.nativeElement, 'top-left');
             // change stile of the button
             this.pointButtonContainer.nativeElement.style = 'visibility: visible;';
             this.clearButtonContainer.nativeElement.style = 'visibility: visible;';
-            this.createCargaContainer.nativeElement.style = "visibility: visible;"
+            // this.createCargaContainer.nativeElement.style = "visibility: visible;"
           } else {
             this.pointButtonContainer.nativeElement.style = 'visibility: false;';
             this.clearButtonContainer.nativeElement.style = 'visibility: false;';
-            this.createCargaContainer.nativeElement.style = "visibility: false;"
+            // this.createCargaContainer.nativeElement.style = "visibility: false;"
           }
         });
 
@@ -391,11 +392,14 @@ export class MapComponent implements OnInit, AfterViewInit {
             // Aqui se debe enviar la data al componente tabla
             self._stateService.row.emit(data);
             self._fuseSplashScreenService.hide();
+            self._stateService.setWebMap(webmap);
+            self._stateService.setGraphicsId(graphicsIds);
             return data;
 
           })
           .catch((error) => {
             self._fuseSplashScreenService.hide();
+            self._stateService.setWebMap(webmap);
             console.log(error)
           })
       }
@@ -419,117 +423,13 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
         graphicsIds = {};
         self._stateService.deleteAll.emit(true);
-      }
-
-      function createCargaTrabajo() {
-        self._fuseSplashScreenService.show(0)
-        const nombre_carga = "carga de prueba"
-        const descrip_carga = "descripcion de la carga"
-        const ubigeo = self._currentUserUbigeo
-
-        let xmin = Infinity;
-        let ymin = Infinity;
-        let xmax = -Infinity;
-        let ymax = -Infinity;
-
-        if (Object.keys(graphicsIds).length === 0) {
-          return
-        }
-
-        for (let key in graphicsIds) {
-          if (graphicsIds.hasOwnProperty(key)) {
-            let graphic = graphicsIds[key];
-            let extent = { xmin: 0, ymin: 0, xmax: 0, ymax: 0 }
-            if (graphic.geometry.type === 'point') {
-              extent = {
-                xmin: graphic.geometry.x - 5,
-                ymin: graphic.geometry.y - 5,
-                xmax: graphic.geometry.x + 5,
-                ymax: graphic.geometry.y + 5,
-              }
-            } else {
-              extent = graphic.geometry.extent;
-            }
-
-            xmin = Math.min(xmin, extent.xmin);
-            ymin = Math.min(ymin, extent.ymin);
-            xmax = Math.max(xmax, extent.xmax);
-            ymax = Math.max(ymax, extent.ymax);
-          }
-        }
-
-        let fullExtent = new Extent({
-          xmin: xmin,
-          ymin: ymin,
-          xmax: xmax,
-          ymax: ymax,
-          spatialReference: 102100
-        });
-
-        let fullExtent_g = webMercatorUtils.webMercatorToGeographic(fullExtent)
-
-        let queryCarga = new Query();
-        queryCarga.where = this._queryUbigeo
-        queryCarga.outStatistics = [{
-          onStatisticField: "COD_CARGA",
-          outStatisticFieldName: "resultado",
-          statisticType: "max"
-        }];
-
-        webmap.findLayerById(_id_carga).queryFeatures(queryCarga)
-          .then((response) => {
-            let cod_carga = response.features[0].attributes.resultado
-            if (!cod_carga) {
-              cod_carga = '00000'
-            }
-            let cod_carga_int = parseInt(cod_carga, 10);
-            cod_carga_int = cod_carga_int + 1;
-            cod_carga = cod_carga_int.toString().padStart(5, '0');
-            console.log(cod_carga)
-
-            let graphics = []
-            let graphic = new Graphic();
-            graphic.attributes = {
-              ID_CARGA: `${ubigeo}${cod_carga}`,
-              COD_CARGA: cod_carga,
-              COD_USUARIO: '',
-              NOM_CARGA: nombre_carga,
-              DESCRIP: descrip_carga,
-              FEC_ENTREGA: new Date(2023, 7, 17).valueOf(),
-              ESTADO: 1,
-              UBIGEO: ubigeo,
-              XMIN: fullExtent_g.xmin,
-              YMIN: fullExtent_g.ymin,
-              XMAX: fullExtent_g.xmax,
-              YMAX: fullExtent_g.ymax,
-              NOM_USUARIO: ''
-            };
-            graphic.geometry = Polygon.fromExtent(fullExtent_g)
-            graphics.push(graphic);
-
-            webmap.findLayerById(_id_carga).applyEdits({ addFeatures: graphics })
-              .then((add, update, del) => {
-                console.log(add)
-                clearSelection()
-                self._fuseSplashScreenService.hide();
-              })
-              .catch((error) => {
-                self._fuseSplashScreenService.hide();
-                console.log(error)
-              })
-
-          })
-          .catch((error) => {
-            self._fuseSplashScreenService.hide();
-            console.log(error)
-          })
-        // view.graphics.add(graphicExtent);
-        // view.goTo(fullExtent_g);
+        self._stateService.setWebMap(webmap);
+        self._stateService.setGraphicsId(graphicsIds);
       }
 
       this.pointButtonContainer.nativeElement.addEventListener('click', enableCreatePoint.bind(this));
       this.clearButtonContainer.nativeElement.addEventListener('click', clearSelection.bind(this));
-      this.createCargaContainer.nativeElement.addEventListener('click', createCargaTrabajo.bind(this));
+      // this.createCargaContainer.nativeElement.addEventListener('click', createCargaTrabajo.bind(this));
 
       view.when(() => {
         // Filter layers by ubigeo
@@ -567,6 +467,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             targetGeometry: response.extent,
           };
           this._fuseSplashScreenService.hide();
+
+          self._stateService.setWebMap(webmap);
         }).catch((error) => {
           console.log('EsriLoader: ', error);
         });

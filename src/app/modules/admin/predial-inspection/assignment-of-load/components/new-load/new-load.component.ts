@@ -12,11 +12,11 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StateService } from '../../services/state.service';
 
 @Component({
-  selector: 'app-new-load',
-  templateUrl: './new-load.component.html',
-  styleUrls: ['./new-load.component.scss']
+    selector: 'app-new-load',
+    templateUrl: './new-load.component.html',
+    styleUrls: ['./new-load.component.scss']
 })
-export class NewLoadComponent implements OnInit,AfterViewInit,OnDestroy {
+export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('apptable') table: MatTable<any>;
@@ -30,7 +30,7 @@ export class NewLoadComponent implements OnInit,AfterViewInit,OnDestroy {
 
 
 
-     // Properties app
+    // Properties app
     _currentUser: User;
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -40,47 +40,50 @@ export class NewLoadComponent implements OnInit,AfterViewInit,OnDestroy {
         isZoom: true,
 
     };
-    tableColumns: TableColumn[] =[];
+    tableColumns: TableColumn[] = [];
 
     dataSource: MatTableDataSource<any>;
-    data: any[]=[];
+    data: any[] = [];
     ngZone: any;
     constructor(
         private _userService: UserService,
         private _stateService: StateService,
         private cdr: ChangeDetectorRef
-        ) { }
+    ) { }
 
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._stateService.deleteAll.subscribe( (data) => {
-                if(data) {
-                    this.data.splice(0, this.data.length);
-                    this.dataSource= new MatTableDataSource(this.data);
-                    data = false;
-                    console.log(data, 'act');
-                    console.log(this.dataSource, 'datasource on init');
-                }
-            });
+        this._stateService.deleteAll.subscribe((data) => {
+            if (data) {
+                this.data.splice(0, this.data.length);
+                this.dataSource = new MatTableDataSource(this.data);
+                data = false;
+                console.log(data, 'act');
+                console.log(this.dataSource, 'datasource on init');
+            }
+            this._stateService.setTableData(this.data);
+        });
 
         this._stateService.row.subscribe((row: any) => {
+            // row is an array
+            for (const item of row) {
+                if (item.status === 1) {
+                    this.data = [...this.data, item];
+                }
+                else {
+                    console.log(row, 'row con ');
+                    const index = this.data.findIndex(data => data.codigo === item.codigo);
+                    console.log(index, 'index');
+                    if (index === -1) return;
+                    this.data.splice(index, 1);
+                }
 
-            if(row[0].status === 1){
-                this.data = [...this.data , row[0]];
+                console.log(this.data, 'data');
+                this.dataSource = new MatTableDataSource(this.data);
             }
-            else{
-                console.log(row, 'row con ');
-                const index = this.data.findIndex(data => data.codigo === row[0].codigo);
-                console.log(index, 'index');
-                if(index === -1) return;
-                this.data.splice(index, 1);
-            }
-
-            console.log(this.data, 'data');
-            this.dataSource= new MatTableDataSource(this.data);
-            console.log(this.dataSource, 'datasource on init');
-        } );
+            this._stateService.setTableData(this.data);
+        });
     }
 
     // public ngOnChanges(changes: SimpleChanges): void {
@@ -95,20 +98,20 @@ export class NewLoadComponent implements OnInit,AfterViewInit,OnDestroy {
     };
 
     ngOnDestroy(): void {
-        this. _unsubscribeAll.next();
-        this. _unsubscribeAll.complete();
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 
     setTableColumn(): void {
         this.tableColumns = [
-            {matheaderdef:'Nro', matcolumndef:'status', matcelldef: 'status'},
-            {matheaderdef:'Codigo', matcolumndef:'codigo', matcelldef: 'codigo'},
-            {matheaderdef:'Tipo', matcolumndef:'tipo', matcelldef: 'tipo'},
-            {matheaderdef:'Fuente', matcolumndef:'fuente', matcelldef: 'fuente'},
+            { matheaderdef: 'Nro', matcolumndef: 'status', matcelldef: 'status' },
+            { matheaderdef: 'Codigo', matcolumndef: 'codigo', matcelldef: 'codigo' },
+            { matheaderdef: 'Tipo', matcolumndef: 'tipo', matcelldef: 'tipo' },
+            { matheaderdef: 'Fuente', matcolumndef: 'fuente', matcelldef: 'fuente' },
         ];
     }
 
-  //   Implementar logica
+    //   Implementar logica
     onZoom(row: any): void {
         console.log('zoom',);
     }
