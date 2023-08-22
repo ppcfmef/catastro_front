@@ -11,6 +11,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StateService } from '../../services/state.service';
 import { IdataLoad } from '../../interfaces/dataload.interface';
+import { TableActions } from '../../../shared/interfaces/table-actions.interface';
+import { TableAction } from '../../../shared/enum/table-action.enum';
 
 @Component({
     selector: 'app-new-load',
@@ -38,6 +40,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     tableConfig: TableConifg = {
         isAction: true,
         isZoom: true,
+        isDeleted: true,
 
     };
     tableColumns: TableColumn[] = [];
@@ -100,10 +103,28 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
     }
 
+    onAction(tableAction: TableActions): void {
+        switch (tableAction.action) {
+            case TableAction.zoom:
+            this.onZoom(tableAction.row);
+            break;
+
+            case TableAction.delete:
+            this.onDelete(tableAction.row);
+            break;
+
+            default:
+                break;
+        }
+    }
+
     //   Implementar logica
     onZoom(row: any): void {
         console.log('zoom',);
     }
 
+    onDelete(row: any): void {
+        console.log('zoom',);
+    }
 
 }

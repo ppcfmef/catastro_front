@@ -58,7 +58,7 @@ export class LoadAttendComponent implements OnInit {
         }
 
         redirecto(): void {
-            this._router.navigate(['assignment-of-load'], { relativeTo: this._route });
+            this._router.navigate(['../../'], { relativeTo: this._route });
         }
 
 }

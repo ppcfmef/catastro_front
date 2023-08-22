@@ -7,7 +7,7 @@ import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { TableActions } from '../../../shared/interfaces/table-actions.interface';
 import { TableAction } from '../../../shared/enum/table-action.enum';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.component';
 
@@ -37,6 +37,7 @@ export class TableAssignedComponent implements OnInit,AfterViewInit {
     constructor(
         public dialog: MatDialog,
         private _router: Router,
+        private _route: ActivatedRoute,
         ) { }
 
     ngOnInit(): void {
@@ -73,7 +74,7 @@ export class TableAssignedComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`inspection/assignment-of-load/load-assigned/${row.cod_carga}`]);
+        this._router.navigate([`load-assigned/${row.cod_carga}`], {relativeTo: this._route});
     }
     onDelete(row: any): void {
             this.dialog.open(MatDialogDeletedComponent, {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 
 @Component({
@@ -35,7 +35,10 @@ export class LoadPendingAssignmentComponent implements OnInit {
         },
     ];
 
-    constructor(private _router: Router) {}
+    constructor(
+        private _router: Router,
+        private _route: ActivatedRoute,
+        ) {}
 
     ngOnInit(): void {
         this.setTableColumn();
@@ -64,6 +67,6 @@ export class LoadPendingAssignmentComponent implements OnInit {
     }
 
     redirecto(): void {
-        this._router.navigate(['./inspection/assignment-of-load']);
+        this._router.navigate(['../../'], {relativeTo: this._route});
     }
 }

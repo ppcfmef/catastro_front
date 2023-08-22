@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableActions } from '../../../shared/interfaces/table-actions.interface';
 import { TableAction } from '../../../shared/enum/table-action.enum';
 import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.component';
@@ -34,6 +34,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     constructor(
         public dialog: MatDialog,
         private _router: Router,
+        private _route: ActivatedRoute,
         ) { }
 
     ngOnInit(): void {
@@ -48,7 +49,6 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
         this.tableColumns = [
             {matheaderdef:'Nro.', matcolumndef:'nro', matcelldef: 'nro'},
             {matheaderdef:'Cod. Carga', matcolumndef:'cod_carga', matcelldef: 'cod_carga'},
-            {matheaderdef:'Operador', matcolumndef:'operador', matcelldef: 'operador'},
             {matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
         ];
 
@@ -70,7 +70,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`inspection/assignment-of-load/load-assigned/${row.cod_carga}`]);
+        this._router.navigate([`load-pending-assigment/${row.cod_carga}`] , {relativeTo: this._route});
     }
     onDelete(row: any): void {
             this.dialog.open(MatDialogDeletedComponent, {
