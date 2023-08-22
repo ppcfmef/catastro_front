@@ -10,6 +10,7 @@ import { loadModules } from 'esri-loader';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StateService } from '../../services/state.service';
+import { IdataLoad } from '../../interfaces/dataload.interface';
 
 @Component({
     selector: 'app-new-load',
@@ -19,7 +20,6 @@ import { StateService } from '../../services/state.service';
 export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('apptable') table: MatTable<any>;
 
     count = 0;
 
@@ -42,11 +42,9 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     tableColumns: TableColumn[] = [];
 
-    dataSource: MatTableDataSource<any>;
-    data: any[] = [];
-    ngZone: any;
+    dataSource: MatTableDataSource<IdataLoad>;
+    data: IdataLoad[] = [];
     constructor(
-        private _userService: UserService,
         private _stateService: StateService,
         private cdr: ChangeDetectorRef
     ) { }
@@ -54,47 +52,38 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._stateService.deleteAll.subscribe((data) => {
-            if (data) {
+        this._stateService.deleteAll.subscribe((state:boolean) => {
+            if (state) {
                 this.data.splice(0, this.data.length);
                 this.dataSource = new MatTableDataSource(this.data);
-                data = false;
-                console.log(data, 'act');
-                console.log(this.dataSource, 'datasource on init');
+                state = false;
             }
             this._stateService.setTableData(this.data);
         });
 
-        this._stateService.row.subscribe((row: any) => {
+        this._stateService.row.subscribe((row: IdataLoad[]) => {
             // row is an array
             for (const item of row) {
                 if (item.status === 1) {
                     this.data = [...this.data, item];
                 }
                 else {
-                    console.log(row, 'row con ');
-                    const index = this.data.findIndex(data => data.codigo === item.codigo);
-                    console.log(index, 'index');
+                    const index = this.data.findIndex((data:IdataLoad) => data.codigo === item.codigo);
                     if (index === -1) return;
                     this.data.splice(index, 1);
                 }
+                this.data.map((item, index) => {
+                    Object.assign(item, {nro: `${index+1}`});
+                });
 
-                console.log(this.data, 'data');
                 this.dataSource = new MatTableDataSource(this.data);
             }
             this._stateService.setTableData(this.data);
         });
     }
 
-    // public ngOnChanges(changes: SimpleChanges): void {
-    //     this.dataSource = new MatTableDataSource(changes.data.currentValue);
-    // }
 
     ngAfterViewInit(): void {
-        this.dataSource = new MatTableDataSource(this.data);
-        this.dataSource._updateChangeSubscription();
-
-        console.log(this.dataSource, 'datasource');
     };
 
     ngOnDestroy(): void {
@@ -104,7 +93,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTableColumn(): void {
         this.tableColumns = [
-            { matheaderdef: 'Nro', matcolumndef: 'status', matcelldef: 'status' },
+            { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro' },
             { matheaderdef: 'Codigo', matcolumndef: 'codigo', matcelldef: 'codigo' },
             { matheaderdef: 'Tipo', matcolumndef: 'tipo', matcelldef: 'tipo' },
             { matheaderdef: 'Fuente', matcolumndef: 'fuente', matcelldef: 'fuente' },

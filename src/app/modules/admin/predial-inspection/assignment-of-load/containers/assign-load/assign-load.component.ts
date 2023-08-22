@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StateService } from '../../services/state.service';
 import { UserService } from 'app/core/user/user.service';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -10,7 +10,7 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
-import { PassThrough } from 'stream';
+import { IdataLoad } from '../../interfaces/dataload.interface';
 
 
 
@@ -26,7 +26,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     _queryUbigeo: string;
     _field_ubigeo = 'UBIGEO';
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    tableData: any;
+    tableData: IdataLoad[];
     webMapData: any;
     graphicsIdsData: any;
     ubigeoSubscription: Subscription;
@@ -49,6 +49,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _router: Router,
+        private route: ActivatedRoute,
         private _stateService: StateService,
         private _userService: UserService,
         protected _fuseSplashScreenService: FuseSplashScreenService,
@@ -70,7 +71,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             });
 
         // Suscríbete al BehaviorSubject para datos de la tabla
-        this.tableDataSubscription = this._stateService.getTableData().subscribe(data => {
+        this.tableDataSubscription = this._stateService.getTableData().subscribe((data:IdataLoad[]) => {
             this.tableData = data;
         });
 
@@ -89,7 +90,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     redirecto(): void {
-        console.log('redirect'); this._router.navigate(['/land-inspection/assignment-of-load']);
+        console.log('redirect');
+        this._router.navigate(['../'],{ relativeTo: this.route });
         this._stateService.state.emit(false);
 
     }
@@ -97,7 +99,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     async createWorkLoad() {
         // params
         const dataWorkLoad = this.tableData;
-        const nameWorkLoad = this.form.value.loadName
+        const nameWorkLoad = this.form.value.loadName;
         const descWorlLoad = this.form.value.description
         const ubigeo = this._currentUserUbigeo
         const graphicsId = this.graphicsIdsData
