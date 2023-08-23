@@ -1,0 +1,55 @@
+:root {
+    ---black: #1e293b;
+}
+.title-primary {
+    font-weight: bold;
+    color: var(---black);
+    font-size: 18px;
+}
+
+:host .mat-button{
+    background-color: #66BB6A;
+    color: #FFFFFF;
+    border-radius: 7px !important;
+    width: 143px;
+    font-size: 12px;
+}
+
+:host mat-icon.height ::ng-deep svg{
+    height: 20px;
+}
+
+
+:host mat-tab-group ::ng-deep mat-tab-header {
+    padding-top: 8px;
+
+    .mat-tab-label-container
+        .mat-tab-list
+        .mat-tab-labels
+        .mat-tab-label.mat-tab-label-active
+        .mat-tab-label-content {
+        color: #219ef9;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .mat-tab-label-container
+        .mat-tab-list
+        .mat-tab-labels
+        > .mat-tab-label.mat-tab-label-active {
+        background-color: transparent !important;
+        border-bottom: solid 3px #219ef9;
+        border-radius: 0 !important;
+    }
+
+    .mat-tab-label-container {
+        padding: 0;
+    }
+}
+
+:host mat-tab-group ::ng-deep {
+    .mat-tab-body-content {
+        padding: 2px;
+        padding-top: 10px;
+    }
+}

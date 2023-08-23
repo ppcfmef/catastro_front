@@ -42,8 +42,8 @@ const routes: Routes = [
   {
     path: 'land-maintenance',
     loadChildren: () => import('./map-land-maintenance/map-land-maintenance.module').then(m => m.MapLandMaintenanceModule)
-  }
-];;
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -1,0 +1,29 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0 1.25rem;
+    padding: 9px 12px;
+    border-radius: 0.5rem;
+    flex-direction: row;
+    height: 56px;
+    background-color: #66BB6A;
+    width: max-content;
+    .number {
+        font-size: 32px;
+        color:  #FFFFFF ;
+        font-weight: bold;
+    }
+
+    .title {
+        font-size: 11px;
+        color: #FFFFFF;
+        font-weight: bold;
+        line-height: 12px;
+        text-align: center;
+        width: 85px;
+        text-align: justify;
+    }
+
+}

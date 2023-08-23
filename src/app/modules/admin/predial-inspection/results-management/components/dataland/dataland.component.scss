@@ -1,0 +1,24 @@
+:root {
+    ---black: #1E293B;
+}
+@mixin text() {
+    color: #1E293B;
+    font-size: 14px;
+}
+
+.text-bold {
+    @include text;
+    font-weight: bold;
+}
+
+.text {
+    @include text;
+}
+
+.buttonMap {
+    display: flex;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #0795FA;
+
+}

@@ -1,0 +1,53 @@
+<div class="flex flex-col w-full">
+    <div class="flex flex-col bg-gray-100">
+        <div
+            class="p-9 px-8 border-b bg-card text-5xl font-bold tracking-tight leading-none"
+        >
+            Predios sin georreferenciación
+            <mat-icon aria-hidden="false" fontIcon="home"></mat-icon>
+        </div>
+    </div>
+    <div class="flex gap-4 mt-14 w-100 px-6">
+        <ng-container *ngFor="let card of cards">
+            <app-card-deatail [styles]="card" (onClickEvent)="onFilterStatus($event)" ></app-card-deatail>
+        </ng-container>
+    </div>
+    <div class="flex gap-4 mt-7 w-full px-6">
+        <div class="w-100">
+
+            <app-search-land-without-geo-table (searchEvent)="onSearch($event)" (cleanSearchEvent)="onClearSearch()" ></app-search-land-without-geo-table>
+
+
+        </div>
+        <button mat-button >
+            <mat-icon
+                svgIcon="mat_solid:download"
+                class="text-white mr-2"
+            ></mat-icon>
+            Descargar Excel
+        </button>
+        <div class="flex items-end py-2 gap-x-3">
+
+            <button class="circle green">
+                <div class="circle__text">UBICADO</div>
+            </button>
+            <button class="circle orange">
+                <div class="circle__text">PENDIENTE</div>
+            </button>
+
+            <button class="circle red">
+                <div class="circle__text">OBSERVADO</div>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="p-6">
+        <app-land-without-geo-table [dataSource]="dataSource"
+        [length]="tableLength"
+        (changePage)="onChangePage($event)"></app-land-without-geo-table>
+    </div>
+
+</div>
+

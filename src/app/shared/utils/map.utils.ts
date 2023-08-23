@@ -3,6 +3,7 @@ import { loadModules } from 'esri-loader';
 import proj4 from 'proj4';
 import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
+import { FormUtils } from './form.utils';
 
 export class MapUtils {
 
@@ -178,7 +179,7 @@ export class MapUtils {
 
 
     /* eslint-disable @typescript-eslint/naming-convention */
-    static  async projectGeometry(geometry: any,proj4DestWkid: number): Promise<any> {
+    static   async projectGeometry(geometry: any,proj4DestWkid: number): Promise<any> {
         const [SpatialReference, Point, projection] = await loadModules([
             'esri/geometry/SpatialReference',
             'esri/geometry/Point',
@@ -245,7 +246,59 @@ export class MapUtils {
 
     /* eslint-disable @typescript-eslint/naming-convention */
 
-  projectPoint(point: any,proj4SrcKey: string,proj4DestKey: string): any {
+
+ /* eslint-disable @typescript-eslint/naming-convention */
+static async createArcgisJSON(
+    features: any[],
+    projectionWkid: number
+): Promise<any[]> {
+    const arcgisJson = [];
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const [Graphic, Polyline, Point, projection, SpatialReference] =
+        await loadModules([
+            'esri/Graphic',
+            'esri/geometry/Polyline',
+            'esri/geometry/Point',
+            'esri/geometry/projection',
+            'esri/geometry/SpatialReference',
+        ]);
+    /* eslint-enable @typescript-eslint/naming-convention */
+    const outSpatialReference = new SpatialReference(projectionWkid);
+
+    return projection.load().then(() => {
+        features.forEach((feature: any) => {
+            if (projectionWkid !== 4326) {
+                const geometryIni = new Point({
+                    x: feature.COORD_X,
+                    y: feature.COORD_Y,
+                    spatialReference: {
+                        wkid: 4326,
+                    },
+                });
+                const pointProject = projection.project(
+                    geometryIni,
+                    outSpatialReference
+                );
+                feature.COORD_X = pointProject.x;
+                feature.COORD_Y = pointProject.y;
+            }
+
+            const geometry = {
+                x: feature.COORD_X,
+                y: feature.COORD_Y,
+            };
+
+            const attributes = FormUtils.deleteKeysNullInObject(feature);
+            const geoFeature = {
+                geometry,
+                attributes,
+            };
+            arcgisJson.push(geoFeature);
+        });
+        return Promise.all(arcgisJson);
+    });
+}
+projectPoint(point: any,proj4SrcKey: string,proj4DestKey: string): any {
     return proj4(
         proj4.defs[proj4SrcKey],
         proj4.defs[proj4DestKey]

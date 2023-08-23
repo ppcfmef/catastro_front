@@ -1,0 +1,67 @@
+<div class="flex flex-col flex-auto gap-y-3 container">
+    <div class="flex gap-x-4 items-center">
+        <button class="green-button-solid">
+            <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
+        </button>
+        <span class="title-primary">Ticket  {{ticket.cod}}  -   {{ticket.gap}}</span>
+    </div>
+    <mat-accordion class="mt-3">
+        <mat-expansion-panel (opened)="true"(closed)="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Observación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                {{comment}}
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="true"(closed)="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Datos de Ubicación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-dataland></app-dataland>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="true" (closed)="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Datos de Titularidad
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>I'm visible because I am open</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="true" (closed)="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                Datos de Predio
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>I'm visible because I am open</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="true" (closed)="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Datos de Actualizacion
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>I'm visible because I am open</p>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+
+    <div class="w-full flex gap-x-4 justify-center">
+        <button class="btn">
+            <mat-icon class="text-white" svgIcon="mat_solid:picture_as_pdf"></mat-icon>
+            Descargar PDF
+        </button>
+    </div>
+
+</div>
+
+

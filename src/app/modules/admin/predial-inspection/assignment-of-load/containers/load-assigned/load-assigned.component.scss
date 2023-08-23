@@ -1,0 +1,32 @@
+:root {
+    ---black:#1E293B;
+}
+
+.title-primary {
+    font-weight: bold;
+    color: var(---black);
+    font-size: 18px;
+}
+
+.text-secundary {
+    color: var(---black);
+    font-size: 14px;
+}
+
+
+.arrow-back {
+    color: #0090F8;
+}
+
+input{
+    outline: none;
+}
+
+
+:host .mat-button{
+    margin-top: 32px;
+    background-color: #E54646;
+    color: #FFFFFF;
+    border-radius: 7px !important;
+    width: 375px;
+}

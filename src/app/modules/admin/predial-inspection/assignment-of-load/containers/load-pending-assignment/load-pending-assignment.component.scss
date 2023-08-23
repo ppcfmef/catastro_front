@@ -1,0 +1,43 @@
+:root {
+    ---black:#1E293B;
+}
+
+.title-primary {
+    font-weight: bold;
+    color: var(---black);
+    font-size: 18px;
+}
+
+.text-secundary {
+    color: var(---black);
+    font-size: 14px;
+}
+
+
+.arrow-back {
+    color: #0090F8;
+}
+
+input{
+    outline: none;
+}
+
+:host app-widget ::ng-deep .card {
+    background-color: #66BB6A;
+}
+
+
+
+:host .mat-button{
+    margin-top: 16px;
+    background-color: #219EF9;
+    color: #FFFFFF;
+    border-radius: 7px !important;
+    position: absolute;
+    bottom: 16px;
+    width: 375px;
+
+
+}
+
+

@@ -1,0 +1,85 @@
+:host {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.esri-view {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#mapViewAOL {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.map {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.pointButtonCls {
+    visibility: hidden;
+    background-color: #219EF9;
+    color: white;
+}
+
+.pointButtonCls.active {
+    background-color: #013492;
+    color: white
+}
+
+.pointButtonCls:hover {
+    background-color: #013492;
+    color: white;
+}
+
+.clearButtonCls {
+    visibility: hidden;
+    background-color: #ec404f;
+    color: white;
+}
+
+// .createCarga {
+//     visibility: hidden;
+//     background-color: #149608;
+//     color: white;
+// }
+
+// //
+// @mixin styleBasic {
+//     background-color: #57585A;
+//         color: white;
+//         border-radius: 8px;
+//         padding: 12px;
+// }
+
+// :host ::ng-deep{
+//     .esri-widget.esri-interactive {
+//         @include styleBasic()
+//     }
+
+//     .esri-widget.esri-widget.esri-interactive:hover {
+//         background-color: #323334
+//     }
+//     .esri-component.esri-zoom.esri-widget {
+//         background-color: #57585A;
+//         border-radius: 8px;
+//     }
+
+//     .esri-component.esri-home.esri-widget.esri-widget {
+//         @include styleBasic()
+//     }
+//     .esri-component.esri-home.esri-widget.esri-widget:hover {
+//         background-color: #323334
+//     }
+// }

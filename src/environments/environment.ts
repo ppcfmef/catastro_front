@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 const host = 'https://catastro-fiscal.codtree.com/';
-
+//const host = 'http://127.0.0.1:8000/';
 export const environment = {
     production: false,
     url: host,
@@ -12,7 +12,9 @@ export const environment = {
     mediaUrl: host + 'media',
     exportUrl: host + 'export',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv',
-    defaultUbigeo: '150101'
+    defaultUbigeo: '150101',
+    apiKeyArcgis:'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9',
+    apiUrlArcGisServer: 'https://ws.mineco.gob.pe/serverdf/rest/services',
 };
 
 /*

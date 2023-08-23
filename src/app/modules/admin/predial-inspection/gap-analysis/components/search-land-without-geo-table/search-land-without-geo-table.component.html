@@ -1,0 +1,24 @@
+
+<div class="w-100">
+    <div class="text">Buscar predio</div>
+    <div
+        class="flex border bg-white border-gary-100 py-2 px-4 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base"
+        [formGroup]="search">
+        <input
+            class="w-full" formControlName="search"
+            placeholder="Código de predio, calle, unidad urbana..."
+            (keyup.enter)="onClickSearch()"
+        />
+
+        <mat-icon *ngIf="cleanSearch"
+        [matTooltip]="'Limpiar buscador'"
+        class="hidden sm:flex icon-size-5"
+        [svgIcon]="'heroicons_solid:x'"
+        (click)="onCleanSearch()"
+      ></mat-icon>
+
+        <span class="flex"  >
+            <mat-icon svgIcon="mat_outline:search" (click)="onClickSearch()"></mat-icon>
+        </span>
+    </div>
+</div>

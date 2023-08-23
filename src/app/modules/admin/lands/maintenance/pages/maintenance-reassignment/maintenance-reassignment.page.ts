@@ -12,7 +12,7 @@ export class MaintenanceReassignmentPage implements OnInit {
     constructor(private _activatedRoute: ActivatedRoute) {
 
         this.idLand=this._activatedRoute.snapshot.paramMap.get('idLand');
-        console.log('this.idLand>>',this.idLand);
+        //console.log('this.idLand>>',this.idLand);
    }
 
   ngOnInit(): void {

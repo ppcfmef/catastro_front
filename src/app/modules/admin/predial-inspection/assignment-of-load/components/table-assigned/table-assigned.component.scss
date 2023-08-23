@@ -1,0 +1,17 @@
+
+:host app-table ::ng-deep {
+
+    thead .mat-header-cell {
+        text-align: left;
+    }
+    .mat-row {
+        text-align: left;
+    }
+
+    td.mat-cell{
+        font-size: 12px;
+    }
+
+
+
+}

@@ -1,0 +1,36 @@
+<!-- <div class="flex w-full pt-3 gap-4 px-4 py-3 bg-white">
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">PREDIOS ASIGNADOS PENDIENTES</span>
+    </div>
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">PUNTOS LOTES ASIGNADOS PENDIENTE</span>
+    </div>
+
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">MANZANA ASIGNADAS PENDIENTE</span>
+    </div>
+
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">MANZANAS VERIFICABLES EN CAMPO</span>
+    </div>
+
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">MANZANAS (EXPANSION URBANA)</span>
+    </div>
+
+    <div class="card shadow-md">
+        <span class="number">23</span>
+        <span class="title">OPERADORES DE CAMPO</span>
+    </div>
+</div> -->
+
+<div class="flex w-full pt-3 gap-4 px-4 py-3 bg-white">
+    <ng-container *ngFor="let card of cards">
+        <app-widget-main [card]="card"></app-widget-main>
+    </ng-container>
+</div>

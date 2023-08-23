@@ -1,0 +1,39 @@
+.container-list-load{
+    width:410px;
+    //max-width: 440px;
+}
+
+.text {
+    color: #1E293B;
+    font-size: 14px;
+}
+
+h2 {
+    font-weight: bold ;
+}
+
+.button {
+    width: 110px;
+    height: 38px;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.25;
+    padding: 0 8px;
+    border-radius:7px;
+    color: white ;
+    font-size: 12px;
+}
+.red {
+    background-color: #E54646;
+}
+
+.green {
+    background-color: #66BB6A;
+}
+.blue {
+    background-color: #2FA1F3;
+    width: 135px;
+}
+

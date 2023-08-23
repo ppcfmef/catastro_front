@@ -1,0 +1,37 @@
+
+<div class="flex flex-col w-full">
+    <div class="flex flex-col bg-gray-100">
+        <div class="p-9 px-8 border-b bg-card text-5xl font-bold tracking-tight leading-none">
+            Análisis de Brechas
+            <mat-icon aria-hidden="false" fontIcon="home"></mat-icon>
+        </div>
+    </div>
+    <div class="mt-2 w-100 px-8 ">
+        <div class="flex border bg-white border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
+            <input class="w-full" placeholder="Buscar por distrito" />
+            <span class="flex">
+                <mat-icon svgIcon="mat_outline:search"></mat-icon>
+            </span>
+        </div>
+        <div class="mt-4">
+            <div class="flex gap-1 mb-1">
+                <div class="text">DEPARTAMENTO:</div>
+                <div class="subText">Lima</div>
+            </div>
+            <div class="flex gap-1 mb-1">
+                <div class="text">PROVINCIA:</div>
+                <div class="subText">Lima</div>
+            </div>
+            <div class="flex gap-1 mb-1">
+                <div class="text">DISTRITO:</div>
+                <div class="subText">San Juan de Lurigancho</div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-wrap gap-5 py-5 px-8">
+        <div *ngFor="let card of cards">
+            <app-card-predial [card]="card" ></app-card-predial>
+        </div>
+    </div>
+
+</div>
