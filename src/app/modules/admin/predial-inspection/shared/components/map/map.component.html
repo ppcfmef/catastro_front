@@ -12,6 +12,9 @@
         title="Crear carga" #createCarga>
         <span class="esri-icon-upload"></span>
     </div> -->
+    <select-ubigeo id="selectUbigeo" *ngIf="!hideSelectUbigeo" (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
 </div>
+
+
 <!-- add dark theme arcgis calcite -->
 <link rel="stylesheet" href="https://js.arcgis.com/4.17/esri/themes/light/main.css" />

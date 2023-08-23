@@ -19,7 +19,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('clearSelection', { static: false }) clearButtonContainer: ElementRef;
   // @ViewChild('createCarga', { static: false }) createCargaContainer: ElementRef;
   // create string to the id of the map element that will be created
-
+  hideSelectUbigeo:boolean = true;
   _queryUbigeo: string;
   _field_ubigeo = 'UBIGEO';
   _view = null;
@@ -73,6 +73,10 @@ clearSelectionById(oid:any): void {
     delete this._graphicsIds[oid]
     this._stateService.setWebMap(this._webmap);
     this._stateService.setGraphicsId(this._graphicsIds);
+}
+
+onSelectUbigeo(ubigeo: string): void {
+    console.log("onSelectUbigeo", ubigeo);
 }
 
 
