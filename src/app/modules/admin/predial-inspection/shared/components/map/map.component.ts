@@ -67,6 +67,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     this._stateService.setGraphicsId(this._graphicsIds);
   }
 
+  clearSelectionById(oid: any): void {
+    this._view.graphics.remove(this._graphicsIds[oid]);
+    delete this._graphicsIds[oid]
+    this._stateService.setWebMap(this._webmap);
+    this._stateService.setGraphicsId(this._graphicsIds);
+  }
+
   refreshLayerById(id): void {
     this._webmap.findLayerById(id).refresh();
   }
