@@ -31,6 +31,7 @@ import { DetailOperadorComponent } from './components/detail-operador/detail-ope
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablePendingComponent } from './components/table-pending/table-pending.component';
 import { TableAttendedComponent } from './components/table-attended/table-attended.component';
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -68,6 +69,7 @@ imports: [
     MatCheckboxModule,
     SharedModule,
     ReactiveFormsModule,
+    MatSelectModule,
 ]
 })
 export class AssignmentOfLoadModule { }

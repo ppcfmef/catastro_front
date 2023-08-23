@@ -54,6 +54,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
       });
     this._stateService.clearAllGraphics.subscribe(() => this.clearSelection());
+
+    this._stateService.functiondelete.subscribe((oid) => this.clearSelectionById(oid));
   }
 
   clearSelection(): void {
@@ -65,6 +67,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     this._stateService.setWebMap(this._webmap);
     this._stateService.setGraphicsId(this._graphicsIds);
   }
+
+clearSelectionById(oid:any): void {
+    this._view.graphics.remove(this._graphicsIds[oid]);
+    delete this._graphicsIds[oid]
+    this._stateService.setWebMap(this._webmap);
+    this._stateService.setGraphicsId(this._graphicsIds);
+}
+
 
   async initializeMapAOL() {
     try {

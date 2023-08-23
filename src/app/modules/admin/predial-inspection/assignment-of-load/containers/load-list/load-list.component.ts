@@ -13,7 +13,10 @@ import { Subject } from 'rxjs';
 })
 export class LoadListComponent implements OnInit {
 
-
+    states:string[] = [
+        "Ubigeo",
+        "Codigo"
+    ]
     private _unsuscribe = new Subject();
     constructor(
         private _router: Router,

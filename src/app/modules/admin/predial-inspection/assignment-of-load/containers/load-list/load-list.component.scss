@@ -18,7 +18,7 @@ input {
     border-radius: 7px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     mat-icon {
         margin-right: 10px;
         color: white;
@@ -67,5 +67,45 @@ input {
     .mat-row {
         height: 27px;
         text-align: left;
+    }
+}
+
+
+mat-form-field.mat-form-field-appearance-fill {
+    .mat-form-field-wrapper {
+        margin-bottom: 0;
+
+        .mat-form-field-flex {
+            border-radius: 6px;
+            //padding: 0 16px;
+            border-width: none !important;
+        }
+    }
+}
+
+
+.mat-form-field-wrapper {
+    margin-bottom: 0px;
+
+    .mat-form-field-flex {
+        // position: relative;
+        // display: flex;
+        // align-items: stretch;
+        // min-height: 48px;
+        border-radius: 0px;
+        border-width: none !important;
+    }
+}
+
+
+:host ::ng-deep .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
+    margin-bottom: 0px !important;
+    border-right: 1px solid #D2D2D2;
+
+    .mat-form-field-flex {
+        border-width: 0px  !important;
+        box-shadow: none !important;
+        min-height: 40px;
+        padding: 0 8px;
     }
 }

@@ -1,5 +1,5 @@
-<div class="w-250 lg:w-full flex flex-col p-4">
-    <div class="flex flex-col lg:flex-row justify-between">
+<div class="w-full flex flex-auto flex-col p-4">
+    <div class="flex justify-between">
         <span class="title-primary">Asignacion de carga</span>
         <!-- esto va cambiar con material  -->
         <button class="green-button-solid" (click)="redirecto()">
@@ -9,10 +9,15 @@
     </div>
 
     <span class="text-black mt-3 text-base">Buscar por:</span>
-    <div
-        class="flex border p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700"
-    >
-        <input class="w-full" placeholder="Cod. carga y/o Urbanización" />
+    <div class="flex items-center pr-2 border rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700">
+        <mat-form-field class="">
+            <mat-select placeholder="Buscar por:">
+            <mat-option [value]="">-----</mat-option>
+                <mat-option [value]="state" *ngFor="let state of states">{{state}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <input class="w-full pl-2" placeholder="Ingresar codigo" />
         <span class="flex">
             <mat-icon svgIcon="mat_outline:search"></mat-icon>
         </span>
@@ -31,4 +36,5 @@
             </mat-tab>
         </mat-tab-group>
     </div>
+
 </div>

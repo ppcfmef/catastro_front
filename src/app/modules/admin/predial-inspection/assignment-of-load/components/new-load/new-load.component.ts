@@ -13,6 +13,7 @@ import { StateService } from '../../services/state.service';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { TableActions } from '../../../shared/interfaces/table-actions.interface';
 import { TableAction } from '../../../shared/enum/table-action.enum';
+import { addListener } from 'process';
 
 @Component({
     selector: 'app-new-load',
@@ -22,7 +23,7 @@ import { TableAction } from '../../../shared/enum/table-action.enum';
 export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-
+    _graphicsIds = {};
     count = 0;
 
     _portalUrl = 'https://js.arcgis.com/4.27/';
@@ -71,14 +72,9 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.data = [...this.data, item];
                 }
                 else {
-                    const index = this.data.findIndex((data:IdataLoad) => data.codigo === item.codigo);
-                    if (index === -1) return;
-                    this.data.splice(index, 1);
+                    this.deleteItem(this.data, item);
                 }
-                this.data.map((item, index) => {
-                    Object.assign(item, {nro: `${index+1}`});
-                });
-
+                this.addkey(this.data);
                 this.dataSource = new MatTableDataSource(this.data);
             }
             this._stateService.setTableData(this.data);
@@ -123,8 +119,22 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('zoom',);
     }
 
-    onDelete(row: any): void {
-        console.log('zoom',);
+    onDelete(row: IdataLoad): void {
+        this.deleteItem(this.data, row);
+        this.dataSource = new MatTableDataSource(this.data);
+        this.addkey(this.data);
+        this._stateService.functiondelete.emit(row.oid)
     }
 
+    addkey(data: IdataLoad[]): void {
+        data.map((item, index) => {
+            Object.assign(item, {nro: `${index+1}`});
+        });
+    }
+
+    deleteItem(data:IdataLoad[], row:IdataLoad): void {
+        const index = data.findIndex((data:IdataLoad) => data.codigo === row.codigo);
+        if (index === -1) return;
+        this.data.splice(index, 1);
+    }
 }
