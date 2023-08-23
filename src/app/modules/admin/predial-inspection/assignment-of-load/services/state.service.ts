@@ -19,9 +19,7 @@ export class StateService {
   private webMapSubject = new BehaviorSubject<any>(null);
   private graphicsIdSubject = new BehaviorSubject<any>(null);
   public clearAllGraphics: EventEmitter<void> = new EventEmitter();
-  public functiondelete = new EventEmitter<any>();
-
-
+  public refreshLayer: EventEmitter<void> = new EventEmitter();
 
   constructor() { }
 
@@ -55,8 +53,9 @@ export class StateService {
     this.clearAllGraphics.emit();
   }
 
-
-
+  triggerRefreshLayer(id) {
+    this.refreshLayer.emit(id);
+  }
 }
 
 

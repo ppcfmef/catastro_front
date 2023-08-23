@@ -10,7 +10,8 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
-import { IdataLoad } from '../../interfaces/dataload.interface';
+import { PassThrough } from 'stream';
+import { tick } from '@angular/core/testing';
 
 
 
@@ -105,10 +106,22 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const graphicsId = this.graphicsIdsData
         const webMap = this.webMapData
         const dateWorkLoad = new Date(2023, 7, 17).valueOf() // Reemplazar cuando se tenga el servicio de operador de campo
-        const codUserWorkLoad = 'defaultUser'  // Reemplazar cuando se tenga el servicio de operador de campo
+        const codUserWorkLoad = '57'  // Reemplazar cuando se tenga el servicio de operador de campo
         const nomUserWorkLoad = 'defaultUser'  // Reemplazar cuando se tenga el servicio de operador de campo
+        const id_mz_pred = "CAPAS_INSPECCION_AC_1236"
         const id_carga = "carto_asignacion_carga_8124"
-        const id_predios = "CARTO_PUNTO_CAMPO_3291"
+        const id_predios = "CARTO_PUNTO_CAMPO_4985"
+        const id_lotes_sin_predio = "CAPAS_INSPECCION_AC_3266"
+        const id_punto_imagen = "CAPAS_INSPECCION_AC_3611"
+        const id_mz_inei = "CAPAS_INSPECCION_AC_3891"
+        const id_ticket = "carto_asignacion_carga_9869"
+        const mz_asignadas = "CARTO_MANZANA_CAMPO_3194"
+        const id_predio_sin_mz = "CARTO_PUNTO_CAMPO_7359"
+        const id_mz_pimg = "CAPAS_INSPECCION_AC_3115"
+        let cod_carga = null
+
+        const stateCarga = codUserWorkLoad ? 2 : 1
+        const stateTicket = codUserWorkLoad ? 3 : 2
 
 
         try {
@@ -188,7 +201,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
 
             const getAttributesByWorkLoad = (response) => {
-                let cod_carga = response.features[0].attributes.resultado
+                cod_carga = response.features[0].attributes.resultado
                 if (!cod_carga) {
                     cod_carga = '00000'
                 }
@@ -205,7 +218,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     NOM_CARGA: nameWorkLoad,
                     DESCRIP: descWorlLoad,
                     FEC_ENTREGA: dateWorkLoad,
-                    ESTADO: 1,
+                    ESTADO: stateCarga,
                     UBIGEO: ubigeo,
                     XMIN: fullExtent_g.xmin,
                     YMIN: fullExtent_g.ymin,
@@ -229,35 +242,200 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 .then(async (add, update, del) => {
 
                     const allPromises = []
+                    const orderPromises = []
+                    const prediosSinManzana = []
                     for (let key of dataWorkLoad) {
-                        switch (key.fuente) {
-                            case 'CF':
-                                const queryCF = new Query();
-                                queryCF.where = webMap.findLayerById(id_predios).definitionExpression;
-                                queryCF.outFields = ['*'];
-                                queryCF.returnGeometry = true;
-                                queryCF.geometry = graphicsId[key.oid].geometry;
-                                queryCF.spatialRelationship = 'intersects';
-                                const promiseCF = webMap.findLayerById(id_predios).queryFeatures(queryCF)
-                                allPromises.push(promiseCF);
-                                break
-                            case 'CFA':
-                                break
-                            case 'EU':
-                                break
+                        if (key.tipo.toLowerCase() === 'manzana') {
+                            switch (key.fuente) {
+                                case 'CF':
+                                    const queryCFPSG = new Query();
+                                    queryCFPSG.where = webMap.findLayerById(id_predios).definitionExpression;
+                                    queryCFPSG.outFields = ['*'];
+                                    queryCFPSG.returnGeometry = true;
+                                    queryCFPSG.geometry = graphicsId[key.oid].geometry;
+                                    queryCFPSG.spatialRelationship = 'intersects';
+                                    const promiseCF = webMap.findLayerById(id_predios).queryFeatures(queryCFPSG)
+                                    allPromises.push(promiseCF);
+                                    orderPromises.push({ type: 'CF', idmz: key.oid });
 
-                            // if (key.fuente === 'CF') {
-                            //     const promise = (key);
-                            // } 
+                                    const queryCFLSP = new Query();
+                                    queryCFLSP.where = webMap.findLayerById(id_lotes_sin_predio).definitionExpression;
+                                    queryCFLSP.outFields = ['*'];
+                                    queryCFLSP.returnGeometry = true;
+                                    queryCFLSP.geometry = graphicsId[key.oid].geometry;
+                                    queryCFLSP.spatialRelationship = 'intersects';
+                                    const promiseCFLSP = webMap.findLayerById(id_lotes_sin_predio).queryFeatures(queryCFLSP)
+                                    allPromises.push(promiseCFLSP);
+                                    orderPromises.push({ type: 'CFP', idmz: key.oid });
 
-                            // allPromises.push(promise);
+                                    break
+                                case 'CFA':
+                                    const queryCFAPI = new Query();
+                                    queryCFAPI.where = webMap.findLayerById(id_punto_imagen).definitionExpression;
+                                    queryCFAPI.outFields = ['*'];
+                                    queryCFAPI.returnGeometry = true;
+                                    queryCFAPI.geometry = graphicsId[key.oid].geometry;
+                                    queryCFAPI.spatialRelationship = 'intersects';
+                                    const promiseCFAPI = webMap.findLayerById(id_punto_imagen).queryFeatures(queryCFAPI)
+                                    allPromises.push(promiseCFAPI);
+                                    orderPromises.push({ type: 'CFA', idmz: key.oid });
+                                    break
+                                case 'EU':
+                                    const queryEUMSL = new Query();
+                                    queryEUMSL.where = webMap.findLayerById(id_mz_inei).definitionExpression;
+                                    queryEUMSL.outFields = ['*'];
+                                    orderPromises.push({ type: 'EU', idmz: key.oid });
+                                    break
+                            }
+                        } else {
+                            prediosSinManzana.push(key)
                         }
-
-                        await Promise.all(allPromises);
-                        return allPromises
                     }
+                    const data = await Promise.all(allPromises)
+                    return [data, orderPromises, prediosSinManzana];
                 })
-                .then((result) => {
+                .then(async (results) => {
+                    const data = results[0];
+                    const order = results[1];
+                    const prediosSinManzana = results[2];
+
+                    let tickets = []
+                    let controller = 0
+                    let row = null
+
+
+                    order.map((key, index) => {
+                        if (data[index].features.length === 0) {
+                            return null
+                        }
+                        for (let row of data[index].features) {
+                            controller = controller + 1
+                            // row = data[index].features[0].attributes
+                            let ticket = {
+                                COD_TICKET: `G${ubigeo}${cod_carga}${controller.toString().padStart(3, '0')}`,
+                                ID_CARGA: `${ubigeo}${cod_carga}`,
+                                ESTADO: stateTicket,
+                                COD_USUARIO: codUserWorkLoad,
+                                UBIGEO: ubigeo,
+                                FEC_ASIGNACION: dateWorkLoad,
+                                FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
+                                ID_MZN_C: key.idmz,
+                                COD_EST_ENVIO_TICKET: 0
+                            }
+                            switch (key.type) {
+                                case 'CF':
+                                    ticket['ID_ENTIDAD'] = `${ubigeo}${row.attributes.COD_PRE}`
+                                    ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket
+                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket
+                                    ticket['OBS_TICKET_GABINETE'] = row.OBSERVACION
+                                    ticket['COD_PRE'] = row.attributes.COD_PRE
+                                    tickets.push({ attributes: ticket, geometry: null })
+                                    break
+                                case 'CFP':
+                                    ticket['ID_ENTIDAD'] = row.attributes.ID_LOTE
+                                    ticket['TIPO'] = 'Punto Lote sin predios'
+                                    ticket['COD_TIPO_TICKET'] = '2'
+                                    ticket['OBS_TICKET_GABINETE'] = 'Punto Lote sin predios'
+                                    tickets.push({ attributes: ticket, geometry: null })
+                                    break
+                                case 'CFA':
+                                    ticket['ID_ENTIDAD'] = row.attributes.ID_IMG
+                                    ticket['TIPO'] = 'Punto imagen'
+                                    ticket['COD_TIPO_TICKET'] = '3'
+                                    ticket['OBS_TICKET_GABINETE'] = 'Punto imagen'
+                                    tickets.push({ attributes: ticket, geometry: null })
+                                    break
+                                case 'EU':
+                                    ticket['ID_ENTIDAD'] = `E${ubigeo}${row.attributes.ID_MZN_C}`
+                                    ticket['TIPO'] = "Manzana sin lotes"
+                                    ticket['COD_TIPO_TICKET'] = '4'
+                                    ticket['OBS_TICKET_GABINETE'] = 'Manzana sin lotes'
+                                    tickets.push({ attributes: ticket, geometry: null })
+                                    break
+                            }
+                        }
+                    })
+
+                    prediosSinManzana.map((key) => {
+                        controller = controller + 1
+                        let ticket = {
+                            COD_TICKET: `G${ubigeo}${cod_carga}${controller.toString().padStart(3, '0')}`,
+                            ID_ENTIDAD: `${ubigeo}${key.codigo}`,
+                            ID_CARGA: `${ubigeo}${cod_carga}`,
+                            ESTADO: stateTicket,
+                            TIPO: "Predios sin georreferenciacion",
+                            COD_TIPO_TICKET: '1',
+                            COD_USUARIO: codUserWorkLoad,
+                            UBIGEO: ubigeo,
+                            OBS_TICKET_GABINETE: "Predios sin georreferenciacion",
+                            FEC_ASIGNACION: dateWorkLoad,
+                            FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
+                            ID_MZN_C: '9999',
+                            COD_EST_ENVIO_TICKET: 0,
+                            COD_PRE: key.codigo
+                        }
+                        tickets.push({ attributes: ticket, geometry: null })
+                    })
+                    const applyEdistsTickets = await webMap.findTableById(id_ticket).applyEdits({ addFeatures: tickets })
+                    return { edits: applyEdistsTickets, tickets: tickets }
+                })
+                .then((results) => {
+                    const applyEdistsTickets = results.edits;
+                    const tickets = results.tickets;
+                    const prediosTickets = tickets.reduce((acc, ticket) => {
+                        if (ticket.attributes.COD_TIPO_TICKET === '1') {
+                            acc.push(ticket.attributes.COD_PRE)
+                        }
+                        return acc
+                    }, [])
+                    const queryPredios = new Query();
+                    queryPredios.where = `UBIGEO = '${ubigeo}' and COD_PRE in ('${prediosTickets.join("','")}')`;
+                    queryPredios.outFields = ['*'];
+                    queryPredios.returnGeometry = true;
+                    return webMap.findLayerById(id_predios).queryFeatures(queryPredios)
+                })
+                .then((response) => {
+                    let predioUpdateData = response.features.map((row) => {
+                        return {
+                            attributes: {
+                                OBJECTID: row.attributes.OBJECTID,
+                                Estado_tra: stateTicket,
+                                ID_CARGA: `${ubigeo}${cod_carga}`
+                            }
+                        }
+                    })
+
+                    return webMap.findLayerById(id_predios).applyEdits({ updateFeatures: predioUpdateData })
+                })
+                .then((response) => {
+                    console.log(response)
+                    let graphics = []
+                    for (let key in graphicsId) {
+                        if (graphicsId[key].geometry.type === 'polygon') {
+                            let graphic = new Graphic();
+                            graphic.attributes = {
+                                ID_CARGA: `${ubigeo}${cod_carga}`,
+                                ID_MZN_C: key,
+                                Estado_tra: stateTicket,
+                                UBIGEO: ubigeo,
+                            };
+                            graphic.geometry = graphicsId[key].geometry
+                            graphics.push(graphic);
+                        }
+                    }
+
+                    return webMap.findLayerById(mz_asignadas).applyEdits({ addFeatures: graphics })
+                })
+                .then((add, update, del) => {
+                    // agregar funcionalidad para cambiar el estado de los predios en la tabla punto campo
+                    console.log(add)
+                    this._stateService.triggerRefreshLayer(id_punto_imagen);
+                    this._stateService.triggerRefreshLayer(id_lotes_sin_predio);
+                    this._stateService.triggerRefreshLayer(id_predios);
+                    this._stateService.triggerRefreshLayer(id_mz_inei);
+                    this._stateService.triggerRefreshLayer(id_mz_pred);
+                    this._stateService.triggerRefreshLayer(id_predio_sin_mz);
+                    this._stateService.triggerRefreshLayer(id_mz_pimg);
                     this._stateService.triggerClearAllGraphics();
                     this._fuseSplashScreenService.hide();
                 })

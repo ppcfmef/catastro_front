@@ -54,8 +54,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
       });
     this._stateService.clearAllGraphics.subscribe(() => this.clearSelection());
-
-    this._stateService.functiondelete.subscribe((oid) => this.clearSelectionById(oid));
+    this._stateService.refreshLayer.subscribe((id) => this.refreshLayerById(id));
   }
 
   clearSelection(): void {
@@ -68,17 +67,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     this._stateService.setGraphicsId(this._graphicsIds);
   }
 
-clearSelectionById(oid:any): void {
-    this._view.graphics.remove(this._graphicsIds[oid]);
-    delete this._graphicsIds[oid]
-    this._stateService.setWebMap(this._webmap);
-    this._stateService.setGraphicsId(this._graphicsIds);
-}
-
-onSelectUbigeo(ubigeo: string): void {
-    console.log("onSelectUbigeo", ubigeo);
-}
-
+  refreshLayerById(id): void {
+    this._webmap.findLayerById(id).refresh();
+  }
 
   async initializeMapAOL() {
     try {
@@ -143,16 +134,17 @@ onSelectUbigeo(ubigeo: string): void {
       const _id_cf_lotes_pun = "CARTO_FISCAL_2829"
       const _id_cf_predio = "CARTO_FISCAL_869"
 
-      const _id_mz_pred = "CAPAS_INSPECCION_9695"
-      const _id_mz_pimg = "CAPAS_INSPECCION_753"
-      const _id_mz_inei = "CAPAS_INSPECCION_2907"
+      const _id_mz_pred = "CAPAS_INSPECCION_AC_1236"
+      const _id_mz_pimg = "CAPAS_INSPECCION_AC_3115"
+      const _id_mz_inei = "CAPAS_INSPECCION_AC_3891"
 
       const _id_predio_sin_mz = "CARTO_PUNTO_CAMPO_7359"
-      const _id_predios = "CARTO_PUNTO_CAMPO_3291"
-      const _id_lotes_sin_predio = "CAPAS_INSPECCION_7679"
-      const _id_punto_imagen = "CAPAS_INSPECCION_6966"
+      const _id_predios = "CARTO_PUNTO_CAMPO_4985"
+      const _id_lotes_sin_predio = "CAPAS_INSPECCION_AC_3266"
+      const _id_punto_imagen = "CAPAS_INSPECCION_AC_3611"
 
       const _id_carga = "carto_asignacion_carga_8124"
+      const _mz_asignadas = "CARTO_MANZANA_CAMPO_3194"
 
 
       const self = this;
@@ -317,7 +309,8 @@ onSelectUbigeo(ubigeo: string): void {
         return Promise.all([promiseManzanas, promiseManzanasPuntoImagen, promiseManzanasInei, promisePrediosSinManzana])
           .then((results) => {
             const responseManzanas = results[0].features.map((row) => {
-              const oid = `${row.attributes.UBIGEO}${row.attributes.COD_SECT}${row.attributes.COD_MZN}`;
+              // const oid = `${row.attributes.UBIGEO}${row.attributes.COD_SECT}${row.attributes.COD_MZN}`;
+              const oid = row.attributes.ID_MZN_C;
               let status = 1
               if (self._graphicsIds[oid]) {
                 self._view.graphics.remove(self._graphicsIds[oid])
@@ -342,7 +335,8 @@ onSelectUbigeo(ubigeo: string): void {
             })
 
             const responseManzanasPuntoImagen = results[1].features.map((row) => {
-              const oid = `${row.attributes.ubigeo}${row.attributes.ID_MZN_U}`
+              // const oid = `${row.attributes.ubigeo}${row.attributes.ID_MZN_U}`
+              const oid = `I${row.attributes.ID_MZN_U}`
               let status = 1
               if (self._graphicsIds[oid]) {
                 self._view.graphics.remove(self._graphicsIds[oid])
@@ -366,7 +360,8 @@ onSelectUbigeo(ubigeo: string): void {
             })
 
             const responseManzanasInei = results[2].features.map((row) => {
-              const oid = `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`
+              // const oid = `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`
+              const oid = `E${row.attributes.ID_MZN_C}`
               let status = 1
               if (self._graphicsIds[oid]) {
                 self._view.graphics.remove(self._graphicsIds[oid])
@@ -462,7 +457,8 @@ onSelectUbigeo(ubigeo: string): void {
         self._webmap.findLayerById(_id_cf_predio).definitionExpression = this._queryUbigeo
 
         // Para el caso de las manzanas de predios se debe mantener la expresion definida desde portal y agregar el ubigeo
-        self._webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
+        // self._webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
+        self._webmap.findLayerById(_id_mz_pred).definitionExpression = this._queryUbigeo
         // console.log(self._webmap.findLayerById(_id_mz_pred).definitionExpression)
         self._webmap.findLayerById(_id_mz_pimg).definitionExpression += ` AND (${this._queryUbigeo})`
         self._webmap.findLayerById(_id_mz_inei).definitionExpression = this._queryUbigeo
@@ -472,6 +468,7 @@ onSelectUbigeo(ubigeo: string): void {
         self._webmap.findLayerById(_id_lotes_sin_predio).definitionExpression = this._queryUbigeo
         self._webmap.findLayerById(_id_predios).definitionExpression += ` AND (${this._queryUbigeo})`
         self._webmap.findLayerById(_id_punto_imagen).definitionExpression = this._queryUbigeo
+        self._webmap.findLayerById(_mz_asignadas).definitionExpression = this._queryUbigeo
 
         // zoom extent by ubigeo
         let limites_nacionales_url = self._webmap.findLayerById(_id_limites).url
