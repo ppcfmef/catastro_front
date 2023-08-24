@@ -32,7 +32,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     // create string to the id of the map element that will be created
     hideSelectUbigeo: boolean = false;
     _queryUbigeo: string;
-    _field_ubigeo = 'UBIGEO';
+    _fieldUbigeo = 'UBIGEO';
     _view = null;
     _graphicsIds = {};
     _webmap = null;
@@ -58,35 +58,35 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.navigationAuthorizationService.userScopePermission(this.idView)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data: any) => {
-                console.log(data,'data');
-                this._currentUser = data.user;
-                this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-                if(!data?.limitScope){
-                    console.log(!data?.limitScope , 'uu');
-                    data.ubigeo='040703';
-                    this._currentUserUbigeo = data.ubigeo ;
-                    this.hideSelectUbigeo = false;
-                    console.log(data,'dataif');
-                }
-                else {
-                    this.hideSelectUbigeo = true;
-                    this._currentUserUbigeo = data?.ubigeo ;
-                    console.log(data,'dataelse');
-                }
-            this.navigationAuthorizationService.ubigeoNavigation = this._currentUserUbigeo;
-        });
-
-        // this._userService.user$
+        // this.navigationAuthorizationService.userScopePermission(this.idView)
         //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((user: User) => {
-        //         this._currentUser = user;
-        //         // @SETUBIGEO
-        //         this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
-        //         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-        //     });
+        //     .subscribe((data: any) => {
+        //         console.log(data,'data');
+        //         this._currentUser = data.user;
+        //         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
+        //         if(!data?.limitScope){
+        //             console.log(!data?.limitScope , 'uu');
+        //             data.ubigeo='040703';
+        //             this._currentUserUbigeo = data.ubigeo ;
+        //             this.hideSelectUbigeo = false;
+        //             console.log(data,'dataif');
+        //         }
+        //         else {
+        //             this.hideSelectUbigeo = true;
+        //             this._currentUserUbigeo = data?.ubigeo ;
+        //             console.log(data,'dataelse');
+        //         }
+        //     this.navigationAuthorizationService.ubigeoNavigation = this._currentUserUbigeo;
+        // });
+
+        this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: User) => {
+                this._currentUser = user;
+                // @SETUBIGEO
+                this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+                this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
+            });
         this._stateService.clearAllGraphics.subscribe(() =>this.clearSelection());
         this._stateService.functiondelete.subscribe(oid => this.clearSelectionById(oid));
         this._stateService.refreshLayer.subscribe(id =>this.refreshLayerById(id)
@@ -318,7 +318,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 self._fuseSplashScreenService.show(0);
                 // view.graphics.removeAll();
                 const coordinates = evt.vertices.slice(-1)[0];
-                const point_g = new Point({
+                const pointG = new Point({
                     x: coordinates[0],
                     y: coordinates[1],
                     spatialReference: self._view.spatialReference,
@@ -331,7 +331,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                     self._webmap.findLayerById(
                         _id_mz_pred
                     ).definitionExpression;
-                queryManzanas.geometry = point_g;
+                queryManzanas.geometry = pointG;
                 queryManzanas.spatialRelationship = 'intersects';
                 queryManzanas.returnGeometry = true;
                 queryManzanas.outFields = [
@@ -349,7 +349,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                     self._webmap.findLayerById(
                         _id_mz_pimg
                     ).definitionExpression;
-                queryManzanasPuntoImagen.geometry = point_g;
+                queryManzanasPuntoImagen.geometry = pointG;
                 queryManzanasPuntoImagen.spatialRelationship = 'intersects';
                 queryManzanasPuntoImagen.returnGeometry = true;
                 queryManzanasPuntoImagen.outFields = ['UBIGEO', 'ID_MZN_U'];
@@ -361,7 +361,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                     self._webmap.findLayerById(
                         _id_mz_inei
                     ).definitionExpression;
-                queryManzanasInei.geometry = point_g;
+                queryManzanasInei.geometry = pointG;
                 queryManzanasInei.spatialRelationship = 'intersects';
                 queryManzanasInei.returnGeometry = true;
                 queryManzanasInei.outFields = ['UBIGEO', 'ID_MZN_C'];
@@ -375,7 +375,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 // generate buffer as point_g 10 meter
                 queryPrediosSinManzana.distance = 5;
                 queryPrediosSinManzana.units = 'meters';
-                queryPrediosSinManzana.geometry = point_g;
+                queryPrediosSinManzana.geometry = pointG;
                 queryPrediosSinManzana.spatialRelationship = 'contains';
                 queryPrediosSinManzana.returnGeometry = true;
                 queryPrediosSinManzana.outFields = ['COD_PRE'];
@@ -620,11 +620,11 @@ export class MapComponent implements OnInit, AfterViewInit {
                     this._queryUbigeo;
 
                 // zoom extent by ubigeo
-                const limites_nacionales_url =
+                const limitesNacionalesUrl =
                     self._webmap.findLayerById(_id_limites).url;
 
                 query
-                    .executeForExtent(`${limites_nacionales_url}/2`, {
+                    .executeForExtent(`${limitesNacionalesUrl}/2`, {
                         where: this._queryUbigeo,
                     })
                     .then((response) => {
