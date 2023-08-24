@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { ActivatedRoute, Router } from '@angular/router';

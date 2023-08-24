@@ -12,7 +12,6 @@ import { Subject } from 'rxjs';
   styleUrls: ['./load-list.component.scss']
 })
 export class LoadListComponent implements OnInit {
-    hideSelectUbigeo: boolean = false;
     states: string[] = [
         'Ubigeo',
         'Unidad urbana'
@@ -31,9 +30,5 @@ export class LoadListComponent implements OnInit {
         this._router.navigate(['assign-load'], { relativeTo: this._route });
         this._stateService.state.emit(true);
     }
-    onSelectUbigeo(ubigeo: string): void {
-        console.log('onSelectUbigeo', ubigeo);
-      }
-
 
 }

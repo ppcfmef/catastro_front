@@ -12,6 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
 import { PassThrough } from 'stream';
 import { tick } from '@angular/core/testing';
+import { IdataLoad } from '../../interfaces/dataload.interface';
 
 
 
