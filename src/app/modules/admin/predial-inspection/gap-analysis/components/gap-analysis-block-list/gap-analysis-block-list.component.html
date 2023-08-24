@@ -17,6 +17,14 @@ class="flex flex-col bg-white container-list-load text py-6 px-5 w-full h-full r
         (action)="onZoom($event)"
     >
     </app-table>
+    <mat-paginator  class="w-full" [length]="length"
+[pageIndex]="pageIndex"
+[pageSize]="pageSize"
+[pageSizeOptions]="pageSizeOptions"
+(page)="onPage($event)"
+>
+</mat-paginator>
+
 </div>
 <button mat-button>
     <mat-icon

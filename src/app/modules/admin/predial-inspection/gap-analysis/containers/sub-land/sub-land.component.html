@@ -5,6 +5,9 @@
             [dataSource]="dataSource"
             [cards]="cards"
             [tableConfig]="tableConfig"
+            (zoomAction)="onZoom($event)"
+            [length]="tableLength"
+            (changePage)="onChangePage($event)"
         ></app-gap-analysis-block-list>
     </div>
 
@@ -15,7 +18,12 @@
             [urlPredio]="urlPredio"
             [urlManzana]="urlManzana"
             [urlPuntoCampo]="urlPuntoCampo"
+            [idManzana]="idManzana"
+            [idPredio]="idPredio"
+            [idPuntoCampo]="idPuntoCampo"
             [typeGapAnalisys]="typeGapAnalisys"
+            [rowZoom]="rowZoom"
+            (refreshEvent)="getInitList()"
         ></app-gap-analysis-map>
     </div>
 </div>

@@ -25,16 +25,16 @@ export class PuntoCampoService {
         private _commonService: CommonService
     ) {}
 
-    async crearPuntoCampo(data: PuntoCampoUI): Promise<any> {
+    async crearPuntoCampo(data: PuntoCampoUI[]): Promise<any> {
         const wkid = 4326;
-        const _predio = data;
+        const _predios = data;
 
         this.apiUrl = `${this.apiUrlPuntoCampo.replace(
             'MapServer',
             'FeatureServer'
         )}/addFeatures`;
 
-        const jsonData = await MapUtils.createArcgisJSON([_predio], wkid);
+        const jsonData = await MapUtils.createArcgisJSON(_predios, wkid);
         const formData = new FormData();
         formData.append('features', JSON.stringify(jsonData));
         formData.append('F', 'json');

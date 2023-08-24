@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
     AfterViewInit,
     Component,
@@ -25,13 +26,19 @@ import { PredioUI } from '../../interfaces/predio.interface';
 import { MapUtils } from 'app/shared/utils/map.utils';
 import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
 import { P } from '@angular/cdk/keycodes';
+import { PredioModel } from 'app/modules/admin/land-inspection/gap-analisys/models/predio.model';
+import { PuntoCampoModel } from 'app/modules/admin/land-inspection/gap-analisys/models/punto-campo.model';
+import { PuntoCampoService } from '../../services/punto-campo.service';
 
+let _this: any;
 @Component({
     selector: 'app-gap-analysis-map',
     templateUrl: './gap-analysis-map.component.html',
     styleUrls: ['./gap-analysis-map.component.scss'],
 })
 export class GapAnalysisMapComponent implements OnInit, OnChanges {
+    //@Input() view: any = null;
+    @Input() rowZoom: any = null;
     @Input() typeGapAnalisys = TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION;
     @Input() event: any;
     @Input() x: number = -71.955921;
@@ -41,12 +48,22 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
     @Input() urlManzana = '';
     @Input() idManzana = 3;
     @Input() idPredio = 1;
+    @Input() idPuntoCampo = 1;
     @Input() layersInfo = [];
     @Input() listSourceSearchConfig = [];
 
     @Output() setPointEvent: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+    @Output() refreshEvent: EventEmitter<any> = new EventEmitter<any>();
 
+    @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+    /*@Input() set rowZoom(value: any){
+        this._rowZoom = value;
+        this.onZoom();
+    }*/
+
+
+
+    _this = this;
     apiKey = environment.apiKeyArcgis;
     view: any = null;
     map: any;
@@ -88,9 +105,11 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
         height: '30px',
         yoffset: '15px',
     };
-
-
-    constructor(private _confirmationService: CustomConfirmationService) {}
+    private _rowZoom: any;
+    constructor(
+        private _confirmationService: CustomConfirmationService,
+        private _puntoCampoService: PuntoCampoService
+    ) {}
 
     ngOnInit(): void {
         this.points = [{ latitude: -13.53063, longitude: -71.955921 }];
@@ -124,6 +143,8 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 Expand,
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 Search,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                Popup,
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -135,6 +156,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 'esri/layers/GroupLayer',
                 'esri/widgets/Expand',
                 'esri/widgets/Search',
+                'esri/widgets/Popup',
             ]);
 
             const mapProperties = {
@@ -148,7 +170,11 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 zoom: 15,
 
                 map: this.map,
-                highlightOptions:null
+
+                popup: {
+                    autoOpenEnabled: false,
+                },
+                //highlightOptions: null,
                 /*highlightOptions: {
                     color: [255, 241, 58],
                     fillOpacity: 0.4
@@ -199,16 +225,16 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 content: 'Holass',
             };
 
-            this.layersInfo.reverse().map((l) => {
+            this.layersInfo.map((l) => {
                 const options: any = {
                     url: `${l.urlBase}/${l.layerId}`,
                     title: l.title,
-                    fields: ['*'],
+                    outFields: ['*'],
                     visible: l.visible,
                     //popupEnabled: l.selected ? true : false,
-                    popupTemplate: popupTrailheads,
+                    //popupTemplate: popupTrailheads,
                     id: l.id,
-                    popupEnabled:  true ,
+                    popupEnabled: true,
                 };
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -276,89 +302,197 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
                 position: 'top-right',
             });
-
+            this.view.ui.add('logoDiv', 'bottom-right');
             this.view.when(() => {
-                this.view.on('click', (event) => {
+                const verificarAction = {
+                    // This text is displayed as a tooltip
+                    title: 'Verificar',
+                    // The ID by which to reference the action in the event handler
+                    id: 'verificar',
+                    // Sets the icon font used to style the action button
+                    className: 'esri-icon-check-mark',
+                };
+
+                this.view.on('click', async (event) => {
+                    /*function createPopupContent(target) {
+                        return 'holassss';
+                    };*/
+                    this.points = [];
+                    this.view.popup.close();
+                    this.view.graphics.removeAll();
                     if (
                         this.typeGapAnalisys ===
                         TypeGapAnalisys.PREDIO_SUBVALUADO
                     ) {
-                        this.view.hitTest(event).then((response) => {
-                            const r = response.results[0];
-                            this.points=[];
-                            this.view.graphics.removeAll();
-                            if (r && r.graphic && r.graphic.layer) {
-                                if (
-                                    r.graphic.layer.id === String(this.idPredio)
-                                ) {
-                                    const geometry = r.graphic.geometry;
-                                    const graphic = new Graphic(
-                                        geometry,
-                                        this.pointSelectSymbol
-                                    );
+                        const layerPredio = this.layersInfo.find(
+                            (l: any) => l.id === this.idPredio
+                        )?.featureLayer;
 
-                                    this.view.graphics.add(graphic);
+                        const layerManzana = this.layersInfo.find(
+                            (l: any) => l.id === this.idManzana
+                        )?.featureLayer;
 
+                        console.log('event>', event.mapPoint);
 
-                                } else if (
-                                    r.graphic.layer.id ===
-                                    String(this.idManzana)
-                                ) {
-                                    const geometry = r.graphic.geometry;
+                        const results: any[] =
+                            await MapUtils.queryIntersectFeaturelayerResults(
+                                layerPredio,
+                                event.mapPoint,
+                                5,
+                                'meters'
+                            );
 
-                                    const graphic = new Graphic(
-                                        geometry,
-                                        this.polygonSelectSymbol
-                                    );
+                        if (results && results.length > 0) {
+                            const r = results[0];
+                            const geometry = r.geometry;
+                            const graphic = new Graphic(
+                                geometry,
+                                this.pointSelectSymbol
+                            );
+                            this.view.graphics.add(graphic);
+                            //const content='holass';
+                            let content = `<table class="esri-widget__table">
+                            <tr>
+                              <th>Cod Manzana</th>
+                              <th>Codigo de Predio</th>
+                              <th></th>
+                            </tr>
+                            `;
 
-                                    this.view.graphics.add(graphic);
-                                        console.log(this.layersInfo);
-                                    const layerPredio = this.layersInfo.find(
-                                        l => l.id === this.idPredio
-                                    )?.featureLayer;
+                            content =
+                                content +
+                                `
+                            <tr >
+                              <td>${r.attributes['COD_MZN']}</td>
+                              <td>${r.attributes['COD_PRE']}</td>
 
-                                    const layerManzana = this.layersInfo.find(
-                                        l => l.id === this.idManzana
-                                    )?.featureLayer;
-                                    MapUtils.queryIntersectFeaturelayerResults(
+                            </tr>
+                            `;
+                            content = content + '</table>';
+                            this.points.push(r);
+
+                            this.view.popup.open({
+                                location: event.mapPoint,
+                                content: content,
+                                actions: [verificarAction],
+                            });
+                        } else {
+                            const resultsManzanas: any[] =
+                                await MapUtils.queryIntersectFeaturelayerResults(
+                                    layerManzana,
+                                    event.mapPoint,
+                                    1,
+                                    'meters'
+                                );
+
+                            if (resultsManzanas && resultsManzanas.length > 0) {
+                                const manzana = resultsManzanas[0];
+                                const geometry = manzana.geometry;
+
+                                const graphic = new Graphic(
+                                    geometry,
+                                    this.polygonSelectSymbol
+                                );
+                                this.view.graphics.add(graphic);
+
+                                const resPoints: any[] =
+                                    await MapUtils.queryIntersectFeaturelayerResults(
                                         layerPredio,
                                         geometry,
                                         1,
                                         'meters'
-                                    ).then((res: any) => {
-                                        console.log('results>>',res);
-                                        if (res) {
-                                            // eslint-disable-next-line @typescript-eslint/no-shadow
-                                            res.forEach(
-                                                // eslint-disable-next-line @typescript-eslint/no-shadow
-                                                (r: any) => {
-                                                    const geometryPoint =
-                                                        r.geometry;
-                                                    const graphicPoint =
-                                                        new Graphic(
-                                                            geometryPoint,
-                                                            this.pointSelectSymbol
-                                                        );
-                                                    this.view.graphics.add(
-                                                        graphicPoint
-                                                    );
-                                                    this.points.push(r);
-                                                }
-                                            );
-                                        }
-                                        /*
-                                        const geometry = r.graphic.geometry;
-                                        const graphic = new Graphic(
-                                            geometry,
+                                    );
+
+                                if (resPoints && resPoints.length > 0) {
+                                    let content = `<table class="esri-widget__table">
+                                        <tr>
+                                          <th>Cod Manzana</th>
+                                          <th>Codigo de Predio</th>
+                                        </tr>
+                                        `;
+
+                                    resPoints.forEach((r: any) => {
+                                        const geometryPoint = r.geometry;
+                                        const graphicPoint = new Graphic(
+                                            geometryPoint,
                                             this.pointSelectSymbol
                                         );
+                                        this.view.graphics.add(graphicPoint);
 
-                                        this.view.graphics.add(graphic);*/
+                                        content =
+                                            content +
+                                            `
+                                                <tr >
+                                                  <td>${r.attributes['COD_MZN']}</td>
+                                                  <td>${r.attributes['COD_PRE']}</td>
+
+                                                </tr>
+                                                `;
+                                        this.points.push(r);
                                     });
+
+                                    content = content + '</table>';
+
+                                    this.view.popup.open({
+                                        location: event.mapPoint,
+                                        content: content,
+                                        actions: [verificarAction],
+                                        declaredClass: 'customers',
+                                    });
+                                    //this.points
+                                }
+                            }
+
+
+                        }
+                    }
+                });
+
+                this.view.popup.on('trigger-action', (event) => {
+                    if (event.action.id === 'verificar') {
+                        const puntosCampo = this.points.map((p: any) => {
+                            const puntoCampo = new PuntoCampoModel(
+                                p.attributes
+                            );
+                            puntoCampo.Cod_Tipo_Ticket = String(
+                                TypeGapAnalisys.PREDIO_SUBVALUADO
+                            );
+                            puntoCampo.Estado_tra = 1;
+                            return puntoCampo;
+                        });
+
+                        const dialogRef = this._confirmationService.info(
+                            'Guardar',
+                            'Esta seguro de guardar el predio como predio subvaluado?'
+                        );
+
+                        dialogRef.afterClosed().toPromise()
+                        .then(
+                            (option) => {
+                                if (option === 'confirmed') {
+                                    this._puntoCampoService
+                                    .crearPuntoCampo(puntosCampo)
+                                    .then((results) => {
+                                        this._confirmationService.success(
+                                            'Exito',
+                                            'puntos guardados'
+                                        );
+                                        this.view.popup.close();
+                                        this.view.graphics.removeAll();
+                                        const layerPuntoCampo = this.layersInfo.find(
+                                            (l: any) => l.id === this.idPuntoCampo
+                                        )?.featureLayer;
+
+                                        layerPuntoCampo.refresh();
+                                        this.refreshEvent.emit();
+                                    });
+
+
 
                                 }
                             }
-                        });
+                        );
+
                     }
                 });
             });
@@ -367,11 +501,36 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
         }
     }
 
+    createPopupContent(feature: any): string {
+        // Customize this HTML template based on your data's field names
+        return `
+          <div>
+
+            <p>HOLASSS</p>
+
+          </div>
+        `;
+        /*return `
+          <div>
+            <h3>${feature.attributes.COD_MZN}</h3>
+            <p><b>Attribute 1:</b> ${feature.attributes.COD_PRE }</p>
+
+          </div>
+        `;*/
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         const event = changes?.event?.currentValue;
-        console.log(event);
+        //console.log(event);
         if (event) {
             this.estado = event;
+        }
+
+        if (changes?.rowZoom) {
+            this.rowZoom = changes?.rowZoom.currentValue;
+            console.log(this.rowZoom);
+            this.onZoom();
+            //console.log('rowZoom>>',rowZoom);
         }
     }
 
@@ -396,6 +555,26 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             this.view?.graphics?.addMany([pointGraphic]);
         } catch (error) {
             console.error('EsriLoader: ', error);
+        }
+    }
+
+    async onZoom(): Promise<void> {
+        if (this.view) {
+            const feature=this.rowZoom.feature;
+            const target = feature.geometry;
+    /*view.goTo(parcel);
+    //map.setExtent(parcelExtent);
+    return (parcel);*/
+
+            //this.view.zoom = 17;
+
+            this.view.goTo(
+                {
+                    target: target,
+                    //zoom: 18,
+                },
+                //zoom: 18,
+            );
         }
     }
 }
