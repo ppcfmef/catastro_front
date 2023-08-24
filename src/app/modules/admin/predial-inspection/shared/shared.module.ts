@@ -16,6 +16,7 @@ import { CardPredialComponent } from './components/card-predial/card-predial.com
 import { RouterModule } from '@angular/router';
 import { WidgetMainComponent } from './components/widget-main/widget-main.component';
 import { MapComponent } from './components/map/map.component';
+import { SharedModule as Shared } from 'app/shared/shared.module';
 
 
 
@@ -32,7 +33,8 @@ import { MapComponent } from './components/map/map.component';
         MatDialogModule,
         MatIconModule,
         MatButtonModule,
-        RouterModule
+        RouterModule,
+        Shared,
 
     ],
     exports: [TableComponent, WidgetComponent, CardPredialComponent,WidgetMainComponent,MapComponent],

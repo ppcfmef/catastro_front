@@ -16,6 +16,7 @@ import { LoadAttendComponent } from './containers/load-attend/load-attend.compon
 import { AssignLoadComponent } from './containers/assign-load/assign-load.component';
 import { LoadListComponent } from './containers/load-list/load-list.component';
 import { SharedModule } from '../shared/shared.module';
+import { SharedModule as Shared } from 'app/shared/shared.module';
 
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -70,6 +71,7 @@ imports: [
     SharedModule,
     ReactiveFormsModule,
     MatSelectModule,
+    Shared,
 ]
 })
 export class AssignmentOfLoadModule { }

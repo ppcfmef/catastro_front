@@ -36,5 +36,5 @@
             </mat-tab>
         </mat-tab-group>
     </div>
-
+    <select-ubigeo  *ngIf="!hideSelectUbigeo" (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
 </div>

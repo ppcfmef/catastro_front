@@ -17,9 +17,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('mapViewAOL', { static: false }) mapViewAOLContainer: ElementRef;
   @ViewChild('pointButton', { static: false }) pointButtonContainer: ElementRef;
   @ViewChild('clearSelection', { static: false }) clearButtonContainer: ElementRef;
+  @ViewChild('select', { static: false }) selectContainer: ElementRef;
   // @ViewChild('createCarga', { static: false }) createCargaContainer: ElementRef;
   // create string to the id of the map element that will be created
-  hideSelectUbigeo:boolean = true;
+  hideSelectUbigeo:boolean = false;
   _queryUbigeo: string;
   _field_ubigeo = 'UBIGEO';
   _view = null;
@@ -76,6 +77,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   refreshLayerById(id): void {
     this._webmap.findLayerById(id).refresh();
+  }
+
+  onSelectUbigeo(ubigeo: string): void {
+    console.log("onSelectUbigeo", ubigeo)
   }
 
   async initializeMapAOL() {
@@ -233,13 +238,20 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
 
       self._view.ui.add(legend, "bottom-right");
+      self._view.ui.add(this.selectContainer.nativeElement, {
+        position:'top-right',
+        index: 0,
+        style: {'visibility': 'visible'}
+      });
+      self._view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
+      self._view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
+
+
 
       this._stateService.state
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((state) => {
           if (state) {
-            self._view.ui.add(this.pointButtonContainer.nativeElement, 'top-left');
-            self._view.ui.add(this.clearButtonContainer.nativeElement, 'top-left');
             // view.ui.add(this.createCargaContainer.nativeElement, 'top-left');
             // change stile of the button
             this.pointButtonContainer.nativeElement.style = 'visibility: visible;';
