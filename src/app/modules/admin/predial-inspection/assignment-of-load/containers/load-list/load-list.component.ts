@@ -12,11 +12,11 @@ import { Subject } from 'rxjs';
   styleUrls: ['./load-list.component.scss']
 })
 export class LoadListComponent implements OnInit {
-    hideSelectUbigeo:boolean = false;
-    states:string[] = [
-        "Ubigeo",
-        "Unidad urbana"
-    ]
+    hideSelectUbigeo: boolean = false;
+    states: string[] = [
+        'Ubigeo',
+        'Unidad urbana'
+    ];
     private _unsuscribe = new Subject();
     constructor(
         private _router: Router,
@@ -32,7 +32,7 @@ export class LoadListComponent implements OnInit {
         this._stateService.state.emit(true);
     }
     onSelectUbigeo(ubigeo: string): void {
-        console.log("onSelectUbigeo", ubigeo)
+        console.log('onSelectUbigeo', ubigeo);
       }
 
 

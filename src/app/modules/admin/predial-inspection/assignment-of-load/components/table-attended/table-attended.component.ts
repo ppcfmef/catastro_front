@@ -33,7 +33,7 @@ export class TableAttendedComponent implements OnInit,AfterViewInit {
     constructor(
         public dialog: MatDialog,
         private _router: Router,
-        private _route:ActivatedRoute,
+        private _route: ActivatedRoute,
         ) { }
 
     ngOnInit(): void {

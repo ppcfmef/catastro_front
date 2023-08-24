@@ -56,7 +56,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._stateService.deleteAll.subscribe((state:boolean) => {
+        this._stateService.deleteAll.subscribe((state: boolean) => {
             if (state) {
                 this.data.splice(0, this.data.length);
                 this.dataSource = new MatTableDataSource(this.data);
@@ -123,7 +123,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
         this.deleteItem(this.data, row);
         this.dataSource = new MatTableDataSource(this.data);
         this.addkey(this.data);
-        this._stateService.functiondelete.emit(row.oid)
+        this._stateService.functiondelete.emit(row.oid);
     }
 
     addkey(data: IdataLoad[]): void {
@@ -132,9 +132,9 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    deleteItem(data:IdataLoad[], row:IdataLoad): void {
-        const index = data.findIndex((data:IdataLoad) => data.codigo === row.codigo);
-        if (index === -1) return;
+    deleteItem(dataItem: IdataLoad[], row: IdataLoad): void {
+        const index = dataItem.findIndex((data: IdataLoad) => data.codigo === row.codigo);
+        if (index === -1) {return;}
         this.data.splice(index, 1);
     }
 }

@@ -24,7 +24,7 @@ export class StateService {
   constructor() { }
 
   // update state
-  setTableData(data: IdataLoad[]) {
+  setTableData(data: IdataLoad[]): void {
     this.tableDataSubject.next(data);
   }
 
