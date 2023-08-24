@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 
 
@@ -45,6 +43,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _router: Router,
+        private _route: ActivatedRoute,
 
         ) {}
 
@@ -76,7 +75,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit {
     }
 
     redirecto(): void {
-        this._router.navigate(['./inspection/assignment-of-load']);
+        this._router.navigate(['../../'], {relativeTo: this._route});
     }
 
 }

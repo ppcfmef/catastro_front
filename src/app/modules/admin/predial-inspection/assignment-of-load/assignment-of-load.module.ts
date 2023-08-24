@@ -16,6 +16,7 @@ import { LoadAttendComponent } from './containers/load-attend/load-attend.compon
 import { AssignLoadComponent } from './containers/assign-load/assign-load.component';
 import { LoadListComponent } from './containers/load-list/load-list.component';
 import { SharedModule } from '../shared/shared.module';
+import { SharedModule as Shared } from 'app/shared/shared.module';
 
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -23,15 +24,15 @@ import { MatDialogDeletedComponent } from './components/alert-confirm/mat-dialog
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import { DetailOperadorComponent } from './containers/detail-operador/detail-operador.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TableAssignedComponent } from './components/table-assigned/table-assigned.component';
 import { NewLoadComponent } from './components/new-load/new-load.component';
+import { DetailOperadorComponent } from './components/detail-operador/detail-operador.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablePendingComponent } from './components/table-pending/table-pending.component';
 import { TableAttendedComponent } from './components/table-attended/table-attended.component';
-
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -69,6 +70,8 @@ imports: [
     MatCheckboxModule,
     SharedModule,
     ReactiveFormsModule,
+    MatSelectModule,
+    Shared,
 ]
 })
 export class AssignmentOfLoadModule { }

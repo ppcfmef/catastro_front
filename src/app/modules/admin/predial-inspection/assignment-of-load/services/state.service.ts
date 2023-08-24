@@ -1,56 +1,58 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Subject, of, BehaviorSubject } from 'rxjs';
-import { state } from '@angular/animations';
-import { illegalData } from 'highlight.js';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { IdataLoad } from '../interfaces/dataload.interface';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class StateService {
+    @Output() state: EventEmitter<boolean> = new EventEmitter();
 
-  @Output() state: EventEmitter<boolean> = new EventEmitter();
+    @Output() row: EventEmitter<any> = new EventEmitter();
 
-  @Output() row: EventEmitter<any> = new EventEmitter();
+    @Output() deleteAll: EventEmitter<boolean> = new EventEmitter();
+    public functiondelete = new EventEmitter<any>();
+    public clearAllGraphics: EventEmitter<void> = new EventEmitter();
+    public refreshLayer: EventEmitter<void> = new EventEmitter();
+    private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
+    private webMapSubject = new BehaviorSubject<any>(null);
+    private graphicsIdSubject = new BehaviorSubject<any>(null);
 
-  @Output() deleteAll: EventEmitter<boolean> = new EventEmitter();
+    constructor() {}
 
-  private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
-  private webMapSubject = new BehaviorSubject<any>(null);
-  private graphicsIdSubject = new BehaviorSubject<any>(null);
-  public clearAllGraphics: EventEmitter<void> = new EventEmitter();
+    // update state
+    setTableData(data: IdataLoad[]): void {
+        this.tableDataSubject.next(data);
+    }
 
-  constructor() { }
+    // Get data of table
+    getTableData(): Observable<IdataLoad[]> {
+        return this.tableDataSubject.asObservable();
+    }
 
-  // update state
-  setTableData(data: IdataLoad[]) {
-    this.tableDataSubject.next(data);
-  }
+    setWebMap(webMap: any): void {
+        this.webMapSubject.next(webMap);
+    }
 
-  // Get data of table
-  getTableData() {
-    return this.tableDataSubject.asObservable();
-  }
+    getWebMap(): Observable<any> {
+        return this.webMapSubject.asObservable();
+    }
 
-  setWebMap(webMap: any) {
-    this.webMapSubject.next(webMap);
-  }
+    setGraphicsId(graphicsId: any): void {
+        this.graphicsIdSubject.next(graphicsId);
+    }
 
-  getWebMap() {
-    return this.webMapSubject.asObservable();
-  }
+    getGraphicsId(): Observable<any> {
+        return this.graphicsIdSubject.asObservable();
+    }
 
-  setGraphicsId(graphicsId: any) {
-    this.graphicsIdSubject.next(graphicsId);
-  }
+    triggerClearAllGraphics(): void {
+        this.clearAllGraphics.emit();
+    }
 
-  getGraphicsId() {
-    return this.graphicsIdSubject.asObservable();
-  }
-
-  triggerClearAllGraphics() {
-    this.clearAllGraphics.emit();
-  }
+    triggerRefreshLayer(id): void {
+        this.refreshLayer.emit(id);
+    }
 }
 
 

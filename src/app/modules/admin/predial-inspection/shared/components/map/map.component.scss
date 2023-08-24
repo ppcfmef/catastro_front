@@ -49,6 +49,15 @@
     color: white;
 }
 
+.select {
+    visibility:visible;
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    background-color: #013492;
+
+}
+
 // .createCarga {
 //     visibility: hidden;
 //     background-color: #149608;
@@ -83,3 +92,32 @@
 //         background-color: #323334
 //     }
 // }
+
+select-ubigeo {
+    position: absolute;
+    right: 350px;
+
+}
+
+:host ::ng-deep .ubigeo-selection{
+    padding: 6px 12px !important;
+    border-radius: 0px !important;
+    position: absolute;
+    color: #323232;
+    min-width: 400px;
+    .text-selection{
+        font-size: 12px !important;
+        width: 100%;
+        align-items: center;
+    }
+    .block-selects{
+
+        .btn-close{
+            button{
+                width: 100% !important;
+                background-color: #E54646 !important;
+                border-radius: 6px;
+            }
+        }
+    }
+  }
