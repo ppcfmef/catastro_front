@@ -326,7 +326,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 case 'CF':
                                     ticket['ID_ENTIDAD'] = `${ubigeo}${row.attributes.COD_PRE}`
                                     ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket
-                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket
+                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket == '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion'
                                     ticket['OBS_TICKET_GABINETE'] = row.OBSERVACION
                                     ticket['COD_PRE'] = row.attributes.COD_PRE
                                     tickets.push({ attributes: ticket, geometry: null })
