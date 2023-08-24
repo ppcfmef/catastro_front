@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
@@ -48,7 +46,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     setTableColumn(): void {
         this.tableColumns = [
             {matheaderdef:'Nro.', matcolumndef:'nro', matcelldef: 'nro'},
-            {matheaderdef:'Cod. Carga', matcolumndef:'cod_carga', matcelldef: 'cod_carga'},
+            {matheaderdef:'Cod. Carga', matcolumndef:'codCarga', matcelldef: 'codCarga'},
             {matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
         ];
 
@@ -70,7 +68,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-pending-assigment/${row.cod_carga}`] , {relativeTo: this._route});
+        this._router.navigate([`load-pending-assigment/${row.codCarga}`] , {relativeTo: this._route});
     }
     onDelete(row: any): void {
             this.dialog.open(MatDialogDeletedComponent, {
@@ -79,15 +77,15 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
 
     }
 
-    async dataAssigned() {
+    async dataAssigned(): Promise<void> {
         try {
-            const [ Query,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
+            const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
             esriConfig.portalUrl = this._portalUrl;
             // Url del servicio de cargas
             const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
 
             // Realizamos el filtro
-            const queryObjectPorAsignar = new Query();
+            const queryObjectPorAsignar = new newQuery();
 
             queryObjectPorAsignar.where = 'ESTADO = "1"';
             // Campos para el estado 1: OBJECTID, ID_CARGA, COD_CARGA, FEC_ENTREGA
@@ -108,7 +106,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
                         {
                             oid: feature.attributes.OBJECTID,
                             nro: index + 1,
-                            cod_carga: feature.attributes.COD_CARGA,
+                            codCarga: feature.attributes.COD_CARGA,
                             fecha: moment(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
                         })
                     );

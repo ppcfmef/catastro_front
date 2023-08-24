@@ -1,3 +1,4 @@
+
 import {
     Component,
     OnInit,
@@ -13,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { StateService } from '../../../assignment-of-load/services/state.service';
 import { IdataLoad } from '../../../assignment-of-load/interfaces/dataload.interface';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 
 @Component({
     selector: 'app-map',
@@ -39,10 +41,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    idView = 'inspre';
+
     constructor(
         protected _fuseSplashScreenService: FuseSplashScreenService,
         private _userService: UserService,
-        private _stateService: StateService
+        private _stateService: StateService,
+        private navigationAuthorizationService: NavigationAuthorizationService,
     ) {}
 
     ngAfterViewInit(): void {
@@ -53,16 +58,35 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this._userService.user$
+        this.navigationAuthorizationService.userScopePermission(this.idView)
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this._currentUser = user;
-                // @SETUBIGEO
-                this._currentUserUbigeo = this._currentUser.ubigeo
-                    ? this._currentUser.ubigeo
-                    : '040703';
+            .subscribe((data: any) => {
+                console.log(data,'data');
+                this._currentUser = data.user;
                 this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-            });
+                if(!data?.limitScope){
+                    console.log(!data?.limitScope , 'uu');
+                    data.ubigeo='040703';
+                    this._currentUserUbigeo = data.ubigeo ;
+                    this.hideSelectUbigeo = false;
+                    console.log(data,'dataif');
+                }
+                else {
+                    this.hideSelectUbigeo = true;
+                    this._currentUserUbigeo = data?.ubigeo ;
+                    console.log(data,'dataelse');
+                }
+            this.navigationAuthorizationService.ubigeoNavigation = this._currentUserUbigeo;
+        });
+
+        // this._userService.user$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((user: User) => {
+        //         this._currentUser = user;
+        //         // @SETUBIGEO
+        //         this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+        //         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+        //     });
         this._stateService.clearAllGraphics.subscribe(() =>this.clearSelection());
         this._stateService.functiondelete.subscribe(oid => this.clearSelectionById(oid));
         this._stateService.refreshLayer.subscribe(id =>this.refreshLayerById(id)
@@ -91,8 +115,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     onSelectUbigeo(ubigeo: string): void {
+        this._currentUserUbigeo = ubigeo;
+        this.navigationAuthorizationService.ubigeoNavigation = this._currentUserUbigeo;
         console.log('onSelectUbigeo', ubigeo);
     }
+
 
     async initializeMapAOL(): Promise<void> {
         try {
