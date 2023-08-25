@@ -39,7 +39,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     cards = [
         {
             num: 21,
-            text: 'MANZANAS ASIGNADAS ACTUALMENTE'
+            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
         },
         {
             num: 25,
@@ -54,7 +54,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private _stateService: StateService,
         private _userService: UserService,
-        protected _fuseSplashScreenService: FuseSplashScreenService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
     ) {
         this.form = new FormGroup({
             loadName: new FormControl(''),
@@ -119,6 +119,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const mz_asignadas = 'CARTO_MANZANA_CAMPO_3194';
         const id_predio_sin_mz = 'CARTO_PUNTO_CAMPO_7359';
         const id_mz_pimg = 'CAPAS_INSPECCION_AC_3115';
+        const idPredSinCartoAsignadoLayer = 'CARTO_PUNTO_CAMPO_7359_2477';
         let cod_carga = null;
 
         const stateCarga = codUserWorkLoad ? 2 : 1;
@@ -153,11 +154,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
             // check graphicsId is null
             if (graphicsId === null) {
+                this._fuseSplashScreenService.hide();
                 return;
             }
 
             // check graphicsId is empty
             if (Object.keys(graphicsId).length === 0) {
+                this._fuseSplashScreenService.hide();
                 return;
             }
             for (const key in graphicsId) {
@@ -316,13 +319,14 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 FEC_ASIGNACION: dateWorkLoad,
                                 FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
                                 ID_MZN_C: key.idmz,
-                                COD_EST_ENVIO_TICKET: 0
+                                COD_EST_ENVIO_TICKET: 0,
+                                ESTADO_V:'1',
                             };
                             switch (key.type) {
                                 case 'CF':
                                     ticket['ID_ENTIDAD'] = `${ubigeo}${row.attributes.COD_PRE}`;
-                                    ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket;
-                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
+                                    ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
+                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket;
                                     ticket['OBS_TICKET_GABINETE'] = row.OBSERVACION;
                                     ticket['COD_PRE'] = row.attributes.COD_PRE;
                                     tickets.push({ attributes: ticket, geometry: null });
@@ -379,7 +383,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     const applyEdistsTickets = results.edits;
                     const tickets = results.tickets;
                     const prediosTickets = tickets.reduce((acc, ticket) => {
-                        if (ticket.attributes.COD_TIPO_TICKET === '1') {
+                        if (ticket.attributes.COD_TIPO_TICKET === '1' || ticket.attributes.COD_TIPO_TICKET === '5') {
                             acc.push(ticket.attributes.COD_PRE);
                         }
                         return acc;
@@ -412,6 +416,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 ID_MZN_C: key,
                                 Estado_tra: stateTicket,
                                 UBIGEO: ubigeo,
+                                FUENTE: dataWorkLoad.find(row => row.oid.toString() === key).fuente
                             };
                             graphic.geometry = graphicsId[key].geometry;
                             graphics.push(graphic);
@@ -430,7 +435,10 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     this._stateService.triggerRefreshLayer(id_mz_pred);
                     this._stateService.triggerRefreshLayer(id_predio_sin_mz);
                     this._stateService.triggerRefreshLayer(id_mz_pimg);
+                    this._stateService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
                     this._stateService.triggerClearAllGraphics();
+                    this._stateService.updatewidget.emit(true);
+                    this.form.reset();
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {

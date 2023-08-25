@@ -10,6 +10,11 @@ import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.c
 
 import { loadModules } from 'esri-loader';
 import * as moment from 'moment';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { IdataLoad } from '../../interfaces/dataload.interface';
+import { StateService } from '../../services/state.service';
+import { DetailTableService } from '../../services/detail-table.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-table-pending',
@@ -27,12 +32,14 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     dataSource = [];
-
-
     constructor(
         public dialog: MatDialog,
         private _router: Router,
         private _route: ActivatedRoute,
+        private _messageProvider: MessageProviderService,
+        private _stateService: StateService,
+        private _detailService: DetailTableService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
         ) { }
 
     ngOnInit(): void {
@@ -68,14 +75,27 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-pending-assigment/${row.codCarga}`] , {relativeTo: this._route});
+        this._detailService.setRow(row);
+        this._router.navigate([`pending/${row.codCarga}`] , {relativeTo: this._route});
     }
-    onDelete(row: any): void {
-            this.dialog.open(MatDialogDeletedComponent, {
-            width: '420px',
-            });
 
+    onDelete(row): void {
+        const cod = row.codCarga;
+        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' +cod)
+            .afterClosed()
+            .subscribe((confirm) => {
+                if(confirm){
+                    this._stateService.emitRowDelete(row);
+                    this._fuseSplashScreenService.show();
+                }
+            });
+        this._stateService.stateRowdeleted.subscribe((state) => {
+            if(state){
+                this.dataAssigned();
+            }
+        });
     }
+
 
     async dataAssigned(): Promise<void> {
         try {
