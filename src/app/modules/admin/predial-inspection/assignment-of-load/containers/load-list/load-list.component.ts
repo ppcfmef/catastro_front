@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 })
 export class LoadListComponent implements OnInit {
     states: string[] = [
-        'Ubigeo',
+        'Codigo',
         'Unidad urbana'
     ];
     private _unsuscribe = new Subject();
