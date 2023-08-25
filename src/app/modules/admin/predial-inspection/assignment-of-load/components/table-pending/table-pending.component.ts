@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { StateService } from '../../services/state.service';
+import { DetailTableService } from '../../services/detail-table.service';
 
 @Component({
   selector: 'app-table-pending',
@@ -36,6 +37,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
         private _route: ActivatedRoute,
         private _messageProvider: MessageProviderService,
         private _stateService: StateService,
+        private _detailService: DetailTableService,
         ) { }
 
     ngOnInit(): void {
@@ -71,7 +73,8 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-pending-assigment/${row.codCarga}`] , {relativeTo: this._route});
+        this._detailService.setRow(row);
+        this._router.navigate([`pending/${row.codCarga}`] , {relativeTo: this._route});
     }
 
     onDelete(row): void {
