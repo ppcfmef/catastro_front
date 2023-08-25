@@ -12,12 +12,14 @@ export class StateService {
 
     @Output() deleteAll: EventEmitter<boolean> = new EventEmitter();
     @Output() stateRowdeleted: EventEmitter<boolean> = new EventEmitter();
+    @Output() updatewidget: EventEmitter<boolean> = new EventEmitter();
     public functiondelete = new EventEmitter<any>();
     public clearAllGraphics: EventEmitter<void> = new EventEmitter();
     public refreshLayer: EventEmitter<void> = new EventEmitter();
     private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
     private webMapSubject = new BehaviorSubject<any>(null);
     private graphicsIdSubject = new BehaviorSubject<any>(null);
+
 
     private rowDeleted = new Subject<any>();
     constructor() {}

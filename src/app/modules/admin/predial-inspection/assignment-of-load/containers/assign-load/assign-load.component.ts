@@ -39,7 +39,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     cards = [
         {
             num: 21,
-            text: 'MANZANAS ASIGNADAS ACTUALMENTE'
+            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
         },
         {
             num: 25,
@@ -325,7 +325,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                             switch (key.type) {
                                 case 'CF':
                                     ticket['ID_ENTIDAD'] = `${ubigeo}${row.attributes.COD_PRE}`;
-                                    ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket;
+                                    ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
                                     ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
                                     ticket['OBS_TICKET_GABINETE'] = row.OBSERVACION;
                                     ticket['COD_PRE'] = row.attributes.COD_PRE;
@@ -383,7 +383,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     const applyEdistsTickets = results.edits;
                     const tickets = results.tickets;
                     const prediosTickets = tickets.reduce((acc, ticket) => {
-                        if (ticket.attributes.COD_TIPO_TICKET === '1') {
+                        if (ticket.attributes.COD_TIPO_TICKET === '1' || ticket.attributes.COD_TIPO_TICKET === '5') {
                             acc.push(ticket.attributes.COD_PRE);
                         }
                         return acc;
@@ -437,6 +437,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     this._stateService.triggerRefreshLayer(id_mz_pimg);
                     this._stateService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
                     this._stateService.triggerClearAllGraphics();
+                    this._stateService.updatewidget.emit(true);
+                    this.form.reset();
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {
