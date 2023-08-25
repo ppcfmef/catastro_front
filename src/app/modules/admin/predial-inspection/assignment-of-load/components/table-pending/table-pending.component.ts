@@ -14,6 +14,7 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { StateService } from '../../services/state.service';
 import { DetailTableService } from '../../services/detail-table.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-table-pending',
@@ -38,6 +39,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
         private _messageProvider: MessageProviderService,
         private _stateService: StateService,
         private _detailService: DetailTableService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
         ) { }
 
     ngOnInit(): void {
@@ -84,6 +86,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
             .subscribe((confirm) => {
                 if(confirm){
                     this._stateService.emitRowDelete(row);
+                    this._fuseSplashScreenService.show();
                 }
             });
         this._stateService.stateRowdeleted.subscribe((state) => {

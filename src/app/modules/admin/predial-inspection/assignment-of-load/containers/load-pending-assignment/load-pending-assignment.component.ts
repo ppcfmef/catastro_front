@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { DetailTableService } from '../../services/detail-table.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
     selector: 'app-load-pending-assignment',
@@ -36,7 +37,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     cards = [
         {
             num: 21,
-            text: 'MANZANAS ASIGNADAS ACTUALMENTE',
+            text: 'UNIDADES ASIGNADAS ACTUALMENTE',
         },
         {
             num: 25,
@@ -46,10 +47,10 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
 
     constructor(
         private _router: Router,
-        private _route: ActivatedRoute,
         private _userService: UserService,
         private _detailService: DetailTableService,
         private _activatedRoute: ActivatedRoute,
+        private _fuseSplashScreenService: FuseSplashScreenService,
         ) {}
 
     ngOnInit(): void {
@@ -96,7 +97,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     redirecto(): void {
-        this._router.navigate(['../../'], {relativeTo: this._route});
+        this._router.navigate(['../../'], {relativeTo: this._activatedRoute});
     }
 
     async detailLoad(workLoadData, ubigeouser): Promise<void> {

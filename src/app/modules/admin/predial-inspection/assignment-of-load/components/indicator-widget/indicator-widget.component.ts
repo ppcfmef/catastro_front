@@ -25,6 +25,12 @@ export class IndicatorWidgetComponent implements OnInit {
                 this.listWidget();
             }
         });
+        this._stateService.stateRowdeleted.subscribe((state) => {
+            if(state){
+                this.listWidget();
+            }
+        });
+
     }
 
     async listWidget(): Promise<void> {

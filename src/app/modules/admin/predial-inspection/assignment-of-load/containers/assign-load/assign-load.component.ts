@@ -54,7 +54,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private _stateService: StateService,
         private _userService: UserService,
-        protected _fuseSplashScreenService: FuseSplashScreenService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
     ) {
         this.form = new FormGroup({
             loadName: new FormControl(''),
@@ -326,7 +326,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 case 'CF':
                                     ticket['ID_ENTIDAD'] = `${ubigeo}${row.attributes.COD_PRE}`;
                                     ticket['TIPO'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
-                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket === '5' ? 'Predio subvaluado' : 'Predio sin georreferenciacion';
+                                    ticket['COD_TIPO_TICKET'] = row.attributes.Cod_Tipo_Ticket;
                                     ticket['OBS_TICKET_GABINETE'] = row.OBSERVACION;
                                     ticket['COD_PRE'] = row.attributes.COD_PRE;
                                     tickets.push({ attributes: ticket, geometry: null });

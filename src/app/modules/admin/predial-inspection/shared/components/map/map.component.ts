@@ -43,7 +43,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     idManzanaIneiLayer = 'CAPAS_INSPECCION_AC_3891';
     idPredioSinManzanaLayer = 'CARTO_PUNTO_CAMPO_7359';
     idManzanaPuntoImagenLayer = 'CAPAS_INSPECCION_AC_3115';
-    hideSelectUbigeo: boolean = false;
+    hideSelectUbigeo: boolean = true;
     _queryUbigeo: string;
     _fieldUbigeo = 'UBIGEO';
     _view = null;
@@ -765,16 +765,17 @@ export class MapComponent implements OnInit, AfterViewInit {
                         this._webmap.findLayerById(this.idManzanaPrediosLayer).refresh();
                         this._webmap.findLayerById(this.idPredioSinManzanaLayer).refresh();
                         this._webmap.findLayerById(this.idManzanaPuntoImagenLayer).refresh();
-
                         // Aqui confirma que se elimino la carga de trabajo
                         this._stateService.stateRowdeleted.emit(true);
                         const responseMessage = 'Se eliminó la carga de trabajo ' + workLoadData.codCarga;
                         this._messageProvider.showAlert(responseMessage);
                         console.log(responseMessage, 'correcto');
+                        this._fuseSplashScreenService.hide();
                     })
                     .catch((err) => {
                         // Aqui se muestran los posibles errores
                         this._messageProvider.showSnackError('No existe el codigo que desea eliminar');
+                        this._fuseSplashScreenService.hide();
                         throw new Error('Err:' + err?.error?.statusText);
                     });
     }

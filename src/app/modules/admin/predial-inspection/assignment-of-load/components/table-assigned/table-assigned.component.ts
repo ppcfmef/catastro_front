@@ -15,6 +15,8 @@ import { Subject, Subscription } from 'rxjs';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { StateService } from '../../services/state.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { DetailTableService } from '../../services/detail-table.service';
 
 
 
@@ -39,6 +41,8 @@ export class TableAssignedComponent implements OnInit, AfterViewInit {
         private _route: ActivatedRoute,
         private _messageProvider: MessageProviderService,
         private _stateService: StateService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
+        private _detailService: DetailTableService,
     ) {}
 
     ngOnInit(): void {
@@ -86,9 +90,8 @@ export class TableAssignedComponent implements OnInit, AfterViewInit {
     }
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-assigned/${row.cod_carga}`], {
-            relativeTo: this._route,
-        });
+        this._detailService.setRow(row);
+        this._router.navigate([`load-assigned/${row.codCarga}`] , {relativeTo: this._route});
     }
 
     onDelete(row): void {
@@ -98,6 +101,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit {
             .subscribe((confirm) => {
                 if(confirm){
                     this._stateService.emitRowDelete(row);
+                    this._fuseSplashScreenService.show();
                 }
             });
         this._stateService.stateRowdeleted.subscribe((state) => {
