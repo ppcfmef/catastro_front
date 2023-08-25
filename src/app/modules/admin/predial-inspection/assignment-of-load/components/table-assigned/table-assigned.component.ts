@@ -10,6 +10,11 @@ import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.c
 
 import { loadModules } from 'esri-loader';
 import * as moment from 'moment';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { Subject, Subscription } from 'rxjs';
+import { IdataLoad } from '../../interfaces/dataload.interface';
+import { StateService } from '../../services/state.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 
@@ -26,13 +31,14 @@ export class TableAssignedComponent implements OnInit, AfterViewInit {
         isEdit: true,
         isDeleted: true,
     };
-
-    dataSource = [];
+    dataSource: MatTableDataSource<IdataLoad>;
 
     constructor(
         public dialog: MatDialog,
         private _router: Router,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _messageProvider: MessageProviderService,
+        private _stateService: StateService,
     ) {}
 
     ngOnInit(): void {
@@ -84,9 +90,20 @@ export class TableAssignedComponent implements OnInit, AfterViewInit {
             relativeTo: this._route,
         });
     }
-    onDelete(row: any): void {
-        this.dialog.open(MatDialogDeletedComponent, {
-            width: '420px',
+
+    onDelete(row): void {
+        const cod = row.codCarga;
+        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' +cod)
+            .afterClosed()
+            .subscribe((confirm) => {
+                if(confirm){
+                    this._stateService.emitRowDelete(row);
+                }
+            });
+        this._stateService.stateRowdeleted.subscribe((state) => {
+            if(state){
+                this.dataAssigned();
+            }
         });
     }
 

@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IdataLoad } from '../interfaces/dataload.interface';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class StateService {
     @Output() row: EventEmitter<any> = new EventEmitter();
 
     @Output() deleteAll: EventEmitter<boolean> = new EventEmitter();
+    @Output() stateRowdeleted: EventEmitter<boolean> = new EventEmitter();
     public functiondelete = new EventEmitter<any>();
     public clearAllGraphics: EventEmitter<void> = new EventEmitter();
     public refreshLayer: EventEmitter<void> = new EventEmitter();
@@ -18,6 +19,7 @@ export class StateService {
     private webMapSubject = new BehaviorSubject<any>(null);
     private graphicsIdSubject = new BehaviorSubject<any>(null);
 
+    private rowDeleted = new Subject<any>();
     constructor() {}
 
     // update state
@@ -52,6 +54,14 @@ export class StateService {
 
     triggerRefreshLayer(id): void {
         this.refreshLayer.emit(id);
+    }
+
+    emitRowDelete(row): void {
+        this.rowDeleted.next(row);
+    }
+
+    getRowtDelete(): Observable<any> {
+        return this.rowDeleted.asObservable();
     }
 }
 

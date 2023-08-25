@@ -29,7 +29,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     _portalUrl = 'https://js.arcgis.com/4.27/';
 
     _queryUbigeo: string;
-    _field_ubigeo = 'UBIGEO';
+
 
 
 
@@ -133,6 +133,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     deleteItem(dataItem: IdataLoad[], row: IdataLoad): void {
+        console.log('delete', dataItem);
         const index = dataItem.findIndex((data: IdataLoad) => data.codigo === row.codigo);
         if (index === -1) {return;}
         this.data.splice(index, 1);

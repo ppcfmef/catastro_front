@@ -119,6 +119,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const mz_asignadas = 'CARTO_MANZANA_CAMPO_3194';
         const id_predio_sin_mz = 'CARTO_PUNTO_CAMPO_7359';
         const id_mz_pimg = 'CAPAS_INSPECCION_AC_3115';
+        const idPredSinCartoAsignadoLayer = 'CARTO_PUNTO_CAMPO_7359_2477';
         let cod_carga = null;
 
         const stateCarga = codUserWorkLoad ? 2 : 1;
@@ -153,11 +154,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
             // check graphicsId is null
             if (graphicsId === null) {
+                this._fuseSplashScreenService.hide();
                 return;
             }
 
             // check graphicsId is empty
             if (Object.keys(graphicsId).length === 0) {
+                this._fuseSplashScreenService.hide();
                 return;
             }
             for (const key in graphicsId) {
@@ -316,7 +319,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 FEC_ASIGNACION: dateWorkLoad,
                                 FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
                                 ID_MZN_C: key.idmz,
-                                COD_EST_ENVIO_TICKET: 0
+                                COD_EST_ENVIO_TICKET: 0,
+                                ESTADO_V:'1',
                             };
                             switch (key.type) {
                                 case 'CF':
@@ -412,6 +416,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 ID_MZN_C: key,
                                 Estado_tra: stateTicket,
                                 UBIGEO: ubigeo,
+                                FUENTE: dataWorkLoad.find(row => row.oid.toString() === key).fuente
                             };
                             graphic.geometry = graphicsId[key].geometry;
                             graphics.push(graphic);
@@ -430,6 +435,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     this._stateService.triggerRefreshLayer(id_mz_pred);
                     this._stateService.triggerRefreshLayer(id_predio_sin_mz);
                     this._stateService.triggerRefreshLayer(id_mz_pimg);
+                    this._stateService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
                     this._stateService.triggerClearAllGraphics();
                     this._fuseSplashScreenService.hide();
                 })
