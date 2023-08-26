@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
@@ -8,6 +9,12 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
 import { MatPaginator } from '@angular/material/paginator';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { Card } from '../../../shared/interfaces/card.interface';
+import { ExportUtils } from 'app/shared/utils/export.util';
+import { PredioUI } from 'app/modules/admin/land-inspection/gap-analisys/interfaces/predio.interface';
+import { IPagination } from 'app/core/common/interfaces/common.interface';
+import { Land } from 'app/modules/admin/lands/land-registry/interfaces/land-map-in.interface';
+import { LandAnalisysUI } from '../../interfaces/land.interface';
+import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-georreferencing-status-gap-analisys.enum';
 
 @Component({
     selector: 'app-georeferencing',
@@ -15,6 +22,7 @@ import { Card } from '../../../shared/interfaces/card.interface';
     styleUrls: ['./georeferencing.component.scss'],
 })
 export class GeoreferencingComponent implements OnInit {
+    @Input() ubigeo ='040703';
     cards = [
         {
             title: 'predios sin cartografía inicial',
@@ -85,6 +93,7 @@ export class GeoreferencingComponent implements OnInit {
     tableLength: number;
     search: any;
     filterStatusGapAnalisys: any;
+    filterUbigeo: any;
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     private defaultTableLimit = 5;
@@ -93,19 +102,32 @@ export class GeoreferencingComponent implements OnInit {
         private _userService: UserService,
         public dialog: MatDialog,
         private _router: Router,
-        protected _messageProviderService: MessageProviderService
+        protected _messageProviderService: MessageProviderService,
+        private _activatedRoute: ActivatedRoute,
     ) {}
 
     ngOnInit(): void {
-        this.getInitStadistics();
-        this.getInitList();
+        this._activatedRoute.params.subscribe((params) => {
+            this.ubigeo = params.ubigeo;
+
+            if(this.ubigeo && this.ubigeo !==''){
+
+                this.filterUbigeo ={ubigeo : this.ubigeo};
+            }
+
+            this.getInitStadistics();
+            this.getInitList();
+        });
+
     }
 
     getInitList(): void {
-        const queryParams = { limit: this.defaultTableLimit };
+
+
+        const filterRawValue = { limit: this.defaultTableLimit , ... this.filterUbigeo };
 
         this.landGapAnalisysService
-            .getList(queryParams)
+            .getList(filterRawValue)
             .toPromise()
             .then((landResult) => {
                 this.dataSource = landResult.results;
@@ -114,37 +136,35 @@ export class GeoreferencingComponent implements OnInit {
     }
 
     getInitStadistics(): void {
+        const queryParams = {ubigeo: this.ubigeo };
         this.landGapAnalisysService
-            .geStadistictsStatus()
+            .geStadistictsStatus(queryParams)
             .toPromise()
             .then((results: any[]) => {
                 this.cards.forEach((card) => {
-                    if (card.arrayStatus){
+                    if (card.arrayStatus) {
                         let s = 0;
                         card.arrayStatus.forEach((idStatus) => {
                             const rs = results.find(
-                                r => r.statusGapAnalisys === idStatus
+                                (r) => r.statusGapAnalisys === idStatus
                             );
-                            s = s + (rs.count ? rs.count : 0);
+                            if (rs) {
+                                s = s + (rs.count ? rs.count : 0);
+                            }
                         });
                         card.numb = String(s);
-                    }
-
-                    else{
+                    } else {
                         let s = 0;
 
                         results.forEach((rs) => {
-
                             s = s + (rs.count ? rs.count : 0);
                         });
 
                         card.numb = String(s);
                     }
-
                 });
             });
     }
-
 
     onClearSearch(): void {
         this.search = {};
@@ -163,40 +183,68 @@ export class GeoreferencingComponent implements OnInit {
             });
     }
 
-    onFilterStatus(card: Card): void{
-
-        const arrayStatus=card.arrayStatus;
-        if (arrayStatus){
+    onFilterStatus(card: Card): void {
+        const arrayStatus = card.arrayStatus;
+        if (arrayStatus) {
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            this.filterStatusGapAnalisys={ 'status_gap_analisys__in':arrayStatus.join(',')};
+            this.filterStatusGapAnalisys = {
+                status_gap_analisys__in: arrayStatus.join(','),
+            };
+            const filterRawValue = { ... this.filterStatusGapAnalisys , ... this.filterUbigeo };
             this.landGapAnalisysService
-            .getList(this.filterStatusGapAnalisys)
-            .toPromise()
-            .then((result) => {
-                this.dataSource = result.results;
-                this.tableLength = result.count;
-            });
-        }
-        else{
-            this.filterStatusGapAnalisys={};
+                .getList(filterRawValue)
+                .toPromise()
+                .then((result) => {
+                    this.dataSource = result.results;
+                    this.tableLength = result.count;
+                });
+        } else {
+            this.filterStatusGapAnalisys = {};
             this.onClearSearch();
         }
-
-
     }
 
     onChangePage(
         paginator: MatPaginator | { pageSize: number; pageIndex: number }
     ): void {
-        //const ownerFilter = { owner: this.landOwnerId };
-
         const limit = paginator.pageSize;
         const offset = limit * paginator.pageIndex;
-        const filterRawValue = { limit, offset, ...this.search , ...this.filterStatusGapAnalisys};
+        const filterRawValue = {
+            limit,
+            offset,
+            ...this.search,
+            ...this.filterStatusGapAnalisys,
+            ... this.filterUbigeo
+        };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
         this.landGapAnalisysService
             .getList(queryParams)
             .toPromise()
             .then(result => (this.dataSource = result.results));
+    }
+
+    exportDataToExcel(): void {
+        const filterRawValue = {
+            ...this.search,
+            ...this.filterStatusGapAnalisys,
+            ... this.filterUbigeo
+        };
+        const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+        this.landGapAnalisysService
+            .getList(queryParams)
+            .toPromise()
+            .then((result: IPagination<LandAnalisysUI>) => {
+                const data = result.results.map(r => ({
+                        'Contribuyente': r.ownerName,
+                        'Codigo de Predio': r.cpm,
+                        'Direccion': `${r?.streetTypeName} ${r?.streetName} ${r?.municipalNumber}`,
+                        'Estado': r?.statusGapAnalisys
+                    }));
+
+                ExportUtils.exportToExcel(
+                    data,
+                    'Predios sin georreferenciacion.xlsx'
+                );
+            });
     }
 }

@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild,
+} from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,7 +17,8 @@ import { MatPaginator } from '@angular/material/paginator';
     templateUrl: './gap-analysis-block-list.component.html',
     styleUrls: ['./gap-analysis-block-list.component.scss'],
 })
-export class GapAnalysisBlockListComponent implements OnInit {
+export class GapAnalysisBlockListComponent implements OnInit, OnChanges {
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @Input() view;
     @Input() length: number;
     @Input() tableColumns: TableColumn[] = [];
@@ -33,15 +43,23 @@ export class GapAnalysisBlockListComponent implements OnInit {
         isAction: true,
         isZoom: true,
     };
+
+    @Input() pageSize = 5;
+    @Input() pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+    @Input() pageIndex = 0;
+    @Input() resetTable = false;
     @Output() zoomAction: EventEmitter<any> = new EventEmitter();
     @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
     @Output() refreshPage: EventEmitter<any> = new EventEmitter();
-    pageIndex = 0;
-    pageSize = 5;
-    pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+    @Output() exportDataToExcel: EventEmitter<any> = new EventEmitter();
+    constructor() {}
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log('changes', changes);
 
-    constructor() {
-        /*this.setTableColumn();*/
+        if (this.resetTable) {
+            this.pageIndex =0;
+            this.paginator.pageIndex = 0;
+        }
     }
 
     ngOnInit(): void {}
@@ -52,11 +70,15 @@ export class GapAnalysisBlockListComponent implements OnInit {
 
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
-        console.log('paginator>>',paginator);
+        //console.log('paginator>>', paginator);
         this.changePage.emit(paginator);
-      }
-      onRefreshPage(): void {
+    }
+    onRefreshPage(): void {
         this.refreshPage.emit();
-      }
+    }
 
+
+    onExportDataToExcel(): void {
+        this.exportDataToExcel.emit();
+    }
 }

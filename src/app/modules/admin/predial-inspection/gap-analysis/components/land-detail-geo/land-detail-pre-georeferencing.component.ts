@@ -9,17 +9,10 @@ import {
 } from '@angular/core';
 import { LandAnalisysUI } from '../../interfaces/land.interface';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
-import { TypePoint } from 'app/shared/enums/type-point.enum';
 import { FormUtils } from 'app/shared/utils/form.utils';
-import { loadModules } from 'esri-loader';
-import { Predio } from 'app/modules/admin/lands/land-registry/interfaces/predio.interface';
-import { PuntoCampoUI } from '../../interfaces/punto-campo.interface';
-import { PredioUI } from '../../interfaces/predio.interface';
 import { PredioService } from '../../services/predio.service';
 import { PredioModel } from '../../models/predio.model';
 import { PuntoCampoModel } from '../../models/punto-campo.model';
-import { LoteUI } from '../../interfaces/lote.interface';
 import { PuntoCampoService } from '../../services/punto-campo.service';
 import { LandStatus } from 'app/shared/enums/land-status.enum';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
@@ -27,6 +20,7 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
 import { Router } from '@angular/router';
 import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
 import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-georreferencing-status-gap-analisys.enum';
+import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
 @Component({
     selector: 'app-land-detail-pre-georeferencing',
     templateUrl: './land-detail-pre-georeferencing.component.html',
@@ -35,6 +29,7 @@ import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-geor
 export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     @Input() land: LandAnalisysUI;
     @Input() dataPoint: { point: any; type: string };
+    @Input() estado =  ActionsGapAnalisys.ASIGNAR_PUNTO;
     @Output() asigLandEvent: EventEmitter<any> = new EventEmitter<any>();
 
     showAddres = true;
@@ -42,6 +37,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     point: any;
     type: string;
     dialogRef = null;
+    disabled: boolean = false;
     constructor(
         private fb: FormBuilder,
         private _predioService: PredioService,
@@ -52,8 +48,15 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     ) {}
 
     ngOnInit(): void {
-        console.log('land>>>', this.land);
+        //console.log('land>>>', this.land);
         this.createFormEdit();
+        if(this.estado === ActionsGapAnalisys.LEER){
+            this.disabled = true;
+        }
+        else if (this.estado === ActionsGapAnalisys.ASIGNAR_PUNTO){
+            this.disabled = false;
+        }
+
     }
 
     createFormEdit(): void {
@@ -73,23 +76,20 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
             .toPromise()
             .then((option) => {
                 if (option === 'confirmed') {
-                    this.land.statusGapAnalisys = LandGeorreferencingStatusGapAnalisys.OBSERVADO;
+                    this.land.statusGapAnalisys =
+                        LandGeorreferencingStatusGapAnalisys.OBSERVADO;
                     this.land = FormUtils.deleteKeysNullInObject(this.land);
                     this._landService.update(this.land.id, this.land).subscribe(
                         (resp) => {
-                            this._confirmationService.success(
-                                'Exito',
-                                'Datos guardados'
-                            ).afterClosed().toPromise()
-                            .then(
-                                (e) => {
-                                    this._router.navigate(
-                                        [
-                                            '/inspection/gap-analysis/geo',
-                                        ]
-                                    );
-                                }
-                            );
+                            this._confirmationService
+                                .success('Exito', 'Datos guardados')
+                                .afterClosed()
+                                .toPromise()
+                                .then((e) => {
+                                    this._router.navigate([
+                                        '/inspection/gap-analysis/geo',
+                                    ]);
+                                });
                         },
                         (error) => {
                             this._confirmationService.error(
@@ -136,11 +136,14 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         puntoCampo.COD_PRE = this.land.cpm;
                         puntoCampo.UBIGEO = this.land.ubigeo;
                         puntoCampo.REFEREN = this.land.referenceName;
-                        puntoCampo.Cod_Tipo_Ticket = String(TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION);
-                        puntoCampo.Estado_tra =0;
+                        puntoCampo.Cod_Tipo_Ticket = String(
+                            TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION
+                        );
+                        puntoCampo.Estado_tra = 0;
                         this.land.longitude = puntoCampo.COORD_X;
                         this.land.latitude = puntoCampo.COORD_Y;
-                        this.land.statusGapAnalisys = LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
+                        this.land.statusGapAnalisys =
+                            LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
                         this._puntoCampoService
                             .crearPuntoCampo([puntoCampo])
@@ -150,19 +153,18 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                         .update(this.land.id, this.land)
                                         .subscribe(
                                             (resp) => {
-                                                this._confirmationService.success(
-                                                    'Exito',
-                                                    'punto guardado'
-                                                ).afterClosed().toPromise()
-                                                .then(
-                                                    (e) => {
-                                                        this._router.navigate(
-                                                            [
-                                                                '/inspection/gap-analysis/geo',
-                                                            ]
-                                                        );
-                                                    }
-                                                );
+                                                this._confirmationService
+                                                    .success(
+                                                        'Exito',
+                                                        'punto guardado'
+                                                    )
+                                                    .afterClosed()
+                                                    .toPromise()
+                                                    .then((e) => {
+                                                        this._router.navigate([
+                                                            '/inspection/gap-analysis/geo',
+                                                        ]);
+                                                    });
                                             },
                                             (error) => {
                                                 this._confirmationService.error(
@@ -223,7 +225,8 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                     this.land.latitude = predio.COORD_Y;
                                     this.land.statusGapAnalisys =
                                         LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PREDIO;
-                                        this.land.status = LandStatus.CON_CARTOGRAFIA_LOTE;
+                                    this.land.status =
+                                        LandStatus.CON_CARTOGRAFIA_LOTE;
                                     this.land =
                                         FormUtils.deleteKeysNullInObject(
                                             this.land
@@ -240,16 +243,15 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                                                 'Exito',
                                                                 'punto guardado'
                                                             )
-                                                            .afterClosed().toPromise()
-                                                            .then(
-                                                                (e) => {
-                                                                    this._router.navigate(
-                                                                        [
-                                                                            '/inspection/gap-analysis/geo',
-                                                                        ]
-                                                                    );
-                                                                }
-                                                            );
+                                                            .afterClosed()
+                                                            .toPromise()
+                                                            .then((e) => {
+                                                                this._router.navigate(
+                                                                    [
+                                                                        '/inspection/gap-analysis/geo',
+                                                                    ]
+                                                                );
+                                                            });
                                                     },
                                                     (error) => {
                                                         this._confirmationService.error(
@@ -271,5 +273,9 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
             this.dataPoint = changes?.dataPoint.currentValue;
             console.log('this.dataPoint>>', this.dataPoint);
         }
+    }
+
+    backToList(): void{
+        this._router.navigate(['./inspection/gap-analysis/geo',this.land.ubigeo]);
     }
 }

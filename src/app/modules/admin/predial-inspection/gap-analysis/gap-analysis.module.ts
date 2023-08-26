@@ -4,10 +4,9 @@ import { CommonModule } from '@angular/common';
 import { GapAnalysisRoutingModule } from './gap-analysis-routing.module';
 import { GapAnalysisPage } from './pages/gap-analysis/gap-analysis.page';
 
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTableModule} from '@angular/material/table';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 
 import { GapListComponent } from './containers/gap-list/gap-list.component';
 import { GeoreferencingComponent } from './containers/georeferencing/georeferencing.component';
@@ -29,42 +28,40 @@ import { LandMapPreGeoreferencingComponent } from './components/land-map-geo/lan
 import { LandDetailPreGeoreferencingComponent } from './components/land-detail-geo/land-detail-pre-georeferencing.component';
 import { GapAnalysisMapComponent } from './components/gap-analysis-map/gap-analysis-map.component';
 import { GapAnalysisBlockListComponent } from './components/gap-analysis-block-list/gap-analysis-block-list.component';
-
-
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
-  declarations: [
-    GapAnalysisPage,
-    GapListComponent,
-    CardDeatailComponent,
-    GeoreferencingComponent,
-    DataPropertyComponent,
-    GrowthAppleComponent,
-    ImagenComponent,
-    WithoutBatchComponent,
-    SubLandComponent,
-    PointsWithoutLandComponent,
-SearchLandWithoutGeoTableComponent,
- LandWithoutGeoTableComponent,
- LandMapPreGeoreferencingComponent,
- LandDetailPreGeoreferencingComponent,
- GapAnalysisMapComponent,
- GapAnalysisBlockListComponent
-  ],
-  imports: [
-    CommonModule,
-    GapAnalysisRoutingModule,
-    MatIconModule,
-    SharedModule,
-    MatButtonModule,
-    MatTableModule,
-    MatInputModule,
-    MatTooltipModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-
-  ]
+    declarations: [
+        GapAnalysisPage,
+        GapListComponent,
+        CardDeatailComponent,
+        GeoreferencingComponent,
+        DataPropertyComponent,
+        GrowthAppleComponent,
+        ImagenComponent,
+        WithoutBatchComponent,
+        SubLandComponent,
+        PointsWithoutLandComponent,
+        SearchLandWithoutGeoTableComponent,
+        LandWithoutGeoTableComponent,
+        LandMapPreGeoreferencingComponent,
+        LandDetailPreGeoreferencingComponent,
+        GapAnalysisMapComponent,
+        GapAnalysisBlockListComponent,
+    ],
+    imports: [
+        CommonModule,
+        GapAnalysisRoutingModule,
+        MatIconModule,
+        SharedModule,
+        MatButtonModule,
+        MatTableModule,
+        MatInputModule,
+        MatTooltipModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatPaginatorModule,
+        MatAutocompleteModule,
+    ],
 })
-export class GapAnalysisModule { }
+export class GapAnalysisModule {}

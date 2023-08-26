@@ -20,13 +20,13 @@ class="flex flex-col bg-white container-list-load text py-6 px-5 w-full h-full r
     <mat-paginator  class="w-full" [length]="length"
 [pageIndex]="pageIndex"
 [pageSize]="pageSize"
-[pageSizeOptions]="pageSizeOptions"
 (page)="onPage($event)"
+[pageSizeOptions]="pageSizeOptions"
 >
 </mat-paginator>
 
 </div>
-<button mat-button>
+<button mat-button (click)="onExportDataToExcel()">
     <mat-icon
         svgIcon="mat_solid:download"
         class="text-white mr-2"

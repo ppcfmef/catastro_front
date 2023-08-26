@@ -6,25 +6,36 @@
             <mat-icon aria-hidden="false" fontIcon="home"></mat-icon>
         </div>
     </div>
-    <div class="mt-2 w-100 px-8 ">
+    <div class="mt-2 w-2/3 px-8 ">
         <div class="flex border bg-white border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
-            <input class="w-full" placeholder="Buscar por distrito" />
+            <input class="w-full" placeholder="Buscar por distrito" (keyup)=searchDistrict($event) [matAutocomplete]= "auto" />
+            <mat-autocomplete   #auto = "matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelect($event)" >
+                <mat-option *ngFor = "let option of districts " [value] = "option"  >
+                    {{option.departmentName}} - {{option.provinceName}} - {{option.districtName}}
+
+                </mat-option >
+            </mat-autocomplete >
             <span class="flex">
                 <mat-icon svgIcon="mat_outline:search"></mat-icon>
             </span>
+
         </div>
+
+
+
+
         <div class="mt-4">
-            <div class="flex gap-1 mb-1">
+            <div class="flex gap-1 mb-1" *ngIf="district">
                 <div class="text">DEPARTAMENTO:</div>
-                <div class="subText">Lima</div>
+                <div class="subText">{{district?.departmentName}}</div>
             </div>
             <div class="flex gap-1 mb-1">
                 <div class="text">PROVINCIA:</div>
-                <div class="subText">Lima</div>
+                <div class="subText">{{district?.provinceName}}</div>
             </div>
             <div class="flex gap-1 mb-1">
                 <div class="text">DISTRITO:</div>
-                <div class="subText">San Juan de Lurigancho</div>
+                <div class="subText">{{district?.districtName}}</div>
             </div>
         </div>
     </div>

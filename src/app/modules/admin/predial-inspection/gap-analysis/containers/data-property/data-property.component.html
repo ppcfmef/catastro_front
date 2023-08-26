@@ -5,7 +5,7 @@
     </div>
 
     <div class="flex-auto w-3/4 block relative " >
-        <app-land-map-pre-georeferencing  (setPointEvent)="setPoint($event)" ></app-land-map-pre-georeferencing>
+        <app-land-map-pre-georeferencing [ubigeo]="ubigeo" [land]="land" [event] ="event" (setPointEvent)="setPoint($event)" ></app-land-map-pre-georeferencing>
     </div>
 
 </div>

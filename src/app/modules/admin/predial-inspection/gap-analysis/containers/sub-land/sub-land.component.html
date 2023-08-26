@@ -8,6 +8,11 @@
             (zoomAction)="onZoom($event)"
             [length]="tableLength"
             (changePage)="onChangePage($event)"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            [pageIndex] ="pageIndex"
+            [resetTable] ="resetTable"
+            (exportDataToExcel)="exportDataToExcel()"
         ></app-gap-analysis-block-list>
     </div>
 
@@ -23,7 +28,9 @@
             [idPuntoCampo]="idPuntoCampo"
             [typeGapAnalisys]="typeGapAnalisys"
             [rowZoom]="rowZoom"
+            [ubigeo]="ubigeo"
             (refreshEvent)="getInitList()"
+
         ></app-gap-analysis-map>
     </div>
 </div>

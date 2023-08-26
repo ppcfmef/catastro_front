@@ -16,7 +16,6 @@ import { PuntoCampoUI } from '../interfaces/punto-campo.interface';
     providedIn: 'root',
 })
 export class ManzanaPrediosSubvaluadosService {
-
     baseUrl = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer/4/query`;
 
     constructor(
@@ -24,37 +23,66 @@ export class ManzanaPrediosSubvaluadosService {
         private _commonService: CommonService
     ) {}
 
-    async get(parametros?: any): Promise<any> {
+    async getList(parametros?: any): Promise<any> {
+        let where = 'CONT_PS>0';
+        where =  parametros?.ubigeo? `CONT_PS>0 and UBIGEO='${parametros?.ubigeo}'`:where;
 
-
+        let responseJsonTotal: any = {};
         const params = new URLSearchParams({
-            where: parametros.where?parametros.where:'1=1',// A valid SQL where clause
-            outFields: '*',// Fields you want to retrieve, "*" for all fields
-           // returnGeometry: 'true', // Whether to return geometries
-            f: 'json',// Response format
-            resultOffset: parametros.resultOffset?String(parametros.resultOffset):'0',// Starting record
-            resultRecordCount: parametros.resultRecordCount?String(parametros.resultRecordCount):'5',// Number of records to fetch,
-
-          });
-          const url = `${this.baseUrl}?${params.toString()}`;
-          const response = await fetch(`${url}`, {
+            where: where, // A valid SQL where clause
+            outFields: '*', // Fields you want to retrieve, "*" for all fields
+            // returnGeometry: 'true', // Whether to return geometries
+            f: 'json', // Response format
+            resultOffset: parametros.resultOffset
+                ? String(parametros.resultOffset)
+                : '0', // Starting record
+            resultRecordCount: parametros.resultRecordCount
+                ? String(parametros.resultRecordCount)
+                : '5', // Number of records to fetch,
+        });
+        const url = `${this.baseUrl}?${params.toString()}`;
+        const response = await fetch(`${url}`, {
             method: 'GET',
         });
 
-          const paramsTotal = new URLSearchParams({
-            where: parametros.where?parametros.where:'1=1',// A valid SQL where clause
-            f: 'json',// Response format
-            returnCountOnly: 'true'
-          });
+        if (parametros.count) {
+            const paramsTotal = new URLSearchParams({
+                where: parametros.where ? parametros.where : '1=1', // A valid SQL where clause
+                f: 'json', // Response format
+                returnCountOnly: 'true',
+            });
 
-        const urlTotal = `${this.baseUrl}?${paramsTotal.toString()}`;
-        const responseTotal = await fetch(`${urlTotal}`, {
-            method: 'GET',
-        });
+            const urlTotal = `${this.baseUrl}?${paramsTotal.toString()}`;
+            const responseTotal = await fetch(`${urlTotal}`, {
+                method: 'GET',
+            });
 
-        const responseJsonTotal: any = await responseTotal.json();
-        console.log('responseTotal>>>',responseJsonTotal);
+            responseJsonTotal = await responseTotal.json();
+            console.log('responseTotal>>>', responseJsonTotal);
+        }
         const responseJson: any = await response.json();
-        return {...responseJson, ...responseJsonTotal};
+        return { ...responseJson, ...responseJsonTotal };
     }
+
+    async getTotalSubvaluados(parametros?: any): Promise<any> {
+        let res =0;
+        let where = 'CONT_PS>0';
+        where =  parametros?.ubigeo? `CONT_PS>0 and UBIGEO='${parametros?.ubigeo}'`:where;
+        const params = new URLSearchParams({
+            where: where , // A valid SQL where clause
+            outStatistics:'[{"statisticType":"sum","onStatisticField":"CONT_PS","outStatisticFieldName":"sum_contps"}]',
+            f: 'json', // Response format
+        });
+        const url = `${this.baseUrl}?${params.toString()}`;
+        const response = await fetch(`${url}`, {
+            method: 'GET',
+        });
+
+        const responseJson: any = await response.json();
+        res = (responseJson &&  responseJson?.features  && responseJson?.features[0]?.attributes?.sum_contps)?responseJson?.features[0]?.attributes?.sum_contps:0;
+        return res;
+
+    }
+
+
 }

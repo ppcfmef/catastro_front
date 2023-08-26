@@ -11,23 +11,16 @@ import {
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
-import { Predio } from 'app/modules/admin/lands/land-registry/interfaces/predio.interface';
-import { LandRegistryMapModel } from 'app/modules/admin/lands/land-registry/models/land-registry-map.model';
+
 import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
-import { Actions } from 'app/shared/enums/actions.enum';
+
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
-import { FormUtils } from 'app/shared/utils/form.utils';
-import { FormatUtils } from 'app/shared/utils/format.utils';
+
 import { environment } from 'environments/environment';
 import { loadModules } from 'esri-loader';
-import { TypePoint } from 'app/shared/enums/type-point.enum';
-import { PuntoCampoUI } from '../../interfaces/punto-campo.interface';
-import { PredioUI } from '../../interfaces/predio.interface';
 import { MapUtils } from 'app/shared/utils/map.utils';
 import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
-import { P } from '@angular/cdk/keycodes';
-import { PredioModel } from 'app/modules/admin/land-inspection/gap-analisys/models/predio.model';
-import { PuntoCampoModel } from 'app/modules/admin/land-inspection/gap-analisys/models/punto-campo.model';
+import { PuntoCampoModel } from '../../models/punto-campo.model';
 import { PuntoCampoService } from '../../services/punto-campo.service';
 
 let _this: any;
@@ -51,7 +44,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
     @Input() idPuntoCampo = 1;
     @Input() layersInfo = [];
     @Input() listSourceSearchConfig = [];
-
+    @Input() ubigeo;
     @Output() setPointEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshEvent: EventEmitter<any> = new EventEmitter<any>();
 
@@ -61,9 +54,6 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
         this.onZoom();
     }*/
 
-
-
-    _this = this;
     apiKey = environment.apiKeyArcgis;
     view: any = null;
     map: any;
@@ -90,6 +80,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             width: 2,
         },
     };
+
     simpleMarkerSymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
         url: '/assets/images/map/location2.png',
@@ -105,7 +96,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
         height: '30px',
         yoffset: '15px',
     };
-    private _rowZoom: any;
+    //private _rowZoom: any;
     constructor(
         private _confirmationService: CustomConfirmationService,
         private _puntoCampoService: PuntoCampoService
@@ -114,11 +105,14 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.points = [{ latitude: -13.53063, longitude: -71.955921 }];
         setTimeout(() => {
-            this.initializeMap(this.points);
+            this.initializeMap(this.points, this.ubigeo);
         }, 1000);
     }
 
-    async initializeMap(inputPoints: any[] = []): Promise<void> {
+    async initializeMap(
+        inputPoints: any[] = [],
+        ubigeo?: string
+    ): Promise<void> {
         try {
             const container = this.mapViewEl.nativeElement;
 
@@ -220,10 +214,6 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
 
             basemapGallery.activeBasemap = 'satellite';
             console.log('this.layersInfo>>', this.layersInfo);
-            const popupTrailheads = {
-                title: 'Trailhead',
-                content: 'Holass',
-            };
 
             this.layersInfo.map((l) => {
                 const options: any = {
@@ -241,6 +231,10 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 l.labelClass ? (options.labelingInfo = [l.labelClass]) : null;
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 l.renderer ? (options.renderer = l.renderer) : null;
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                l.definitionExpression
+                    ? (options.definitionExpression = l.definitionExpression)
+                    : null;
 
                 l.featureLayer = new FeatureLayer(options);
 
@@ -302,8 +296,12 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
                 position: 'top-right',
             });
-            this.view.ui.add('logoDiv', 'bottom-right');
+            /*this.view.ui.add('logoDiv', 'bottom-right');*/
             this.view.when(() => {
+                if (ubigeo) {
+                    this.filterUbigeo(this.ubigeo);
+                }
+
                 const verificarAction = {
                     // This text is displayed as a tooltip
                     title: 'Verificar',
@@ -355,7 +353,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                             <tr>
                               <th>Cod Manzana</th>
                               <th>Codigo de Predio</th>
-                              <th></th>
+
                             </tr>
                             `;
 
@@ -442,8 +440,6 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                                     //this.points
                                 }
                             }
-
-
                         }
                     }
                 });
@@ -458,6 +454,13 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                                 TypeGapAnalisys.PREDIO_SUBVALUADO
                             );
                             puntoCampo.Estado_tra = 1;
+
+                            console.log(
+                                'p>>>',
+                                p.attributes,
+                                'puntoCampo>>',
+                                puntoCampo
+                            );
                             return puntoCampo;
                         });
 
@@ -466,33 +469,32 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                             'Esta seguro de guardar el predio como predio subvaluado?'
                         );
 
-                        dialogRef.afterClosed().toPromise()
-                        .then(
-                            (option) => {
+                        dialogRef
+                            .afterClosed()
+                            .toPromise()
+                            .then((option) => {
                                 if (option === 'confirmed') {
                                     this._puntoCampoService
-                                    .crearPuntoCampo(puntosCampo)
-                                    .then((results) => {
-                                        this._confirmationService.success(
-                                            'Exito',
-                                            'puntos guardados'
-                                        );
-                                        this.view.popup.close();
-                                        this.view.graphics.removeAll();
-                                        const layerPuntoCampo = this.layersInfo.find(
-                                            (l: any) => l.id === this.idPuntoCampo
-                                        )?.featureLayer;
+                                        .crearPuntoCampo(puntosCampo)
+                                        .then((results) => {
+                                            this._confirmationService.success(
+                                                'Exito',
+                                                'puntos guardados'
+                                            );
+                                            this.view.popup.close();
+                                            this.view.graphics.removeAll();
+                                            const layerPuntoCampo =
+                                                this.layersInfo.find(
+                                                    (l: any) =>
+                                                        l.id ===
+                                                        this.idPuntoCampo
+                                                )?.featureLayer;
 
-                                        layerPuntoCampo.refresh();
-                                        this.refreshEvent.emit();
-                                    });
-
-
-
+                                            layerPuntoCampo.refresh();
+                                            this.refreshEvent.emit();
+                                        });
                                 }
-                            }
-                        );
-
+                            });
                     }
                 });
             });
@@ -558,22 +560,48 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
         }
     }
 
+    filterUbigeo(ubigeo: string): void {
+        const where = `UBIGEO='${ubigeo}'`;
+        this.layersInfo.forEach((l) => {
+            if (l.featureLayer) {
+                const featureLayer = l.featureLayer;
+                console.log('where', where);
+                featureLayer.definitionExpression = where;
+            }
+        });
+
+        this.zoomToUbigeo(where);
+    }
+
+    async zoomToUbigeo(where: string): Promise<any> {
+        try {
+            const layerManzana = this.layersInfo.find(
+                (l: any) => l.id === this.idManzana
+            )?.featureLayer;
+
+            /*console.log('where>>>', where);
+            console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);*/
+            if (this.view) {
+                MapUtils.zoomToFeature(this.view, layerManzana, where).then(
+                    () => {
+                        this.view.zoom = 16;
+                    }
+                );
+            }
+        } catch (error) {
+            console.error('EsriLoader: ', error);
+        }
+    }
+
     async onZoom(): Promise<void> {
         if (this.view) {
-            const feature=this.rowZoom.feature;
-            const target = feature.geometry;
-    /*view.goTo(parcel);
-    //map.setExtent(parcelExtent);
-    return (parcel);*/
+            const layerManzana = this.layersInfo.find(
+                (l: any) => l.id === this.idManzana
+            )?.featureLayer;
+            const where = `UBIGEO = ${this.rowZoom.ubigeo} and ID_MZN_C = ${this.rowZoom.idmznc}`;
 
-            //this.view.zoom = 17;
-
-            this.view.goTo(
-                {
-                    target: target,
-                    //zoom: 18,
-                },
-                //zoom: 18,
+            MapUtils.zoomToFeature(this.view, layerManzana, where).then(
+                () => {}
             );
         }
     }
