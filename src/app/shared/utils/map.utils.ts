@@ -298,10 +298,85 @@ static async createArcgisJSON(
         return Promise.all(arcgisJson);
     });
 }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    static   async queryIntersectFeaturelayer(layer: any, geometry: any, distance: number=10,units: string='meters' ) {
+        const query = {
+            spatialRelationship: 'intersects', // Relationship operation to apply
+            geometry: geometry, // The sketch feature geometry
+            returnGeometry: true,
+            outFields: ['*'],
+            distance : distance,
+            units: units
+        };
+
+        const results = await layer.queryFeatures(query);
+        let feature = {};
+        if (results.features && results.features.length > 0) {
+            feature = results.features[0];
+        }
+        return feature;
+    }
+
+
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        static   async queryIntersectFeaturelayerResults(layer: any, geometry: any, distance: number=10,units: string='meters' ) {
+            const query = {
+                spatialRelationship: 'intersects', // Relationship operation to apply
+                geometry: geometry, // The sketch feature geometry
+                returnGeometry: true,
+                outFields: ['*'],
+                distance : distance,
+                units: units
+            };
+
+            const results = await layer.queryFeatures(query);
+            let features = [];
+            if (results.features && results.features.length > 0) {
+                features = results.features;
+            }
+            return features;
+        }
+
+ // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    static  async queryFeaturelayer(layer: any,whereClause: string  ) {
+        const query = {
+            where: whereClause,  // Set by select element
+            returnGeometry: true,
+            outFields: ['*'],
+
+        };
+
+        const results = await layer.queryFeatures(query);
+
+        return results.features;
+    }
+
+    /*
+    const parcelQuery = {
+        where: whereClause,  // Set by select element
+        spatialRelationship: "intersects", // Relationship operation to apply
+        geometry: extent, // Restricted to visible extent of the map
+        outFields: ["APN","UseType","TaxRateCity","Roll_LandValue"], // Attributes to return
+        returnGeometry: true
+       };
+
+       parcelLayer.queryFeatures(parcelQuery)
+
+       .then((results) => {
+
+         console.log("Feature count: " + results.features.length)
+
+       }).catch((error) => {
+         console.log(error.error);
+       });*/
+
 projectPoint(point: any,proj4SrcKey: string,proj4DestKey: string): any {
     return proj4(
         proj4.defs[proj4SrcKey],
         proj4.defs[proj4DestKey]
     ).forward(point);
 }
+
+
 }

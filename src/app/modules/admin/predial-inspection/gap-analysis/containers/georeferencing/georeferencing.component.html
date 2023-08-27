@@ -19,7 +19,7 @@
 
 
         </div>
-        <button mat-button >
+        <button mat-button (click)="exportDataToExcel()" >
             <mat-icon
                 svgIcon="mat_solid:download"
                 class="text-white mr-2"
@@ -44,7 +44,7 @@
 
 
     <div class="p-6">
-        <app-land-without-geo-table [dataSource]="dataSource"
+        <app-land-without-geo-table  [dataSource]="dataSource"
         [length]="tableLength"
         (changePage)="onChangePage($event)"></app-land-without-geo-table>
     </div>

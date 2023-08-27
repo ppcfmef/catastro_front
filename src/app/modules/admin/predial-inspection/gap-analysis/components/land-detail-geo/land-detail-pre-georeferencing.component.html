@@ -62,6 +62,8 @@
                 <button
                     class="button red"
                     (click)="guardarPuntoSinReferencia()"
+
+                    [disabled]="!disabled"
                 >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
@@ -69,14 +71,14 @@
                     ></mat-icon>
                     Predio no ubicable
                 </button>
-                <button class="button blue" (click)="nuevoPuntoCampo()">
+                <button class="button blue" (click)="nuevoPuntoCampo()" [disabled]="!disabled" >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
                         class="text-white"
                     ></mat-icon>
                     Generar punto imagen
                 </button>
-                <button class="button green" (click)="asignarPredio()">
+                <button class="button green" (click)="asignarPredio()"  [disabled]="!disabled" >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
                         class="text-white"
@@ -119,7 +121,7 @@
         <button
 
             class="button blue"
-            [routerLink]="'/inspection/gap-analysis/geo'"
+            (click)="backToList()"
             matTooltip="volver"
             [color]="'primary'"
         >
