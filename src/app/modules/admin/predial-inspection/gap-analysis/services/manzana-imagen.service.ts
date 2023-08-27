@@ -4,29 +4,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from 'environments/environment';
-import { IPagination } from 'app/core/common/interfaces/common.interface';
-import { PredioUI } from '../interfaces/predio.interface';
-import { MapUtils } from 'app/shared/utils/map.utils';
-import { loadModules } from 'esri-loader';
+
 import { CommonService } from 'app/core/common/services/common.service';
-import { FormUtils } from 'app/shared/utils/form.utils';
-import { PuntoCampoUI } from '../interfaces/punto-campo.interface';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ManzanaPrediosSubvaluadosService {
-    baseUrl = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer/4/query`;
+export class ManzanaPuntoImagenService {
+    baseUrl = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer/3/query`;
 
     constructor(
-        private http: HttpClient,
-        private _commonService: CommonService
+
     ) {}
 
     async getList(parametros?: any): Promise<any> {
-        let where = 'CONT_PS>0';
-        where =  parametros?.ubigeo? `CONT_PS>0 and UBIGEO='${parametros?.ubigeo}'`:where;
-        console.log('where>>>>>>',where);
+        let where = '';
+        where =  parametros?.ubigeo? `UBIGEO='${parametros?.ubigeo}' AND CONT_PIM>0`:where;
+
         let responseJsonTotal: any = {};
         const params = new URLSearchParams({
             where: where, // A valid SQL where clause
@@ -58,19 +52,19 @@ export class ManzanaPrediosSubvaluadosService {
             });
 
             responseJsonTotal = await responseTotal.json();
-            console.log('responseTotal>>>', responseJsonTotal);
+
         }
         const responseJson: any = await response.json();
         return { ...responseJson, ...responseJsonTotal };
     }
 
-    async getTotalSubvaluados(parametros?: any): Promise<any> {
+    async getTotalPuntoImagen(parametros?: any): Promise<any> {
         let res =0;
-        let where = 'CONT_PS>0';
-        where =  parametros?.ubigeo? `CONT_PS>0 and UBIGEO='${parametros?.ubigeo}'`:where;
+        let where = '';
+        where =  parametros?.ubigeo? `UBIGEO='${parametros?.ubigeo}' AND CONT_PIM>0`:where;
         const params = new URLSearchParams({
             where: where , // A valid SQL where clause
-            outStatistics:'[{"statisticType":"sum","onStatisticField":"CONT_PS","outStatisticFieldName":"sum_contps"}]',
+            outStatistics:'[{"statisticType":"sum","onStatisticField":"CONT_PIM","outStatisticFieldName":"count_cont_pim"}]',
             f: 'json', // Response format
         });
         const url = `${this.baseUrl}?${params.toString()}`;
@@ -79,7 +73,7 @@ export class ManzanaPrediosSubvaluadosService {
         });
 
         const responseJson: any = await response.json();
-        res = (responseJson &&  responseJson?.features  && responseJson?.features[0]?.attributes?.sum_contps)?responseJson?.features[0]?.attributes?.sum_contps:0;
+        res = (responseJson &&  responseJson?.features  && responseJson?.features[0]?.attributes?.count_cont_pim)?responseJson?.features[0]?.attributes?.count_cont_pim:0;
         return res;
 
     }

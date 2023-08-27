@@ -562,14 +562,14 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
 
     filterUbigeo(ubigeo: string): void {
         const where = `UBIGEO='${ubigeo}'`;
-        this.layersInfo.forEach((l) => {
+        /*this.layersInfo.forEach((l) => {
             if (l.featureLayer) {
                 const featureLayer = l.featureLayer;
                 console.log('where', where);
                 featureLayer.definitionExpression = where;
             }
         });
-
+*/
         this.zoomToUbigeo(where);
     }
 
@@ -598,7 +598,12 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             const layerManzana = this.layersInfo.find(
                 (l: any) => l.id === this.idManzana
             )?.featureLayer;
-            const where = `UBIGEO = ${this.rowZoom.ubigeo} and ID_MZN_C = ${this.rowZoom.idmznc}`;
+            const where = (this.rowZoom?.where)?this.rowZoom?.where:`UBIGEO = ${this.rowZoom.ubigeo} and ID_MZN_C = ${this.rowZoom.idmznc}`;
+            /*if(this.rowZoom.where)
+            {
+                where =
+            }*/
+
 
             MapUtils.zoomToFeature(this.view, layerManzana, where).then(
                 () => {}

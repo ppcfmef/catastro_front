@@ -7,7 +7,7 @@ import { GeoreferencingComponent } from './containers/georeferencing/georeferenc
 import { DataPropertyComponent } from './containers/data-property/data-property.component';
 import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
 import { ImagenComponent } from './containers/imagen/imagen.component';
-import { WithoutBatchComponent } from './containers/apple-without-batch/without-batch.component';
+import { WithoutBatchComponent } from './containers/block-without-batch/without-batch.component';
 import { SubLandComponent } from './containers/sub-land/sub-land.component';
 import { PointsWithoutLandComponent } from './containers/points-without-land/points-without-land.component';
 
@@ -23,10 +23,10 @@ const routes: Routes = [
             {path: 'geo/:ubigeo',component: GeoreferencingComponent},
             {path: 'geo/land/:id', component: DataPropertyComponent},
             {path: 'growth-apple', component: GrowthAppleComponent},
-            {path: 'imagen', component: ImagenComponent},
-            {path: 'apple-without-batch', component: WithoutBatchComponent},
+            {path: 'imagen/:ubigeo', component: ImagenComponent},
+            {path: 'without-batch/:ubigeo', component: WithoutBatchComponent},
             {path: 'sub-land/:ubigeo', component: SubLandComponent},
-            {path: 'points-without-land', component: PointsWithoutLandComponent},
+            {path: 'points-without-land/:ubigeo', component: PointsWithoutLandComponent},
         ],
     },
 ];

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
@@ -12,25 +11,27 @@ import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { ExportUtils } from 'app/shared/utils/export.util';
+import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
+import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
 
 @Component({
-    selector: 'app-sub-land',
-    templateUrl: './sub-land.component.html',
-    styleUrls: ['./sub-land.component.scss'],
+  selector: 'app-without-batch',
+  templateUrl: './without-batch.component.html',
+  styleUrls: ['./without-batch.component.scss']
 })
-export class SubLandComponent implements OnInit {
+export class WithoutBatchComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title='Predios Subvaluados';
+    title ='Manzana sin lotes';
     ubigeo = '040703';
     rowZoom: any;
-    typeGapAnalisys = TypeGapAnalisys.PREDIO_SUBVALUADO;
+    typeGapAnalisys = TypeGapAnalisys.MANZANA_SIN_LOTES;
 
     tableColumns: TableColumn[] = [];
 
     dataSource = [];
 
     cards = [];
-    totalPredios = 0;
+    manzanasSinLote = 0;
     tableConfig: TableConifg = {
         isAction: true,
         isZoom: true,
@@ -39,6 +40,7 @@ export class SubLandComponent implements OnInit {
     urlPredio = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/0`;
     urlPuntoCampo = `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer/0`;
     urlManzana = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/8`;
+
     where = '';
     idManzana = 1;
     idPredio = 3;
@@ -83,7 +85,7 @@ export class SubLandComponent implements OnInit {
                     style: 'solid',
                     outline: {
                         // autocasts as new SimpleLineSymbol()
-                        color: [0, 0, 0],
+                        color: [0, 0, 255],
                         width: 1.5,
                     },
                 },
@@ -106,11 +108,13 @@ export class SubLandComponent implements OnInit {
             selected: false,
         },
 
+
+
         {
-            title: 'Predios',
+            title: 'Manzanas Sin Lote',
             id: 3,
-            layerId: 0,
-            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            layerId: 2,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
@@ -120,48 +124,22 @@ export class SubLandComponent implements OnInit {
             projection: null,
             visible: true,
             selected: false,
-        },
-
-        {
-            title: 'Predios Subvaluados',
-            id: 4,
-            layerId: 0,
-            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer`,
-            order: 0,
-            featureLayer: null,
-            definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: null,
-            projection: 4326,
-            visible: true,
-            selected: false,
             renderer: {
                 type: 'simple',
                 symbol: {
                     type: 'simple-marker',
                     style: 'square',
                     size: '10px', // pixels
-                    color: [0, 255, 0, 0.2],
+                    color: [255, 255, 0,0.2],
                     fillOpacity: 0.2,
                     outline: {
-                        color: [0, 255, 0], // White
+                        color: [255, 255, 0, 0], // White
                         width: 1.5,
                     },
                 },
-                /*symbol: {
-                    type: 'simple-marker',
-                    style: 'square',
-                    size: '10px', // pixels
-                    color: [15, 255, 255, 0.2],
-                    fillOpacity: 0.2,
-                    outline: {
-                        color: [15, 255, 255], // White
-                        width: 2,
-                    },
-                },*/
             },
         },
+
     ];
 
     listSourceSearchConfig = [
@@ -196,7 +174,6 @@ export class SubLandComponent implements OnInit {
 
     queryParams = {};
     tableLength: number;
-    user: User;
     pageIndex = 0;
     pageSize = 15;
     pageSizeOptions = [5, 10, 15];
@@ -204,10 +181,10 @@ export class SubLandComponent implements OnInit {
     private defaultTableLimit = this.pageSize;
 
     constructor(
-        private _router: Router,
-        private _manzanaPrediosSubvaluadosService: ManzanaPrediosSubvaluadosService,
-        private _userService: UserService,
-        private _activatedRoute: ActivatedRoute
+        private _activatedRoute: ActivatedRoute,
+        private _manzanaSinLoteService: ManzanaSinLoteService,
+
+
     ) {}
 
     ngOnInit(): void {
@@ -234,18 +211,18 @@ export class SubLandComponent implements OnInit {
     }
 
     getTotalPredios(): void {
-        this._manzanaPrediosSubvaluadosService
-            .getTotalSubvaluados({ ubigeo: this.ubigeo })
+        this._manzanaSinLoteService
+            .getTotalManzanaSinLote({ ubigeo: this.ubigeo })
             .then((res) => {
-                this.totalPredios = res;
+                this.manzanasSinLote = res;
             });
     }
 
     updateCards(): void {
         this.cards = [
             {
-                num: this.totalPredios,
-                text: 'PREDIOS PARA VERIFICACION EN CAMPO',
+                num: this.manzanasSinLote,
+                text: 'MANZANAS SIN LOTE',
             },
         ];
     }
@@ -263,38 +240,12 @@ export class SubLandComponent implements OnInit {
                 matcolumndef: 'codmzn',
                 matcelldef: 'codmzn',
             },
-            {
-                matheaderdef: 'Sub',
-                matcolumndef: 'contps',
-                matcelldef: 'contps',
-            },
         ];
     }
 
     async onZoom(row: any): Promise<void> {
         this.rowZoom = row;
-        /*
-        const [FeatureLayer] = await loadModules(['esri/layers/FeatureLayer']);
 
-        const queryFeature = {
-            where: `UBIGEO = ${row.ubigeo} and ID_MZN_C = ${row.idmznc}`,
-            returnGeometry: true,
-        };
-
-        const featureLayer = new FeatureLayer(this.urlManzana);
-
-        featureLayer
-            .queryFeatures(queryFeature)
-            .then((results) => {
-                if (results.features.length > 0) {
-                    const feature = results.features[0];
-                    row.feature = feature;
-                    this.rowZoom = row;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });*/
     }
 
     onChangePage(
@@ -307,17 +258,17 @@ export class SubLandComponent implements OnInit {
             resultRecordCount,
             resultOffset,
             where: this.where,
-            count: false,
             ubigeo: this.ubigeo,
+            count: false,
         };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
         this.resetTable = false;
         this.getDataTable(queryParams);
-        //paginator.firstPage();
+
     }
 
     getDataTable(queryParams: any): void {
-        this._manzanaPrediosSubvaluadosService
+        this._manzanaSinLoteService
             .getList(queryParams)
             .then((result) => {
                 if (result && result.features) {
@@ -325,8 +276,7 @@ export class SubLandComponent implements OnInit {
                     const data = features.map((f: any) => ({
                         ubigeo: f.attributes['UBIGEO'],
                         codmzn: f.attributes['COD_MZN'],
-                        idmznc: f.attributes['ID_MZN_C'],
-                        contps: f.attributes['CONT_PS'],
+
                     }));
                     this.dataSource = data;
                     if (queryParams.count) {
@@ -346,22 +296,25 @@ export class SubLandComponent implements OnInit {
         };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
 
-        this._manzanaPrediosSubvaluadosService
+        this._manzanaSinLoteService
             .getList(queryParams)
             .then((result) => {
                 if (result && result.features) {
                     const features: any[] = result.features;
                     const data = features.map((f: any) => ({
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
                         'UBIGEO': f.attributes['UBIGEO'],
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
                         'CODIGO DE MANZANA': f.attributes['COD_MZN'],
-                        'CANTIDAD DE PUNTOS SUBVALUADOS':
-                            f.attributes['CONT_PS'],
+
                     }));
                     ExportUtils.exportToExcel(
                         data,
-                        'Manzanas subvaluadas.xlsx'
+                        'Manzanas sin lote.xlsx'
                     );
                 }
             });
     }
+
+
 }

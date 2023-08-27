@@ -9,6 +9,9 @@ import { User } from 'app/core/user/user.types';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
 import { ManzanaPrediosSubvaluadosService } from '../../services/manzana-sub-valuado.service';
+import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
+import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
+import { ManzanaPuntoImagenService } from '../../services/manzana-imagen.service';
 
 @Component({
     selector: 'app-gap-list',
@@ -39,21 +42,21 @@ export class GapListComponent implements OnInit {
             path: './sub-land',
         },
         {
-            type: null,
+            type: TypeGapAnalisys.MANZANA_SIN_LOTES,
             title: 'MANZANAS SIN LOTES',
             numb: '180',
             color: '#F89500',
-            path: './apple-without-batch',
+            path: './without-batch',
         },
         {
-            type: null,
+            type: TypeGapAnalisys.PUNTO_IMAGEN,
             title: 'PUNTOS EN IMAGEN',
             numb: '110',
             color: '#0090F8',
             path: './imagen',
         },
         {
-            type: null,
+            type: TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA,
             title: 'MANZANAS ACTUALIZACION',
             numb: '5',
             color: '#1E293B',
@@ -73,6 +76,9 @@ export class GapListComponent implements OnInit {
         private _districtService: DistrictService,
         private _landGapAnalisysService: LandGapAnalisysService,
         private _manzanaPrediosSubvaluadosService: ManzanaPrediosSubvaluadosService,
+        private _manzanaLotesSinPredioService: ManzanaLotesSinPredioService,
+        private _manzanaSinLoteService: ManzanaSinLoteService,
+        private _manzanaPuntoImagenService: ManzanaPuntoImagenService
     ) {}
 
     ngOnInit(): void {
@@ -119,6 +125,23 @@ export class GapListComponent implements OnInit {
                         const total = await this._manzanaPrediosSubvaluadosService.getTotalSubvaluados({ubigeo:ubigeo});
                         c.numb = String(total);
                     }
+
+                    if(c.type === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO){
+                        const total = await this._manzanaLotesSinPredioService.getTotalLotesSinPredio({ubigeo:ubigeo});
+                        c.numb = String(total);
+                    }
+
+                    if(c.type === TypeGapAnalisys.MANZANA_SIN_LOTES){
+                        const total = await this._manzanaSinLoteService.getTotalManzanaSinLote({ubigeo:ubigeo});
+                        c.numb = String(total);
+                    }
+
+                    if(c.type === TypeGapAnalisys.PUNTO_IMAGEN){
+                        const total = await this._manzanaPuntoImagenService
+                        .getTotalPuntoImagen({ ubigeo: this.ubigeo });
+                        c.numb = String(total);
+                    }
+
 
                     c.path = `${c.path}/${ubigeo}`;
                 });
