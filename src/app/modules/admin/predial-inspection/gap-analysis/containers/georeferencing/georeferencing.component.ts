@@ -138,7 +138,7 @@ export class GeoreferencingComponent implements OnInit {
     getInitStadistics(): void {
         const queryParams = {ubigeo: this.ubigeo };
         this.landGapAnalisysService
-            .geStadistictsStatus(queryParams)
+            .getStadistictsStatus(queryParams)
             .toPromise()
             .then((results: any[]) => {
                 this.cards.forEach((card) => {

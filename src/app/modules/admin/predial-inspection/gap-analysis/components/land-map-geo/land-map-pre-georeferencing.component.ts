@@ -266,19 +266,32 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
 
     simpleMarkerSymbol = {
-        type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+        /*type: 'picture-marker',
         url: '/assets/images/map/location2.png',
         width: '20px',
         height: '30px',
-        yoffset: '15px',
+        yoffset: '15px',*/
+        type: 'simple-marker',
+        style: 'square',
+        size: '10px', // pixels
+        color: [0, 255, 0, 0.5],
+
+        outline: {
+            color: [0, 255, 0], // White
+            width: 1.5,
+        },
     };
 
     simpleMarkerSymbolUndefined = {
-        type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location_out2.png',
-        width: '20px',
-        height: '30px',
-        yoffset: '15px',
+        type: 'simple-marker',
+        style: 'square',
+        size: '14px', // pixels
+        color: [0, 255, 255, 0.5],
+
+        outline: {
+            color: [0, 255, 255], // White
+            width: 1.5,
+        },
     };
 
     layerIdSelectPoint = 1;

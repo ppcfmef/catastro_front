@@ -39,8 +39,14 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-wrap gap-5 py-5 px-8">
-        <div *ngFor="let card of cards">
+
+
+
+
+    <div   *ngIf="!loadData" class="flex flex-wrap gap-5 py-5 px-8">
+
+
+        <div   *ngFor="let card of cards">
             <app-card-predial [card]="card" ></app-card-predial>
         </div>
     </div>

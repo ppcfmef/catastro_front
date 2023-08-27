@@ -13,25 +13,27 @@ import { User } from 'app/core/user/user.types';
 import { ExportUtils } from 'app/shared/utils/export.util';
 import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
 import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
+import { ManzanaPuntoImagenService } from '../../services/manzana-imagen.service';
+import { ManzanaCrecimientoService } from '../../services/manzana-crecimiento.service';
 
 @Component({
-  selector: 'app-without-batch',
-  templateUrl: './without-batch.component.html',
-  styleUrls: ['./without-batch.component.scss']
+    selector: 'app-growing-block',
+    templateUrl: './growing-block.component.html',
+    styleUrls: ['./growing-block.component.scss'],
 })
-export class WithoutBatchComponent implements OnInit {
+export class GrowingBlockComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title ='Manzana sin lotes';
+    title = 'Manzanas crecimiento';
     ubigeo = '040703';
     rowZoom: any;
-    typeGapAnalisys = TypeGapAnalisys.MANZANA_SIN_LOTES;
+    typeGapAnalisys = TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA;
 
     tableColumns: TableColumn[] = [];
 
     dataSource = [];
 
     cards = [];
-    manzanasSinLote = 0;
+    manzanasImagen = 0;
     tableConfig: TableConifg = {
         isAction: true,
         isZoom: true,
@@ -43,7 +45,7 @@ export class WithoutBatchComponent implements OnInit {
 
     where = '';
     idManzana = 3;
-    idPredio = 3;
+    idPredio = 0;
     idPuntoCampo = 4;
     layersInfo = [
         {
@@ -55,7 +57,9 @@ export class WithoutBatchComponent implements OnInit {
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}'`
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -103,8 +107,9 @@ export class WithoutBatchComponent implements OnInit {
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            /*definitionExpressionBase:'',
-            definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',*/
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}'`
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -113,45 +118,28 @@ export class WithoutBatchComponent implements OnInit {
             selected: false,
         },
 
-
-
         {
-            title: 'Manzanas Sin Lote',
+            title: 'Manzanas en crecimiento',
             id: 3,
-            layerId: 2,
+            layerId: 3,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            /*definitionExpressionBase:'',
-
-            definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',*/
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}' `
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
             projection: null,
             visible: true,
             selected: false,
-            /*renderer: {
-                type: 'simple',
-                symbol: {
-                    type: 'simple-marker',
-                    style: 'square',
-                    size: '10px', // pixels
-                    color: [255, 255, 0,0.2],
-                    fillOpacity: 0.2,
-                    outline: {
-                        color: [255, 255, 0, 0], // White
-                        width: 1.5,
-                    },
-                },
-            },*/
-
             labelClass: {
                 symbol: {
                     type: 'text', // autocasts as new TextSymbol()
-                    color:  [255, 255, 0],
+                    color: 'black',
                     yoffset: 5,
                     font: {
                         // autocast as new Font()
@@ -162,24 +150,23 @@ export class WithoutBatchComponent implements OnInit {
                 },
                 labelPlacement: 'above-center',
                 labelExpressionInfo: {
-                    expression: '$feature.ID_MZN_C',
+                    expression: '$feature.ID_MZN_U',
                 },
             },
             renderer: {
                 type: 'simple',
                 symbol: {
                     type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-                    color: [255, 255, 0, 0],
+                    color: [0, 255, 255, 0],
                     style: 'solid',
                     outline: {
                         // autocasts as new SimpleLineSymbol()
-                        color: [255, 255, 0],
+                        color: [0, 255, 255],
                         width: 1.5,
                     },
                 },
             },
         },
-
     ];
 
     listSourceSearchConfig = [
@@ -222,9 +209,7 @@ export class WithoutBatchComponent implements OnInit {
 
     constructor(
         private _activatedRoute: ActivatedRoute,
-        private _manzanaSinLoteService: ManzanaSinLoteService,
-
-
+        private _manzanaCrecimientoService: ManzanaCrecimientoService
     ) {}
 
     ngOnInit(): void {
@@ -251,18 +236,18 @@ export class WithoutBatchComponent implements OnInit {
     }
 
     getTotalPredios(): void {
-        this._manzanaSinLoteService
-            .getTotalManzanaSinLote({ ubigeo: this.ubigeo })
+        this._manzanaCrecimientoService
+            .getTotalManzanas({ ubigeo: this.ubigeo })
             .then((res) => {
-                this.manzanasSinLote = res;
+                this.manzanasImagen = res;
             });
     }
 
     updateCards(): void {
         this.cards = [
             {
-                num: this.manzanasSinLote,
-                text: 'MANZANAS SIN LOTE',
+                num: this.manzanasImagen,
+                text: 'MANZANAS CRECIMIENTO',
             },
         ];
     }
@@ -285,7 +270,7 @@ export class WithoutBatchComponent implements OnInit {
 
     async onZoom(row: any): Promise<void> {
         this.rowZoom = row;
-        this.rowZoom.where =`ubigeo ='${this.rowZoom.ubigeo}' AND  ID_MZN_C=${this.rowZoom.codmzn} `;
+        this.rowZoom.where = `ubigeo ='${this.rowZoom.ubigeo}' AND  ID_MZN_U=${this.rowZoom.codmzn} `;
     }
 
     onChangePage(
@@ -304,27 +289,24 @@ export class WithoutBatchComponent implements OnInit {
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
         this.resetTable = false;
         this.getDataTable(queryParams);
-
     }
 
     getDataTable(queryParams: any): void {
-        this._manzanaSinLoteService
-            .getList(queryParams)
-            .then((result) => {
-                if (result && result.features) {
-                    const features: any[] = result.features;
-                    const data = features.map((f: any) => ({
-                        ubigeo: f.attributes['ubigeo'],
-                        codmzn: f.attributes['ID_MZN_C'],
-
-                    }));
-                    this.dataSource = data;
-                    if (queryParams.count) {
-                        this.tableLength = result.count;
-                        this.updateCards();
-                    }
+        this._manzanaCrecimientoService.getList(queryParams).then((result) => {
+            if (result && result.features) {
+                const features: any[] = result.features;
+                console.log('features>>', features);
+                const data = features.map((f: any) => ({
+                    ubigeo: f.attributes['ubigeo'],
+                    codmzn: f.attributes['ID_MZN_U'],
+                }));
+                this.dataSource = data;
+                if (queryParams.count) {
+                    this.tableLength = result.count;
+                    this.updateCards();
                 }
-            });
+            }
+        });
     }
 
     exportDataToExcel(): void {
@@ -336,25 +318,17 @@ export class WithoutBatchComponent implements OnInit {
         };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
 
-        this._manzanaSinLoteService
-            .getList(queryParams)
-            .then((result) => {
-                if (result && result.features) {
-                    const features: any[] = result.features;
-                    const data = features.map((f: any) => ({
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        'UBIGEO': f.attributes['ubigeo'],
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        'CODIGO DE MANZANA': f.attributes['ID_MZN_C'],
-
-                    }));
-                    ExportUtils.exportToExcel(
-                        data,
-                        'Manzanas sin lote.xlsx'
-                    );
-                }
-            });
+        this._manzanaCrecimientoService.getList(queryParams).then((result) => {
+            if (result && result.features) {
+                const features: any[] = result.features;
+                const data = features.map((f: any) => ({
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'UBIGEO': f.attributes['ubigeo'],
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'CODIGO DE MANZANA': f.attributes['ID_MZN_U'],
+                }));
+                ExportUtils.exportToExcel(data, 'Manzanas en crecimiento.xlsx');
+            }
+        });
     }
-
-
 }

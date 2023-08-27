@@ -1,0 +1,38 @@
+<div class="flex w-full">
+    <div class="flex-auto w-1/4">
+        <app-gap-analysis-block-list
+            [tableColumns]="tableColumns"
+            [dataSource]="dataSource"
+            [cards]="cards"
+            [tableConfig]="tableConfig"
+            (zoomAction)="onZoom($event)"
+            [length]="tableLength"
+            (changePage)="onChangePage($event)"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            [pageIndex] ="pageIndex"
+            [resetTable] ="resetTable"
+            [title]="title"
+            (exportDataToExcel)="exportDataToExcel()"
+        ></app-gap-analysis-block-list>
+    </div>
+
+    <div class="flex-auto w-3/4 block relative">
+        <app-gap-analysis-map
+            [layersInfo]="layersInfo"
+            [listSourceSearchConfig]="listSourceSearchConfig"
+            [urlPredio]="urlPredio"
+            [urlManzana]="urlManzana"
+            [urlPuntoCampo]="urlPuntoCampo"
+            [idManzana]="idManzana"
+            [idPredio]="idPredio"
+            [idPuntoCampo]="idPuntoCampo"
+            [typeGapAnalisys]="typeGapAnalisys"
+            [rowZoom]="rowZoom"
+            [ubigeo]="ubigeo"
+            (refreshEvent)="getInitList()"
+
+        ></app-gap-analysis-map>
+    </div>
+</div>
+

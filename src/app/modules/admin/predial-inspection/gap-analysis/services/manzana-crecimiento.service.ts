@@ -10,8 +10,8 @@ import { CommonService } from 'app/core/common/services/common.service';
 @Injectable({
     providedIn: 'root',
 })
-export class ManzanaSinLoteService {
-    baseUrl = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer/2/query`;
+export class ManzanaCrecimientoService {
+    baseUrl = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer/3/query`;
 
     constructor(
 
@@ -19,7 +19,7 @@ export class ManzanaSinLoteService {
 
     async getList(parametros?: any): Promise<any> {
         let where = '';
-        where =  parametros?.ubigeo? `ubigeo='${parametros?.ubigeo}'`:where;
+        where =  parametros?.ubigeo? `UBIGEO='${parametros?.ubigeo}' `:where;
 
         let responseJsonTotal: any = {};
         const params = new URLSearchParams({
@@ -58,13 +58,13 @@ export class ManzanaSinLoteService {
         return { ...responseJson, ...responseJsonTotal };
     }
 
-    async getTotalManzanaSinLote(parametros?: any): Promise<any> {
+    async getTotalManzanas(parametros?: any): Promise<any> {
         let res =0;
-        let where = '';
-        where =  parametros?.ubigeo? `ubigeo='${parametros?.ubigeo}'`:where;
+        let where = '1=1';
+        where =  parametros?.ubigeo? `UBIGEO='${parametros?.ubigeo}' `:where;
         const params = new URLSearchParams({
             where: where , // A valid SQL where clause
-            outStatistics:'[{"statisticType":"count","onStatisticField":"ID_MZN_C","outStatisticFieldName":"count_id_mzn_c"}]',
+            outStatistics:'[{"statisticType":"count","onStatisticField":"ID_MZN_U","outStatisticFieldName":"count_id_mzn_u"}]',
             f: 'json', // Response format
         });
         const url = `${this.baseUrl}?${params.toString()}`;
@@ -73,7 +73,7 @@ export class ManzanaSinLoteService {
         });
 
         const responseJson: any = await response.json();
-        res = (responseJson &&  responseJson?.features  && responseJson?.features[0]?.attributes?.count_id_mzn_c)?responseJson?.features[0]?.attributes?.count_id_mzn_c:0;
+        res = (responseJson &&  responseJson?.features  && responseJson?.features[0]?.attributes?.count_id_mzn_u)?responseJson?.features[0]?.attributes?.count_id_mzn_u:0;
         return res;
 
     }

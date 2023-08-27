@@ -13,7 +13,7 @@ import { GeoreferencingComponent } from './containers/georeferencing/georeferenc
 import { CardDeatailComponent } from './components/card-deatail/card-deatail.component';
 import { SharedModule } from '../shared/shared.module';
 import { DataPropertyComponent } from './containers/data-property/data-property.component';
-import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
+
 import { ImagenComponent } from './containers/imagen/imagen.component';
 import { WithoutBatchComponent } from './containers/block-without-batch/without-batch.component';
 import { SubLandComponent } from './containers/sub-land/sub-land.component';
@@ -29,6 +29,7 @@ import { LandDetailPreGeoreferencingComponent } from './components/land-detail-g
 import { GapAnalysisMapComponent } from './components/gap-analysis-map/gap-analysis-map.component';
 import { GapAnalysisBlockListComponent } from './components/gap-analysis-block-list/gap-analysis-block-list.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { GrowingBlockComponent } from './containers/growing-block/growing-block.component';
 
 @NgModule({
     declarations: [
@@ -37,7 +38,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         CardDeatailComponent,
         GeoreferencingComponent,
         DataPropertyComponent,
-        GrowthAppleComponent,
         ImagenComponent,
         WithoutBatchComponent,
         SubLandComponent,
@@ -48,6 +48,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         LandDetailPreGeoreferencingComponent,
         GapAnalysisMapComponent,
         GapAnalysisBlockListComponent,
+        GrowingBlockComponent,
     ],
     imports: [
         CommonModule,

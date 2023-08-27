@@ -29,7 +29,7 @@ export class LandGapAnalisysService {
     return this.http.patch<any>(`${this.apiUrl}/gap-analisys/land/${id}/`, data);
   }
 
-  geStadistictsStatus(queryParams?: any): Observable<any>{
+  getStadistictsStatus(queryParams?: any): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/gap-analisys/land/stadisticts_gap_analisys/`, {params: queryParams} );
   }
 }

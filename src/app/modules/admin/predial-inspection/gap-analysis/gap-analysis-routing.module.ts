@@ -5,11 +5,11 @@ import { GapAnalysisPage } from './pages/gap-analysis/gap-analysis.page';
 import { GapListComponent } from './containers/gap-list/gap-list.component';
 import { GeoreferencingComponent } from './containers/georeferencing/georeferencing.component';
 import { DataPropertyComponent } from './containers/data-property/data-property.component';
-import { GrowthAppleComponent } from './containers/growth-apple/growth-apple.component';
 import { ImagenComponent } from './containers/imagen/imagen.component';
 import { WithoutBatchComponent } from './containers/block-without-batch/without-batch.component';
 import { SubLandComponent } from './containers/sub-land/sub-land.component';
 import { PointsWithoutLandComponent } from './containers/points-without-land/points-without-land.component';
+import { GrowingBlockComponent } from './containers/growing-block/growing-block.component';
 
 const routes: Routes = [
     {
@@ -22,7 +22,7 @@ const routes: Routes = [
             { path: 'gap-list', component:GapListComponent},
             {path: 'geo/:ubigeo',component: GeoreferencingComponent},
             {path: 'geo/land/:id', component: DataPropertyComponent},
-            {path: 'growth-apple', component: GrowthAppleComponent},
+            {path: 'growing-block/:ubigeo', component: GrowingBlockComponent},
             {path: 'imagen/:ubigeo', component: ImagenComponent},
             {path: 'without-batch/:ubigeo', component: WithoutBatchComponent},
             {path: 'sub-land/:ubigeo', component: SubLandComponent},

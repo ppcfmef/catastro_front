@@ -12,65 +12,74 @@ import { ManzanaPrediosSubvaluadosService } from '../../services/manzana-sub-val
 import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
 import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
 import { ManzanaPuntoImagenService } from '../../services/manzana-imagen.service';
-
+import { ManzanaCrecimientoService } from '../../services/manzana-crecimiento.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 @Component({
     selector: 'app-gap-list',
     templateUrl: './gap-list.component.html',
     styleUrls: ['./gap-list.component.scss'],
 })
 export class GapListComponent implements OnInit {
+    ubigeo = '040703';
     cards = [
         {
             type: TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO,
             title: 'PUNTOS LOTES SIN PREDIOS',
             numb: '120',
             color: '#DE3F43',
-            path: './points-without-land',
+            pathBase: './geo',
+            path: `./points-without-land/${this.ubigeo}`,
         },
         {
             type: TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION,
             title: 'PREDIOS SIN GEOREFERENCIACION',
             numb: '284',
             color: '#0090F8',
-            path: './geo',
+            pathBase: './geo',
+            path: `./geo/${this.ubigeo}`,
         },
         {
             type: TypeGapAnalisys.PREDIO_SUBVALUADO,
             title: 'PREDIOS SUBVALUADOS',
             numb: '0',
             color: '#66BB6A',
-            path: './sub-land',
+            pathBase:'./sub-land',
+            path: `./sub-land/${this.ubigeo}`,
         },
         {
             type: TypeGapAnalisys.MANZANA_SIN_LOTES,
             title: 'MANZANAS SIN LOTES',
             numb: '180',
             color: '#F89500',
-            path: './without-batch',
+            pathBase:'./without-batch',
+            path: `./without-batch/${this.ubigeo}`,
         },
         {
             type: TypeGapAnalisys.PUNTO_IMAGEN,
             title: 'PUNTOS EN IMAGEN',
             numb: '110',
             color: '#0090F8',
-            path: './imagen',
+            pathBase:'./imagen',
+            path: `./imagen/${this.ubigeo}`,
         },
         {
             type: TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA,
             title: 'MANZANAS ACTUALIZACION',
             numb: '5',
             color: '#1E293B',
-            path: './growth-apple',
+            pathBase:'./growing-block',
+            path: `./growing-block/${this.ubigeo}`,
         },
     ];
 
-    ubigeo = '040703';
+
     districts: District[] = [];
     search: string;
     defaultTableLimit: number = 5;
     district: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     user: User;
+    loadData: boolean = false;
     constructor(
         private _userService: UserService,
         private _districtService: DistrictService,
@@ -78,7 +87,9 @@ export class GapListComponent implements OnInit {
         private _manzanaPrediosSubvaluadosService: ManzanaPrediosSubvaluadosService,
         private _manzanaLotesSinPredioService: ManzanaLotesSinPredioService,
         private _manzanaSinLoteService: ManzanaSinLoteService,
-        private _manzanaPuntoImagenService: ManzanaPuntoImagenService
+        private _manzanaPuntoImagenService: ManzanaPuntoImagenService,
+        private _manzanaCrecimientoService: ManzanaCrecimientoService,
+        private _ngxSpinner: NgxSpinnerService,
     ) {}
 
     ngOnInit(): void {
@@ -106,10 +117,10 @@ export class GapListComponent implements OnInit {
     }
 
     async updateUbigeoCards(ubigeo: string): Promise<void> {
-        console.log('ubigeo>>>',ubigeo);
+        this._ngxSpinner.show();
         const params = { search: ubigeo, limit: this.defaultTableLimit };
         this._districtService.getList(params).subscribe((res)=>{
-            console.log(res);
+            /*console.log(res);*/
             this.districts = res.results;
             if (this.districts && this.districts.length > 0) {
                 this.district = this.districts[0];
@@ -141,10 +152,16 @@ export class GapListComponent implements OnInit {
                         .getTotalPuntoImagen({ ubigeo: this.ubigeo });
                         c.numb = String(total);
                     }
-
-
-                    c.path = `${c.path}/${ubigeo}`;
+                    if(c.type === TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA){
+                        const total = await this._manzanaCrecimientoService
+                        .getTotalManzanas({ ubigeo: this.ubigeo });
+                        c.numb = String(total);
+                    }
+                    c.path = `${c.pathBase}/${ubigeo}`;
                 });
+
+                this._ngxSpinner.hide();
+                /*this.loadData = false;*/
             }
         });
 
@@ -154,7 +171,7 @@ export class GapListComponent implements OnInit {
         let s = 0;
 
         const queryParams = { ubigeo };
-        const results = await this._landGapAnalisysService.geStadistictsStatus(
+        const results = await this._landGapAnalisysService.getStadistictsStatus(
             queryParams
         ).toPromise();
         results.forEach((rs) => {

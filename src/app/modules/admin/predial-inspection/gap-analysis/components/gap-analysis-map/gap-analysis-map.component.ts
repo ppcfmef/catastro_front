@@ -82,12 +82,37 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
     };
 
     simpleMarkerSymbol = {
-        type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+        /*type: 'picture-marker',
         url: '/assets/images/map/location2.png',
         width: '20px',
         height: '30px',
-        yoffset: '15px',
+        yoffset: '15px',*/
+        type: 'simple-marker',
+        style: 'square',
+        size: '10px', // pixels
+        color: [0, 0, 255, 0.5],
+        fillOpacity: 0.2,
+        outline: {
+            color: [0, 0, 255, 0], // White
+            width: 1.5,
+        },
+
     };
+/*
+
+                type: 'simple',
+                symbol: {
+                    type: 'simple-marker',
+                    style: 'square',
+                    size: '10px', // pixels
+                    color: [0, 255, 0, 0.2],
+                    fillOpacity: 0.2,
+                    outline: {
+                        color: [0, 255, 0], // White
+                        width: 1.5,
+                    },
+                }
+*/
 
     simpleMarkerSymbolUndefined = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
@@ -232,12 +257,33 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 l.renderer ? (options.renderer = l.renderer) : null;
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
+
+
+                if(this.ubigeo && this.ubigeo!=='' ){
+                    console.log('options.definitionExpressionBase>>',l.definitionExpressionBase);
+                    if(l.definitionExpressionBase  &&  l.definitionExpressionBase !==''){
+                        l.definitionExpression = `${l.definitionExpressionBase} AND UBIGEO ='${this.ubigeo}'`;
+
+                    }
+
+                    else{
+                        l.definitionExpression = ` UBIGEO ='${this.ubigeo}'`;
+                    }
+
+                }
+
+                /*options.definitionExpression = ` UBIGEO ='${this.ubigeo}'`;*/
+
+
+
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 l.definitionExpression
                     ? (options.definitionExpression = l.definitionExpression)
                     : null;
-
+                    console.log(options);
                 l.featureLayer = new FeatureLayer(options);
-
+                console.log('l.definitionExpression>>',l.definitionExpression);
                 this.map.add(l.featureLayer);
             });
 
@@ -534,6 +580,7 @@ export class GapAnalysisMapComponent implements OnInit, OnChanges {
             this.onZoom();
             //console.log('rowZoom>>',rowZoom);
         }
+
     }
 
     setPoint(point: any, type: string): void {
