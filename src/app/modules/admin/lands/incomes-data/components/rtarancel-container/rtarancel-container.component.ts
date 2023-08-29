@@ -23,7 +23,7 @@ export class RTArancelContainerComponent implements OnInit, AfterViewInit {
   pageSize = 5;
   listFormatMultiple = [
     { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente', path: '/rtcontribuyente' },
-    { code: 'RT_MARCOPREDIO', text: 'Tabla RT_MarcoPredio', path: '/rtmarco-predrio' },
+    { code: 'RT_MARCO_PREDIO', text: 'Tabla RT_MarcoPredio', path: '/rtmarco-predrio' },
     { code: 'RT_ARANCEL', text: 'Tabla RT_Arancel', path: '/rtarancel' },
     { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato', path: '' },
     { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract', path: '' },

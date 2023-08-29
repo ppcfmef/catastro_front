@@ -34,7 +34,7 @@ export class UploadContainerComponent implements OnInit {
   listFormatMultiple = [
 
         { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente' },
-        { code: 'RT_MARCOPREDIO', text: 'Tabla RT_MarcoPredio' },
+        { code: 'RT_MARCO_PREDIO', text: 'Tabla RT_MarcoPredio' },
         { code: 'RT_ARANCEL', text: 'Tabla RT_Arancel' },
         { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato' },
         { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract' },
