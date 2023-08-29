@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
@@ -12,25 +11,29 @@ import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { ExportUtils } from 'app/shared/utils/export.util';
+import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
+import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
+import { ManzanaPuntoImagenService } from '../../services/manzana-imagen.service';
+import { ManzanaCrecimientoService } from '../../services/manzana-crecimiento.service';
 
 @Component({
-    selector: 'app-sub-land',
-    templateUrl: './sub-land.component.html',
-    styleUrls: ['./sub-land.component.scss'],
+    selector: 'app-growing-block',
+    templateUrl: './growing-block.component.html',
+    styleUrls: ['./growing-block.component.scss'],
 })
-export class SubLandComponent implements OnInit {
+export class GrowingBlockComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title='Predios Subvaluados';
+    title = 'Manzanas crecimiento';
     ubigeo = '040703';
     rowZoom: any;
-    typeGapAnalisys = TypeGapAnalisys.PREDIO_SUBVALUADO;
+    typeGapAnalisys = TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA;
 
     tableColumns: TableColumn[] = [];
 
     dataSource = [];
 
     cards = [];
-    totalPredios = 0;
+    manzanasImagen = 0;
     tableConfig: TableConifg = {
         isAction: true,
         isZoom: true,
@@ -39,9 +42,10 @@ export class SubLandComponent implements OnInit {
     urlPredio = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/0`;
     urlPuntoCampo = `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer/0`;
     urlManzana = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/8`;
+
     where = '';
-    idManzana = 1;
-    idPredio = 3;
+    idManzana = 3;
+    idPredio = 0;
     idPuntoCampo = 4;
     layersInfo = [
         {
@@ -53,7 +57,9 @@ export class SubLandComponent implements OnInit {
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}'`
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -74,7 +80,7 @@ export class SubLandComponent implements OnInit {
                 },
                 labelPlacement: 'above-center',
                 labelExpressionInfo: {
-                    expression: '$feature.COD_MZN',
+                    expression: '$feature.ID_MZN_C',
                 },
             },
             renderer: {
@@ -101,7 +107,9 @@ export class SubLandComponent implements OnInit {
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}'`
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -111,63 +119,52 @@ export class SubLandComponent implements OnInit {
         },
 
         {
-            title: 'Predios',
+            title: 'Manzanas en crecimiento',
             id: 3,
-            layerId: 0,
-            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            layerId: 3,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpressionBase:'',
             definitionExpression:'',
-            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
+            /*definitionExpression: this.ubigeo
+                ? `UBIGEO = '${this.ubigeo}' `
+                : '1=1',*/
             featureTable: null,
             popupTemplate: null,
             utm: null,
             projection: null,
             visible: true,
             selected: false,
-        },
-
-        {
-            title: 'Predios Subvaluados',
-            id: 4,
-            layerId: 0,
-            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer`,
-            order: 0,
-            featureLayer: null,
-            definitionExpressionBase:'',
-            definitionExpression:'',
-            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: null,
-            projection: 4326,
-            visible: true,
-            selected: false,
+            labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    yoffset: 5,
+                    font: {
+                        // autocast as new Font()
+                        family: 'Playfair Display',
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.ID_MZN_U',
+                },
+            },
             renderer: {
                 type: 'simple',
                 symbol: {
-                    type: 'simple-marker',
-                    style: 'square',
-                    size: '10px', // pixels
-                    color: [0, 255, 0, 0.2],
-                    fillOpacity: 0.2,
+                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+                    color: [0, 255, 255, 0],
+                    style: 'solid',
                     outline: {
-                        color: [0, 255, 0], // White
+                        // autocasts as new SimpleLineSymbol()
+                        color: [0, 255, 255],
                         width: 1.5,
                     },
                 },
-                /*symbol: {
-                    type: 'simple-marker',
-                    style: 'square',
-                    size: '10px', // pixels
-                    color: [15, 255, 255, 0.2],
-                    fillOpacity: 0.2,
-                    outline: {
-                        color: [15, 255, 255], // White
-                        width: 2,
-                    },
-                },*/
             },
         },
     ];
@@ -204,7 +201,6 @@ export class SubLandComponent implements OnInit {
 
     queryParams = {};
     tableLength: number;
-    user: User;
     pageIndex = 0;
     pageSize = 15;
     pageSizeOptions = [5, 10, 15];
@@ -212,10 +208,8 @@ export class SubLandComponent implements OnInit {
     private defaultTableLimit = this.pageSize;
 
     constructor(
-        private _router: Router,
-        private _manzanaPrediosSubvaluadosService: ManzanaPrediosSubvaluadosService,
-        private _userService: UserService,
-        private _activatedRoute: ActivatedRoute
+        private _activatedRoute: ActivatedRoute,
+        private _manzanaCrecimientoService: ManzanaCrecimientoService
     ) {}
 
     ngOnInit(): void {
@@ -242,18 +236,18 @@ export class SubLandComponent implements OnInit {
     }
 
     getTotalPredios(): void {
-        this._manzanaPrediosSubvaluadosService
-            .getTotalSubvaluados({ ubigeo: this.ubigeo })
+        this._manzanaCrecimientoService
+            .getTotalManzanas({ ubigeo: this.ubigeo })
             .then((res) => {
-                this.totalPredios = res;
+                this.manzanasImagen = res;
             });
     }
 
     updateCards(): void {
         this.cards = [
             {
-                num: this.totalPredios,
-                text: 'PREDIOS PARA VERIFICACION EN CAMPO',
+                num: this.manzanasImagen,
+                text: 'MANZANAS CRECIMIENTO',
             },
         ];
     }
@@ -271,38 +265,12 @@ export class SubLandComponent implements OnInit {
                 matcolumndef: 'codmzn',
                 matcelldef: 'codmzn',
             },
-            {
-                matheaderdef: 'Sub',
-                matcolumndef: 'contps',
-                matcelldef: 'contps',
-            },
         ];
     }
 
     async onZoom(row: any): Promise<void> {
         this.rowZoom = row;
-        /*
-        const [FeatureLayer] = await loadModules(['esri/layers/FeatureLayer']);
-
-        const queryFeature = {
-            where: `UBIGEO = ${row.ubigeo} and ID_MZN_C = ${row.idmznc}`,
-            returnGeometry: true,
-        };
-
-        const featureLayer = new FeatureLayer(this.urlManzana);
-
-        featureLayer
-            .queryFeatures(queryFeature)
-            .then((results) => {
-                if (results.features.length > 0) {
-                    const feature = results.features[0];
-                    row.feature = feature;
-                    this.rowZoom = row;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });*/
+        this.rowZoom.where = `ubigeo ='${this.rowZoom.ubigeo}' AND  ID_MZN_U=${this.rowZoom.codmzn} `;
     }
 
     onChangePage(
@@ -315,34 +283,30 @@ export class SubLandComponent implements OnInit {
             resultRecordCount,
             resultOffset,
             where: this.where,
-            count: false,
             ubigeo: this.ubigeo,
+            count: false,
         };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
         this.resetTable = false;
         this.getDataTable(queryParams);
-        //paginator.firstPage();
     }
 
     getDataTable(queryParams: any): void {
-        this._manzanaPrediosSubvaluadosService
-            .getList(queryParams)
-            .then((result) => {
-                if (result && result.features) {
-                    const features: any[] = result.features;
-                    const data = features.map((f: any) => ({
-                        ubigeo: f.attributes['UBIGEO'],
-                        codmzn: f.attributes['COD_MZN'],
-                        idmznc: f.attributes['ID_MZN_C'],
-                        contps: f.attributes['CONT_PS'],
-                    }));
-                    this.dataSource = data;
-                    if (queryParams.count) {
-                        this.tableLength = result.count;
-                        this.updateCards();
-                    }
+        this._manzanaCrecimientoService.getList(queryParams).then((result) => {
+            if (result && result.features) {
+                const features: any[] = result.features;
+                console.log('features>>', features);
+                const data = features.map((f: any) => ({
+                    ubigeo: f.attributes['ubigeo'],
+                    codmzn: f.attributes['ID_MZN_U'],
+                }));
+                this.dataSource = data;
+                if (queryParams.count) {
+                    this.tableLength = result.count;
+                    this.updateCards();
                 }
-            });
+            }
+        });
     }
 
     exportDataToExcel(): void {
@@ -354,22 +318,17 @@ export class SubLandComponent implements OnInit {
         };
         const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
 
-        this._manzanaPrediosSubvaluadosService
-            .getList(queryParams)
-            .then((result) => {
-                if (result && result.features) {
-                    const features: any[] = result.features;
-                    const data = features.map((f: any) => ({
-                        'UBIGEO': f.attributes['UBIGEO'],
-                        'CODIGO DE MANZANA': f.attributes['COD_MZN'],
-                        'CANTIDAD DE PUNTOS SUBVALUADOS':
-                            f.attributes['CONT_PS'],
-                    }));
-                    ExportUtils.exportToExcel(
-                        data,
-                        'Manzanas subvaluadas.xlsx'
-                    );
-                }
-            });
+        this._manzanaCrecimientoService.getList(queryParams).then((result) => {
+            if (result && result.features) {
+                const features: any[] = result.features;
+                const data = features.map((f: any) => ({
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'UBIGEO': f.attributes['ubigeo'],
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'CODIGO DE MANZANA': f.attributes['ID_MZN_U'],
+                }));
+                ExportUtils.exportToExcel(data, 'Manzanas en crecimiento.xlsx');
+            }
+        });
     }
 }

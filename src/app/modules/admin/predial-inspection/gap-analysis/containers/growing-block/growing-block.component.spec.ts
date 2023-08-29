@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GrowthAppleComponent } from './growth-apple.component';
+import { GrowingBlockComponent } from './growing-block.component';
 
-describe('GrowthAppleComponent', () => {
-  let component: GrowthAppleComponent;
-  let fixture: ComponentFixture<GrowthAppleComponent>;
+describe('GrowingBlockComponent', () => {
+  let component: GrowingBlockComponent;
+  let fixture: ComponentFixture<GrowingBlockComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GrowthAppleComponent ]
+      declarations: [ GrowingBlockComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GrowthAppleComponent);
+    fixture = TestBed.createComponent(GrowingBlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

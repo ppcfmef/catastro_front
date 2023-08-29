@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export enum StatusGapAnalisys {
+export enum LandGeorreferencingStatusGapAnalisys {
     FALTANTE = 0,
 
     UBICADO_CON_PREDIO = 1,

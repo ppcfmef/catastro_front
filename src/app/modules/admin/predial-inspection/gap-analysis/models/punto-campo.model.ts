@@ -51,6 +51,10 @@ export class PuntoCampoModel implements PuntoCampoUI{
     ID_MZN_C: number;
 
     constructor(l?: PuntoCampoUI){
+        this.COD_CPU= l?.COD_CPU;
+        this.COD_PRE = l?.COD_PRE;
+        this.SEC_EJEC= l?.SEC_EJEC;
+        this.ID_PRED= l?.ID_PRED;
         this.ANIO_CART = l?.ANIO_CART;
         this.BLOCK = l?.BLOCK;
         this.COD_LOTE = l?.COD_LOTE;
