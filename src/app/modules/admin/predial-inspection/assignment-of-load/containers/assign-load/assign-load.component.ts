@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StateService } from '../../services/state.service';
+import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
@@ -10,9 +10,9 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
-import { PassThrough } from 'stream';
-import { tick } from '@angular/core/testing';
 import { IdataLoad } from '../../interfaces/dataload.interface';
+import { WidgetService } from '../../services/widget.service';
+import { TableService } from '../../services/table.service';
 
 
 
@@ -52,13 +52,16 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     constructor(
         private _router: Router,
         private route: ActivatedRoute,
-        private _stateService: StateService,
+        private _newLoadService: NewLoadService,
         private _userService: UserService,
+        private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _widgetService: WidgetService,
     ) {
         this.form = new FormGroup({
             loadName: new FormControl(''),
-            description: new FormControl('')
+            description: new FormControl(''),
+            codUser: new FormControl(''),
         });
 
     }
@@ -73,15 +76,15 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             });
 
         // Suscríbete al BehaviorSubject para datos de la tabla
-        this.tableDataSubscription = this._stateService.getTableData().subscribe((data: IdataLoad[]) => {
+        this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
             this.tableData = data;
         });
 
-        this.webMapSubscription = this._stateService.getWebMap().subscribe((webMap) => {
+        this.webMapSubscription = this._tableService.getWebMap().subscribe((webMap) => {
             this.webMapData = webMap;
         });
 
-        this.graphicsIdSubscription = this._stateService.getGraphicsId().subscribe((graphicsId) => {
+        this.graphicsIdSubscription = this._newLoadService.getGraphicsId().subscribe((graphicsId) => {
             this.graphicsIdsData = graphicsId;
         });
 
@@ -92,10 +95,14 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     redirecto(): void {
-        console.log('redirect');
         this._router.navigate(['../'],{ relativeTo: this.route });
-        this._stateService.state.emit(false);
+        this._newLoadService.showIcon.next(false);
+        this._newLoadService.triggerClearAllGraphics();
 
+    }
+
+    getWidget(): void {
+        this._widgetService.listWidget(this._currentUserUbigeo);
     }
 
     async createWorkLoad() {
@@ -107,7 +114,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
         const dateWorkLoad = new Date(2023, 7, 17).valueOf(); // Reemplazar cuando se tenga el servicio de operador de campo
-        const codUserWorkLoad = '57';  // Reemplazar cuando se tenga el servicio de operador de campo
+        const codUserWorkLoad = this.form.value.codUser;
         const nomUserWorkLoad = 'defaultUser';  // Reemplazar cuando se tenga el servicio de operador de campo
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
@@ -253,6 +260,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFPSG.outFields = ['*'];
                                     queryCFPSG.returnGeometry = true;
                                     queryCFPSG.geometry = graphicsId[key.oid].geometry;
+                                    queryCFPSG.distance = 1;
+                                    queryCFPSG.units = 'meters';
                                     queryCFPSG.spatialRelationship = 'intersects';
                                     const promiseCF = webMap.findLayerById(id_predios).queryFeatures(queryCFPSG);
                                     allPromises.push(promiseCF);
@@ -264,6 +273,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFLSP.returnGeometry = true;
                                     queryCFLSP.geometry = graphicsId[key.oid].geometry;
                                     queryCFLSP.spatialRelationship = 'intersects';
+                                    queryCFLSP.distance = 1;
+                                    queryCFLSP.units = 'meters';
                                     const promiseCFLSP = webMap.findLayerById(id_lotes_sin_predio).queryFeatures(queryCFLSP);
                                     allPromises.push(promiseCFLSP);
                                     orderPromises.push({ type: 'CFP', idmz: key.oid });
@@ -275,6 +286,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFAPI.outFields = ['*'];
                                     queryCFAPI.returnGeometry = true;
                                     queryCFAPI.geometry = graphicsId[key.oid].geometry;
+                                    queryCFAPI.distance = 1;
+                                    queryCFAPI.units = 'meters';
                                     queryCFAPI.spatialRelationship = 'intersects';
                                     const promiseCFAPI = webMap.findLayerById(id_punto_imagen).queryFeatures(queryCFAPI);
                                     allPromises.push(promiseCFAPI);
@@ -428,16 +441,16 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 .then((add, update, del) => {
                     // agregar funcionalidad para cambiar el estado de los predios en la tabla punto campo
                     console.log(add);
-                    this._stateService.triggerRefreshLayer(id_punto_imagen);
-                    this._stateService.triggerRefreshLayer(id_lotes_sin_predio);
-                    this._stateService.triggerRefreshLayer(id_predios);
-                    this._stateService.triggerRefreshLayer(id_mz_inei);
-                    this._stateService.triggerRefreshLayer(id_mz_pred);
-                    this._stateService.triggerRefreshLayer(id_predio_sin_mz);
-                    this._stateService.triggerRefreshLayer(id_mz_pimg);
-                    this._stateService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
-                    this._stateService.triggerClearAllGraphics();
-                    this._stateService.updatewidget.emit(true);
+                    this._newLoadService.triggerRefreshLayer(id_punto_imagen);
+                    this._newLoadService.triggerRefreshLayer(id_lotes_sin_predio);
+                    this._newLoadService.triggerRefreshLayer(id_predios);
+                    this._newLoadService.triggerRefreshLayer(id_mz_inei);
+                    this._newLoadService.triggerRefreshLayer(id_mz_pred);
+                    this._newLoadService.triggerRefreshLayer(id_predio_sin_mz);
+                    this._newLoadService.triggerRefreshLayer(id_mz_pimg);
+                    this._newLoadService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
+                    this._newLoadService.triggerClearAllGraphics();
+                    this.getWidget();
                     this.form.reset();
                     this._fuseSplashScreenService.hide();
                 })
@@ -450,7 +463,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
         }
         catch (error) {
-            console.log('EsriLoader: ', error);
+            console.log('EsriLoader: here ', error);
         }
 
 

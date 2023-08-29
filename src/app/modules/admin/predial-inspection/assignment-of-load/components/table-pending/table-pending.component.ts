@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,20 +8,21 @@ import { TableAction } from '../../../shared/enum/table-action.enum';
 import { MatDialogDeletedComponent } from '../alert-confirm/mat-dialog-deleted.component';
 
 
-import { loadModules } from 'esri-loader';
-import * as moment from 'moment';
+
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
-import { IdataLoad } from '../../interfaces/dataload.interface';
-import { StateService } from '../../services/state.service';
-import { DetailTableService } from '../../services/detail-table.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { TableService } from '../../services/table.service';
+import { UserService } from 'app/core/user/user.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { User } from 'app/core/user/user.types';
 
 @Component({
   selector: 'app-table-pending',
   templateUrl: './table-pending.component.html',
   styleUrls: ['./table-pending.component.scss']
 })
-export class TablePendingComponent implements OnInit,AfterViewInit {
+export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
 
     _portalUrl = 'https://js.arcgis.com/4.27/';
     tableColumns: TableColumn[] =[];
@@ -31,23 +32,36 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
         isDeleted: true,
     };
 
+    _currentUserUbigeo: string;
+    _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSource = [];
     constructor(
         public dialog: MatDialog,
         private _router: Router,
-        private _route: ActivatedRoute,
+        private _activatedRoute: ActivatedRoute,
         private _messageProvider: MessageProviderService,
-        private _stateService: StateService,
-        private _detailService: DetailTableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _tableService: TableService,
+        private _userService: UserService,
         ) { }
 
-    ngOnInit(): void {
-        this.setTableColumn();
-    }
+        ngOnInit(): void {
+            this.setTableColumn();
+            this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: User) => {
+                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
+            });
+        }
 
     ngAfterViewInit(): void {
-        this.dataAssigned();
+       this.loadTable();
+    }
+
+    ngOnDestroy(): void
+    {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 
     setTableColumn(): void {
@@ -75,68 +89,36 @@ export class TablePendingComponent implements OnInit,AfterViewInit {
     };
 
     onEditAssigned(row): void {
-        this._detailService.setRow(row);
-        this._router.navigate([`pending/${row.codCarga}`] , {relativeTo: this._route});
+        this._router.navigate([`pending/${row.codCarga}`] , {relativeTo: this._activatedRoute});
     }
+
 
     onDelete(row): void {
         const cod = row.codCarga;
         this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' +cod)
             .afterClosed()
-            .subscribe((confirm) => {
+            .subscribe(async (confirm) => {
+                this._fuseSplashScreenService.show(0);
                 if(confirm){
-                    this._stateService.emitRowDelete(row);
-                    this._fuseSplashScreenService.show();
+                    await this._tableService.deleteRow(row,this._currentUserUbigeo)
+                    .then((data) => {
+                        this._messageProvider.showAlert(data);
+                        this.loadTable();
+                        this._fuseSplashScreenService.hide();
+                    })
+                    .catch(error => this._messageProvider.showSnackError(error));
+                    this._fuseSplashScreenService.hide();
                 }
             });
-        this._stateService.stateRowdeleted.subscribe((state) => {
-            if(state){
-                this.dataAssigned();
-            }
-        });
+
     }
 
+    loadTable(): void {
+        this._tableService.dataLoad('ESTADO = "1"',['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],this._currentUserUbigeo).then(data => this.dataSource = data )
+        .then(data => this.dataSource = data );
+        this._fuseSplashScreenService.hide();
 
-    async dataAssigned(): Promise<void> {
-        try {
-            const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
-            esriConfig.portalUrl = this._portalUrl;
-            // Url del servicio de cargas
-            const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
-
-            // Realizamos el filtro
-            const queryObjectPorAsignar = new newQuery();
-
-            queryObjectPorAsignar.where = 'ESTADO = "1"';
-            // Campos para el estado 1: OBJECTID, ID_CARGA, COD_CARGA, FEC_ENTREGA
-            // Se utilizará el campo OBJECTID para desencadenar la eliminación de la carga,
-            // ya que este valor es necesario para actualizar el estado de la carga a 0 (baja).
-            // Asegúrate de que este valor esté disponible en algún lugar de la interfaz del usuario (id, value class, etc),
-            // asociado a la fila correspondiente en la tabla.
-            queryObjectPorAsignar.outFields = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'];
-
-            // indicamos que no queremos retornar datos de geometria
-            queryObjectPorAsignar.returnGeometry = false;
-
-            // query to feature layer
-            query.executeQueryJSON(urlCarga, queryObjectPorAsignar)
-                .then((response)=> {
-
-                    const data = response.features.map((feature, index) =>(
-                        {
-                            oid: feature.attributes.OBJECTID,
-                            nro: index + 1,
-                            codCarga: feature.attributes.COD_CARGA,
-                            fecha: moment(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
-                        })
-                    );
-                        this.dataSource = data;
-                })
-                .catch( error => console.log(error));
-        }
-        catch (error) {
-            console.log('EsriLoader: ', error);
-        }
     }
+
 }
 

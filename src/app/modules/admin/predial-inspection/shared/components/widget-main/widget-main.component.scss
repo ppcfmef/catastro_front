@@ -1,3 +1,10 @@
+@mixin mv($media){
+    @media screen and (max-width:$media) {
+         @content
+    }
+}
+
+
 .card {
     display: flex;
     flex-direction: column;
@@ -10,6 +17,10 @@
     height: 56px;
     background-color: #F6F6F6;
     width: max-content;
+    @include mv(768px){
+        display: flex;
+        flex-direction: column;
+    }
     .number {
         font-size: 32px;
         color:  #0090F8 ;

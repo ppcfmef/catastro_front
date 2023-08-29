@@ -2,13 +2,12 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
-
-import { loadModules } from 'esri-loader';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { TableService } from '../../services/table.service';
 
 
 
@@ -51,29 +50,23 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private _userService: UserService,
         private _fuseSplashScreenService: FuseSplashScreenService,
-
-
+        private _tableService: TableService,
         ) {}
 
     ngOnInit(): void {
         this.setTableColumn();
-        this.setTableColumn();
         this._userService.user$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: User) => {
-            this._currentUser = user;
-            // @SETUBIGEO
-            this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+            this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
         });
 
     }
 
     ngAfterViewInit(): void {
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
-            this._fuseSplashScreenService.show();
             if (cod) {
-                this.detailLoad(cod,this._currentUserUbigeo);
-                this._fuseSplashScreenService.hide();
+                this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
             }
         });
     }
@@ -98,45 +91,15 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
     onZoom(row: any): void {
-        console.log('zoom');
+        this.zoom(row);
     }
 
     redirecto(): void {
         this._router.navigate(['../../'], {relativeTo: this._activatedRoute});
     }
 
-    async detailLoad(workLoadData, ubigeouser): Promise<void> {
-        try {
-            const [ newQuery,query] = await loadModules([ 'esri/rest/support/Query','esri/rest/query']);
-
-            const idDetailWorkLoadLayer = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/5';
-            const ubigeo = ubigeouser;
-            //const workLoadData = { oid: 3238, nro: 1, cod_carga: '00093', fecha: '17-08-2023' };
-
-            const queryDetailWorkLoad = new newQuery();
-            queryDetailWorkLoad.where = `ID_CARGA = '${ubigeo}${workLoadData}'`;
-            queryDetailWorkLoad.outFields = ['*'];
-            queryDetailWorkLoad.returnGeometry = false;
-
-            query.executeQueryJSON(idDetailWorkLoadLayer, queryDetailWorkLoad)
-                .then((response) => {
-                    if (response.features.length > 0) {
-                        // aqui esta el detalle de la carga para agregar a la tabla
-                        const dataTable = response.features.map(row => row.attributes);
-                        dataTable.map((item, index) => Object.assign(item, {nro: `${index+1}`}));
-                        this.dataSource = dataTable;
-                        return;
-                    }
-                    return Promise.reject(`No se encontró la carga ${workLoadData} `);
-                })
-                .catch((error) => {
-                    // Aqui se muestran los posibles errores
-                    console.log(error);
-                });
-        }
-        catch (error) {
-            console.log('EsriLoader: ', error);
-        }
+    async zoom(row): Promise<any> {
+        await this._tableService.zoomRow(row).then(data =>  console.log(data));
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StateService } from '../../services/state.service';
+import { NewLoadService } from '../../services/new-load.service';
 import { Subject } from 'rxjs';
 
 
@@ -20,7 +20,7 @@ export class LoadListComponent implements OnInit {
     constructor(
         private _router: Router,
         private _route: ActivatedRoute,
-        private _stateService: StateService,
+        private _newLoadService: NewLoadService,
         ) { }
 
     ngOnInit(): void {
@@ -28,7 +28,7 @@ export class LoadListComponent implements OnInit {
 
     redirecto(): void {
         this._router.navigate(['assign-load'], { relativeTo: this._route });
-        this._stateService.state.emit(true);
+        this._newLoadService.showIcon.next(true);
     }
 
 }
