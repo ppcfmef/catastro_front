@@ -33,8 +33,8 @@ export class RTArancelContainerComponent implements OnInit, AfterViewInit {
     { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible', path: '' },
     { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota', path: '' },
     { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente', path: '' },
-    { code: 'RT_AMNMUNICIPA', text: 'Tabla RT_AmnMunicipal', path: '' },
-    { code: 'RT_VAREM_MUN', text: 'Tabla RT_VarEm_muni', path: '' }
+    { code: 'RT_AMNMUNICIPAL', text: 'Tabla RT_AmnMunicipal', path: '' },
+    { code: 'RT_VAREM_MUNI', text: 'Tabla RT_VarEm_muni', path: '' }
   ];
 
   constructor(

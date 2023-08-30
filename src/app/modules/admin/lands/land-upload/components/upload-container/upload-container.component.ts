@@ -44,8 +44,8 @@ export class UploadContainerComponent implements OnInit {
         { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible' },
         { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota' },
         { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente' },
-        { code: 'RT_AMNMUNICIPA', text: 'Tabla RT_AmnMunicipal' },
-        { code: 'RT_VAREM_MUN', text: 'Tabla RT_VarEm_muni' }
+        { code: 'RT_AMNMUNICIPAL', text: 'Tabla RT_AmnMunicipal' },
+        { code: 'RT_VAREM_MUNI', text: 'Tabla RT_VarEm_muni' }
   ];
 
   isUpload = false;
