@@ -16,6 +16,7 @@ import { RTMarcoPredioPage } from './pages/rtmarco-predio/rtmarco-predio.page';
 import { RTArancelPage } from './pages/rtarancel/rtarancel.page';
 import { RTArancelContainerComponent } from './components/rtarancel-container/rtarancel-container.component';
 import { RTMarcoPredioContainerComponent } from './components/rtmarco-predio-container/rtmarco-predio-container.component';
+import { SelectIcomesTableComponent } from './components/select-icomes-table/select-icomes-table.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { RTMarcoPredioContainerComponent } from './components/rtmarco-predio-con
     RTArancelPage,
     RTArancelContainerComponent,
     RTMarcoPredioContainerComponent,
+    SelectIcomesTableComponent,
   ],
   imports: [
     CommonModule,
