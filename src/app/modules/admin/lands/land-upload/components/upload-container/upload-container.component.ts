@@ -34,7 +34,7 @@ export class UploadContainerComponent implements OnInit {
   listFormatMultiple = [
 
         { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente' },
-        { code: 'RT_MARCOPREDIO', text: 'Tabla RT_MarcoPredio' },
+        { code: 'RT_MARCO_PREDIO', text: 'Tabla RT_MarcoPredio' },
         { code: 'RT_ARANCEL', text: 'Tabla RT_Arancel' },
         { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato' },
         { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract' },
@@ -44,8 +44,8 @@ export class UploadContainerComponent implements OnInit {
         { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible' },
         { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota' },
         { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente' },
-        { code: 'RT_AMNMUNICIPA', text: 'Tabla RT_AmnMunicipal' },
-        { code: 'RT_VAREM_MUN', text: 'Tabla RT_VarEm_muni' }
+        { code: 'RT_AMNMUNICIPAL', text: 'Tabla RT_AmnMunicipal' },
+        { code: 'RT_VAREM_MUNI', text: 'Tabla RT_VarEm_muni' }
   ];
 
   isUpload = false;

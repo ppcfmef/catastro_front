@@ -1,19 +1,4 @@
-<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
-
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12">
-    <mat-label>Tabla</mat-label>
-    <mat-icon
-        matPrefix
-        class="hidden sm:flex icon-size-5"
-        [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-    <mat-select (selectionChange)="onChangeIncomePage($event)" formControlName="incomePage">
-      <mat-option [value]="item.path" *ngFor="let item of listFormatMultiple">
-          {{ item.text }}
-        </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-
+<app-select-icomes-table selectedTable="RT_CONTRIBUYENTE"></app-select-icomes-table>
 <table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
   <ng-container matColumnDef="nro">
       <th mat-header-cell *matHeaderCellDef> Nro.</th>
