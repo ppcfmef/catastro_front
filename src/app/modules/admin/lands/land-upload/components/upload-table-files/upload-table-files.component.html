@@ -21,13 +21,21 @@
                         </ng-container>
                         </td>
                 </ng-container>
-                <!--
+
                 <ng-container matColumnDef="errorCode">
-                    <th mat-header-cell *matHeaderCellDef> Código</th>
-                    <td mat-cell *matCellDef="let element"> {{element.errorCode ?? "VALIDO" }} </td>
+                    <th mat-header-cell *matHeaderCellDef> Error</th>
+                    <td mat-cell *matCellDef="let element">
+                        <ng-container [ngSwitch]="element.errorCode">
+                            <ng-container *ngSwitchCase="'IS_REQUIRED[ubigeo]'">UBIGEO es requerido</ng-container>
+                            <ng-container *ngSwitchCase="'IS_REQUIRED[cod_pre]'">COD_PRE es requerido</ng-container>
+                            <ng-container *ngSwitchCase="'WARNING[cod_contr_empty]'">COD_CONTR esta vacio</ng-container>
+                            <ng-container *ngSwitchCase="'NOT_INSERT[exists_owner_with_document]'">Ya existe Controbuyente con este DNI</ng-container>
+                            <ng-container *ngSwitchCase="'DUPLICATE'">REGISTRO DUPLICADO</ng-container>
+                            <ng-container *ngSwitchCase="'DUPLICATE[owner]'">CONTRIBUYENTE DUPLICADO </ng-container>
+                            <ng-container *ngSwitchDefault>VALIDO</ng-container>
+                        </ng-container>
+                    </td>
                 </ng-container>
-                -->
-    
     
                 <ng-container matColumnDef="data">
                     <th mat-header-cell *matHeaderCellDef> Fila Excel </th>                
