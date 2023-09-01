@@ -22,6 +22,7 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUserUbigeo: string;
+    _fecha;
 
     tableColumns: TableColumn[] =[];
     tableConfig: TableConifg = {
@@ -73,6 +74,7 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
                         this.cards[0].num = pending;
                         this.cards[1].num = attended;
                     });
+                    this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then(res=> this._fecha = res);
                 }
             });
         }

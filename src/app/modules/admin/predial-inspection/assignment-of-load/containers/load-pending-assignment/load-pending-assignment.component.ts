@@ -15,6 +15,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IOperator, IResult } from '../../interfaces/operator.interface';
 import { WidgetService } from '../../services/widget.service';
 import moment from 'moment';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 @Component({
     selector: 'app-load-pending-assignment',
@@ -60,6 +61,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         private _activatedRoute: ActivatedRoute,
         private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        protected _messageProviderService: MessageProviderService,
         private _operatorsService: OperatorService,
         private _widgetsService: WidgetService,
         ) {
@@ -87,10 +89,12 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         });
 
         this.form.get('operador').valueChanges.subscribe((val) => {
+            console.log(val);
             if (val === '') {
                 this.user = false;
                 return;
             }
+            console.log(val, 'he');
             this.params['search'] = val;
             this.user = true;
             this.getOperator();
@@ -147,6 +151,15 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
 
     async assigment(): Promise<void> {
         this._fuseSplashScreenService.show(0);
+        const rawValue = this.form.getRawValue();
+        if (!rawValue.fEntrega) {
+            this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');
+            return;
+        }
+        if (!rawValue.operador) {
+            this._messageProviderService.showSnackError('debe ingresar un operador');
+            return;
+        }
         const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         console.log(date, 'fecha');
         const operator = this.operator.id;

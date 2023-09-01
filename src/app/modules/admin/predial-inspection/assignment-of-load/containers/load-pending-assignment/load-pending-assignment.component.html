@@ -24,7 +24,7 @@
             <span class="text-secundary font-bold">Fecha estimada de entrega: </span>
             <mat-form-field class="h-9">
                 <input matInput [matDatepicker]="date" autocomplete="off" type="text" placeholder="Fecha"
-                        formControlName="fEntrega" (click)="date.open()">
+                        formControlName="fEntrega">
                 <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                 <mat-datepicker #date></mat-datepicker>
             </mat-form-field>
@@ -33,7 +33,7 @@
         <div class="mt-3 w-full">
             <span class="text-secundary">Seleccione operador</span>
             <div class="flex h-9 border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
-                <input class="w-full"  type="text" formControlName="operador"  [appOnlyNumbers]="true"  placeholder="Operador">
+                <input class="w-full"  type="text" formControlName="operador"  [appOnlyNumbers]="true"  placeholder="Operador" maxlength="8">
                 <span class="flex" >
                     <mat-icon svgIcon="mat_outline:search"></mat-icon>
                 </span>
@@ -46,7 +46,7 @@
         <div class="flex w-full pt-3 gap-3 justify-between">
             <ng-container *ngFor="let card of cards">
                 <app-widget [card]="card"></app-widget>
-        </ng-container>
+            </ng-container>
         </div>
 
         <button  mat-button (click)="assigment()">

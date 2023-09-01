@@ -10,6 +10,9 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
 import { OperatorService } from '../../services/operator.service';
 import { WidgetService } from '../../services/widget.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import moment from 'moment';
 
 
 
@@ -27,6 +30,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     newCod;
     codOperator;
     operator;
+    form: FormGroup;
 
      // Properties table
     tableColumns: TableColumn[] = [];
@@ -57,7 +61,13 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         private _tableService: TableService,
         private _operatorsService: OperatorService,
         private _widgetService: WidgetService,
-        ) {}
+        protected _messageProviderService: MessageProviderService,
+        ) {
+            this.form = new FormGroup ({
+                fEntrega: new FormControl(),
+                operator: new FormControl(),
+            });
+        }
 
     ngOnInit(): void {
         this.setTableColumn();
@@ -74,13 +84,17 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
             if (cod) {
                 this.user = true;
                 [this.newCod , this.codOperator] = cod.split('-');
-                this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
                 this._tableService.detailLoad(this.newCod, this._currentUserUbigeo).then(data => this.dataSource = data);
                     this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
                     this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
                         this.cards[0].num = pending;
                         this.cards[1].num = attended;
                     });
+
+                this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then((res) => {
+                    const formatDate = new Date(res);
+                    this.form.controls.fEntrega.setValue(formatDate);
+                });
             }
         });
     }
@@ -90,9 +104,15 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    desasignar(): void {
-        this.user = false;
+    async desasignar(): Promise<void> {
+        const dateLimit = null;
+        const nameOperator = null;
+        const ubigeo = this._currentUserUbigeo;
+        const workload = this.newCod;
+        const operator = null;
+        await this._operatorsService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
     }
+
 
     setTableColumn(): void {
         this.tableColumns = [

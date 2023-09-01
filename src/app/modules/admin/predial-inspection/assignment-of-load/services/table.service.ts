@@ -311,6 +311,40 @@ export class TableService {
     }
 
 
+    fechaLoad(codWorkload: string, ubigeouser: string): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
+
+                const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+                const ubigeo = ubigeouser;
+
+                // @process
+                const dqueryWorkLoad = new newQuery();
+                dqueryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = ${codWorkload}`;
+                dqueryWorkLoad.outFields = ['*'];
+                dqueryWorkLoad.returnGeometry = false;
+                dqueryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = ${codWorkload}`;
+                dqueryWorkLoad.outFields = ['*'];
+                dqueryWorkLoad.returnGeometry = false;
+
+            query.executeQueryJSON(urlWorkLoad, dqueryWorkLoad)
+                .then((response) => {
+                    let dateLimit = '';
+                    if (response.features.length > 0) {
+                        dateLimit = moment(response.features[0].attributes.FEC_ENTREGA).format('YYYY-MM-DD');
+                    }
+                    console.log(dateLimit);
+                    return resolve(dateLimit);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            } catch (error) {
+                reject('EsriLoader: ' + error);
+            }
+        });
+    }
 }
 
 
