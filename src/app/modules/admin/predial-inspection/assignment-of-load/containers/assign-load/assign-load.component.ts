@@ -13,6 +13,9 @@ import { loadModules } from 'esri-loader';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { WidgetService } from '../../services/widget.service';
 import { TableService } from '../../services/table.service';
+import moment from 'moment';
+import { OperatorService } from '../../services/operator.service';
+import { IOperator } from '../../interfaces/operator.interface';
 
 
 
@@ -35,7 +38,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     tableDataSubscription: Subscription;
     webMapSubscription: Subscription;
     graphicsIdSubscription: Subscription;
-    user: boolean = true;
+    user: boolean = false;
     cards = [
         {
             num: 21,
@@ -47,7 +50,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         }
     ];
     form: FormGroup;
-
+    params = {is_active: true, isMobileStaff:true };
+    operator: IOperator;
 
     constructor(
         private _router: Router,
@@ -57,11 +61,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,
+        private _operatorsService: OperatorService,
     ) {
         this.form = new FormGroup({
             loadName: new FormControl(''),
             description: new FormControl(''),
             codUser: new FormControl(''),
+            fEntrega: new FormControl(''),
         });
 
     }
@@ -92,6 +98,17 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+
+        this.form.get('codUser').valueChanges.subscribe((val) => {
+            if (val === '') {
+                this.user = false;
+                return;
+            }
+            this.params['search'] = val;
+            this.user = true;
+            this.getOperator();
+        }
+        );
     }
 
     redirecto(): void {
@@ -105,6 +122,15 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         this._widgetService.listWidget(this._currentUserUbigeo);
     }
 
+    getOperator() {
+        this._fuseSplashScreenService.show();
+        this._operatorsService.getOperador(this.params).subscribe((data) => {
+            this.operator = data.results[0];
+            this._fuseSplashScreenService.hide();
+    });
+    }
+
+
     async createWorkLoad() {
         // params
         const dataWorkLoad = this.tableData;
@@ -113,9 +139,10 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const ubigeo = this._currentUserUbigeo;
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
-        const dateWorkLoad = new Date(2023, 7, 17).valueOf(); // Reemplazar cuando se tenga el servicio de operador de campo
-        const codUserWorkLoad = this.form.value.codUser;
-        const nomUserWorkLoad = 'defaultUser';  // Reemplazar cuando se tenga el servicio de operador de campo
+        const dateWorkLoad = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        console.log(dateWorkLoad, 'ff');
+        const codUserWorkLoad = this.operator.id ? this.operator.id : '';
+        const nomUserWorkLoad = `${this.operator.firstName} ${this.operator.lastName}`;
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';

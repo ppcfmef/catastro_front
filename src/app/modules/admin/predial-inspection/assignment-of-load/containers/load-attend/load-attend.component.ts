@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
+import { WidgetService } from '../../services/widget.service';
 @Component({
     selector: 'app-load-attend',
     templateUrl: './load-attend.component.html',
@@ -27,14 +29,16 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         isZoom:true,
     };
     dataSource = [];
-
+    newCod;
+    codOperator;
+    operator;
     cards =[
         {
-            num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
+            num: 0,
+            text: 'TICKETS ASIGNADAS ACTUALMENTE'
         },
         {
-            num: 25,
+            num: 0,
             text: 'TICKETS ATENDIDOS'
         }
     ];
@@ -45,6 +49,8 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         private _tableService: TableService,
         private _activatedRoute: ActivatedRoute,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _operatorsService: OperatorService,
+        private _widgetService: WidgetService,
         ) { }
 
         ngOnInit(): void {
@@ -60,10 +66,17 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         ngAfterViewInit(): void {
             this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
                 if (cod) {
-                    this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                    [this.newCod , this.codOperator] = cod.split('-');
+                    this._tableService.detailLoad(this.newCod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                    this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
+                    this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
+                        this.cards[0].num = pending;
+                        this.cards[1].num = attended;
+                    });
                 }
             });
         }
+
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next();
@@ -90,4 +103,5 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         async zoom(row): Promise<any> {
             await this._tableService.zoomRow(row).then(data =>  console.log(data));
         }
+
 }

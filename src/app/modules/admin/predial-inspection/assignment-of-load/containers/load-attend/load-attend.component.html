@@ -8,7 +8,7 @@
 
     </div>
 
-    <span class="text-secundary mt-3">Manzanas asignadas:</span>
+    <span class="text-secundary mt-4">Manzanas asignadas - codigo: <strong> {{newCod}}</strong> </span>
 
     <div class="w-full mt-4">
         <app-table
@@ -21,15 +21,10 @@
     </div>
 
     <div class="flex items-center justify-between mb-4">
-        <span class="text-secundary font-bold">Fecha estimada de entrega: </span>
-        <mat-form-field class="h-11">
-            <input matInput [matDatepicker]="picker" autocomplete="off" type="text" placeholder="Fecha">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <app-detail-operador [data] = "operator"></app-detail-operador>
     </div>
 
-    <app-detail-operador></app-detail-operador>
+
     <div class="flex w-full pt-4 gap-4 py-3 justify-between">
         <ng-container *ngFor="let card of cards">
             <app-widget [card]="card"></app-widget>

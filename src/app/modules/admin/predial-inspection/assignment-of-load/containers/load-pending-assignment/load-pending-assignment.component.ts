@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 
 import { loadModules } from 'esri-loader';
@@ -10,6 +10,11 @@ import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IOperator, IResult } from '../../interfaces/operator.interface';
+import { WidgetService } from '../../services/widget.service';
+import moment from 'moment';
 
 @Component({
     selector: 'app-load-pending-assignment',
@@ -32,18 +37,22 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         isZoom: true,
     };
 
-    user: boolean = true;
-
+    user: boolean = false;
+    params = {is_active: true, isMobileStaff:true };
+    operator: IOperator;
+    form: FormGroup;
+    oparator= null;
     cards = [
         {
             num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE',
+            text: 'TICKETS ASIGNADAS ACTUALMENTE',
         },
         {
             num: 25,
             text: 'TICKETS ATENDIDOS',
         },
     ];
+    codLoad: string;
 
     constructor(
         private _router: Router,
@@ -51,7 +60,11 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         private _activatedRoute: ActivatedRoute,
         private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
-        ) {}
+        private _operatorsService: OperatorService,
+        private _widgetsService: WidgetService,
+        ) {
+            this.createFormActions();
+        }
 
     ngOnInit(): void {
         this.setTableColumn();
@@ -68,9 +81,21 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     ngAfterViewInit(): void {
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
             if (cod) {
+                this.codLoad = cod;
                 this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
             }
         });
+
+        this.form.get('operador').valueChanges.subscribe((val) => {
+            if (val === '') {
+                this.user = false;
+                return;
+            }
+            this.params['search'] = val;
+            this.user = true;
+            this.getOperator();
+        }
+        );
     }
 
     ngOnDestroy(): void {
@@ -98,7 +123,42 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     async zoom(row): Promise<any> {
-        await this._tableService.zoomRow(row).then(data =>  console.log(data));
+        await this._tableService.zoomRow(row);
     }
+
+    createFormActions(): void {
+        this.form = new FormGroup({
+            fEntrega: new FormControl(new Date(), [Validators.required]),
+            operador: new FormControl('', [Validators.required]),
+        });
+    };
+
+    getOperator(): void {
+        this._fuseSplashScreenService.show();
+        this._operatorsService.getOperador(this.params).subscribe((data: IResult) => {
+            this.operator = data.results[0];
+            this._widgetsService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
+                this.cards[0].num = pending;
+                this.cards[1].num = attended;
+            });
+        });
+        this._fuseSplashScreenService.hide();
+    }
+
+    async assigment(): Promise<void> {
+        this._fuseSplashScreenService.show(0);
+        const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        console.log(date, 'fecha');
+        const operator = this.operator.id;
+        const nameOperator = `${this.operator.firstName} ${this.operator.lastName}`;
+        const workload = this.codLoad;
+        const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        const ubigeo = this._currentUserUbigeo;
+        await this._operatorsService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
+        this.form.reset();
+        this.redirecto();
+        this._fuseSplashScreenService.show();
+    }
+
 
 }

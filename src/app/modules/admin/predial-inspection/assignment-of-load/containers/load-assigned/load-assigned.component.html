@@ -52,7 +52,7 @@
     </ng-container>
 
     <ng-container *ngIf="user">
-        <app-detail-operador></app-detail-operador>
+        <app-detail-operador [data] = "operator"></app-detail-operador>
         <div class="flex w-full pt-3 gap-4 py-3 justify-between">
             <ng-container *ngFor="let card of cards">
                 <app-widget [card]="card"></app-widget>

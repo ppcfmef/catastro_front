@@ -8,6 +8,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class WidgetService {
 
+
+
     private dataWidget = new BehaviorSubject<any>(null);
     constructor(
     ) {
@@ -61,6 +63,40 @@ export class WidgetService {
                             reject(error.message);
                             console.log(error);
                         });
+
+            }
+            catch (error) {
+                console.log('EsriLoader: ', error);
+            }
+        });
+    }
+
+
+    widgetUser(ubigeo, codUser): Promise<any> {
+        return new Promise (async (resolve, reject) => {
+            try {
+                const [ newQuery,query] = await loadModules([ 'esri/rest/support/Query','esri/rest/query']);
+                const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
+                const queryStatsUser = new newQuery();
+                queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = ${codUser}`;
+                queryStatsUser.outFields = ['*'];
+                queryStatsUser.returnGeometry = false;
+                query.executeQueryJSON(urlStatsUser, queryStatsUser)
+                    .then((response) => {
+                        let statsUser = { pending: 0, attended: 0 };
+                        if (response.features.length > 0) {
+                            statsUser = {
+                                pending: response.features[0].attributes.PENDIENTE,
+                                attended: response.features[0].attributes.ATENDIDO
+                            };
+                        }
+                        return resolve(statsUser);
+                    })
+                    .catch((error) => {
+                        document.getElementById('response').innerHTML = error;
+                        console.log(error);
+                        return reject(error);
+                    });
 
             }
             catch (error) {

@@ -20,24 +20,32 @@
 
             </div>
         </div>
-
-        <div class="mt-2">
-            <span class="text-base font-medium">Seleccione operador</span>
-
-            <div
-                class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-                <input formControlName="codUser" class="w-full" placeholder="Operador" />
-                <span class="flex">
-                    <mat-icon svgIcon="mat_outline:search"></mat-icon>
-                </span>
+        <div class="flex w-full justify-between gap-4">
+            <div class="mt-2 w-4/5">
+                <span class="text-base font-medium">Seleccione operador</span>
+                <div
+                    class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
+                    <input formControlName="codUser" class="w-full" placeholder="Operador" />
+                    <span class="flex">
+                        <mat-icon svgIcon="mat_outline:search"></mat-icon>
+                    </span>
+                </div>
+            </div>
+            <div class="mt-2 w-min">
+                <span class="text-base font-medium">Fecha de entrega:</span>
+                <mat-form-field class="h-9">
+                    <input matInput [matDatepicker]="date" autocomplete="off" type="text" placeholder="Fecha"
+                            formControlName="fEntrega" (click)="date.open()">
+                    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                    <mat-datepicker #date></mat-datepicker>
+                </mat-form-field>
             </div>
         </div>
-        <ng-container *ngIf="!user">
-            <app-detail-operador></app-detail-operador>
-            <div class="flex w-full pt-3 gap-4 py-3 justify-between">
-                <ng-container *ngFor="let card of cards">
-                    <app-widget [card]="card"></app-widget>
-                </ng-container>
+
+
+        <ng-container *ngIf="user">
+            <div class="mb-4">
+                <app-detail-operador [data] ="operator"></app-detail-operador>
             </div>
         </ng-container>
 

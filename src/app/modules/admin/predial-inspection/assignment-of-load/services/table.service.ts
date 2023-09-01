@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { loadModules } from 'esri-loader';
 import moment from 'moment';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { WidgetService } from './widget.service';
 
 
@@ -30,8 +30,10 @@ export class TableService {
     _portalUrl = 'https://js.arcgis.com/4.27/';
     _view = null;
 
+    public _row = new Subject();
     private webMapSubject = new BehaviorSubject<any>(null);
     private wievSubject = new BehaviorSubject<any>(null);
+
     constructor(
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,

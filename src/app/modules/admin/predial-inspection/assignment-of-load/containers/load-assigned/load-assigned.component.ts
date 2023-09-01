@@ -8,6 +8,8 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
+import { WidgetService } from '../../services/widget.service';
 
 
 
@@ -22,7 +24,9 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUser: User;
     _currentUserUbigeo: string;
-
+    newCod;
+    codOperator;
+    operator;
 
      // Properties table
     tableColumns: TableColumn[] = [];
@@ -33,14 +37,14 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     };
 
     // Properties widget
-    user: boolean = true;
+    user: boolean = false;
     cards = [
         {
-            num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE',
+            num: 0,
+            text: 'TICKETS ASIGNADAS ACTUALMENTE',
         },
         {
-            num: 25,
+            num: 0,
             text: 'TICKETS ATENDIDOS',
         },
     ];
@@ -51,6 +55,8 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         private _userService: UserService,
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _tableService: TableService,
+        private _operatorsService: OperatorService,
+        private _widgetService: WidgetService,
         ) {}
 
     ngOnInit(): void {
@@ -66,7 +72,15 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     ngAfterViewInit(): void {
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
             if (cod) {
+                this.user = true;
+                [this.newCod , this.codOperator] = cod.split('-');
                 this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                this._tableService.detailLoad(this.newCod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                    this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
+                    this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
+                        this.cards[0].num = pending;
+                        this.cards[1].num = attended;
+                    });
             }
         });
     }

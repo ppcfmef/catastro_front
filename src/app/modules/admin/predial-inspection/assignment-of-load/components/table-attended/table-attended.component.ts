@@ -65,7 +65,8 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
     }
 
     onEdit({row}): void {
-        this._router.navigate([`load-attend/${row.codCarga}`], {relativeTo: this._activatedRoute});
+        this._tableService._row.next(row);
+        this._router.navigate([`load-attend/${row.codCarga}-${row.codOperador}`], {relativeTo: this._activatedRoute});
     }
 }
 

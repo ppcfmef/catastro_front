@@ -88,7 +88,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     }
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-assigned/${row.codCarga}`] , {relativeTo: this._activatedRoute});
+        this._router.navigate([`load-assigned/${row.codCarga}-${row.codOperador}`] , {relativeTo: this._activatedRoute});
     }
     onDelete(row): void {
         const cod = row.codCarga;
