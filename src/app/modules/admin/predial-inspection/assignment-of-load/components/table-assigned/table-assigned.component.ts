@@ -63,6 +63,12 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
             this.bySearch = res;
             this.loadTable();
         });
+
+        this._tableService._updateTable.subscribe((resp) => {
+            if(resp){
+                this.loadTable();
+            }
+        });
     }
 
     ngOnDestroy(): void

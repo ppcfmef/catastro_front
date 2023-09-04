@@ -642,6 +642,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
         } catch (error) {
             console.log('EsriLoader: ', error);
+            window.location.reload();
         }
     }
 

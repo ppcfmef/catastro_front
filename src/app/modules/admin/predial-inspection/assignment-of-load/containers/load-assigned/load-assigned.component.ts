@@ -204,24 +204,22 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
             this._fuseSplashScreenService.hide();
             return;
         }
-        const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const operator = this.operator.id;
         const nameOperator = `${this.operator.firstName} ${this.operator.lastName}`;
-        const workload = this.codLoad;
+        const workload = this.newCod;
         const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const ubigeo = this._currentUserUbigeo;
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
             .then((result) =>{
                 console.log(result, 'result');
                 this._messageProviderService.showSnack('Asignado correctament');
-                this.form.reset();
                 window.location.reload();
                 this._fuseSplashScreenService.hide();
             })
             .catch((error)=> {
                 console.log(error, 'errr');
                 this._messageProviderService.showSnackError('Error al asignar carga');
-                window.location.reload();
+                this._fuseSplashScreenService.hide();
             });
 
     }

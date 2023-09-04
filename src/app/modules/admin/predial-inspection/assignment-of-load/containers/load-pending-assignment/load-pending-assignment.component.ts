@@ -178,11 +178,14 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const ubigeo = this._currentUserUbigeo;
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
-            .then((result) =>{
+            .then(async (result) => {
                 console.log(result, 'result');
+                this._tableService._updateTable.next(true);
                 this.getWidget();
-                this._messageProviderService.showSnack('Asignado correctament');
+                await this._messageProviderService.showSnack('Asignado correctament');
                 this.form.reset();
+                this.redirecto();
+                //window.location.reload();
                 this._fuseSplashScreenService.hide();
             })
             .catch((error)=> {
