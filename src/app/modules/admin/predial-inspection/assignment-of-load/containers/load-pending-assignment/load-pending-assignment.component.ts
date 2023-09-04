@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -110,6 +111,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         this._unsubscribeAll.complete();
     }
 
+    getWidget(): void {
+        this._widgetsService.listWidget(this._currentUserUbigeo);
+    }
 
     setTableColumn(): void {
         this.tableColumns = [
@@ -176,10 +180,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
             .then((result) =>{
                 console.log(result, 'result');
+                this.getWidget();
                 this._messageProviderService.showSnack('Asignado correctament');
                 this.form.reset();
-                this.redirecto();
-                //window.location.reload();
                 this._fuseSplashScreenService.hide();
             })
             .catch((error)=> {

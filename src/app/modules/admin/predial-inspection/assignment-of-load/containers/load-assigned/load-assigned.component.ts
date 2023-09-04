@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
@@ -13,6 +13,9 @@ import { WidgetService } from '../../services/widget.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import moment from 'moment';
+import { debounce } from 'lodash';
+import { IOperator, IResult } from '../../interfaces/operator.interface';
+import { T } from '@angular/cdk/keycodes';
 
 
 
@@ -29,7 +32,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     newCod;
     codOperator;
-    operator;
+    operator: IOperator;
     form: FormGroup;
 
      // Properties table
@@ -39,9 +42,12 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         isAction: true,
         isZoom: true,
     };
-
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    params = {is_active: true, isMobileStaff:true };
     // Properties widget
-    user: boolean = false;
+    user: boolean = true;
+    codLoad: string;
+
     cards = [
         {
             num: 0,
@@ -65,7 +71,6 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         ) {
             this.form = new FormGroup ({
                 fEntrega: new FormControl(),
-                operator: new FormControl(),
                 codUser: new FormControl(''),
             });
         }
@@ -78,25 +83,74 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
             this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
         });
 
+        // this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
+        //     if (cod) {
+        //         this.codLoad = cod;
+        //         this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+        //     }
+        // });
+        this.getdataUser();
     }
 
     ngAfterViewInit(): void {
+        this.form.controls['codUser'].valueChanges.
+            pipe(debounceTime(600),
+                takeUntil(this._unsubscribeAll))
+            .subscribe((dni: any) => {
+                if(!dni){
+                    this.operator = null;
+                    this.cards[0].num =0;
+                    this.cards[1].num = 0;
+                    return;
+                }else {
+                    this.params['search'] = dni;
+                    console.log(this.params, '');
+                    this.user = false;
+                    this.getOperator();
+                }
+            });
+    }
+
+
+    async getOperator(): Promise<any> {
+        await this._operatorsService.getOperador(this.params).subscribe(async (data: IResult) => {
+            this._fuseSplashScreenService.show();
+            this.operator = data.results[0];
+            if(this.operator){
+                await this._widgetService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
+                    this.cards[0].num = pending;
+                    this.cards[1].num = attended;
+                });
+                this._fuseSplashScreenService.hide();
+            }
+            else {
+                this._messageProviderService.showSnackInfo('No existe Operador');
+                this._fuseSplashScreenService.hide();
+            }
+        });
+
+    }
+
+    getdataUser(): void {
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
             if (cod) {
-                this.user = true;
-                [this.newCod , this.codOperator] = cod.split('-');
-                this._tableService.detailLoad(this.newCod, this._currentUserUbigeo).then(data => this.dataSource = data);
-                    this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
-                    this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
-                        this.cards[0].num = pending;
-                        this.cards[1].num = attended;
-                    });
-
-                this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then((res) => {
-                    const formatDate = new Date(res);
+                this.newCod = cod;
+                this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                this._tableService.getDataByWorkLoad(this._currentUserUbigeo,cod).then((resp) => {
+                    const formatDate = new Date(resp.dateLimit);
                     this.form.controls.fEntrega.setValue(formatDate);
+                    this.operator = resp.user;
+                    this.cards[0].num =resp.user.statsUser.pending;
+                    this.cards[1].num = resp.user.statsUser.attended;
                 });
             }
+        });
+    }
+
+    getWidgetByUser(id): void {
+        this._widgetService.widgetUser(this._currentUserUbigeo,id).then((resp) => {
+            this.cards[0].num =resp.pending;
+            this.cards[1].num = resp.attended;
         });
     }
 
@@ -111,12 +165,15 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         const ubigeo = this._currentUserUbigeo;
         const workload = this.newCod;
         const operator = null;
-        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
-        this.user = true;
-        this.form.controls['codUser'].enable();
+        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+        .then(() => {
+            this.user = false;
+            this.form.controls['codUser'].enable();
+            this.operator = null;
+        })
+        .catch();
+
     }
-
-
     setTableColumn(): void {
         this.tableColumns = [
             { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro' },
@@ -137,6 +194,36 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
 
     async zoom(row): Promise<any> {
         await this._tableService.zoomRow(row).then(data =>  console.log(data));
+    }
+
+    async assigment(): Promise<void> {
+        this._fuseSplashScreenService.show(0);
+        const rawValue = this.form.getRawValue();
+        if (!rawValue.fEntrega) {
+            this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');
+            this._fuseSplashScreenService.hide();
+            return;
+        }
+        const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        const operator = this.operator.id;
+        const nameOperator = `${this.operator.firstName} ${this.operator.lastName}`;
+        const workload = this.codLoad;
+        const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        const ubigeo = this._currentUserUbigeo;
+        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+            .then((result) =>{
+                console.log(result, 'result');
+                this._messageProviderService.showSnack('Asignado correctament');
+                this.form.reset();
+                window.location.reload();
+                this._fuseSplashScreenService.hide();
+            })
+            .catch((error)=> {
+                console.log(error, 'errr');
+                this._messageProviderService.showSnackError('Error al asignar carga');
+                window.location.reload();
+            });
+
     }
 
 }

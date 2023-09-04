@@ -136,7 +136,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         this._operatorsService.getOperador(this.params).subscribe((data) => {
             this.operator = data.results[0];
             this._fuseSplashScreenService.hide();
-    });
+        });
     }
 
     emitFilter(): void {

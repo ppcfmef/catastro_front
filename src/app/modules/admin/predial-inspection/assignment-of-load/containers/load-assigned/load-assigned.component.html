@@ -44,7 +44,7 @@
                 <span class="text-base">Seleccione operador</span>
 
                 <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
-                    <input formControlName="codUser" class="w-full" placeholder="Operador" disabled/>
+                    <input formControlName="codUser" class="w-full" placeholder="Operador" disabled appOnlyNumbers="true" maxDigitsLength="8"/>
                     <span class="flex">
                         <mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>
@@ -53,15 +53,21 @@
 
     </form>
 
-
-    <ng-container *ngIf="operator">
         <app-detail-operador [data] = "operator"></app-detail-operador>
         <div class="flex w-full pt-3 gap-4 py-3 justify-between">
-            <ng-container *ngFor="let card of cards">
-                <app-widget [card]="card"></app-widget>
-            </ng-container>
+            <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
         </div>
-    </ng-container>
+        <ng-container *ngIf="!user">
+            <button mat-button (click)="assigment()">
+                <mat-icon
+                    svgIcon="mat_solid:check"
+                    class="text-white mr-3"
+                ></mat-icon>
+                    Asignar operador
+            </button>
+        </ng-container>
+
+
     <ng-container *ngIf="user">
         <button mat-button (click)="desasignar()">
             <mat-icon
@@ -69,15 +75,6 @@
                 class="text-white mr-3"
             ></mat-icon>
             Desasignar operador
-        </button>
-    </ng-container>
-    <ng-container *ngIf="!user">
-        <button mat-button (click)="asignar()">
-            <mat-icon
-            svgIcon="mat_solid:check"
-            class="text-white mr-3"
-            ></mat-icon>
-            Asignar operador
         </button>
     </ng-container>
 </div>

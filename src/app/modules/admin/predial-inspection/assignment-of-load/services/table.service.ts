@@ -9,6 +9,7 @@ import { OperatorService } from './operator.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { IOperator } from '../interfaces/operator.interface';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 
 @Injectable({
@@ -45,6 +46,7 @@ export class TableService {
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,
         private _operatorService: OperatorService,
+        protected _messageProviderService: MessageProviderService,
     ) { }
 
     getWidget(ubigeo): void {
@@ -455,12 +457,12 @@ export class TableService {
     getDataByWorkLoad(ubigeo, codWorkload): Promise<any> {
         return new Promise (async (resolve, reject) => {
             try {
-                const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
+                const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query', 'esri/config',]);
                 esriConfig.portalUrl = this._portalUrl;
                 const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
                 const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
 
-                    // @process
+                // @process
                 const queryWorkLoad = new newQuery();
                 queryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = '${codWorkload}'`;
                 queryWorkLoad.outFields = ['*'];
@@ -472,35 +474,37 @@ export class TableService {
                     dateLimit: null,
                 };
                 const dataWorkLoad = await query.executeQueryJSON(urlWorkLoad, queryWorkLoad);
-                    if (dataWorkLoad.features.length === 0) {
-                        return reject(`No se encontró la carga ${codWorkload} para el distrito ${ubigeo} `);
-                    }
+                if (dataWorkLoad.features.length === 0) {
+                    return reject(`No se encontró la carga ${codWorkload} para el distrito ${ubigeo} `);
+                }
 
-                    const attributes = dataWorkLoad.features[0].attributes;
-                    result.dateLimit = moment(attributes.FEC_ENTREGA).format('YYYY-MM-DD');
+                const attributes = dataWorkLoad.features[0].attributes;
+                result.dateLimit = moment(attributes.FEC_ENTREGA).format('YYYY-MM-DD');
 
-                    if (attributes.COD_USUARIO) {
-                        this._operatorService.getOperatorById(attributes.COD_USUARIO).subscribe(async (data: IOperator) => {
-                            result.user = data;
-                            const queryStatsUser = new newQuery();
-                            queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = '${result.user['id']}'`;
-                            queryStatsUser.outFields = ['*'];
-                            queryStatsUser.returnGeometry = false;
-                            const dataStatsUser = await query.executeQueryJSON(urlStatsUser, queryStatsUser);
-                            let statsUser = {
-                                pending: 0,
-                                attended: 0
-                            };
-                            if (dataStatsUser.features.length > 0) {
-                                statsUser = {
-                                    pending: dataStatsUser.features[0].attributes.PENDIENTE,
-                                    attended: dataStatsUser.features[0].attributes.ATENDIDO
-                                };
-                            }
-                            result.user['statsUser'] = statsUser;
-                        });
+                if (attributes.COD_USUARIO) {
+                    result.user = await this._operatorService.getOperatorById(attributes.COD_USUARIO).toPromise();
+                    // this._operatorService.getOperatorById(attributes.COD_USUARIO).subscribe(async (data: IOperator) => {
+                    //     result.user = data;
+
+                    // });
+                    const queryStatsUser = new newQuery();
+                    queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = '${result.user['id']}'`;
+                    queryStatsUser.outFields = ['*'];
+                    queryStatsUser.returnGeometry = false;
+                    const dataStatsUser = await query.executeQueryJSON(urlStatsUser, queryStatsUser);
+                    let statsUser = {
+                        pending: 0,
+                        attended: 0
+                    };
+                    if (dataStatsUser.features.length > 0) {
+                        statsUser = {
+                            pending: dataStatsUser.features[0].attributes.PENDIENTE,
+                            attended: dataStatsUser.features[0].attributes.ATENDIDO
+                        };
                     }
-                    return resolve(result);
+                    result.user['statsUser'] = statsUser;
+                }
+                return resolve(result);
                 } catch (error) {
                     reject(error);
                 }
@@ -601,12 +605,16 @@ export class TableService {
 
                 })
                 .then(() => {
-                    console.log(`Se ${operator ? 'asigno' : 'desasigno'} el usuario ${nameOperator} a la carga de trabajo ${workload}`);
+                    const respt =(`Se ${operator ? 'asigno' : 'desasigno'} el usuario a la carga de trabajo ${workload}`);
+                    this.getWidget(ubigeo);
+                    this._messageProviderService.showSnack(respt);
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {
                     console.log(error);
+                    this._messageProviderService.showSnackError('Ocurrio un error al desasignar el operador');
                     this._fuseSplashScreenService.hide();
+                    window.location.reload();
                 });
         }
         catch (error) {

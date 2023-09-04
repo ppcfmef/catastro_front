@@ -66,22 +66,19 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
                 this._currentUserUbigeo = us.ubigeo ? us.ubigeo : '040703';
             });
 
-            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(async ({cod}) => {
+            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
                 if (cod) {
                     this.newCod = cod;
                     this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
-                    this.result =  await this._tableService.getDataByWorkLoad(this._currentUserUbigeo,cod);
-                    console.log(this.result ,'resul');
+                    this._tableService.getDataByWorkLoad(this._currentUserUbigeo,cod).then((resp) => {
+                        this.result = resp;
+                        this.operator = resp.user;
+                        this._fecha = resp.dateLimit;
+                        this.cards[0].num =resp.user.statsUser.pending;
+                        this.cards[1].num = resp.user.statsUser.attended;
+                    });
                 }
-
-                    // this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
-                    // this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
-                    //     this.cards[0].num = pending;
-                    //     this.cards[1].num = attended;
-                    // });
-                    // this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then(res=> this._fecha = res);
-                    // this._tableService.getDataByWorkLoad(this._currentUserUbigeo,this.newCod).then(data => console.log(data, 'new data trasn'));
-                });
+            });
 
 
         }
