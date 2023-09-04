@@ -41,8 +41,8 @@ export class SubLandComponent implements OnInit {
     urlManzana = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/8`;
     where = '';
     idManzana = 1;
-    idPredio = 3;
-    idPuntoCampo = 4;
+    idPredio = 4;
+    idPuntoCampo = 5;
     layersInfo = [
         {
             title: 'Manzana',
@@ -111,8 +111,26 @@ export class SubLandComponent implements OnInit {
         },
 
         {
-            title: 'Predios',
+            title: 'Lotes Poligono Zona',
             id: 3,
+            layerId: 5,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'',
+            definitionExpression:'',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: true,
+            selected: false,
+            renderer:null
+        },
+
+        {
+            title: 'Predios',
+            id: 4,
             layerId: 0,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
@@ -130,7 +148,7 @@ export class SubLandComponent implements OnInit {
 
         {
             title: 'Predios Subvaluados',
-            id: 4,
+            id: 5,
             layerId: 0,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer`,
             order: 0,
@@ -206,7 +224,7 @@ export class SubLandComponent implements OnInit {
     tableLength: number;
     user: User;
     pageIndex = 0;
-    pageSize = 15;
+    pageSize = 10;
     pageSizeOptions = [5, 10, 15];
     resetTable = false;
     private defaultTableLimit = this.pageSize;

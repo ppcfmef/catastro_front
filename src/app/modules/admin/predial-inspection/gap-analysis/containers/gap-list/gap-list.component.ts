@@ -14,6 +14,7 @@ import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
 import { ManzanaPuntoImagenService } from '../../services/manzana-imagen.service';
 import { ManzanaCrecimientoService } from '../../services/manzana-crecimiento.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 @Component({
     selector: 'app-gap-list',
     templateUrl: './gap-list.component.html',
@@ -90,6 +91,8 @@ export class GapListComponent implements OnInit {
         private _manzanaPuntoImagenService: ManzanaPuntoImagenService,
         private _manzanaCrecimientoService: ManzanaCrecimientoService,
         private _ngxSpinner: NgxSpinnerService,
+
+        protected _fuseSplashScreenService: FuseSplashScreenService,
     ) {}
 
     ngOnInit(): void {
@@ -117,14 +120,55 @@ export class GapListComponent implements OnInit {
     }
 
     async updateUbigeoCards(ubigeo: string): Promise<void> {
-        this._ngxSpinner.show();
+        //this._ngxSpinner.show();
         const params = { search: ubigeo, limit: this.defaultTableLimit };
-        this._districtService.getList(params).subscribe((res)=>{
+        this._districtService.getList(params).subscribe(async (res)=>{
             /*console.log(res);*/
             this.districts = res.results;
+            this._fuseSplashScreenService.show(0);
             if (this.districts && this.districts.length > 0) {
                 this.district = this.districts[0];
-                this.cards.forEach(async (c) => {
+
+                const [total1, total2, total3,total4,total5,total6] = await Promise.all([
+                    this.getTotalPrediosSinGeorreferrencia(
+                        ubigeo
+                    ),
+                    this._manzanaPrediosSubvaluadosService.getTotalSubvaluados({ubigeo:ubigeo}),
+                    this._manzanaLotesSinPredioService.getTotalLotesSinPredio({ubigeo:ubigeo}),
+                    this._manzanaSinLoteService.getTotalManzanaSinLote({ubigeo:ubigeo}),
+                    this._manzanaPuntoImagenService
+                        .getTotalPuntoImagen({ ubigeo: this.ubigeo }),
+                        this._manzanaCrecimientoService
+                        .getTotalManzanas({ ubigeo: this.ubigeo })
+                  ]);
+
+                  this._fuseSplashScreenService.hide();
+
+                this.cards.forEach( (c) => {
+
+                    if(c.type === TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION){
+                        c.numb = String(total1);
+                    }
+                    if(c.type === TypeGapAnalisys.PREDIO_SUBVALUADO){
+                        c.numb = String(total2);
+                    }
+                    if(c.type === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO){
+                        c.numb = String(total3);
+                    }
+
+                    if(c.type === TypeGapAnalisys.MANZANA_SIN_LOTES){
+                        c.numb = String(total4);
+                    }
+
+                    if(c.type === TypeGapAnalisys.PUNTO_IMAGEN){
+                        c.numb = String(total5);
+                    }
+                    if(c.type === TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA){
+                        c.numb = String(total6);
+                    }
+
+                   
+                   /*
                     if(c.type === TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION){
                         const total = await this.getTotalPrediosSinGeorreferrencia(
                             ubigeo
@@ -157,6 +201,8 @@ export class GapListComponent implements OnInit {
                         .getTotalManzanas({ ubigeo: this.ubigeo });
                         c.numb = String(total);
                     }
+
+*/
                     c.path = `${c.pathBase}/${ubigeo}`;
                 });
 

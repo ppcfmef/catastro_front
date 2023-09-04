@@ -43,8 +43,8 @@ export class PointsWithoutLandComponent implements OnInit {
 
     where = '';
     idManzana = 1;
-    idPredio = 3;
-    idPuntoCampo = 4;
+    idPredio = 4;
+    idPuntoCampo = null;
     layersInfo = [
         {
             title: 'Manzana',
@@ -113,8 +113,26 @@ export class PointsWithoutLandComponent implements OnInit {
         },
 
         {
-            title: 'Lotes sin predio',
+            title: 'Lotes Poligono Zona',
             id: 3,
+            layerId: 5,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'',
+            definitionExpression:'',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: true,
+            selected: false,
+            renderer:null
+        },
+
+        {
+            title: 'Lotes sin predio',
+            id: 4,
             layerId: 1,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
             order: 0,
@@ -209,7 +227,7 @@ export class PointsWithoutLandComponent implements OnInit {
     tableLength: number;
     user: User;
     pageIndex = 0;
-    pageSize = 15;
+    pageSize = 10;
     pageSizeOptions = [5, 10, 15];
     resetTable = false;
     private defaultTableLimit = this.pageSize;
