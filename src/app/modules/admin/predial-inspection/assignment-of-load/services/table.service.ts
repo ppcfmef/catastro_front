@@ -4,6 +4,7 @@ import { loadModules } from 'esri-loader';
 import moment from 'moment';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { WidgetService } from './widget.service';
+import { Params } from '@angular/router';
 
 
 @Injectable({
@@ -31,6 +32,7 @@ export class TableService {
     _view = null;
 
     public _row = new Subject();
+    public searchBy = new Subject();
     private webMapSubject = new BehaviorSubject<any>(null);
     private wievSubject = new BehaviorSubject<any>(null);
 
@@ -57,23 +59,45 @@ export class TableService {
         this.wievSubject.next(this._view);
     }
 
-    dataLoad(state: string, queryObject: string[], ubigeo: string ): Promise<any> {
+
+    dataLoad(state: string, queryObject: string[], ubigeo: string, filters?, params?): Promise<any> {
         return new Promise (async (resolve, reject) => {
             try {
                 const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
                 esriConfig.portalUrl = this._portalUrl;
                 // Url del servicio de cargas
                 const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+                const urlUnidadesUrbanas = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6' ;
 
                 // Realizamos el filtro
                 const queryObjectPorAsignar = new newQuery();
+                const typeSearch: string = filters ? filters.type : '';
+                const textValue: string = filters ? filters.search : '';
+                const codeUrbanUnit: string = filters ? filters.cod : '';
 
-                queryObjectPorAsignar.where = `UBIGEO = ${ubigeo} and ${state}`;
+
+                if (typeSearch === 'code' && textValue !== '') {
+                    queryObjectPorAsignar.where = `UBIGEO = '${ubigeo}' and COD_CARGA = '${textValue}' and ${state}`;
+                } else if (typeSearch === 'urban' && textValue !== '') {
+                    const queryUrbanUnit = new newQuery();
+                    queryUrbanUnit.where = `UBIGEO = '${ubigeo}' and COD_UU = '${codeUrbanUnit}'`;
+                    queryUrbanUnit.outFields = ['*'];
+                    queryUrbanUnit.returnGeometry = true;
+                    const feature = await query.executeQueryJSON(urlUnidadesUrbanas, queryUrbanUnit);
+                    const geometry = feature.features[0].geometry;
+                    queryObjectPorAsignar.geometry = geometry;
+                    queryObjectPorAsignar.spatialRelationship = 'intersects';
+                    queryObjectPorAsignar.where = `${state}`;
+                } else {
+                    queryObjectPorAsignar.where = `UBIGEO = '${ubigeo}' and ${state}`;
+                }
+
                 queryObjectPorAsignar.outFields = queryObject;
 
                 // indicamos que no queremos retornar datos de geometria
                 queryObjectPorAsignar.returnGeometry = false;
-
+                queryObjectPorAsignar.start = params.offset;
+                queryObjectPorAsignar.num = params.limit;
                 // query to feature layer
                 query.executeQueryJSON(urlCarga, queryObjectPorAsignar)
                     .then((response)=> {
@@ -344,6 +368,38 @@ export class TableService {
                 reject('EsriLoader: ' + error);
             }
         });
+    }
+
+    getListUrbantUnit(): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
+            const urlUrbanUnits = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6';
+            const ubigeo = '040703';
+
+            // @process
+
+            const queryUnitsUrban = new newQuery();
+            queryUnitsUrban.where = `UBIGEO = '${ubigeo}'`;
+            queryUnitsUrban.outFields = ['*'];
+            queryUnitsUrban.returnGeometry = false;
+
+            query.executeQueryJSON(urlUrbanUnits, queryUnitsUrban)
+                .then((response) => {
+                    if (response.features.length > 0) {
+                        const urbanUnitsList = response.features.map(row => ({ cod: row.attributes.COD_UU, name: row.attributes.NOM_UU }));
+                        console.log(urbanUnitsList);
+                        return resolve(urbanUnitsList);
+                    }
+                    return resolve(`No se encontraron unidades urbanas para el distrito ${ubigeo} `);
+                })
+                .catch((error) => {
+                    // Aqui se muestran los posibles errores; esto solo debe imprimirse; puede pasar
+                    // que un distrito no tenga unidades urbanas
+                    console.log(error);
+                    reject(error);
+                });
+        });
+
     }
 }
 

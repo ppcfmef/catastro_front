@@ -4,3 +4,6 @@
 [config]="tableConfig"
 (action)="onEdit($event)"
 ></app-table>
+<ng-container *ngIf="error">
+    <h5>No se encontro resultado</h5>
+</ng-container>

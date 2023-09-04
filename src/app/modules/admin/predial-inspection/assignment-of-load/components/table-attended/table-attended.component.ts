@@ -8,6 +8,7 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { TableService } from '../../services/table.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 @Component({
   selector: 'app-table-attended',
   templateUrl: './table-attended.component.html',
@@ -24,17 +25,18 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
     dataSource = [];
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUserUbigeo: string;
-
-
+    error: boolean = false;
+    bySearch: any;
 
     constructor(
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
         private _tableService: TableService,
         private _userService: UserService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
         ) { }
 
-        ngOnInit(): void {
+    ngOnInit(): void {
             this.setTableColumn();
             this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -44,14 +46,12 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
         }
 
     ngAfterViewInit(): void {
-        this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],this._currentUserUbigeo)
-        .then(data => this.dataSource = data );
-    }
-
-    ngOnDestroy(): void
-    {
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
+        this.loadTable();
+        this._tableService.searchBy.subscribe((res) => {
+            this.bySearch = res;
+            console.log(this.bySearch,'00172');
+            this.loadTable();
+        });
     }
 
     setTableColumn(): void {
@@ -62,6 +62,27 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
             {matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
         ];
 
+    }
+
+    async loadTable(): Promise<void> {
+        this._fuseSplashScreenService.show();
+        await this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],this._currentUserUbigeo, this.bySearch)
+        .then((data) => {
+            this.dataSource = data;
+            if(this.dataSource.length > 0) {
+                this.error = false;
+            }else {
+                this.error = true;
+            }
+        } );
+        this._fuseSplashScreenService.hide();
+
+    }
+
+    ngOnDestroy(): void
+    {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 
     onEdit({row}): void {

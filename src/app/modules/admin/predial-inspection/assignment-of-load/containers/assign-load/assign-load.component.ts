@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
@@ -16,6 +16,7 @@ import { TableService } from '../../services/table.service';
 import moment from 'moment';
 import { OperatorService } from '../../services/operator.service';
 import { IOperator } from '../../interfaces/operator.interface';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 
 
@@ -62,12 +63,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,
         private _operatorsService: OperatorService,
+        private _messageProviderService: MessageProviderService,
     ) {
         this.form = new FormGroup({
-            loadName: new FormControl(''),
+            loadName: new FormControl('',[Validators.required]),
             description: new FormControl(''),
             codUser: new FormControl(''),
-            fEntrega: new FormControl(''),
+            fEntrega: new FormControl(new Date(),[Validators.required]),
         });
 
     }
@@ -132,6 +134,15 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
 
     async createWorkLoad() {
+        if(this.tableData.length === 0) {
+            this._messageProviderService.showSnackError('Debe seleccionar al menos una manzana');
+            return;
+        }
+        if(this.form.get['loadName'] === undefined || ''){
+            this._messageProviderService.showSnackError('Debe ingresar el nombre de la carga');
+            return;
+        }
+
         // params
         const dataWorkLoad = this.tableData;
         const nameWorkLoad = this.form.value.loadName;
@@ -140,16 +151,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
         const dateWorkLoad = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
-        console.log(dateWorkLoad, 'ff');
-        console.log(this.operator.id, 'cod');
-        const codUserWorkLoad = this.operator.id ? this.operator.id : '';
-        const nomUserWorkLoad = `${this.operator.firstName} ${this.operator.lastName}`;
+        const codUserWorkLoad =this.operator ? this.operator.id : '';
+        const nomUserWorkLoad = '';
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';
         const id_lotes_sin_predio = 'CAPAS_INSPECCION_AC_3266';
-        const id_punto_imagen = 'CAPAS_INSPECCION_AC_3611';
-        const id_mz_inei = 'CAPAS_INSPECCION_AC_3891';
+        const id_punto_imagen = 'CAPAS_INSPECCION_AC_3611';        const id_mz_inei = 'CAPAS_INSPECCION_AC_3891';
         const id_ticket = 'carto_asignacion_carga_9869';
         const mz_asignadas = 'CARTO_MANZANA_CAMPO_3194';
         const id_predio_sin_mz = 'CARTO_PUNTO_CAMPO_7359';
@@ -480,9 +488,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     this._newLoadService.triggerClearAllGraphics();
                     this.getWidget();
                     this.form.reset();
+                    this._messageProviderService.showSnack('Cargado correctamente');
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {
+                    this._messageProviderService.showSnackError('Error al crear la carga');
                     this._fuseSplashScreenService.hide();
                     console.log(error);
                 });

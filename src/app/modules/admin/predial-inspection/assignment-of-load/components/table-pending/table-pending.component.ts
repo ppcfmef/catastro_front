@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { environment } from './../../../../../../../environments/environment';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +17,7 @@ import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-table-pending',
@@ -23,7 +25,8 @@ import { User } from 'app/core/user/user.types';
   styleUrls: ['./table-pending.component.scss']
 })
 export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
-
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    bySearch: any;
     _portalUrl = 'https://js.arcgis.com/4.27/';
     tableColumns: TableColumn[] =[];
     tableConfig: TableConifg = {
@@ -35,6 +38,9 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSource = [];
+    count=0;
+    params = { limit: 5, offset: 0 };
+    error: boolean = false;
     constructor(
         public dialog: MatDialog,
         private _router: Router,
@@ -56,6 +62,10 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
 
     ngAfterViewInit(): void {
        this.loadTable();
+       this._tableService.searchBy.subscribe((res) => {
+        this.bySearch = res;
+        this.loadTable();
+        });
     }
 
     ngOnDestroy(): void
@@ -113,11 +123,26 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
 
     }
 
-    loadTable(): void {
-        this._tableService.dataLoad('ESTADO = "1"',['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],this._currentUserUbigeo).then(data => this.dataSource = data )
-        .then(data => this.dataSource = data );
+    async loadTable(): Promise<void> {
+        this._fuseSplashScreenService.show();
+        await this._tableService.dataLoad('ESTADO = "1"',['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],this._currentUserUbigeo, this.bySearch, this.params)
+        .then((data) => {
+            this.dataSource = data;
+            this.count = 25;
+            if(this.dataSource.length > 0) {
+                this.error = false;
+            }else {
+                this.error = true;
+            }
+        } );
         this._fuseSplashScreenService.hide();
 
+    }
+
+    page(e): void {
+        this.params['limit'] = e.pageSize;
+        this.params['offset'] = e.pageSize * e.pageIndex;
+        this.loadTable();
     }
 
 }

@@ -111,9 +111,9 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     }
 
     loadTable(): void {
-        this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'], this._currentUserUbigeo)
-        .then(data => this.dataSource = data );
-        this._fuseSplashScreenService.hide();
+        // this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'], this._currentUserUbigeo)
+        // .then(data => this.dataSource = data );
+        // this._fuseSplashScreenService.hide();
     }
 }
 
