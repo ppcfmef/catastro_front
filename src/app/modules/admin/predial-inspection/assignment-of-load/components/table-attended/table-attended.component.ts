@@ -27,6 +27,8 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     error: boolean = false;
     bySearch: any;
+    count=0;
+    params = { limit: 5, offset: 0 };
 
     constructor(
         private _router: Router,
@@ -49,7 +51,6 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
         this.loadTable();
         this._tableService.searchBy.subscribe((res) => {
             this.bySearch = res;
-            console.log(this.bySearch,'00172');
             this.loadTable();
         });
     }
@@ -66,15 +67,20 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
 
     async loadTable(): Promise<void> {
         this._fuseSplashScreenService.show();
-        await this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],this._currentUserUbigeo, this.bySearch)
-        .then((data) => {
-            this.dataSource = data;
-            if(this.dataSource.length > 0) {
-                this.error = false;
-            }else {
-                this.error = true;
-            }
-        } );
+        await this._tableService.dataCount('ESTADO = "4"', this._currentUserUbigeo, this.bySearch).then((count) => {
+            this.count = count;
+        })
+            .then(() => this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
+                this._currentUserUbigeo, this.bySearch, this.params)
+            )
+            .then((data) => {
+                this.dataSource = data;
+                if (this.dataSource.length > 0) {
+                    this.error = false;
+                } else {
+                    this.error = true;
+                }
+            });
         this._fuseSplashScreenService.hide();
 
     }
@@ -89,5 +95,11 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
         this._tableService._row.next(row);
         this._router.navigate([`load-attend/${row.codCarga}-${row.codOperador}`], {relativeTo: this._activatedRoute});
     }
+    page(e): void {
+        this.params['limit'] = e.pageSize;
+        this.params['offset'] = e.pageSize * e.pageIndex;
+        this.loadTable();
+    }
+
 }
 

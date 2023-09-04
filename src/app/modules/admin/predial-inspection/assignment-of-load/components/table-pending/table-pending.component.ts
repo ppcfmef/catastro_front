@@ -39,7 +39,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSource = [];
     count=0;
-    params = { limit: 5, offset: 0 };
+    params = { limit: 10, offset: 0 };
     error: boolean = false;
     constructor(
         public dialog: MatDialog,
@@ -125,16 +125,20 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
 
     async loadTable(): Promise<void> {
         this._fuseSplashScreenService.show();
-        await this._tableService.dataLoad('ESTADO = "1"',['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],this._currentUserUbigeo, this.bySearch, this.params)
-        .then((data) => {
-            this.dataSource = data;
-            this.count = 25;
-            if(this.dataSource.length > 0) {
-                this.error = false;
-            }else {
-                this.error = true;
-            }
-        } );
+        await this._tableService.dataCount('ESTADO = "1"', this._currentUserUbigeo, this.bySearch).then((count) => {
+            this.count = count;
+        })
+            .then(() => this._tableService.dataLoad('ESTADO = "1"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],
+                this._currentUserUbigeo, this.bySearch, this.params)
+            )
+            .then((data) => {
+                this.dataSource = data;
+                if (this.dataSource.length > 0) {
+                    this.error = false;
+                } else {
+                    this.error = true;
+                }
+            });
         this._fuseSplashScreenService.hide();
 
     }

@@ -4,11 +4,11 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { WidgetService } from '../../services/widget.service';
@@ -17,6 +17,10 @@ import moment from 'moment';
 import { OperatorService } from '../../services/operator.service';
 import { IOperator } from '../../interfaces/operator.interface';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { FormUtils } from 'app/shared/utils/form.utils';
+import { kMaxLength } from 'buffer';
+import { labels } from '../../../../../../mock-api/apps/mailbox/data';
 
 
 
@@ -64,12 +68,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private _widgetService: WidgetService,
         private _operatorsService: OperatorService,
         private _messageProviderService: MessageProviderService,
+        private _ngxSpinner: NgxSpinnerService,
     ) {
         this.form = new FormGroup({
-            loadName: new FormControl('',[Validators.required]),
+            loadName: new FormControl(''),
             description: new FormControl(''),
-            codUser: new FormControl(''),
-            fEntrega: new FormControl(new Date(),[Validators.required]),
+            dni: new FormControl(''),
+            fEntrega: new FormControl(''),
         });
 
     }
@@ -101,16 +106,18 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
 
-        this.form.get('codUser').valueChanges.subscribe((val) => {
-            if (val === '') {
-                this.user = false;
-                return;
-            }
-            this.params['search'] = val;
-            this.user = true;
-            this.getOperator();
-        }
-        );
+        // this.form.get('codUser').valueChanges.subscribe((val) => {
+        //     if (val === '') {
+        //         this.user = false;
+        //         return;
+        //     }
+        //     this.params['search'] = val;
+        //     this.user = true;
+        //     this.getOperator();
+        // }
+        // );
+
+        this.emitFilter();
     }
 
     redirecto(): void {
@@ -132,16 +139,42 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     });
     }
 
+    emitFilter(): void {
+        this.form.controls['dni'].valueChanges
+        .pipe(
+            debounceTime(600),
+        ).subscribe((dni) => {
+            console.log(dni, 'dni');
+            if(!dni){
+                this.operator = null;
+                this.form.controls['fEntrega'].disable();
+                return;
+            }
+            this.params['search'] = dni;
+            this.form.controls['fEntrega'].enable();
+            this.user = true;
+            this.getOperator();
+        });
+    }
+
 
     async createWorkLoad() {
         if(this.tableData.length === 0) {
             this._messageProviderService.showSnackError('Debe seleccionar al menos una manzana');
-            return;
         }
-        if(this.form.get['loadName'] === undefined || ''){
+        if(!this.form.value.loadName){
             this._messageProviderService.showSnackError('Debe ingresar el nombre de la carga');
             return;
         }
+
+        if(this.operator){
+            if(!this.form.value.fEntrega){
+                this._messageProviderService.showSnackError('Debe seleccionar fecha de entrega');
+                return;
+            }
+        }
+
+
 
         // params
         const dataWorkLoad = this.tableData;
@@ -150,14 +183,15 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const ubigeo = this._currentUserUbigeo;
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
-        const dateWorkLoad = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
-        const codUserWorkLoad =this.operator ? this.operator.id : '';
-        const nomUserWorkLoad = '';
+        const codUserWorkLoad = this.operator ? this.operator.id :'';
+        const nomUserWorkLoad =this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
+        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD'): '';
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';
         const id_lotes_sin_predio = 'CAPAS_INSPECCION_AC_3266';
-        const id_punto_imagen = 'CAPAS_INSPECCION_AC_3611';        const id_mz_inei = 'CAPAS_INSPECCION_AC_3891';
+        const id_punto_imagen = 'CAPAS_INSPECCION_AC_3611';
+        const id_mz_inei = 'CAPAS_INSPECCION_AC_3891';
         const id_ticket = 'carto_asignacion_carga_9869';
         const mz_asignadas = 'CARTO_MANZANA_CAMPO_3194';
         const id_predio_sin_mz = 'CARTO_PUNTO_CAMPO_7359';

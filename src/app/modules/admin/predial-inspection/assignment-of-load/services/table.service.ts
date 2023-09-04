@@ -59,6 +59,53 @@ export class TableService {
         this.wievSubject.next(this._view);
     }
 
+    dataCount(state: string, ubigeo: string, filters?): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query', 'esri/config',]);
+                esriConfig.portalUrl = this._portalUrl;
+                // Url del servicio de cargas
+                const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+                const urlUnidadesUrbanas = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6';
+
+                // Realizamos el filtro
+                const queryObjectCount = new newQuery();
+                const typeSearch: string = filters ? filters.type : '';
+                const textValue: string = filters ? filters.search : '';
+                const codeUrbanUnit: string = filters ? filters.cod : '';
+
+
+                if (typeSearch === 'code' && textValue !== '') {
+                    queryObjectCount.where = `UBIGEO = '${ubigeo}' and COD_CARGA = '${textValue}' and ${state}`;
+                } else if (typeSearch === 'urban' && textValue !== '') {
+                    const queryUrbanUnit = new newQuery();
+                    queryUrbanUnit.where = `UBIGEO = '${ubigeo}' and COD_UU = '${codeUrbanUnit}'`;
+                    queryUrbanUnit.outFields = ['*'];
+                    queryUrbanUnit.returnGeometry = true;
+                    const feature = await query.executeQueryJSON(urlUnidadesUrbanas, queryUrbanUnit);
+                    const geometry = feature.features[0].geometry;
+                    queryObjectCount.geometry = geometry;
+                    queryObjectCount.spatialRelationship = 'intersects';
+                    queryObjectCount.where = `${state}`;
+                } else {
+                    queryObjectCount.where = `UBIGEO = '${ubigeo}' and ${state}`;
+                }
+
+                // indicamos que no queremos retornar datos de geometria
+                queryObjectCount.returnGeometry = false;
+
+                // query to feature layer
+                query.executeForCount(urlCarga, queryObjectCount)
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch(error => reject(error));
+            }
+            catch (error) {
+                console.log('EsriLoader: ', error);
+            }
+        });
+    }
 
     dataLoad(state: string, queryObject: string[], ubigeo: string, filters?, params?): Promise<any> {
         return new Promise (async (resolve, reject) => {

@@ -29,9 +29,13 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         isEdit: true,
         isDeleted: true,
     };
-    dataSource: MatTableDataSource<IdataLoad>;
+    dataSource: [];
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUserUbigeo: string;
+    error: boolean = false;
+    bySearch: any;
+    count=0;
+    params = { limit: 5, offset: 0 };
 
 
     constructor(
@@ -55,6 +59,10 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
 
     ngAfterViewInit(): void {
         this.loadTable();
+        this._tableService.searchBy.subscribe((res) => {
+            this.bySearch = res;
+            this.loadTable();
+        });
     }
 
     ngOnDestroy(): void
@@ -110,10 +118,30 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
 
     }
 
-    loadTable(): void {
-        // this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'], this._currentUserUbigeo)
-        // .then(data => this.dataSource = data );
-        // this._fuseSplashScreenService.hide();
+    async loadTable(): Promise<void> {
+        this._fuseSplashScreenService.show();
+        await this._tableService.dataCount('ESTADO IN ("2","3")', this._currentUserUbigeo, this.bySearch).then((count) => {
+            this.count = count;
+        })
+            .then(() => this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
+                this._currentUserUbigeo, this.bySearch, this.params)
+            )
+            .then((data) => {
+                this.dataSource = data;
+                if (this.dataSource.length > 0) {
+                    this.error = false;
+                } else {
+                    this.error = true;
+                }
+            });
+        this._fuseSplashScreenService.hide();
+
+    }
+
+    page(e): void {
+        this.params['limit'] = e.pageSize;
+        this.params['offset'] = e.pageSize * e.pageIndex;
+        this.loadTable();
     }
 }
 

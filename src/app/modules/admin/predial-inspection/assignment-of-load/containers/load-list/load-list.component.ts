@@ -108,8 +108,6 @@ export class LoadListComponent implements OnInit,AfterViewInit {
                 }
                 const newFilters = { ...filters } as any;
                 return newFilters;
-                console.log(newFilters, 'new');
-                this._ngxSpinner.hide();
             })
         ).subscribe((data) => {
             this._tableService.searchBy.next(data);

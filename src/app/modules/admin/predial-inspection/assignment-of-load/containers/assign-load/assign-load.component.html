@@ -25,7 +25,7 @@
                 <span class="text-base font-medium">Seleccione operador</span>
                 <div
                     class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-                    <input formControlName="codUser" class="w-full" placeholder="Operador" />
+                    <input formControlName="dni" class="w-full" placeholder="DNI Operador" [appOnlyNumbers]="true" maxDigitsLength="8"/>
                     <span class="flex">
                         <mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>
@@ -34,7 +34,7 @@
             <div class="mt-2 w-min">
                 <span class="text-base font-medium">Fecha de entrega:</span>
                 <mat-form-field class="h-9">
-                    <input matInput [matDatepicker]="date" autocomplete="off" type="text" placeholder="Fecha"
+                    <input matInput [matDatepicker]="date" autocomplete="off" type="text" placeholder="Fecha" disabled
                             formControlName="fEntrega" (click)="date.open()">
                     <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                     <mat-datepicker #date></mat-datepicker>
