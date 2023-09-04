@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { TableService } from '../../services/table.service';
 @Component({
     selector: 'app-indicator-widget',
     templateUrl: './indicator-widget.component.html',
@@ -20,6 +21,7 @@ export class IndicatorWidgetComponent implements OnInit, OnDestroy{
     constructor(
         private _widgetService: WidgetService,
         private _userService: UserService,
+        private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
     ) {}
 
@@ -30,8 +32,9 @@ export class IndicatorWidgetComponent implements OnInit, OnDestroy{
             this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
         });
         this._widgetService.listWidget(this._currentUserUbigeo);
-        this._widgetService.getDataWidget().subscribe(data =>  this.newCard = data
-        );
+        this._tableService._newUbigeo.subscribe(resp =>this._widgetService.listWidget(resp) );
+        this._widgetService.getDataWidget().subscribe(data =>  this.newCard = data);
+
     }
 
     ngOnDestroy(): void
