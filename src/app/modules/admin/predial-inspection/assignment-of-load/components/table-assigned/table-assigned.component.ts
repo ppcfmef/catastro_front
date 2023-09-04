@@ -55,6 +55,11 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         .subscribe((user: User) => {
             this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
         });
+        this._tableService._newUbigeo.subscribe((r) => {
+            this._currentUserUbigeo  = r;
+            console.log( this._currentUserUbigeo , 're');
+            this.loadTable();
+        });
     }
 
     ngAfterViewInit(): void {

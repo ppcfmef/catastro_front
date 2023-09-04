@@ -59,6 +59,17 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
                 this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
             });
             this.loadTable();
+            this._tableService._newUbigeo.subscribe((r) => {
+                this._currentUserUbigeo  = r;
+                console.log( this._currentUserUbigeo , r);
+                this.loadTable();
+            });
+
+            this._tableService._newUbigeo.subscribe((r) => {
+                this._currentUserUbigeo  = r;
+                console.log( this._currentUserUbigeo , 'r');
+                this.loadTable();
+            });
         }
 
     ngAfterViewInit(): void {
@@ -78,7 +89,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
         this.tableColumns = [
             {matheaderdef:'Nro.', matcolumndef:'nro', matcelldef: 'nro'},
             {matheaderdef:'Cod. Carga', matcolumndef:'codCarga', matcelldef: 'codCarga'},
-            {matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
+            //{matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
         ];
 
     }

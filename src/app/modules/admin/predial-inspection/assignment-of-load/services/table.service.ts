@@ -39,6 +39,7 @@ export class TableService {
 
     public _row = new Subject();
     public _updateTable: Subject<boolean> = new Subject();
+    public _newUbigeo: Subject<string> = new Subject();
     public searchBy = new Subject();
     private webMapSubject = new BehaviorSubject<any>(null);
     private wievSubject = new BehaviorSubject<any>(null);
