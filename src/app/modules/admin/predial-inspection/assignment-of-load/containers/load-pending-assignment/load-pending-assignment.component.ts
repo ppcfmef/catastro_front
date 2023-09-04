@@ -180,8 +180,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
             .then(async (result) => {
                 console.log(result, 'result');
-                this._tableService._updateTable.next(true);
-                this.getWidget();
+                //this._tableService._updateTable.next(true);
                 await this._messageProviderService.showSnack('Asignado correctament');
                 this.form.reset();
                 this.redirecto();

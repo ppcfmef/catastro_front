@@ -607,6 +607,7 @@ export class TableService {
                 })
                 .then(() => {
                     const respt =(`Se ${operator ? 'asigno' : 'desasigno'} el usuario a la carga de trabajo ${workload}`);
+                    this._updateTable.next(true);
                     this.getWidget(ubigeo);
                     this._messageProviderService.showSnack(respt);
                     this._fuseSplashScreenService.hide();

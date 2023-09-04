@@ -58,10 +58,10 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
             .subscribe((user: User) => {
                 this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
             });
+            this.loadTable();
         }
 
     ngAfterViewInit(): void {
-       this.loadTable();
        this._tableService.searchBy.subscribe((res) => {
         this.bySearch = res;
         this.loadTable();
