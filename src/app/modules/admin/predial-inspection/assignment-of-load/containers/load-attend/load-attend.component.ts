@@ -12,6 +12,8 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
 import { OperatorService } from '../../services/operator.service';
 import { WidgetService } from '../../services/widget.service';
+import { user } from '../../../../../../mock-api/common/user/data';
+import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
 @Component({
     selector: 'app-load-attend',
     templateUrl: './load-attend.component.html',
@@ -30,9 +32,11 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         isZoom:true,
     };
     dataSource = [];
-    newCod;
+    newCod: string;
     codOperator;
     operator;
+    dateOperator;
+    result;
     cards =[
         {
             num: 0,
@@ -58,27 +62,33 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
             this.setTableColumn();
             this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
+            .subscribe((us: User) => {
+                this._currentUserUbigeo = us.ubigeo ? us.ubigeo : '040703';
             });
+
+            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(async ({cod}) => {
+                if (cod) {
+                    this.newCod = cod;
+                    this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+                    this.result =  await this._tableService.getDataByWorkLoad(this._currentUserUbigeo,cod);
+                    console.log(this.result ,'resul');
+                }
+
+                    // this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
+                    // this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
+                    //     this.cards[0].num = pending;
+                    //     this.cards[1].num = attended;
+                    // });
+                    // this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then(res=> this._fecha = res);
+                    // this._tableService.getDataByWorkLoad(this._currentUserUbigeo,this.newCod).then(data => console.log(data, 'new data trasn'));
+                });
+
 
         }
 
         ngAfterViewInit(): void {
-            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
-                if (cod) {
-                    [this.newCod , this.codOperator] = cod.split('-');
-                    this._tableService.detailLoad(this.newCod, this._currentUserUbigeo).then(data => this.dataSource = data);
-                    this._operatorsService.getOperatorById(this.codOperator).subscribe(data => this.operator = data);
-                    this._widgetService.widgetUser(this._currentUserUbigeo , this.codOperator).then(({attended ,pending }) => {
-                        this.cards[0].num = pending;
-                        this.cards[1].num = attended;
-                    });
-                    this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then(res=> this._fecha = res);
-                }
-            });
+            console.log(this.result, 'resptafff');
 
-            // this._tableService.getDataByWorkLoad(this._currentUserUbigeo,this.newCod).then(data => console.log(data, 'new data trasn'));
         }
 
 

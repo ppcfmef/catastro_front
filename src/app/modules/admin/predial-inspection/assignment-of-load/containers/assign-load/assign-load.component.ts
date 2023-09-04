@@ -185,7 +185,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const webMap = this.webMapData;
         const codUserWorkLoad = this.operator ? this.operator.id :'';
         const nomUserWorkLoad =this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
-        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD'): '';
+        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD'): null;
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';

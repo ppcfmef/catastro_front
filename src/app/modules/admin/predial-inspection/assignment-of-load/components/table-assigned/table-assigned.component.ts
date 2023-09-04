@@ -114,6 +114,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
                     .catch(error => this._messageProvider.showSnackError(error));
                     this._fuseSplashScreenService.hide();
                 }
+                this._fuseSplashScreenService.hide();
             });
 
     }

@@ -44,8 +44,7 @@ export class TableService {
     constructor(
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,
-
-
+        private _operatorService: OperatorService,
     ) { }
 
     getWidget(ubigeo): void {
@@ -453,79 +452,61 @@ export class TableService {
 
     }
 
-    // getDataByWorkLoad(ubigeo, codWorkload): Promise<any> {
-    //     return new Promise (async (resolve, reject) => {
-    //         try {
-    //             const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
-    //             esriConfig.portalUrl = this._portalUrl;
-    //             const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
-    //             const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
-    //             const urlGetOperator = 'https://catastro-fiscal.codtree.com/api/v1/gap-analisys/user/';
-    //             const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6
-    //                 ImFkbWluIiwiZXhwIjoxNjkzNzc5NTI5LCJlbWFpbCI6ImpjcmFtaXJlenRlbGxvQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNjkzNTY5NDc3fQ.GvV76MMyuiYMXaDN6nxujR_y39QpnL-FJ3wEKHGZr_o`;
+    getDataByWorkLoad(ubigeo, codWorkload): Promise<any> {
+        return new Promise (async (resolve, reject) => {
+            try {
+                const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
+                esriConfig.portalUrl = this._portalUrl;
+                const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+                const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
 
-    //                 // @process
-    //             const queryWorkLoad = new newQuery();
-    //             queryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = '${codWorkload}'`;
-    //             queryWorkLoad.outFields = ['*'];
-    //             queryWorkLoad.returnGeometry = false;
+                    // @process
+                const queryWorkLoad = new newQuery();
+                queryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = '${codWorkload}'`;
+                queryWorkLoad.outFields = ['*'];
+                queryWorkLoad.returnGeometry = false;
 
-    //             const result = {
-    //                 codCarga: codWorkload,
-    //                 user: {},
-    //                 dateLimit: null,
-    //             };
-    //             const dataWorkLoad = await query.executeQueryJSON(urlWorkLoad, queryWorkLoad);
-    //                 if (dataWorkLoad.features.length === 0) {
-    //                     return new Error(`No se encontró la carga ${codWorkload} para el distrito ${ubigeo} `);
-    //                 }
+                const result = {
+                    codCarga: codWorkload,
+                    user: {},
+                    dateLimit: null,
+                };
+                const dataWorkLoad = await query.executeQueryJSON(urlWorkLoad, queryWorkLoad);
+                    if (dataWorkLoad.features.length === 0) {
+                        return reject(`No se encontró la carga ${codWorkload} para el distrito ${ubigeo} `);
+                    }
 
-    //                 const attributes = dataWorkLoad.features[0].attributes;
-    //                 result.dateLimit = moment(attributes.FEC_ENTREGA).format('YYYY-MM-DD');
+                    const attributes = dataWorkLoad.features[0].attributes;
+                    result.dateLimit = moment(attributes.FEC_ENTREGA).format('YYYY-MM-DD');
 
-    //                 if (attributes.COD_USUARIO) {
-    //                     const urlGetOperatorSet = `${urlGetOperator}/${attributes.COD_USUARIO}`;
-    //                     const data = {
-    //                         method: 'GET',
-    //                         headers: {
-    //                             'Authorization': 'Bearer ' + token,
-    //                             'Content-Type': 'application/json',
-    //                         },
-    //                     };
-    //                     const response = await fetch(urlGetOperatorSet, data);
-    //                     if (response.status !== 200) {
-    //                         return new Error(`No se encontró el usuario para la carga ${codWorkload} para el distrito ${ubigeo} `);
-    //                     }
-    //                     const dataUser = await response.json();
+                    if (attributes.COD_USUARIO) {
+                        this._operatorService.getOperatorById(attributes.COD_USUARIO).subscribe(async (data: IOperator) => {
+                            result.user = data;
+                            const queryStatsUser = new newQuery();
+                            queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = '${result.user['id']}'`;
+                            queryStatsUser.outFields = ['*'];
+                            queryStatsUser.returnGeometry = false;
+                            const dataStatsUser = await query.executeQueryJSON(urlStatsUser, queryStatsUser);
+                            let statsUser = {
+                                pending: 0,
+                                attended: 0
+                            };
+                            if (dataStatsUser.features.length > 0) {
+                                statsUser = {
+                                    pending: dataStatsUser.features[0].attributes.PENDIENTE,
+                                    attended: dataStatsUser.features[0].attributes.ATENDIDO
+                                };
+                            }
+                            result.user['statsUser'] = statsUser;
+                        });
+                    }
+                    return resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
 
-    //                     result.user = dataUser;
-    //                     console.log(result.user,'result.user');
-
-    //                     const queryStatsUser = new newQuery();
-    //                     queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = '${result.user}'`;
-    //                     queryStatsUser.outFields = ['*'];
-    //                     queryStatsUser.returnGeometry = false;
-    //                     const dataStatsUser = await query.executeQueryJSON(urlStatsUser, queryStatsUser);
-    //                     let statsUser = {
-    //                         pending: 0,
-    //                         attended: 0
-    //                     };
-    //                     if (dataStatsUser.features.length > 0) {
-    //                         statsUser = {
-    //                             pending: dataStatsUser.features[0].attributes.PENDIENTE,
-    //                             attended: dataStatsUser.features[0].attributes.ATENDIDO
-    //                         };
-    //                     }
-    //                     result.user['statsUser'] = statsUser;
-    //                 }
-
-    //                 return result;
-    //             } catch (error) {
-    //                 console.log(error);
-    //             }
-
-    //         });
-    // }
+            });
+    }
 
     async assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo): Promise<void> {
         this._fuseSplashScreenService.show(0);
