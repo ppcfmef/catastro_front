@@ -19,7 +19,7 @@
         >
         </app-table>
     </div>
-    <div [formGroup]="form">
+    <div [formGroup]="form" class="mt-4">
         <div class="flex items-center justify-between">
             <span class="text-secundary font-bold">Fecha estimada de entrega: </span>
             <mat-form-field class="h-9">
@@ -33,7 +33,7 @@
         <div class="mt-3 w-full">
             <span class="text-secundary">Seleccione operador</span>
             <div class="flex h-9 border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
-                <input class="w-full"  type="text" formControlName="operador"  [appOnlyNumbers]="true"  placeholder="Operador" maxlength="8">
+                <input class="w-full"  type="text" formControlName="operador" placeholder="Operador" [appOnlyNumbers]="true" maxDigitsLength="8">
                 <span class="flex" >
                     <mat-icon svgIcon="mat_outline:search"></mat-icon>
                 </span>
@@ -43,16 +43,15 @@
     </div>
     <ng-container *ngIf="user" >
         <app-detail-operador [data] = "operator" ></app-detail-operador>
-        <div class="flex w-full pt-3 gap-3 justify-between">
-            <ng-container *ngFor="let card of cards">
-                <app-widget [card]="card"></app-widget>
-            </ng-container>
-        </div>
-
-        <button  mat-button (click)="assigment()">
-            <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
-            Asignar operador
-        </button>
+            <ng-container *ngIf="operator">
+                <div class="flex w-full pt-3 gap-3 justify-between" >
+                    <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
+                </div>
+            <button  mat-button (click)="assigment()">
+                <mat-icon svgIcon="mat_solid:check" class="text-white mr-3"></mat-icon>
+                Asignar operador
+            </button>
+        </ng-container>
     </ng-container>
 </div>
 

@@ -5,7 +5,7 @@ import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 
 import { loadModules } from 'esri-loader';
 import { UserService } from 'app/core/user/user.service';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
@@ -78,9 +78,6 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
             this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
         });
 
-    }
-
-    ngAfterViewInit(): void {
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
             if (cod) {
                 this.codLoad = cod;
@@ -88,16 +85,22 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
             }
         });
 
-        this.form.get('operador').valueChanges.subscribe((val) => {
-            console.log(val);
-            if (val === '') {
-                this.user = false;
-                return;
-            }
-            console.log(val, 'he');
-            this.params['search'] = val;
-            this.user = true;
-            this.getOperator();
+    }
+
+    ngAfterViewInit(): void {
+        this.form.controls['operador'].valueChanges
+            .pipe(  debounceTime(600),
+                takeUntil(this._unsubscribeAll))
+            .subscribe((dateOperator) => {
+                if (!dateOperator) {
+                    this.operator = null;
+                    console.log(dateOperator, 'dateOperator');
+                }else {
+                    this.params['search'] = dateOperator;
+                    console.log(this.params, '');
+                    this.user = true;
+                    this.getOperator();
+                }
         }
         );
     }
@@ -117,7 +120,6 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         ];
     }
 
-    //   Implementar logica
     onZoom(row: any): void {
         this.zoom(row);
     }
@@ -132,21 +134,28 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
 
     createFormActions(): void {
         this.form = new FormGroup({
-            fEntrega: new FormControl(new Date(), [Validators.required]),
+            fEntrega: new FormControl('', [Validators.required]),
             operador: new FormControl('', [Validators.required]),
         });
     };
 
-    getOperator(): void {
-        this._fuseSplashScreenService.show();
-        this._operatorsService.getOperador(this.params).subscribe((data: IResult) => {
+    async getOperator(): Promise<any> {
+        await this._operatorsService.getOperador(this.params).subscribe(async (data: IResult) => {
+            this._fuseSplashScreenService.show();
             this.operator = data.results[0];
-            this._widgetsService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
-                this.cards[0].num = pending;
-                this.cards[1].num = attended;
-            });
+            if(this.operator){
+                await this._widgetsService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
+                    this.cards[0].num = pending;
+                    this.cards[1].num = attended;
+                });
+                this._fuseSplashScreenService.hide();
+            }
+            else {
+                this._messageProviderService.showSnackInfo('No existe Operador');
+                this._fuseSplashScreenService.hide();
+            }
         });
-        this._fuseSplashScreenService.hide();
+
     }
 
     async assigment(): Promise<void> {
@@ -154,10 +163,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
             this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');
-            return;
-        }
-        if (!rawValue.operador) {
-            this._messageProviderService.showSnackError('debe ingresar un operador');
+            this._fuseSplashScreenService.hide();
             return;
         }
         const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
@@ -167,10 +173,21 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         const workload = this.codLoad;
         const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const ubigeo = this._currentUserUbigeo;
-        await this._operatorsService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
-        this.form.reset();
-        this.redirecto();
-        this._fuseSplashScreenService.show();
+        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+            .then((result) =>{
+                console.log(result, 'result');
+                this._messageProviderService.showSnack('Asignado correctament');
+                this.form.reset();
+                this.redirecto();
+                //window.location.reload();
+                this._fuseSplashScreenService.hide();
+            })
+            .catch((error)=> {
+                console.log(error, 'errr');
+                this._messageProviderService.showSnackError('Error al asignar carga');
+                window.location.reload();
+            });
+
     }
 
 

@@ -601,9 +601,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 ).definitionExpression += ` AND (${this._queryUbigeo})`;
                 self._webmap.findLayerById(_id_mz_inei).definitionExpression =
                     this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_carga
-                ).definitionExpression += ` AND (${this._queryUbigeo})`;
+                self._webmap.findLayerById(_id_carga).definitionExpression = `(${self._webmap.findLayerById(_id_carga).definitionExpression}) AND (${this._queryUbigeo})`;
                 self._webmap.findLayerById(
                     _id_predio_sin_mz
                 ).definitionExpression += ` AND (${this._queryUbigeo})`;

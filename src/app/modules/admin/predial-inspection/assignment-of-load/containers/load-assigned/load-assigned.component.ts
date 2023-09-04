@@ -66,6 +66,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
             this.form = new FormGroup ({
                 fEntrega: new FormControl(),
                 operator: new FormControl(),
+                codUser: new FormControl(''),
             });
         }
 
@@ -110,7 +111,9 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         const ubigeo = this._currentUserUbigeo;
         const workload = this.newCod;
         const operator = null;
-        await this._operatorsService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
+        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
+        this.user = true;
+        this.form.controls['codUser'].enable();
     }
 
 

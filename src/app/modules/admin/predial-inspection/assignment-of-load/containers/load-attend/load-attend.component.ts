@@ -77,6 +77,8 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
                     this._tableService.fechaLoad(this.newCod,this._currentUserUbigeo).then(res=> this._fecha = res);
                 }
             });
+
+            // this._tableService.getDataByWorkLoad(this._currentUserUbigeo,this.newCod).then(data => console.log(data, 'new data trasn'));
         }
 
 

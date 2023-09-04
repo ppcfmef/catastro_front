@@ -5,6 +5,10 @@ import moment from 'moment';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { WidgetService } from './widget.service';
 import { Params } from '@angular/router';
+import { OperatorService } from './operator.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment';
+import { IOperator } from '../interfaces/operator.interface';
 
 
 @Injectable({
@@ -30,6 +34,7 @@ export class TableService {
     _webmap = null;
     _portalUrl = 'https://js.arcgis.com/4.27/';
     _view = null;
+    operator;
 
     public _row = new Subject();
     public searchBy = new Subject();
@@ -39,6 +44,7 @@ export class TableService {
     constructor(
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _widgetService: WidgetService,
+
 
     ) { }
 
@@ -405,7 +411,6 @@ export class TableService {
                     if (response.features.length > 0) {
                         dateLimit = moment(response.features[0].attributes.FEC_ENTREGA).format('YYYY-MM-DD');
                     }
-                    console.log(dateLimit);
                     return resolve(dateLimit);
                 })
                 .catch((error) => {
@@ -434,7 +439,6 @@ export class TableService {
                 .then((response) => {
                     if (response.features.length > 0) {
                         const urbanUnitsList = response.features.map(row => ({ cod: row.attributes.COD_UU, name: row.attributes.NOM_UU }));
-                        console.log(urbanUnitsList);
                         return resolve(urbanUnitsList);
                     }
                     return resolve(`No se encontraron unidades urbanas para el distrito ${ubigeo} `);
@@ -447,6 +451,187 @@ export class TableService {
                 });
         });
 
+    }
+
+    // getDataByWorkLoad(ubigeo, codWorkload): Promise<any> {
+    //     return new Promise (async (resolve, reject) => {
+    //         try {
+    //             const [ newQuery,query,esriConfig] = await loadModules([ 'esri/rest/support/Query','esri/rest/query','esri/config',]);
+    //             esriConfig.portalUrl = this._portalUrl;
+    //             const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+    //             const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
+    //             const urlGetOperator = 'https://catastro-fiscal.codtree.com/api/v1/gap-analisys/user/';
+    //             const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6
+    //                 ImFkbWluIiwiZXhwIjoxNjkzNzc5NTI5LCJlbWFpbCI6ImpjcmFtaXJlenRlbGxvQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNjkzNTY5NDc3fQ.GvV76MMyuiYMXaDN6nxujR_y39QpnL-FJ3wEKHGZr_o`;
+
+    //                 // @process
+    //             const queryWorkLoad = new newQuery();
+    //             queryWorkLoad.where = `UBIGEO = '${ubigeo}' AND COD_CARGA = '${codWorkload}'`;
+    //             queryWorkLoad.outFields = ['*'];
+    //             queryWorkLoad.returnGeometry = false;
+
+    //             const result = {
+    //                 codCarga: codWorkload,
+    //                 user: {},
+    //                 dateLimit: null,
+    //             };
+    //             const dataWorkLoad = await query.executeQueryJSON(urlWorkLoad, queryWorkLoad);
+    //                 if (dataWorkLoad.features.length === 0) {
+    //                     return new Error(`No se encontró la carga ${codWorkload} para el distrito ${ubigeo} `);
+    //                 }
+
+    //                 const attributes = dataWorkLoad.features[0].attributes;
+    //                 result.dateLimit = moment(attributes.FEC_ENTREGA).format('YYYY-MM-DD');
+
+    //                 if (attributes.COD_USUARIO) {
+    //                     const urlGetOperatorSet = `${urlGetOperator}/${attributes.COD_USUARIO}`;
+    //                     const data = {
+    //                         method: 'GET',
+    //                         headers: {
+    //                             'Authorization': 'Bearer ' + token,
+    //                             'Content-Type': 'application/json',
+    //                         },
+    //                     };
+    //                     const response = await fetch(urlGetOperatorSet, data);
+    //                     if (response.status !== 200) {
+    //                         return new Error(`No se encontró el usuario para la carga ${codWorkload} para el distrito ${ubigeo} `);
+    //                     }
+    //                     const dataUser = await response.json();
+
+    //                     result.user = dataUser;
+    //                     console.log(result.user,'result.user');
+
+    //                     const queryStatsUser = new newQuery();
+    //                     queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = '${result.user}'`;
+    //                     queryStatsUser.outFields = ['*'];
+    //                     queryStatsUser.returnGeometry = false;
+    //                     const dataStatsUser = await query.executeQueryJSON(urlStatsUser, queryStatsUser);
+    //                     let statsUser = {
+    //                         pending: 0,
+    //                         attended: 0
+    //                     };
+    //                     if (dataStatsUser.features.length > 0) {
+    //                         statsUser = {
+    //                             pending: dataStatsUser.features[0].attributes.PENDIENTE,
+    //                             attended: dataStatsUser.features[0].attributes.ATENDIDO
+    //                         };
+    //                     }
+    //                     result.user['statsUser'] = statsUser;
+    //                 }
+
+    //                 return result;
+    //             } catch (error) {
+    //                 console.log(error);
+    //             }
+
+    //         });
+    // }
+
+    async assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo): Promise<void> {
+        this._fuseSplashScreenService.show(0);
+        try {
+            const workLoadStatus = operator ? '2' : '1';
+            const ticketStatus = operator ? '3' : '2';
+            const dateUpdate = new Date().valueOf();
+
+            const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query',]);
+            const idWorkLoadLayer = this.idWorkLoadLayer;
+            const idTicketLayer = this.idTicketLayer;
+            const idFieldPointLayer = this.idFieldPointLayer;
+            const idFieldBlockLayer = this.idFieldBlockLayer;
+
+            // Realizamos el filtro
+            const queryWorkLoad = new newQuery();
+            queryWorkLoad.where = `COD_CARGA = '${workload}' AND UBIGEO = '${ubigeo}'`;
+            queryWorkLoad.outFields = ['*'];
+            queryWorkLoad.returnGeometry = false;
+            this.getWebMap();
+
+            // query to feature layer
+            this._webmap.findLayerById(idWorkLoadLayer).queryFeatures(queryWorkLoad)
+                .then((response) => {
+                    const features = response.features;
+                    features.forEach((feature) => {
+                        feature.attributes.ESTADO = workLoadStatus;
+                        feature.attributes.COD_USUARIO = operator;
+                        feature.attributes.NOM_USUARIO = nameOperator;
+                        feature.attributes.FEC_ENTREGA = dateLimit;
+                    });
+
+                    return this._webmap.findLayerById(idWorkLoadLayer).applyEdits({ updateFeatures: features });
+                })
+                .then((response) => {
+                    const updateFeatureResult = response.updateFeatureResults[0];
+                    if (updateFeatureResult.error) {
+                        return Promise.reject(`Ocurrio un error al asignar el usuario ${nameOperator} a la carga de trabajo ${workload}\n${updateFeatureResult.error}`);
+                    }
+                    const queryTicket = new newQuery();
+                    queryTicket.where = `ID_CARGA = '${ubigeo}${workload}'`;
+                    queryTicket.outFields = ['*'];
+                    queryTicket.returnGeometry = false;
+                    return this._webmap.findTableById(idTicketLayer).queryFeatures(queryTicket);
+                })
+                .then((response) => {
+                    const features = response.features;
+                    features.forEach((feature) => {
+                        feature.attributes.ESTADO = ticketStatus;
+                        feature.attributes.COD_USUARIO = operator;
+                        feature.attributes.FEC_ASIGNACION = dateUpdate;
+                        feature.attributes.FEC_ULTIMA_ACTUALIZACION = dateUpdate;
+                    });
+
+                    return this._webmap.findTableById(idTicketLayer).applyEdits({ updateFeatures: features });
+                })
+                .then(() => {
+                    const queryObjectBlock = new newQuery();
+                    queryObjectBlock.where = `ID_CARGA = '${ubigeo}${workload}'`;
+                    queryObjectBlock.outFields = ['*'];
+                    queryObjectBlock.returnGeometry = false;
+                    return this._webmap.findLayerById(idFieldBlockLayer).queryFeatures(queryObjectBlock);
+                })
+                .then((response) => {
+                    if (response.features.length === 0) {
+                        return Promise.resolve();
+                    }
+                    const features = response.features;
+                    features.forEach((feature) => {
+                        feature.attributes.Estado_tra = ticketStatus;
+                    });
+
+                    return this._webmap.findLayerById(idFieldBlockLayer).applyEdits({ updateFeatures: features });
+                })
+                .then(() => {
+                    const queryObjectPred = new newQuery();
+                    queryObjectPred.where = `ID_CARGA = '${ubigeo}${workload}'`;
+                    queryObjectPred.outFields = ['*'];
+                    queryObjectPred.returnGeometry = false;
+                    return this._webmap.findLayerById(idFieldPointLayer).queryFeatures(queryObjectPred);
+                })
+                .then((response) => {
+                    if (response.features.length === 0) {
+                        return Promise.resolve();
+                    }
+                    const features = response.features;
+                    features.forEach((feature) => {
+                        feature.attributes.Estado_tra = ticketStatus;
+                    });
+
+                    return this._webmap.findLayerById(idFieldPointLayer).applyEdits({ updateFeatures: features });
+
+                })
+                .then(() => {
+                    console.log(`Se ${operator ? 'asigno' : 'desasigno'} el usuario ${nameOperator} a la carga de trabajo ${workload}`);
+                    this._fuseSplashScreenService.hide();
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this._fuseSplashScreenService.hide();
+                });
+        }
+        catch (error) {
+            console.log('EsriLoader: ', error);
+            this._fuseSplashScreenService.hide();
+        }
     }
 }
 

@@ -17,7 +17,7 @@
         >
         </app-table>
     </div>
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="mt-4">
         <div class="flex items-center justify-between">
             <span class="text-secundary font-bold"
                 >Fecha estimada de entrega:
@@ -40,22 +40,21 @@
             </mat-form-field>
         </div>
 
-        <ng-container *ngIf="!user">
             <div class="mt-2">
                 <span class="text-base">Seleccione operador</span>
 
-                <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 text-base">
-                    <input formControlName="codUser" class="w-full" placeholder="Operador" />
+                <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
+                    <input formControlName="codUser" class="w-full" placeholder="Operador" disabled/>
                     <span class="flex">
                         <mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>
                 </div>
             </div>
-        </ng-container>
+
     </form>
 
 
-    <ng-container *ngIf="user">
+    <ng-container *ngIf="operator">
         <app-detail-operador [data] = "operator"></app-detail-operador>
         <div class="flex w-full pt-3 gap-4 py-3 justify-between">
             <ng-container *ngFor="let card of cards">
@@ -72,4 +71,14 @@
             Desasignar operador
         </button>
     </ng-container>
+    <ng-container *ngIf="!user">
+        <button mat-button (click)="asignar()">
+            <mat-icon
+            svgIcon="mat_solid:check"
+            class="text-white mr-3"
+            ></mat-icon>
+            Asignar operador
+        </button>
+    </ng-container>
 </div>
+
