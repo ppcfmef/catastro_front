@@ -81,8 +81,11 @@ export class MapComponent implements OnInit, AfterViewInit {
             .subscribe((user: User) => {
                 this._currentUser = user;
                 // @SETUBIGEO
-                this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+                this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
+                if(this._currentUserUbigeo==='150101'){
+                    this.hideSelectUbigeo = false;
+                }
             });
         this._newLoadService.clearAllGraphics.subscribe(() =>this.clearSelection());
         this._newLoadService.oid.subscribe(oid => this.clearSelectionById(oid));
@@ -114,7 +117,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     onSelectUbigeo(ubigeo: string): void {
         this._currentUserUbigeo = ubigeo;
-        this.navigationAuthorizationService.ubigeoNavigation = this._currentUserUbigeo;
+        this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
+        this._fuseSplashScreenService.show(0);
+        console.log(this._currentUserUbigeo, 'this._currentUserUbigeo');
+        setTimeout(() => {
+            this.initializeMapAOL();
+        }, 1000);
     }
 
 

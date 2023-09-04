@@ -1,10 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { loadModules } from 'esri-loader';
-import { Observable, Subscription } from 'rxjs';
-import { TableService } from './table.service';
-import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { Observable } from 'rxjs';
 import { IOperator } from '../interfaces/operator.interface';
 
 @Injectable({

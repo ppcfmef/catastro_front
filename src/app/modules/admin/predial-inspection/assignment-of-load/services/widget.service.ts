@@ -93,7 +93,6 @@ export class WidgetService {
                         return resolve(statsUser);
                     })
                     .catch((error) => {
-                        document.getElementById('response').innerHTML = error;
                         console.log(error);
                         return reject(error);
                     });
