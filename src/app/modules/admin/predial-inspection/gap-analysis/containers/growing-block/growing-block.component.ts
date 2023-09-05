@@ -202,7 +202,7 @@ export class GrowingBlockComponent implements OnInit {
     queryParams = {};
     tableLength: number;
     pageIndex = 0;
-    pageSize = 15;
+    pageSize = 10;
     pageSizeOptions = [5, 10, 15];
     resetTable = false;
     private defaultTableLimit = this.pageSize;
