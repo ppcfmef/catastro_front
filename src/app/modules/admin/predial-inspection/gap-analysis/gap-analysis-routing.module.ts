@@ -16,7 +16,7 @@ const routes: Routes = [
         path: '',
         component: GapAnalysisPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'gescarmeta', permissionType: 'read' },
+        data: { id: 'gapana', permissionType: 'read' },
         children: [
             { path: '', component:GapListComponent},
             { path: 'gap-list', component:GapListComponent},
