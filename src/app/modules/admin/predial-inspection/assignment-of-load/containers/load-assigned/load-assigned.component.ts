@@ -238,6 +238,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._messageProviderService.showSnack('Asignado correctament');
                 //window.location.reload();
                 this._fuseSplashScreenService.hide();
+                this.user = true;
             })
             .catch((error) => {
                 console.log(error, 'errr');

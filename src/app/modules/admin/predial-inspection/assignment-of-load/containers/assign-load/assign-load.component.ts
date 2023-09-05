@@ -47,7 +47,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     cards = [
         {
             num: 0,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
+            text: 'TICKETS ASIGNADAS ACTUALMENTE'
         },
         {
             num: 0,

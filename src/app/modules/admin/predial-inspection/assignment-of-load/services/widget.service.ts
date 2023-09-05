@@ -50,7 +50,7 @@ export class WidgetService {
                                 };
 
                                 for (const [key, value] of Object.entries(dataTable)) {
-                                    if (key !== 'row_id' && key !== 'UBIGEO') {
+                                    if (key !== 'row_id' && key !== 'UBIGEO' && key !== 'OC') {
                                         transformedArray.push({ num: value ? value : 0, text: statsNames[key], });
                                     }
                                 }
