@@ -39,17 +39,19 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
-
+        <ng-container *ngIf="showsearch" >
             <div class="mt-2">
                 <span class="text-base">Seleccione operador</span>
 
                 <div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
-                    <input formControlName="codUser" class="w-full" placeholder="Operador" disabled appOnlyNumbers="true" maxDigitsLength="8"/>
+                    <input formControlName="codUser" class="w-full" placeholder="Operador" appOnlyNumbers="true" maxDigitsLength="8"/>
                     <span class="flex">
                         <mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>
                 </div>
             </div>
+        </ng-container>
+
 
     </form>
 

@@ -32,6 +32,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     codOperator;
     operator: IOperator;
     form: FormGroup;
+    showsearch: boolean = false;
 
     // Properties table
     tableColumns: TableColumn[] = [];
@@ -85,7 +86,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         this._operatorsService.getUbigeo().subscribe((ubigeo) => {
                 this._currentUserUbigeo = ubigeo;
                 console.log(this._currentUserUbigeo, 'assigned');
-                this.params['district']=this._currentUserUbigeo;
+                this.params['district']= this._currentUserUbigeo;
                 this._tableService.detailLoad( this.codLoad, this._currentUserUbigeo)
                 .then((data) => {
                     this.dataSource = data;
@@ -146,6 +147,8 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._fuseSplashScreenService.hide();
             }
             else {
+                this.cards[0].num = 0;
+                this.cards[1].num = 0;
                 this._messageProviderService.showSnackInfo('No existe Operador');
                 this._fuseSplashScreenService.hide();
             }
@@ -153,22 +156,22 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    getdataUser(): void {
-        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ cod }) => {
-            if (cod) {
-                this.newCod = cod;
-                this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
-                this._tableService.getDataByWorkLoad(this._currentUserUbigeo, cod).then((resp) => {
+    // getdataUser(): void {
+    //     this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ cod }) => {
+    //         if (cod) {
+    //             this.newCod = cod;
+    //             this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
+    //             this._tableService.getDataByWorkLoad(this._currentUserUbigeo, cod).then((resp) => {
 
-                    const formatDate = new Date(`${resp.dateLimit}T00:00:00`);
-                    this.form.controls.fEntrega.setValue(formatDate);
-                    this.operator = resp.user;
-                    this.cards[0].num = resp.user.statsUser.pending;
-                    this.cards[1].num = resp.user.statsUser.attended;
-                });
-            }
-        });
-    }
+    //                 const formatDate = new Date(`${resp.dateLimit}T00:00:00`);
+    //                 this.form.controls.fEntrega.setValue(formatDate);
+    //                 this.operator = resp.user;
+    //                 this.cards[0].num = resp.user.statsUser.pending;
+    //                 this.cards[1].num = resp.user.statsUser.attended;
+    //             });
+    //         }
+    //     });
+    // }
 
     getWidgetByUser(id): void {
         this._widgetService.widgetUser(this._currentUserUbigeo, id).then((resp) => {
@@ -190,9 +193,11 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         const operator = null;
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
             .then(() => {
+                this.showsearch = true;
                 this.user = false;
-                this.form.controls['codUser'].enable();
+                //this.form.controls['codUser'].enable();
                 this.operator = null;
+                this.form.reset();
             })
             .catch();
 
@@ -233,18 +238,25 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const ubigeo = this._currentUserUbigeo;
         await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
-            .then((result) => {
-                console.log(result, 'result');
-                this._messageProviderService.showSnack('Asignado correctament');
-                //window.location.reload();
+            .then(() => {
+                this.showsearch = false;
                 this._fuseSplashScreenService.hide();
                 this.user = true;
-            })
-            .catch((error) => {
-                console.log(error, 'errr');
-                this._messageProviderService.showSnackError('Error al asignar carga');
-                this._fuseSplashScreenService.hide();
             });
+
+            // .then((result) => {
+            //     console.log(result, 'result');
+            //     this.form.get('codUser').setValue('');
+            //     //this._messageProviderService.showSnack('Asignado correctament');
+            //     //window.location.reload();
+            //     this._fuseSplashScreenService.hide();
+            //     this.user = true;
+            // })
+            // .catch((error) => {
+            //     console.log(error, 'errr');
+            //     this._messageProviderService.showSnackError('Error al asignar carga');
+            //     this._fuseSplashScreenService.hide();
+            // });
 
     }
 
