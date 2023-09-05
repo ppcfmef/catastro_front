@@ -11,7 +11,7 @@ const routes: Routes = [
         path: '',
         component: ResultsManagementPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'gescarmeta', permissionType: 'read' },
+        data: { id: 'resmanagip', permissionType: 'read' },
         children:[
             {path: '',component: ResultsComponent},
             {path: 'ticket-pending',component: TicketPendingComponent},
