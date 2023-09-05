@@ -557,6 +557,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     this._newLoadService.triggerClearAllGraphics();
                     this.getWidget();
                     this.form.reset();
+                    this.cards[0].num = 0;
+                    this.cards[1].num = 0;
                     this._messageProviderService.showSnack('Cargado correctamente');
                     this._fuseSplashScreenService.hide();
                 })
