@@ -14,6 +14,7 @@ import { OperatorService } from '../../services/operator.service';
 import { WidgetService } from '../../services/widget.service';
 import { user } from '../../../../../../mock-api/common/user/data';
 import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 @Component({
     selector: 'app-load-attend',
     templateUrl: './load-attend.component.html',
@@ -56,29 +57,41 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _operatorsService: OperatorService,
         private _widgetService: WidgetService,
+        protected _messageProviderService: MessageProviderService,
         ) { }
 
         ngOnInit(): void {
             this.setTableColumn();
-            this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((us: User) => {
-                this._currentUserUbigeo = us.ubigeo ? us.ubigeo : '040703';
-            });
-
             this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
                 if (cod) {
                     this.newCod = cod;
-                    this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
-                    this._tableService.getDataByWorkLoad(this._currentUserUbigeo,cod).then((resp) => {
-                        this.result = resp;
-                        this.operator = resp.user;
-                        this._fecha = resp.dateLimit;
-                        this.cards[0].num =resp.user.statsUser.pending;
-                        this.cards[1].num = resp.user.statsUser.attended;
-                    });
                 }
             });
+
+            this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+                    this._currentUserUbigeo = ubigeo;
+                    this._fuseSplashScreenService.show();
+                    this._tableService.detailLoad( this.newCod, this._currentUserUbigeo)
+                    .then((data) => {
+                        this.dataSource = data;
+                        this._tableService.getDataByWorkLoad(this._currentUserUbigeo, this.newCod).then((resp) => {
+                            this._fecha = resp.dateLimit;
+                            this.operator = resp.user;
+                            this.cards[0].num = resp.user.statsUser.pending;
+                            this.cards[1].num = resp.user.statsUser.attended;
+                            this._fuseSplashScreenService.hide();
+                        });
+                    })
+                    .catch((err) => {
+                        this.dataSource = [];
+                        this.cards[0].num = 0;
+                        this.cards[1].num = 0;
+                        this.operator = null;
+                        this._fecha = null;
+                        this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+                        this._fuseSplashScreenService.hide();
+                    });
+                });
 
 
         }

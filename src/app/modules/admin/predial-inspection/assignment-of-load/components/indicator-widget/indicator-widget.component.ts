@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
 @Component({
     selector: 'app-indicator-widget',
     templateUrl: './indicator-widget.component.html',
@@ -23,17 +24,22 @@ export class IndicatorWidgetComponent implements OnInit, OnDestroy{
         private _userService: UserService,
         private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _operatorService: OperatorService,
     ) {}
 
     ngOnInit(): void {
-        this._userService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((user: User) => {
-            this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
+        this._operatorService.getUbigeo().subscribe((ubigeo) => {
+            this._currentUserUbigeo = ubigeo;
+            this._widgetService.listWidget(this._currentUserUbigeo);
+            this._widgetService.getDataWidget().subscribe(data =>  this.newCard = data);
         });
-        this._widgetService.listWidget(this._currentUserUbigeo);
-        this._tableService._newUbigeo.subscribe(resp =>this._widgetService.listWidget(resp) );
-        this._widgetService.getDataWidget().subscribe(data =>  this.newCard = data);
+
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        // });
+        //this._tableService._newUbigeo.subscribe(resp =>this._widgetService.listWidget(resp) );
 
     }
 

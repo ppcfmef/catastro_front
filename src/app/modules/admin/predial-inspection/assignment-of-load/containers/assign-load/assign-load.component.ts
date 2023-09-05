@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
 import { FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, Observable } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
@@ -46,11 +46,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     user: boolean = false;
     cards = [
         {
-            num: 21,
+            num: 0,
             text: 'UNIDADES ASIGNADAS ACTUALMENTE'
         },
         {
-            num: 25,
+            num: 0,
             text: 'TICKETS ATENDIDOS'
         }
     ];
@@ -80,13 +80,27 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                // @SETUBIGEO
-                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
-                this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-            });
+        this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+            console.log(ubigeo, 'ubideo  initi load');
+            this._currentUserUbigeo = ubigeo ? ubigeo : '150101';
+            this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+            this.params['district']=this._currentUserUbigeo;
+        });
+
+        // this._userService.user$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((user: User) => {
+        //         // @SETUBIGEO
+        //         this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        //         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+        //         this.params['district']=this._currentUserUbigeo;
+        //     });
+
+        // this._tableService._newUbigeo.subscribe((newUbigeo) => {
+        //     this._currentUserUbigeo = newUbigeo;
+        //     this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+        //     this.params['district']=this._currentUserUbigeo;
+        // });
 
         // Suscríbete al BehaviorSubject para datos de la tabla
         this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
@@ -131,12 +145,32 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         this._widgetService.listWidget(this._currentUserUbigeo);
     }
 
-    getOperator() {
-        this._fuseSplashScreenService.show();
-        this._operatorsService.getOperador(this.params).subscribe((data) => {
+    // getOperator() {
+    //     this._fuseSplashScreenService.show();
+    //     this._operatorsService.getOperador(this.params).subscribe((data) => {
+    //         console.log(this.params, 'here paarams');
+    //         this.operator = data.results[0];
+    //         this._fuseSplashScreenService.hide();
+    //     });
+    // }
+
+    async getOperator(): Promise<any> {
+        await this._operatorsService.getOperador(this.params).subscribe(async (data) => {
+            this._fuseSplashScreenService.show();
             this.operator = data.results[0];
-            this._fuseSplashScreenService.hide();
+            if (this.operator) {
+                await this._widgetService.widgetUser(this._currentUserUbigeo, this.operator.id).then(({ attended, pending }) => {
+                    this.cards[0].num = pending;
+                    this.cards[1].num = attended;
+                });
+                this._fuseSplashScreenService.hide();
+            }
+            else {
+                this._messageProviderService.showSnackInfo('No existe Operador');
+                this._fuseSplashScreenService.hide();
+            }
         });
+
     }
 
     emitFilter(): void {
@@ -181,6 +215,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const nameWorkLoad = this.form.value.loadName;
         const descWorlLoad = this.form.value.description;
         const ubigeo = this._currentUserUbigeo;
+        console.log(ubigeo, 'personal');
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
         const codUserWorkLoad = this.operator ? this.operator.id :'';

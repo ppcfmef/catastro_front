@@ -18,6 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { MatPaginator } from '@angular/material/paginator';
+import { OperatorService } from '../../services/operator.service';
 
 @Component({
   selector: 'app-table-pending',
@@ -49,33 +50,39 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _tableService: TableService,
         private _userService: UserService,
+        private _operatorService: OperatorService,
         ) { }
 
         ngOnInit(): void {
             this.setTableColumn();
-            this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
-            });
-            this.loadTable();
-            this._tableService._newUbigeo.subscribe((r) => {
-                this._currentUserUbigeo  = r;
-                console.log( this._currentUserUbigeo , r);
+            this._operatorService.getUbigeo().subscribe((data) => {
+                this._currentUserUbigeo = data;
                 this.loadTable();
             });
 
-            this._tableService._newUbigeo.subscribe((r) => {
-                this._currentUserUbigeo  = r;
-                console.log( this._currentUserUbigeo , 'r');
-                this.loadTable();
-            });
+            // this._userService.user$
+            // .pipe(takeUntil(this._unsubscribeAll))
+            // .subscribe((user: User) => {
+            //     console.log(user, 'user');
+            //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+            // });
+            // this._tableService._newUbigeo.subscribe((r) => {
+            //     this._currentUserUbigeo  = r;
+            //     console.log( this._currentUserUbigeo , r);
+            //     this.loadTable();
+            // });
+
+            // this._tableService._newUbigeo.subscribe((r) => {
+            //     this._currentUserUbigeo  = r;
+            //     console.log( this._currentUserUbigeo , 'r');
+            //     this.loadTable();
+            // });
         }
 
     ngAfterViewInit(): void {
-       this._tableService.searchBy.subscribe((res) => {
-        this.bySearch = res;
-        this.loadTable();
+        this._tableService.searchBy.subscribe((res) => {
+            this.bySearch = res;
+            this.loadTable();
         });
     }
 

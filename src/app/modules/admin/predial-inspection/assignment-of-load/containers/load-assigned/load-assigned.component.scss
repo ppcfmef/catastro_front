@@ -30,3 +30,14 @@ input{
     border-radius: 7px !important;
     width: 375px;
 }
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0090F8;
+    color: #FFFFFF;
+    border-radius: 7px;
+    width: 100%;
+    height: 40px;
+}

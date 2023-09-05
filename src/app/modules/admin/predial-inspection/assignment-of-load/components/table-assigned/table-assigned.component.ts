@@ -15,6 +15,7 @@ import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
 
 @Component({
     selector: 'app-table-assigned',
@@ -46,20 +47,25 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         private _fuseSplashScreenService: FuseSplashScreenService,
         protected _tableService: TableService,
         private _userService: UserService,
+        private _operatorService: OperatorService,
     ) {}
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._userService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((user: User) => {
-            this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
-        });
-        this._tableService._newUbigeo.subscribe((r) => {
-            this._currentUserUbigeo  = r;
-            console.log( this._currentUserUbigeo , 're');
+        this._operatorService.getUbigeo().subscribe((data) => {
+            this._currentUserUbigeo = data;
             this.loadTable();
         });
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        // });
+        // this._tableService._newUbigeo.subscribe((r) => {
+        //     this._currentUserUbigeo  = r;
+        //     console.log( this._currentUserUbigeo , 're');
+        //     this.loadTable();
+        // });
     }
 
     ngAfterViewInit(): void {

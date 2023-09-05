@@ -1,4 +1,3 @@
-
 import {
     Component,
     OnInit,
@@ -17,6 +16,7 @@ import { IdataLoad } from '../../../assignment-of-load/interfaces/dataload.inter
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { TableService } from '../../../assignment-of-load/services/table.service';
+import { OperatorService } from '../../../assignment-of-load/services/operator.service';
 
 @Component({
     selector: 'app-map',
@@ -44,6 +44,24 @@ export class MapComponent implements OnInit, AfterViewInit {
     idManzanaIneiLayer = 'CAPAS_INSPECCION_AC_3891';
     idPredioSinManzanaLayer = 'CARTO_PUNTO_CAMPO_7359';
     idManzanaPuntoImagenLayer = 'CAPAS_INSPECCION_AC_3115';
+
+    idPredSinCartoAsignadoLayer = 'CARTO_PUNTO_CAMPO_7359_2477';
+
+    idLimitesLayer = 'limites_nacional_6496';
+    idCfSectorLayer = 'CARTO_FISCAL_6033';
+    idCfManzanaUrbLayer = 'CARTO_FISCAL_3571';
+    idCfManzanaLayer = 'CARTO_FISCAL_8574';
+    idCfParquesLayer = 'CARTO_FISCAL_4241';
+    idCfUnidadesUrbanasLayer = 'CARTO_FISCAL_9795';
+    idCfLotesLayer = 'CARTO_FISCAL_8149';
+    idCfArancelLayer = 'CARTO_FISCAL_8360';
+    idCfNumeracionLayer = 'CARTO_FISCAL_9596';
+    idCfEjeVialLayer = 'CARTO_FISCAL_8524';
+    idCfLotesPunLayer = 'CARTO_FISCAL_2829';
+    idCfPredioLayer = 'CARTO_FISCAL_869';
+
+    defaultFilters = {};
+
     hideSelectUbigeo: boolean = true;
     _queryUbigeo: string;
     _fieldUbigeo = 'UBIGEO';
@@ -55,6 +73,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     _currentUser: User;
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    homeButton;
 
     idView = 'inspre';
     constructor(
@@ -62,9 +81,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         private _userService: UserService,
         private _newLoadService: NewLoadService,
         private _tableService: TableService,
+        private _operatorService: OperatorService,
         private navigationAuthorizationService: NavigationAuthorizationService,
         private _messageProvider: MessageProviderService,
-    ) {}
+    ) { }
 
     ngAfterViewInit(): void {
         this._fuseSplashScreenService.show(0);
@@ -83,13 +103,13 @@ export class MapComponent implements OnInit, AfterViewInit {
                 // @SETUBIGEO
                 this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
-                if(this._currentUserUbigeo==='150101'){
+                if (this._currentUserUbigeo === '150101') {
                     this.hideSelectUbigeo = false;
                 }
             });
-        this._newLoadService.clearAllGraphics.subscribe(() =>this.clearSelection());
+        this._newLoadService.clearAllGraphics.subscribe(() => this.clearSelection());
         this._newLoadService.oid.subscribe(oid => this.clearSelectionById(oid));
-        this._newLoadService.refreshLayer.subscribe(id =>this.refreshLayerById(id));
+        this._newLoadService.refreshLayer.subscribe(id => this.refreshLayerById(id));
 
     }
 
@@ -116,14 +136,77 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     onSelectUbigeo(ubigeo: string): void {
+        this._operatorService.updateUbigeo(ubigeo);
         this._currentUserUbigeo = ubigeo;
+        console.log(this._currentUserUbigeo,'this._currentUserUbigeo');
         this._tableService._newUbigeo.next(this._currentUserUbigeo);
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
         this._fuseSplashScreenService.show(0);
-        console.log(this._currentUserUbigeo, 'this._currentUserUbigeo');
-        setTimeout(() => {
-            this.initializeMapAOL();
-        }, 1000);
+        setTimeout(async () => {
+            try {
+                const [query] = await loadModules([
+                    'esri/rest/query',
+                ]);
+                this._view.when(() => {
+                    // Filter layers by ubigeo
+                    const _layersMap = this._webmap.allLayers;
+                    this._webmap.findLayerById(this.idCfSectorLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfManzanaUrbLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfManzanaLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfParquesLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfUnidadesUrbanasLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfLotesLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfArancelLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfNumeracionLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfEjeVialLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfLotesPunLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idCfPredioLayer).definitionExpression = this._queryUbigeo;
+
+                    // Para el caso de las manzanas de predios se debe mantener la expresion definida desde portal y agregar el ubigeo
+                    // this._webmap.findLayerById(this.idManzanaPrediosLayer).definitionExpression += ` AND (${this._queryUbigeo})`
+                    this._webmap.findLayerById(this.idManzanaPrediosLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idManzanaIneiLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idLotesSinPredioLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idPuntoImagenLayer).definitionExpression = this._queryUbigeo;
+                    this._webmap.findLayerById(this.idFieldBlockLayer).definitionExpression = this._queryUbigeo;
+
+                    // console.log(this._webmap.findLayerById(this.idManzanaPrediosLayer).definitionExpression)
+                    this._webmap.findLayerById(this.idManzanaPuntoImagenLayer).definitionExpression =
+                    `${this.defaultFilters[this.idManzanaPuntoImagenLayer]} AND (${this._queryUbigeo})`;
+                    this._webmap.findLayerById(this.idWorkLoadLayer).definitionExpression =
+                    `(${this.defaultFilters[this.idWorkLoadLayer]}) AND (${this._queryUbigeo})`;
+                    this._webmap.findLayerById(this.idPredioSinManzanaLayer).definitionExpression =
+                    `${this.defaultFilters[this.idPredioSinManzanaLayer]} AND (${this._queryUbigeo})`;
+                    this._webmap.findLayerById(this.idFieldPointLayer).definitionExpression =
+                    `${this.defaultFilters[this.idFieldPointLayer]} AND (${this._queryUbigeo})`;
+                    this._webmap.findLayerById(this.idPredSinCartoAsignadoLayer).definitionExpression =
+                    `${this.defaultFilters[this.idPredSinCartoAsignadoLayer]} AND (${this._queryUbigeo})`;
+
+                    // zoom extent by ubigeo
+                    const limitesNacionalesUrl = this._webmap.findLayerById(this.idLimitesLayer).url;
+
+                    query.executeForExtent(`${limitesNacionalesUrl}/2`, {
+                        where: this._queryUbigeo,
+                    })
+                        .then((response) => {
+                            this._view.goTo(response.extent);
+                            this.homeButton.viewpoint = {
+                                targetGeometry: response.extent,
+                            };
+                            this._fuseSplashScreenService.hide();
+
+                            this._tableService.setWebMap(this._webmap);
+                        })
+                        .catch((error) => {
+                            console.log('EsriLoader: ', error);
+                        });
+                });
+            }
+            catch (error) {
+                this._fuseSplashScreenService.hide();
+            }
+            // this.initializeMapAOL();
+        }, 0);
     }
 
 
@@ -173,37 +256,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             let _layersMap = [];
 
             this.newQuery = Query;
-
-            // Properties of the layers ids
-            const _id_limites = 'limites_nacional_6496';
-            const _id_departamento = 'limites_nacional_6496_0';
-            const _id_provincia = 'limites_nacional_6496_1';
-            const _id_distrito = 'limites_nacional_6496_2';
-            const _id_cf_sector = 'CARTO_FISCAL_6033';
-            const _id_cf_manzana_urb = 'CARTO_FISCAL_3571';
-            const _id_cf_manzana = 'CARTO_FISCAL_8574';
-            const _id_cf_parques = 'CARTO_FISCAL_4241';
-            const _id_cf_unidades_urbanas = 'CARTO_FISCAL_9795';
-            const _id_cf_lotes = 'CARTO_FISCAL_8149';
-            const _id_cf_arancel = 'CARTO_FISCAL_8360';
-            const _id_cf_numeracion = 'CARTO_FISCAL_9596';
-            const _id_cf_eje_vial = 'CARTO_FISCAL_8524';
-            const _id_cf_lotes_pun = 'CARTO_FISCAL_2829';
-            const _id_cf_predio = 'CARTO_FISCAL_869';
-
-            const _id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
-            const _id_mz_pimg = 'CAPAS_INSPECCION_AC_3115';
-            const _id_mz_inei = 'CAPAS_INSPECCION_AC_3891';
-
-            const _id_predio_sin_mz = 'CARTO_PUNTO_CAMPO_7359';
-            const _id_predios = 'CARTO_PUNTO_CAMPO_4985';
-            const _id_lotes_sin_predio = 'CAPAS_INSPECCION_AC_3266';
-            const _id_punto_imagen = 'CAPAS_INSPECCION_AC_3611';
-
-            const _id_carga = 'carto_asignacion_carga_8124';
-            const _mz_asignadas = 'CARTO_MANZANA_CAMPO_3194';
-
-            const _idPredSinCartoAsignadoLayer = 'CARTO_PUNTO_CAMPO_7359_2477';
             const self = this;
             // let graphicsIds = {};
 
@@ -243,11 +295,11 @@ export class MapComponent implements OnInit, AfterViewInit {
             this._tableService.setWiev(self._view);
 
 
-            const homeButton = new Home({
+            this.homeButton = new Home({
                 view: self._view,
             });
 
-            self._view.ui.add(homeButton, 'top-left');
+            self._view.ui.add(this.homeButton, 'top-left');
 
             const layerList = new LayerList({
                 view: self._view,
@@ -314,6 +366,8 @@ export class MapComponent implements OnInit, AfterViewInit {
                     } else {
                         this.pointButtonContainer.nativeElement.style =
                             'visibility: false;';
+                        this.pointButtonContainer.nativeElement.classList.remove('active');
+                        draw.reset();   //@daniel4
                         this.clearButtonContainer.nativeElement.style =
                             'visibility: false;';
                         // this.createCargaContainer.nativeElement.style = "visibility: false;"
@@ -324,7 +378,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 view: self._view,
             });
 
-        const createPointGraphics = (evt): Promise<IdataLoad[]> =>{
+            const createPointGraphics = (evt): Promise<IdataLoad[]> => {
                 self._fuseSplashScreenService.show(0);
                 // view.graphics.removeAll();
                 const coordinates = evt.vertices.slice(-1)[0];
@@ -335,11 +389,11 @@ export class MapComponent implements OnInit, AfterViewInit {
                 });
 
                 // query manzanas
-                // const urlManzanas = webmap.findLayerById(_id_mz_pred).url;
+                // const urlManzanas = webmap.findLayerById(self.idManzanaPrediosLayer).url;
                 const queryManzanas = new Query();
                 queryManzanas.where =
                     self._webmap.findLayerById(
-                        _id_mz_pred
+                        self.idManzanaPrediosLayer
                     ).definitionExpression;
                 queryManzanas.geometry = pointG;
                 queryManzanas.spatialRelationship = 'intersects';
@@ -352,12 +406,12 @@ export class MapComponent implements OnInit, AfterViewInit {
                 ];
 
                 // query manzanas punto imagen
-                // const urlManzanasPuntoImagen = webmap.findLayerById(_id_mz_pimg).url;
+                // const urlManzanasPuntoImagen = webmap.findLayerById(self.idManzanaPuntoImagenLayer).url;
                 // console.log(urlManzanasPuntoImagen)
                 const queryManzanasPuntoImagen = new Query();
                 queryManzanasPuntoImagen.where =
                     self._webmap.findLayerById(
-                        _id_mz_pimg
+                        self.idManzanaPuntoImagenLayer
                     ).definitionExpression;
                 queryManzanasPuntoImagen.geometry = pointG;
                 queryManzanasPuntoImagen.spatialRelationship = 'intersects';
@@ -365,11 +419,11 @@ export class MapComponent implements OnInit, AfterViewInit {
                 queryManzanasPuntoImagen.outFields = ['UBIGEO', 'ID_MZN_U'];
 
                 // query manzanas inei
-                // const urlManzanasInei = webmap.findLayerById(_id_mz_inei).url;
+                // const urlManzanasInei = webmap.findLayerById(self.idManzanaIneiLayer).url;
                 const queryManzanasInei = new Query();
                 queryManzanasInei.where =
                     self._webmap.findLayerById(
-                        _id_mz_inei
+                        self.idManzanaIneiLayer
                     ).definitionExpression;
                 queryManzanasInei.geometry = pointG;
                 queryManzanasInei.spatialRelationship = 'intersects';
@@ -380,7 +434,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 const queryPrediosSinManzana = new Query();
                 queryPrediosSinManzana.where =
                     self._webmap.findLayerById(
-                        _id_predio_sin_mz
+                        self.idPredioSinManzanaLayer
                     ).definitionExpression;
                 // generate buffer as point_g 10 meter
                 queryPrediosSinManzana.distance = 5;
@@ -392,16 +446,16 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                 // query promises
                 const promiseManzanas = self._webmap
-                    .findLayerById(_id_mz_pred)
+                    .findLayerById(self.idManzanaPrediosLayer)
                     .queryFeatures(queryManzanas);
                 const promiseManzanasPuntoImagen = self._webmap
-                    .findLayerById(_id_mz_pimg)
+                    .findLayerById(self.idManzanaPuntoImagenLayer)
                     .queryFeatures(queryManzanasPuntoImagen);
                 const promiseManzanasInei = self._webmap
-                    .findLayerById(_id_mz_inei)
+                    .findLayerById(self.idManzanaIneiLayer)
                     .queryFeatures(queryManzanasInei);
                 const promisePrediosSinManzana = self._webmap
-                    .findLayerById(_id_predio_sin_mz)
+                    .findLayerById(self.idPredioSinManzanaLayer)
                     .queryFeatures(queryPrediosSinManzana);
 
                 evt.preventDefault();
@@ -553,7 +607,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 }
 
                 const action = draw.create('point');
-                action.on('draw-complete',  ( ev => createPointGraphics(ev)));
+                action.on('draw-complete', (ev => createPointGraphics(ev)));
             };
 
             this.pointButtonContainer.nativeElement.addEventListener(
@@ -569,76 +623,52 @@ export class MapComponent implements OnInit, AfterViewInit {
             self._view.when(() => {
                 // Filter layers by ubigeo
                 _layersMap = self._webmap.allLayers;
-                self._webmap.findLayerById(_id_cf_sector).definitionExpression =
-                    this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_manzana_urb
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_manzana
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_parques
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_unidades_urbanas
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(_id_cf_lotes).definitionExpression =
-                    this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_arancel
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_numeracion
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_eje_vial
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_cf_lotes_pun
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(_id_cf_predio).definitionExpression =
-                    this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfSectorLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfManzanaUrbLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfManzanaLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfParquesLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfUnidadesUrbanasLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfLotesLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfArancelLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfNumeracionLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfEjeVialLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfLotesPunLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idCfPredioLayer).definitionExpression = this._queryUbigeo;
 
                 // Para el caso de las manzanas de predios se debe mantener la expresion definida desde portal y agregar el ubigeo
-                // self._webmap.findLayerById(_id_mz_pred).definitionExpression += ` AND (${this._queryUbigeo})`
-                self._webmap.findLayerById(_id_mz_pred).definitionExpression =
-                    this._queryUbigeo;
-                // console.log(self._webmap.findLayerById(_id_mz_pred).definitionExpression)
-                self._webmap.findLayerById(
-                    _id_mz_pimg
-                ).definitionExpression += ` AND (${this._queryUbigeo})`;
-                self._webmap.findLayerById(_id_mz_inei).definitionExpression =
-                    this._queryUbigeo;
-                self._webmap.findLayerById(_id_carga).definitionExpression = `(${self._webmap.findLayerById(_id_carga).definitionExpression}) AND (${this._queryUbigeo})`;
-                self._webmap.findLayerById(
-                    _id_predio_sin_mz
-                ).definitionExpression += ` AND (${this._queryUbigeo})`;
+                // self._webmap.findLayerById(self.idManzanaPrediosLayer).definitionExpression += ` AND (${this._queryUbigeo})`
+                self._webmap.findLayerById(self.idManzanaPrediosLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idManzanaIneiLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idLotesSinPredioLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idPuntoImagenLayer).definitionExpression = this._queryUbigeo;
+                self._webmap.findLayerById(self.idFieldBlockLayer).definitionExpression = this._queryUbigeo;
 
-                self._webmap.findLayerById(
-                    _id_lotes_sin_predio
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(
-                    _id_predios
-                ).definitionExpression += ` AND (${this._queryUbigeo})`;
-                self._webmap.findLayerById(
-                    _id_punto_imagen
-                ).definitionExpression = this._queryUbigeo;
-                self._webmap.findLayerById(_mz_asignadas).definitionExpression =
-                    this._queryUbigeo;
-                self._webmap.findLayerById(_idPredSinCartoAsignadoLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
+                // console.log(self._webmap.findLayerById(self.idManzanaPrediosLayer).definitionExpression)
+                self.defaultFilters[self.idManzanaPuntoImagenLayer] = self._webmap.findLayerById(self.idManzanaPuntoImagenLayer).definitionExpression;
+                self._webmap.findLayerById(self.idManzanaPuntoImagenLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
+
+                self.defaultFilters[self.idWorkLoadLayer] = self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression;
+                self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression =
+                `(${self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression}) AND (${this._queryUbigeo})`;
+
+                self.defaultFilters[self.idPredioSinManzanaLayer] = self._webmap.findLayerById(self.idPredioSinManzanaLayer).definitionExpression;
+                self._webmap.findLayerById(self.idPredioSinManzanaLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
+
+                self.defaultFilters[self.idFieldPointLayer] = self._webmap.findLayerById(self.idFieldPointLayer).definitionExpression;
+                self._webmap.findLayerById(self.idFieldPointLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
+
+                self.defaultFilters[self.idPredSinCartoAsignadoLayer] = self._webmap.findLayerById(self.idPredSinCartoAsignadoLayer).definitionExpression;
+                self._webmap.findLayerById(self.idPredSinCartoAsignadoLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
 
                 // zoom extent by ubigeo
-                const limitesNacionalesUrl =
-                    self._webmap.findLayerById(_id_limites).url;
+                const limitesNacionalesUrl = self._webmap.findLayerById(self.idLimitesLayer).url;
 
-                query
-                    .executeForExtent(`${limitesNacionalesUrl}/2`, {
-                        where: this._queryUbigeo,
-                    })
+                query.executeForExtent(`${limitesNacionalesUrl}/2`, {
+                    where: this._queryUbigeo,
+                })
                     .then((response) => {
                         self._view.goTo(response.extent);
-                        homeButton.viewpoint = {
+                        this.homeButton.viewpoint = {
                             targetGeometry: response.extent,
                         };
                         this._fuseSplashScreenService.hide();
@@ -651,10 +681,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
         } catch (error) {
             console.log('EsriLoader: ', error);
-            window.location.reload();
+            //window.location.reload();
         }
     }
-
-
 }
-

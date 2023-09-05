@@ -71,20 +71,33 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._userService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((user: User) => {
-            this._currentUser = user;
-            // @SETUBIGEO
-            this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
-        });
 
         this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
             if (cod) {
                 this.codLoad = cod;
-                this._tableService.detailLoad(cod, this._currentUserUbigeo).then(data => this.dataSource = data);
             }
         });
+
+        this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+                this._currentUserUbigeo = ubigeo;
+                this.params['district']=this._currentUserUbigeo;
+                this._tableService.detailLoad( this.codLoad, this._currentUserUbigeo)
+                .then(data => this.dataSource = data)
+                .catch((err) => {
+                    this.dataSource = [];
+                    this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+                });
+            });
+
+
+
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     this._currentUser = user;
+        //     // @SETUBIGEO
+        //     this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
+        // });
 
     }
 
@@ -111,9 +124,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         this._unsubscribeAll.complete();
     }
 
-    getWidget(): void {
-        this._widgetsService.listWidget(this._currentUserUbigeo);
-    }
+    // getWidget(): void {
+    //     this._widgetsService.listWidget(this._currentUserUbigeo);
+    // }
 
     setTableColumn(): void {
         this.tableColumns = [

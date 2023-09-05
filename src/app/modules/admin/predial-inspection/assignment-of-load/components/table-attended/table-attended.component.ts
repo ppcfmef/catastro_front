@@ -9,6 +9,7 @@ import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { TableService } from '../../services/table.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { OperatorService } from '../../services/operator.service';
 @Component({
   selector: 'app-table-attended',
   templateUrl: './table-attended.component.html',
@@ -36,25 +37,29 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
         private _tableService: TableService,
         private _userService: UserService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _operatorService: OperatorService,
         ) { }
 
     ngOnInit(): void {
-            this.setTableColumn();
-            this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
-            });
+        this.setTableColumn();
+        this._operatorService.getUbigeo().subscribe((data) => {
+            this._currentUserUbigeo = data;
             this.loadTable();
-            this._tableService._newUbigeo.subscribe((r) => {
-                this._currentUserUbigeo  = r;
-                console.log( this._currentUserUbigeo , 're');
-                this.loadTable();
-            });
+        });
+            // this._userService.user$
+            // .pipe(takeUntil(this._unsubscribeAll))
+            // .subscribe((user: User) => {
+            //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+            // });
+            // this.loadTable();
+            // this._tableService._newUbigeo.subscribe((r) => {
+            //     this._currentUserUbigeo  = r;
+            //     console.log( this._currentUserUbigeo , 're');
+            //     this.loadTable();
+            // });
         }
 
     ngAfterViewInit(): void {
-
         this._tableService.searchBy.subscribe((res) => {
             this.bySearch = res;
             this.loadTable();
@@ -98,7 +103,6 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
     }
 
     onEdit({row}): void {
-        this._tableService._row.next(row);
         this._router.navigate([`load-attend/${row.codCarga}`], {relativeTo: this._activatedRoute});
     }
     page(e): void {

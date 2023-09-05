@@ -6,7 +6,7 @@
         <span class="title-primary">Asignacion de carga</span>
     </div>
 
-    <span class="text-secundary mt-3">Manzanas asignadas:</span>
+    <span class="text-secundary mt-3">Manzanas asignadas - codigo: <strong> {{codLoad}}</strong> </span>
 
     <div class="w-full mt-4">
         <app-table
@@ -54,11 +54,14 @@
     </form>
 
         <app-detail-operador [data] = "operator"></app-detail-operador>
-        <div class="flex w-full pt-3 gap-4 py-3 justify-between">
-            <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
-        </div>
+        <ng-container *ngIf="cards.length>0">
+            <div class="flex w-full pt-3 gap-4 py-3 justify-between">
+                <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
+            </div>
+        </ng-container>
+
         <ng-container *ngIf="!user">
-            <button mat-button (click)="assigment()">
+            <button class="btn" (click)="assigment()">
                 <mat-icon
                     svgIcon="mat_solid:check"
                     class="text-white mr-3"

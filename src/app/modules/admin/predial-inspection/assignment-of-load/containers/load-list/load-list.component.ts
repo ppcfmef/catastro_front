@@ -1,12 +1,15 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
-import { Subject, merge } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TableService } from '../../services/table.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormUtils } from 'app/shared/utils/form.utils';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
+import { OperatorService } from '../../services/operator.service';
 
 
 
@@ -16,7 +19,7 @@ import { FormUtils } from 'app/shared/utils/form.utils';
   templateUrl:'./load-list.component.html',
   styleUrls: ['./load-list.component.scss']
 })
-export class LoadListComponent implements OnInit,AfterViewInit {
+export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
 
     formFilters: FormGroup;
     filters;
@@ -29,7 +32,8 @@ export class LoadListComponent implements OnInit,AfterViewInit {
         {id: 'urban', description: 'Unidad urbana'},
     ];
     listUnit = [];
-
+    _unsubscribeAll: Subject<any> = new Subject<any>();
+    _currentUserUbigeo: string;
     optionSelect: string;
     private _unsuscribe = new Subject();
     constructor(
@@ -38,17 +42,35 @@ export class LoadListComponent implements OnInit,AfterViewInit {
         private _newLoadService: NewLoadService,
         private _tableService: TableService,
         private _ngxSpinner: NgxSpinnerService,
+        private _userService: UserService,
+        private _operatorService: OperatorService,
         ) {
             this.createFormFilters();
-         }
+        }
 
     ngOnInit(): void {
-        this.getListUrbanUnit();
+        this._operatorService.getUbigeo().subscribe((data) => {
+            this._currentUserUbigeo = data;
+            this.getListUrbanUnit();
+        });
+
+
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        // });
     }
 
     ngAfterViewInit(): void {
         this.emitFilter();
-      }
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    }
+
 
     redirecto(): void {
         this._router.navigate(['assign-load'], { relativeTo: this._route });
@@ -64,7 +86,8 @@ export class LoadListComponent implements OnInit,AfterViewInit {
     }
 
     getListUrbanUnit(): void {
-        this._tableService.getListUrbantUnit().then((data) => {
+        console.log(this._currentUserUbigeo, 'load list');
+        this._tableService.getListUrbantUnit(this._currentUserUbigeo).then((data) => {
             this.listUnit = [...data];
         });
     }

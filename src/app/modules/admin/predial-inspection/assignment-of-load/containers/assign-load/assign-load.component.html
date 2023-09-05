@@ -47,15 +47,18 @@
             <div class="mb-4">
                 <app-detail-operador [data] ="operator"></app-detail-operador>
             </div>
+            <ng-container *ngIf="cards.length>0">
+                <div class="flex w-full pt-3 gap-4 py-3 justify-between">
+                    <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
+                </div>
+            </ng-container>
         </ng-container>
 
         <div class="mt-2">
-            <span class="text-base font-medium">Descripcion</span>
-
             <div
                 class="flex border p-2 rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700 text-base">
-                <textarea formControlName="description" name="" id="" cols="30" rows="4"
-                    placeholder="detalle"></textarea>
+                <textarea formControlName="description" name="" id="" cols="45" rows="2"
+                    placeholder="Ingrese descripcion opcional"></textarea>
             </div>
         </div>
 
