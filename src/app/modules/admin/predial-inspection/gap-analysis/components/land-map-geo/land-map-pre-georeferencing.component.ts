@@ -30,6 +30,8 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     @Input() land: LandAnalisysUI;
     @Input() ubigeo ='040703';
     @Input() event: any;
+    @Input() estado = ActionsGapAnalisys.ASIGNAR_PUNTO;
+
     @Input() x: number = -71.955921;
     @Input() y: number = -13.53063;
     //@Output() asigLandEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -40,8 +42,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     view: any = null;
     map: any;
     points: any[];
-    estado = ActionsGapAnalisys.ASIGNAR_PUNTO;
-
+    
     /*groupLayers = [
         {
             id: 0,
@@ -177,7 +178,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     renderer:null
 
 },
-
+/*
 {
     title: 'Via Zona',
     id: 2,
@@ -193,7 +194,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     visible: true,
     selected: false,
     renderer:null
-},
+},*/
 
 {
     title: 'Lotes Poligono Zona',
@@ -335,6 +336,8 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                 Expand,
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 Search,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                Legend,
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -346,6 +349,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                 'esri/layers/GroupLayer',
                 'esri/widgets/Expand',
                 'esri/widgets/Search',
+                'esri/widgets/Legend'
             ]);
 
             const mapProperties = {
@@ -478,6 +482,11 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                 popupEnabled: false,
             });
 
+            const legend = new Legend({
+                view: this.view
+              });
+
+
             searchWidget.on('select-result', (event) => {
                 this.view.zoom = 19;
                 console.log('event>>', event);
@@ -491,8 +500,11 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                 position: 'top-right',
             });
 
+            this.view.ui.add(legend, 'bottom-right');
+
             this.view.when(() => {
                 this._fuseSplashScreenService.hide();
+                console.log('this.land>>',this.land);
                 if (ubigeo && this.estado !== ActionsGapAnalisys.LEER) {
                     this.filterUbigeo(this.ubigeo);
                 }
@@ -501,6 +513,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                 }
 
                 else if(this.estado === ActionsGapAnalisys.LEER && this.land && this.land.statusGapAnalisys!==LandGeorreferencingStatusGapAnalisys.OBSERVADO ){
+
                     const pointGeometry = {
                         //Create a point
                         type: 'point',
@@ -655,9 +668,9 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                         pointData['ID_MZN_C'] =9999;
                                     }
 
-
+                                    console.log('pointData>>',pointData);
                                     this.setPoint(
-                                        data,
+                                        pointData,
                                         TypePoint.NUEVO_PUNTO_CAMPO
                                     );
                                 });

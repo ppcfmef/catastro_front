@@ -33,11 +33,15 @@ export class LandWithoutGeoTableComponent implements OnInit {
   }
 
   landSelection(land: LandAnalisysUI ): void {
-    this._router.navigate(['./land-inspection/gap-analysis/geo/land',land.id]);
+    localStorage.setItem('idLand',String(land.id));
+    //this._router.navigate(['./land-inspection/gap-analysis/geo/land',land.id]);
+    this._router.navigate(['./land-inspection/gap-analysis/geo/land']);
   }
 
   redirecto(land: LandAnalisysUI ): void {
-    this._router.navigate(['./land-inspection/gap-analysis/geo/land',land.id]);
+    localStorage.setItem('idLand',String(land.id));
+    //this._router.navigate(['./land-inspection/gap-analysis/geo/land',land.id]);
+    this._router.navigate(['./land-inspection/gap-analysis/geo/land']);
 }
 
 

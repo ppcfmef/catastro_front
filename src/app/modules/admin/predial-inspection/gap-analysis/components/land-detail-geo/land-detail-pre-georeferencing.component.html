@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="mt-14">
+    <div class="mt-4">
         <h2 class="text-base">INFORMACION COMPLEMENTARIA</h2>
         <div class="mt-2" [formGroup]="formEdit">
             <!--<div class="flex border border-gary-100 p-2 rounded-lg my-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-base">
@@ -63,7 +63,7 @@
                     class="button red"
                     (click)="guardarPuntoSinReferencia()"
 
-                    [disabled]="!disabled"
+                    [disabled]="disabled"
                 >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
@@ -71,14 +71,14 @@
                     ></mat-icon>
                     Predio no ubicable
                 </button>
-                <button class="button blue" (click)="nuevoPuntoCampo()" [disabled]="!disabled" >
+                <button class="button blue" (click)="nuevoPuntoCampo()" [disabled]="disabled" >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
                         class="text-white"
                     ></mat-icon>
                     Generar punto imagen
                 </button>
-                <button class="button green" (click)="asignarPredio()"  [disabled]="!disabled" >
+                <button class="button green" (click)="asignarPredio()"  [disabled]="disabled" >
                     <mat-icon
                         svgIcon="mat_outline:wrong_location"
                         class="text-white"

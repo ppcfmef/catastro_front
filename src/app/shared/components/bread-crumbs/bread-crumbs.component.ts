@@ -72,7 +72,97 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       'children': [],
       'hidden': (item): boolean => item?.id === 'gprpcondit'
     },
+
   ];
+  rutasAdicionales2=[
+    {
+      'id': 'gapgeo',
+      'title': 'Predios sin georreferenciacion',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/geo',
+      'order': 4151,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gapgeo'
+    },
+
+    {
+      'id': 'gapgrowingblock',
+      'title': 'Manzanas crecimiento',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/growing-block',
+      'order': 4152,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gapgrowingblock'
+    },
+
+    {
+      'id': 'gapimagen',
+      'title': 'Puntos en imagen',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/imagen',
+      'order': 4153,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gapimagen'
+    },
+
+    {
+      'id': 'gapwithoutbatch',
+      'title': 'Manzana sin lotes',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/without-batch',
+      'order': 4154,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gapwithoutbatch'
+    },
+
+    {
+      'id': 'gapsubland',
+      'title': 'Predios Subvaluados',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/sub-land',
+      'order': 4155,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gapsubland'
+    },
+
+    {
+      'id': 'gappointswithoutland',
+      'title': 'Puntos lotes sin predio',
+      'subtitle': null,
+      'type': 'basic',
+      'icon': '',
+      'link': '/land-inspection/gap-analysis/points-without-land',
+      'order': 4156,
+      'children': [],
+      'hidden': (item): boolean => item?.id === 'gappointswithoutland'
+    },
+
+ 
+
+  ];
+
+  rutasAdicionales3 =   [{
+    'id': 'gapgeoland',
+    'title': 'Detalle del predio',
+    'subtitle': null,
+    'type': 'basic',
+    'icon': '',
+    'link': '/land-inspection/gap-analysis/geo/land',
+    'order': 4157,
+    'children': [],
+    'hidden': (item): boolean => item?.id === 'gapgeoland'
+  },];
+
 
   constructor(
     private _navigationService: NavigationService,
@@ -89,6 +179,13 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
         this.menuNavegacion[5].children.push(navigation);
      });
 
+     this.rutasAdicionales2.map((navigation) => {
+      this.menuNavegacion[6].children[0].children.push(navigation);
+   });
+
+   this.rutasAdicionales3.map((navigation) => {
+    this.menuNavegacion[6].children[0].children[0].children.push(navigation);
+ });
       this.isHome = this.router.url.includes('home');
       this.limpiarUrl(this.router.url);
     });
@@ -145,8 +242,8 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
   }
 
   obtenerHijosDeRutasRecursivo(itemMenu, urlString, pathParent = null): void{
-
     if(itemMenu.link === urlString){
+      console.log('itemMenu>>>',itemMenu);
       let pathSend = [];
       if(pathParent !== null){
         pathSend = [pathParent];
@@ -168,15 +265,20 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
 
   limpiarBreadCrumbs(breadCrumbs): void{
     this.breadCrumbTemplate = [];
-    for (const item of breadCrumbs) {
+    this.isArrayReturnValue(breadCrumbs);
+    /*for (const item of breadCrumbs) {
       this.isArrayReturnValue(item);
-    }
+    }*/
   }
 
   isArrayReturnValue(item): void{
 
     if(Array.isArray(item)){
-      this.isArrayReturnValue(item[0]);
+      console.log('itemArray>>',item);
+      for (const el of item) {
+        this.isArrayReturnValue(el);
+      }
+      //this.isArrayReturnValue(item[0]);
     }else{
       this.breadCrumbTemplate.push(item);
     }
