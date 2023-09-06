@@ -5,23 +5,16 @@ import { IdataLoad } from '../interfaces/dataload.interface';
 @Injectable({
     providedIn: 'root',
 })
-export class StateService {
-    @Output() state: EventEmitter<boolean> = new EventEmitter();
+export class NewLoadService {
 
-    @Output() row: EventEmitter<any> = new EventEmitter();
-
-    @Output() deleteAll: EventEmitter<boolean> = new EventEmitter();
-    @Output() stateRowdeleted: EventEmitter<boolean> = new EventEmitter();
-    @Output() updatewidget: EventEmitter<boolean> = new EventEmitter();
-    public functiondelete = new EventEmitter<any>();
+    public showIcon: Subject<boolean> = new Subject();
+    public deleteAllGraphicsMap: Subject<boolean> = new Subject();
+    public dataMap: Subject<any> = new Subject();
+    public oid: Subject<string> = new Subject();
     public clearAllGraphics: EventEmitter<void> = new EventEmitter();
     public refreshLayer: EventEmitter<void> = new EventEmitter();
     private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
-    private webMapSubject = new BehaviorSubject<any>(null);
     private graphicsIdSubject = new BehaviorSubject<any>(null);
-
-
-    private rowDeleted = new Subject<any>();
     constructor() {}
 
     // update state
@@ -32,14 +25,6 @@ export class StateService {
     // Get data of table
     getTableData(): Observable<IdataLoad[]> {
         return this.tableDataSubject.asObservable();
-    }
-
-    setWebMap(webMap: any): void {
-        this.webMapSubject.next(webMap);
-    }
-
-    getWebMap(): Observable<any> {
-        return this.webMapSubject.asObservable();
     }
 
     setGraphicsId(graphicsId: any): void {
@@ -58,13 +43,6 @@ export class StateService {
         this.refreshLayer.emit(id);
     }
 
-    emitRowDelete(row): void {
-        this.rowDeleted.next(row);
-    }
-
-    getRowtDelete(): Observable<any> {
-        return this.rowDeleted.asObservable();
-    }
 }
 
 

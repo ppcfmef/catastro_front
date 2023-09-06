@@ -7,20 +7,50 @@
             Nueva carga
         </button>
     </div>
-
-    <span class="text-black mt-3 text-base">Buscar por:</span>
-    <div class="flex items-center pr-2 border rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700">
-        <mat-form-field class="">
-            <mat-select placeholder="Buscar por:">
-            <mat-option [value]="">-----</mat-option>
-                <mat-option [value]="state" *ngFor="let state of states">{{state}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <input class="w-full pl-2" placeholder="Ingresar codigo" />
-        <span class="flex">
-            <mat-icon svgIcon="mat_outline:search"></mat-icon>
-        </span>
+    <div [formGroup]="formFilters">
+        <span class="text-black mt-3 text-base">Buscar por:</span>
+        <div class="flex items-center pr-2 border rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700">
+            <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-4/12">
+                <mat-select placeholder="Buscar por"
+                    (selectionChange)="optionSelected($event)"
+                    formControlName="option">
+                    <mat-option [value]="">-----</mat-option>
+                    <mat-option [value]="option.id"
+                        *ngFor="let option of options"
+                        >{{ option.description }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="optionSelect">
+                <div [ngSwitch]="optionSelect">
+                    <ng-container *ngSwitchCase ="'code'">
+                        <div class="flex w-full pl-2  gap-4">
+                            <input class="pl-2"
+                                type="text"
+                                matInput
+                                [appOnlyNumbers]="true"
+                                placeholder="codigo"
+                                formControlName="search"
+                                autocomplete="off"
+                            />
+                            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase ="'urban'">
+                        <div class="w-full">
+                            <mat-select class="pl-2 w-full"
+                                placeholder="Seleccionar unidad urbana"
+                                formControlName="cod">
+                                <mat-option [value]="">-----</mat-option>
+                                <mat-option [value]="unit.cod" *ngFor="let unit of listUnit">
+                                {{unit.name}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
     </div>
 
     <div class="w-full">

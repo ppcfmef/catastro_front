@@ -1,15 +1,22 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 
 import { loadModules } from 'esri-loader';
 import { UserService } from 'app/core/user/user.service';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
-import { DetailTableService } from '../../services/detail-table.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IOperator, IResult } from '../../interfaces/operator.interface';
+import { WidgetService } from '../../services/widget.service';
+import moment from 'moment';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 @Component({
     selector: 'app-load-pending-assignment',
@@ -32,48 +39,84 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         isZoom: true,
     };
 
-    user: boolean = true;
-
+    user: boolean = false;
+    params = {is_active: true, isMobileStaff:true };
+    operator: IOperator;
+    form: FormGroup;
+    oparator= null;
     cards = [
         {
             num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE',
+            text: 'TICKETS ASIGNADAS ACTUALMENTE',
         },
         {
             num: 25,
             text: 'TICKETS ATENDIDOS',
         },
     ];
+    codLoad: string;
 
     constructor(
         private _router: Router,
         private _userService: UserService,
-        private _detailService: DetailTableService,
         private _activatedRoute: ActivatedRoute,
+        private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
-        ) {}
+        protected _messageProviderService: MessageProviderService,
+        private _operatorsService: OperatorService,
+        private _widgetsService: WidgetService,
+        ) {
+            this.createFormActions();
+        }
 
     ngOnInit(): void {
         this.setTableColumn();
-        this._userService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((user: User) => {
-            this._currentUser = user;
-            // @SETUBIGEO
-            this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '040703';
+
+        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
+            if (cod) {
+                this.codLoad = cod;
+            }
         });
 
-        // this._detailService.getRow()
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe(data =>this.detailLoad(data,this._currentUserUbigeo));
+        this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+                this._currentUserUbigeo = ubigeo;
+                this.params['district']=this._currentUserUbigeo;
+                this._tableService.detailLoad( this.codLoad, this._currentUserUbigeo)
+                .then(data => this.dataSource = data)
+                .catch((err) => {
+                    this.dataSource = [];
+                    this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+                });
+            });
+
+
+
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     this._currentUser = user;
+        //     // @SETUBIGEO
+        //     this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
+        // });
+
     }
 
     ngAfterViewInit(): void {
-        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
-            if (cod) {
-                this.detailLoad(cod,this._currentUserUbigeo);
-            }
-        });
+        this.form.controls['operador'].valueChanges
+            .pipe(  debounceTime(600),
+                takeUntil(this._unsubscribeAll))
+            .subscribe((dateOperator) => {
+                if (!dateOperator) {
+                    this.operator = null;
+                    console.log(dateOperator, 'dateOperator');
+                }else {
+                    this.params['search'] = dateOperator;
+                    console.log(this.params, '');
+                    this.user = true;
+                    this.getOperator();
+                }
+        }
+        );
     }
 
     ngOnDestroy(): void {
@@ -81,6 +124,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         this._unsubscribeAll.complete();
     }
 
+    // getWidget(): void {
+    //     this._widgetsService.listWidget(this._currentUserUbigeo);
+    // }
 
     setTableColumn(): void {
         this.tableColumns = [
@@ -91,46 +137,76 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         ];
     }
 
-    //   Implementar logica
     onZoom(row: any): void {
-        console.log('zoom');
+        this.zoom(row);
     }
 
     redirecto(): void {
         this._router.navigate(['../../'], {relativeTo: this._activatedRoute});
     }
 
-    async detailLoad(workLoadData, ubigeouser): Promise<void> {
-        try {
-            const [ newQuery,query] = await loadModules([ 'esri/rest/support/Query','esri/rest/query']);
-
-            const idDetailWorkLoadLayer = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/5';
-            const ubigeo = ubigeouser;
-            //const workLoadData = { oid: 3238, nro: 1, cod_carga: '00093', fecha: '17-08-2023' };
-
-            const queryDetailWorkLoad = new newQuery();
-            queryDetailWorkLoad.where = `ID_CARGA = '${ubigeo}${workLoadData}'`;
-            queryDetailWorkLoad.outFields = ['*'];
-            queryDetailWorkLoad.returnGeometry = false;
-
-            query.executeQueryJSON(idDetailWorkLoadLayer, queryDetailWorkLoad)
-                .then((response) => {
-                    if (response.features.length > 0) {
-                        // aqui esta el detalle de la carga para agregar a la tabla
-                        const dataTable = response.features.map(row => row.attributes);
-                        dataTable.map((item, index) => Object.assign(item, {nro: `${index+1}`}));
-                        this.dataSource = dataTable;
-                        return;
-                    }
-                    return Promise.reject(`No se encontró la carga ${workLoadData} `);
-                })
-                .catch((error) => {
-                    // Aqui se muestran los posibles errores
-                    console.log(error);
-                });
-        }
-        catch (error) {
-            console.log('EsriLoader: ', error);
-        }
+    async zoom(row): Promise<any> {
+        await this._tableService.zoomRow(row);
     }
+
+    createFormActions(): void {
+        this.form = new FormGroup({
+            fEntrega: new FormControl('', [Validators.required]),
+            operador: new FormControl('', [Validators.required]),
+        });
+    };
+
+    async getOperator(): Promise<any> {
+        await this._operatorsService.getOperador(this.params).subscribe(async (data: IResult) => {
+            this._fuseSplashScreenService.show();
+            this.operator = data.results[0];
+            if(this.operator){
+                await this._widgetsService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
+                    this.cards[0].num = pending;
+                    this.cards[1].num = attended;
+                });
+                this._fuseSplashScreenService.hide();
+            }
+            else {
+                this._messageProviderService.showSnackInfo('No existe Operador');
+                this._fuseSplashScreenService.hide();
+            }
+        });
+
+    }
+
+    async assigment(): Promise<void> {
+        this._fuseSplashScreenService.show(0);
+        const rawValue = this.form.getRawValue();
+        if (!rawValue.fEntrega) {
+            this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');
+            this._fuseSplashScreenService.hide();
+            return;
+        }
+        const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        console.log(date, 'fecha');
+        const operator = this.operator.id;
+        const nameOperator = `${this.operator.firstName} ${this.operator.lastName}`;
+        const workload = this.codLoad;
+        const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
+        const ubigeo = this._currentUserUbigeo;
+        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+            .then(async (result) => {
+                console.log(result, 'result');
+                //this._tableService._updateTable.next(true);
+                await this._messageProviderService.showSnack('Asignado correctament');
+                this.form.reset();
+                this.redirecto();
+                //window.location.reload();
+                this._fuseSplashScreenService.hide();
+            })
+            .catch((error)=> {
+                console.log(error, 'errr');
+                this._messageProviderService.showSnackError('Error al asignar carga');
+                window.location.reload();
+            });
+
+    }
+
+
 }
