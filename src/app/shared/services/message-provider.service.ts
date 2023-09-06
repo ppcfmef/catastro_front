@@ -63,7 +63,7 @@ export class MessageProviderService {
 
     showSnackError(textmessage): any {
         this.snackBar.openFromComponent(AlertSnackErrorComponent, {
-            duration: 30000,
+            duration: 3000,
             verticalPosition: 'top',
             data: {
                 message: textmessage

@@ -8,8 +8,13 @@ import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
-import { DetailTableService } from '../../services/detail-table.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { TableService } from '../../services/table.service';
+import { OperatorService } from '../../services/operator.service';
+import { WidgetService } from '../../services/widget.service';
+import { user } from '../../../../../../mock-api/common/user/data';
+import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 @Component({
     selector: 'app-load-attend',
     templateUrl: './load-attend.component.html',
@@ -19,8 +24,8 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     _portalUrl =  'https://ws.mineco.gob.pe/portaldf';
     idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    _currentUser: User;
     _currentUserUbigeo: string;
+    _fecha;
 
     tableColumns: TableColumn[] =[];
     tableConfig: TableConifg = {
@@ -28,14 +33,18 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         isZoom:true,
     };
     dataSource = [];
-
+    newCod: string;
+    codOperator;
+    operator;
+    dateOperator;
+    result;
     cards =[
         {
-            num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
+            num: 0,
+            text: 'TICKETS ASIGNADAS ACTUALMENTE'
         },
         {
-            num: 25,
+            num: 0,
             text: 'TICKETS ATENDIDOS'
         }
     ];
@@ -43,22 +52,55 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     constructor(
         private _router: Router,
         private _userService: UserService,
-        private _detailService: DetailTableService,
+        private _tableService: TableService,
         private _activatedRoute: ActivatedRoute,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _operatorsService: OperatorService,
+        private _widgetService: WidgetService,
+        protected _messageProviderService: MessageProviderService,
         ) { }
 
-    ngOnInit( ): void {
-        this.setTableColumn();
-    }
+        ngOnInit(): void {
+            this.setTableColumn();
+            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
+                if (cod) {
+                    this.newCod = cod;
+                }
+            });
 
-    ngAfterViewInit(): void {
-        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
-            if (cod) {
-                this.detailLoad(cod,this._currentUserUbigeo);
-            }
-        });
-    }
+            this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+                    this._currentUserUbigeo = ubigeo;
+                    this._fuseSplashScreenService.show();
+                    this._tableService.detailLoad( this.newCod, this._currentUserUbigeo)
+                    .then((data) => {
+                        this.dataSource = data;
+                        this._tableService.getDataByWorkLoad(this._currentUserUbigeo, this.newCod).then((resp) => {
+                            this._fecha = resp.dateLimit;
+                            this.operator = resp.user;
+                            this.cards[0].num = resp.user.statsUser.pending;
+                            this.cards[1].num = resp.user.statsUser.attended;
+                            this._fuseSplashScreenService.hide();
+                        });
+                    })
+                    .catch((err) => {
+                        this.dataSource = [];
+                        this.cards[0].num = 0;
+                        this.cards[1].num = 0;
+                        this.operator = null;
+                        this._fecha = null;
+                        this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+                        this._fuseSplashScreenService.hide();
+                    });
+                });
+
+
+        }
+
+        ngAfterViewInit(): void {
+            console.log(this.result, 'resptafff');
+
+        }
+
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next();
@@ -75,41 +117,15 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     }
 
         onZoom(row: any): void {
-            //
+            this.zoom(row);
         }
 
         redirecto(): void {
             this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
         }
 
-        async detailLoad(workLoadData, ubigeouser): Promise<void> {
-            try {
-                const [ newQuery,query] = await loadModules([ 'esri/rest/support/Query','esri/rest/query']);
-                const idDetailWorkLoadLayer = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/5';
-                const ubigeo = ubigeouser;
-                //const workLoadData = { oid: 3238, nro: 1, cod_carga: '00093', fecha: '17-08-2023' };
-                const queryDetailWorkLoad = new newQuery();
-                queryDetailWorkLoad.where = `ID_CARGA = '${ubigeo}${workLoadData}'`;
-                queryDetailWorkLoad.outFields = ['*'];
-                queryDetailWorkLoad.returnGeometry = false;
-                query.executeQueryJSON(idDetailWorkLoadLayer, queryDetailWorkLoad)
-                    .then((response) => {
-                        if (response.features.length > 0) {
-                            // aqui esta el detalle de la carga para agregar a la tabla
-                            const dataTable = response.features.map(row => row.attributes);
-                            dataTable.map((item, index) => Object.assign(item, {nro: `${index+1}`}));
-                            this.dataSource = dataTable;
-                            return;
-                        }
-                        return Promise.reject(`No se encontró la carga ${workLoadData} `);
-                    })
-                    .catch((error) => {
-                        // Aqui se muestran los posibles errores
-                        console.log(error);
-                    });
-            }
-            catch (error) {
-                console.log('EsriLoader: ', error);
-            }
+        async zoom(row): Promise<any> {
+            await this._tableService.zoomRow(row).then(data =>  console.log(data));
         }
+
 }

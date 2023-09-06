@@ -2,17 +2,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StateService } from '../../services/state.service';
+import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs';
+import { FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
+import { Subscription, Subject, Observable } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
-import { PassThrough } from 'stream';
-import { tick } from '@angular/core/testing';
 import { IdataLoad } from '../../interfaces/dataload.interface';
+import { WidgetService } from '../../services/widget.service';
+import { TableService } from '../../services/table.service';
+import moment from 'moment';
+import { OperatorService } from '../../services/operator.service';
+import { IOperator } from '../../interfaces/operator.interface';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { FormUtils } from 'app/shared/utils/form.utils';
+import { kMaxLength } from 'buffer';
+import { labels } from '../../../../../../mock-api/apps/mailbox/data';
 
 
 
@@ -35,53 +43,75 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     tableDataSubscription: Subscription;
     webMapSubscription: Subscription;
     graphicsIdSubscription: Subscription;
-    user: boolean = true;
+    user: boolean = false;
     cards = [
         {
-            num: 21,
-            text: 'UNIDADES ASIGNADAS ACTUALMENTE'
+            num: 0,
+            text: 'TICKETS ASIGNADOS ACTUALMENTE'
         },
         {
-            num: 25,
+            num: 0,
             text: 'TICKETS ATENDIDOS'
         }
     ];
     form: FormGroup;
-
+    params = {is_active: true, isMobileStaff:true };
+    operator: IOperator;
 
     constructor(
         private _router: Router,
         private route: ActivatedRoute,
-        private _stateService: StateService,
+        private _newLoadService: NewLoadService,
         private _userService: UserService,
+        private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _widgetService: WidgetService,
+        private _operatorsService: OperatorService,
+        private _messageProviderService: MessageProviderService,
+        private _ngxSpinner: NgxSpinnerService,
     ) {
         this.form = new FormGroup({
             loadName: new FormControl(''),
-            description: new FormControl('')
+            description: new FormControl(''),
+            dni: new FormControl(''),
+            fEntrega: new FormControl(''),
         });
 
     }
 
     ngOnInit(): void {
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                // @SETUBIGEO
-                this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '040703';
-                this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-            });
+        this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+            console.log(ubigeo, 'ubideo  initi load');
+            this._currentUserUbigeo = ubigeo ? ubigeo : '150101';
+            this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+            this.params['district']=this._currentUserUbigeo;
+        });
+
+        // this._userService.user$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((user: User) => {
+        //         // @SETUBIGEO
+        //         this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        //         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+        //         this.params['district']=this._currentUserUbigeo;
+        //     });
+
+        // this._tableService._newUbigeo.subscribe((newUbigeo) => {
+        //     this._currentUserUbigeo = newUbigeo;
+        //     this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
+        //     this.params['district']=this._currentUserUbigeo;
+        // });
 
         // Suscríbete al BehaviorSubject para datos de la tabla
-        this.tableDataSubscription = this._stateService.getTableData().subscribe((data: IdataLoad[]) => {
+        this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
             this.tableData = data;
         });
 
-        this.webMapSubscription = this._stateService.getWebMap().subscribe((webMap) => {
+        this.webMapSubscription = this._tableService.getWebMap().subscribe((webMap) => {
             this.webMapData = webMap;
         });
 
-        this.graphicsIdSubscription = this._stateService.getGraphicsId().subscribe((graphicsId) => {
+        this.graphicsIdSubscription = this._newLoadService.getGraphicsId().subscribe((graphicsId) => {
             this.graphicsIdsData = graphicsId;
         });
 
@@ -89,26 +119,108 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+
+        // this.form.get('codUser').valueChanges.subscribe((val) => {
+        //     if (val === '') {
+        //         this.user = false;
+        //         return;
+        //     }
+        //     this.params['search'] = val;
+        //     this.user = true;
+        //     this.getOperator();
+        // }
+        // );
+
+        this.emitFilter();
     }
 
     redirecto(): void {
-        console.log('redirect');
         this._router.navigate(['../'],{ relativeTo: this.route });
-        this._stateService.state.emit(false);
+        this._newLoadService.showIcon.next(false);
+        this._newLoadService.triggerClearAllGraphics();
 
     }
 
+    getWidget(): void {
+        this._widgetService.listWidget(this._currentUserUbigeo);
+    }
+
+    // getOperator() {
+    //     this._fuseSplashScreenService.show();
+    //     this._operatorsService.getOperador(this.params).subscribe((data) => {
+    //         console.log(this.params, 'here paarams');
+    //         this.operator = data.results[0];
+    //         this._fuseSplashScreenService.hide();
+    //     });
+    // }
+
+    async getOperator(): Promise<any> {
+        await this._operatorsService.getOperador(this.params).subscribe(async (data) => {
+            this._fuseSplashScreenService.show();
+            this.operator = data.results[0];
+            if (this.operator) {
+                await this._widgetService.widgetUser(this._currentUserUbigeo, this.operator.id).then(({ attended, pending }) => {
+                    this.cards[0].num = pending;
+                    this.cards[1].num = attended;
+                });
+                this._fuseSplashScreenService.hide();
+            }
+            else {
+                this._messageProviderService.showSnackInfo('No existe Operador');
+                this._fuseSplashScreenService.hide();
+            }
+        });
+
+    }
+
+    emitFilter(): void {
+        this.form.controls['dni'].valueChanges
+        .pipe(
+            debounceTime(600),
+        ).subscribe((dni) => {
+            console.log(dni, 'dni');
+            if(!dni){
+                this.operator = null;
+                this.form.controls['fEntrega'].disable();
+                return;
+            }
+            this.params['search'] = dni;
+            this.form.controls['fEntrega'].enable();
+            this.user = true;
+            this.getOperator();
+        });
+    }
+
+
     async createWorkLoad() {
+        if(this.tableData.length === 0) {
+            this._messageProviderService.showSnackError('Debe seleccionar al menos una manzana');
+        }
+        if(!this.form.value.loadName){
+            this._messageProviderService.showSnackError('Debe ingresar el nombre de la carga');
+            return;
+        }
+
+        if(this.operator){
+            if(!this.form.value.fEntrega){
+                this._messageProviderService.showSnackError('Debe seleccionar fecha de entrega');
+                return;
+            }
+        }
+
+
+
         // params
         const dataWorkLoad = this.tableData;
         const nameWorkLoad = this.form.value.loadName;
         const descWorlLoad = this.form.value.description;
         const ubigeo = this._currentUserUbigeo;
+        console.log(ubigeo, 'personal');
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
-        const dateWorkLoad = new Date(2023, 7, 17).valueOf(); // Reemplazar cuando se tenga el servicio de operador de campo
-        const codUserWorkLoad = '57';  // Reemplazar cuando se tenga el servicio de operador de campo
-        const nomUserWorkLoad = 'defaultUser';  // Reemplazar cuando se tenga el servicio de operador de campo
+        const codUserWorkLoad = this.operator ? this.operator.id :'';
+        const nomUserWorkLoad =this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
+        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD'): null;
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';
@@ -253,6 +365,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFPSG.outFields = ['*'];
                                     queryCFPSG.returnGeometry = true;
                                     queryCFPSG.geometry = graphicsId[key.oid].geometry;
+                                    queryCFPSG.distance = 1;
+                                    queryCFPSG.units = 'meters';
                                     queryCFPSG.spatialRelationship = 'intersects';
                                     const promiseCF = webMap.findLayerById(id_predios).queryFeatures(queryCFPSG);
                                     allPromises.push(promiseCF);
@@ -264,6 +378,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFLSP.returnGeometry = true;
                                     queryCFLSP.geometry = graphicsId[key.oid].geometry;
                                     queryCFLSP.spatialRelationship = 'intersects';
+                                    queryCFLSP.distance = 1;
+                                    queryCFLSP.units = 'meters';
                                     const promiseCFLSP = webMap.findLayerById(id_lotes_sin_predio).queryFeatures(queryCFLSP);
                                     allPromises.push(promiseCFLSP);
                                     orderPromises.push({ type: 'CFP', idmz: key.oid });
@@ -275,6 +391,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     queryCFAPI.outFields = ['*'];
                                     queryCFAPI.returnGeometry = true;
                                     queryCFAPI.geometry = graphicsId[key.oid].geometry;
+                                    queryCFAPI.distance = 1;
+                                    queryCFAPI.units = 'meters';
                                     queryCFAPI.spatialRelationship = 'intersects';
                                     const promiseCFAPI = webMap.findLayerById(id_punto_imagen).queryFeatures(queryCFAPI);
                                     allPromises.push(promiseCFAPI);
@@ -428,20 +546,24 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 .then((add, update, del) => {
                     // agregar funcionalidad para cambiar el estado de los predios en la tabla punto campo
                     console.log(add);
-                    this._stateService.triggerRefreshLayer(id_punto_imagen);
-                    this._stateService.triggerRefreshLayer(id_lotes_sin_predio);
-                    this._stateService.triggerRefreshLayer(id_predios);
-                    this._stateService.triggerRefreshLayer(id_mz_inei);
-                    this._stateService.triggerRefreshLayer(id_mz_pred);
-                    this._stateService.triggerRefreshLayer(id_predio_sin_mz);
-                    this._stateService.triggerRefreshLayer(id_mz_pimg);
-                    this._stateService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
-                    this._stateService.triggerClearAllGraphics();
-                    this._stateService.updatewidget.emit(true);
+                    this._newLoadService.triggerRefreshLayer(id_punto_imagen);
+                    this._newLoadService.triggerRefreshLayer(id_lotes_sin_predio);
+                    this._newLoadService.triggerRefreshLayer(id_predios);
+                    this._newLoadService.triggerRefreshLayer(id_mz_inei);
+                    this._newLoadService.triggerRefreshLayer(id_mz_pred);
+                    this._newLoadService.triggerRefreshLayer(id_predio_sin_mz);
+                    this._newLoadService.triggerRefreshLayer(id_mz_pimg);
+                    this._newLoadService.triggerRefreshLayer(idPredSinCartoAsignadoLayer);
+                    this._newLoadService.triggerClearAllGraphics();
+                    this.getWidget();
                     this.form.reset();
+                    this.cards[0].num = 0;
+                    this.cards[1].num = 0;
+                    this._messageProviderService.showSnack('Cargado correctamente');
                     this._fuseSplashScreenService.hide();
                 })
                 .catch((error) => {
+                    this._messageProviderService.showSnackError('Error al crear la carga');
                     this._fuseSplashScreenService.hide();
                     console.log(error);
                 });
@@ -450,7 +572,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
         }
         catch (error) {
-            console.log('EsriLoader: ', error);
+            console.log('EsriLoader: here ', error);
         }
 
 

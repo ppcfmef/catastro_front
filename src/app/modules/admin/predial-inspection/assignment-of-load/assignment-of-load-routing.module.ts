@@ -14,7 +14,7 @@ const routes: Routes = [
     path: '',
     component: AssignmentOfLoadPage,
     canActivate: [NavigationAuthorizationGuard],
-    data: { id: 'gescarmeta', permissionType: 'read' },
+    data: { id: 'ascargip', permissionType: 'read' },
     children:[
         {path: '',component: LoadListComponent},
         {path:'assign-load',component: AssignLoadComponent,},
