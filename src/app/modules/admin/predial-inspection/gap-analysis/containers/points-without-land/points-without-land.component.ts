@@ -94,7 +94,7 @@ export class PointsWithoutLandComponent implements OnInit {
             },
         },
 
-        {
+        /*{
             title: 'Via Zona',
             id: 2,
             layerId: 2,
@@ -110,7 +110,7 @@ export class PointsWithoutLandComponent implements OnInit {
             projection: null,
             visible: true,
             selected: false,
-        },
+        },*/
 
         {
             title: 'Lotes Poligono Zona',
@@ -131,8 +131,25 @@ export class PointsWithoutLandComponent implements OnInit {
         },
 
         {
-            title: 'Lotes sin predio',
+            title: 'Lotes',
             id: 4,
+            layerId: 1,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'',
+            definitionExpression:'',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: true,
+            selected: false,
+            renderer:null
+        },
+        {
+            title: 'Lotes sin predio',
+            id: 5,
             layerId: 1,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
             order: 0,
@@ -152,11 +169,11 @@ export class PointsWithoutLandComponent implements OnInit {
                     type: 'simple-marker',
                     style: 'square',
                     size: '10px', // pixels
-                    color: [255, 0, 0,0.2],
+                    color: [255, 0, 0,0.6],
                     fillOpacity: 0.2,
                     outline: {
                         color: [255, 0, 0], // White
-                        width: 1.5,
+                        width: 2,
                     },
                 },
             },
@@ -238,14 +255,18 @@ export class PointsWithoutLandComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._activatedRoute.params.subscribe((params) => {
+        this.ubigeo = localStorage.getItem('ubigeoBrechas') ? localStorage.getItem('ubigeoBrechas'):this.ubigeo;
+        this.setTableColumn();
+        this.getInitList();
+        this.updateCards();
+        /*this._activatedRoute.params.subscribe((params) => {
             this.ubigeo = params.ubigeo;
 
             this.setTableColumn();
             this.getInitList();
 
             this.updateCards();
-        });
+        });*/
     }
 
     getInitList(): void {

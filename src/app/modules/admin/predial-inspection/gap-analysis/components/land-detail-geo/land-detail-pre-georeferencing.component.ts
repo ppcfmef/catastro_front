@@ -87,7 +87,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                 .toPromise()
                                 .then((e) => {
                                     this._router.navigate([
-                                        '/inspection/gap-analysis/geo',
+                                        './land-inspection/gap-analysis/geo'
                                     ]);
                                 });
                         },
@@ -145,6 +145,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         this.land.statusGapAnalisys =
                             LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
+                        console.log('this.land>>',this.land);
                         this._puntoCampoService
                             .crearPuntoCampo([puntoCampo])
                             .then((result) => {
@@ -162,7 +163,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                                     .toPromise()
                                                     .then((e) => {
                                                         this._router.navigate([
-                                                            '/inspection/gap-analysis/geo',
+                                                        './land-inspection/gap-analysis/geo',
                                                         ]);
                                                     });
                                             },
@@ -248,7 +249,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                                             .then((e) => {
                                                                 this._router.navigate(
                                                                     [
-                                                                        '/inspection/gap-analysis/geo',
+                                                                        './land-inspection/gap-analysis/geo'
                                                                     ]
                                                                 );
                                                             });
@@ -276,6 +277,6 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     }
 
     backToList(): void{
-        this._router.navigate(['./land-inspection/gap-analysis/geo',this.land.ubigeo]);
+        this._router.navigate(['./land-inspection/gap-analysis/geo']);
     }
 }

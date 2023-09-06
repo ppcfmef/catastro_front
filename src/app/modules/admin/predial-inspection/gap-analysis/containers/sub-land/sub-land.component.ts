@@ -237,14 +237,18 @@ export class SubLandComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._activatedRoute.params.subscribe((params) => {
+        this.ubigeo = localStorage.getItem('ubigeoBrechas') ? localStorage.getItem('ubigeoBrechas'):this.ubigeo;
+        this.setTableColumn();
+        this.getInitList();
+        this.updateCards();
+        /*this._activatedRoute.params.subscribe((params) => {
             this.ubigeo = params.ubigeo;
 
             this.setTableColumn();
             this.getInitList();
 
             this.updateCards();
-        });
+        });*/
     }
 
     getInitList(): void {

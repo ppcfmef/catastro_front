@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { District } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictService } from '../../services/district.service';
@@ -20,7 +20,7 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
     templateUrl: './gap-list.component.html',
     styleUrls: ['./gap-list.component.scss'],
 })
-export class GapListComponent implements OnInit {
+export class GapListComponent implements OnInit , OnDestroy{
     ubigeo = '040703';
     cards = [
         {
@@ -73,7 +73,7 @@ export class GapListComponent implements OnInit {
         },
     ];
 
-
+    idView='gapana';
     districts: District[] = [];
     search: string;
     defaultTableLimit: number = 5;
@@ -81,6 +81,8 @@ export class GapListComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     user: User;
     loadData: boolean = false;
+    _emailUserAdmin='jcramireztello@gmail.com';
+    isAdmin = true;
     constructor(
         private _userService: UserService,
         private _districtService: DistrictService,
@@ -94,18 +96,45 @@ export class GapListComponent implements OnInit {
 
         protected _fuseSplashScreenService: FuseSplashScreenService,
     ) {}
+    ngOnDestroy(): void {
+        console.log('destroy');
+        /*localStorage.removeItem('ubigeoBrechas');
+        localStorage.removeItem('idLand');*/
+    }
 
     ngOnInit(): void {
+
+
+
+
         this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this.user = user;
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((user: User) => {
+            this.user = user;
+
+
+            const permissionsNavigation: any[]=this.user?.permissionsNavigation;
+            const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
+            console.log('readAll>>',readAll);
+
+            if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+
+            this.isAdmin = false;
+            }
+ 
+            const ubigeo = localStorage.getItem('ubigeoBrechas');
+            if (ubigeo){
+                this.ubigeo = ubigeo;
+            }else{
                 this.ubigeo =
-                    this.user && this.user.ubigeo
-                        ? this.user.ubigeo
-                        : this.ubigeo;
-                this.updateUbigeoCards(this.ubigeo);
-            });
+                this.user && this.user.ubigeo
+                    ? this.user.ubigeo
+                    : this.ubigeo;
+                    localStorage.setItem('ubigeoBrechas',this.ubigeo);
+            }
+
+            this.updateUbigeoCards(this.ubigeo);
+        });
     }
     searchDistrict(event: any): void {
         const search = event.target.value;
@@ -167,47 +196,12 @@ export class GapListComponent implements OnInit {
                         c.numb = String(total6);
                     }
 
-                   
-                   /*
-                    if(c.type === TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION){
-                        const total = await this.getTotalPrediosSinGeorreferrencia(
-                            ubigeo
-                        );
-                        console.log('total>>', total);
-                        c.numb = String(total);
-                    }
-                    if(c.type === TypeGapAnalisys.PREDIO_SUBVALUADO){
-                        const total = await this._manzanaPrediosSubvaluadosService.getTotalSubvaluados({ubigeo:ubigeo});
-                        c.numb = String(total);
-                    }
 
-                    if(c.type === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO){
-                        const total = await this._manzanaLotesSinPredioService.getTotalLotesSinPredio({ubigeo:ubigeo});
-                        c.numb = String(total);
-                    }
-
-                    if(c.type === TypeGapAnalisys.MANZANA_SIN_LOTES){
-                        const total = await this._manzanaSinLoteService.getTotalManzanaSinLote({ubigeo:ubigeo});
-                        c.numb = String(total);
-                    }
-
-                    if(c.type === TypeGapAnalisys.PUNTO_IMAGEN){
-                        const total = await this._manzanaPuntoImagenService
-                        .getTotalPuntoImagen({ ubigeo: this.ubigeo });
-                        c.numb = String(total);
-                    }
-                    if(c.type === TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA){
-                        const total = await this._manzanaCrecimientoService
-                        .getTotalManzanas({ ubigeo: this.ubigeo });
-                        c.numb = String(total);
-                    }
-
-*/
-                    c.path = `${c.pathBase}/${ubigeo}`;
+                    c.path = `${c.pathBase}`;
+                   // c.path = `${c.pathBase}/${ubigeo}`;
                 });
-
                 this._ngxSpinner.hide();
-                /*this.loadData = false;*/
+
             }
         });
 
@@ -231,6 +225,7 @@ export class GapListComponent implements OnInit {
     onSelect(event: any): void {
         this.district = event.option.value;
         this.ubigeo = this.district.code;
+        localStorage.setItem('ubigeoBrechas',this.ubigeo);
         this.updateUbigeoCards(this.ubigeo);
     }
 

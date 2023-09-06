@@ -13,7 +13,8 @@ export class DataPropertyComponent implements OnInit {
     ubigeo = '040703';
     idLand: any;
     land: LandAnalisysUI;
-    event: string = ActionsGapAnalisys.LEER;
+    estado: string = ActionsGapAnalisys.LEER;
+
     dataPoint: any;
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -21,7 +22,26 @@ export class DataPropertyComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._activatedRoute.params.subscribe((params) => {
+        this.idLand = localStorage.getItem('idLand');
+        console.log('this.idLand>>',this.idLand);
+        if (this.idLand) {
+            this._landGapAnalisysService
+                .get(this.idLand)
+                .subscribe((res) => {
+                    this.land = res;
+                    this.ubigeo = this.land.ubigeo;
+                    if (this.land.statusGapAnalisys === 0) {
+                        this.estado = ActionsGapAnalisys.ASIGNAR_PUNTO;
+                    } else {
+                        this.estado = ActionsGapAnalisys.LEER;
+                    }
+
+                });
+        }
+
+        //localStorage.setItem('idLand',this.ubigeo);
+
+        /*this._activatedRoute.params.subscribe((params) => {
             this.idLand = params.id;
 
             if (this.idLand) {
@@ -31,18 +51,18 @@ export class DataPropertyComponent implements OnInit {
                         this.land = res;
                         this.ubigeo = this.land.ubigeo;
                         if (this.land.statusGapAnalisys === 0) {
-                            this.event = ActionsGapAnalisys.ASIGNAR_PUNTO;
+                            this.estado = ActionsGapAnalisys.ASIGNAR_PUNTO;
                         } else {
-                            this.event = ActionsGapAnalisys.LEER;
+                            this.estado = ActionsGapAnalisys.LEER;
                         }
-                        /*console.log('this.land>>>',this.land);*/
+
                     });
             }
-        });
+        });*/
     }
 
     asigLandEvent(e: any): void {
-        this.event = e;
+        this.estado = e;
     }
 
     setPoint(e: any): void {

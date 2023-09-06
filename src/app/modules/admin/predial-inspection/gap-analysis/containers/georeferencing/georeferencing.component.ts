@@ -106,7 +106,19 @@ export class GeoreferencingComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._activatedRoute.params.subscribe((params) => {
+
+    this.ubigeo = localStorage.getItem('ubigeoBrechas') ? localStorage.getItem('ubigeoBrechas'):this.ubigeo;;
+
+        if(this.ubigeo && this.ubigeo !==''){
+
+            this.filterUbigeo ={ubigeo : this.ubigeo};
+        }
+
+        this.getInitStadistics();
+        this.getInitList();
+
+
+        /*this._activatedRoute.params.subscribe((params) => {
             this.ubigeo = params.ubigeo;
 
             if(this.ubigeo && this.ubigeo !==''){
@@ -116,7 +128,7 @@ export class GeoreferencingComponent implements OnInit {
 
             this.getInitStadistics();
             this.getInitList();
-        });
+        });*/
 
     }
 
@@ -145,7 +157,7 @@ export class GeoreferencingComponent implements OnInit {
                         let s = 0;
                         card.arrayStatus.forEach((idStatus) => {
                             const rs = results.find(
-                                (r) => r.statusGapAnalisys === idStatus
+                                r => r.statusGapAnalisys === idStatus
                             );
                             if (rs) {
                                 s = s + (rs.count ? rs.count : 0);
