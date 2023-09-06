@@ -73,7 +73,7 @@ export class GapListComponent implements OnInit , OnDestroy{
         },
     ];
 
-
+    idView='gapana';
     districts: District[] = [];
     search: string;
     defaultTableLimit: number = 5;
@@ -81,6 +81,8 @@ export class GapListComponent implements OnInit , OnDestroy{
     _unsubscribeAll: Subject<any> = new Subject<any>();
     user: User;
     loadData: boolean = false;
+    _emailUserAdmin='jcramireztello@gmail.com';
+    isAdmin = true;
     constructor(
         private _userService: UserService,
         private _districtService: DistrictService,
@@ -95,16 +97,31 @@ export class GapListComponent implements OnInit , OnDestroy{
         protected _fuseSplashScreenService: FuseSplashScreenService,
     ) {}
     ngOnDestroy(): void {
-        localStorage.removeItem('ubigeoBrechas');
-        localStorage.removeItem('idLand');
+        console.log('destroy');
+        /*localStorage.removeItem('ubigeoBrechas');
+        localStorage.removeItem('idLand');*/
     }
 
     ngOnInit(): void {
+
+
+
 
         this._userService.user$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: User) => {
             this.user = user;
+
+
+            const permissionsNavigation: any[]=this.user?.permissionsNavigation;
+            const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
+            console.log('readAll>>',readAll);
+
+            if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+
+            this.isAdmin = false;
+            }
+ 
             const ubigeo = localStorage.getItem('ubigeoBrechas');
             if (ubigeo){
                 this.ubigeo = ubigeo;
@@ -113,13 +130,10 @@ export class GapListComponent implements OnInit , OnDestroy{
                 this.user && this.user.ubigeo
                     ? this.user.ubigeo
                     : this.ubigeo;
+                    localStorage.setItem('ubigeoBrechas',this.ubigeo);
             }
-            /*this.ubigeo =
-                this.user && this.user.ubigeo
-                    ? this.user.ubigeo
-                    : this.ubigeo;*/
+
             this.updateUbigeoCards(this.ubigeo);
-            localStorage.setItem('ubigeoBrechas',this.ubigeo);
         });
     }
     searchDistrict(event: any): void {
@@ -186,9 +200,8 @@ export class GapListComponent implements OnInit , OnDestroy{
                     c.path = `${c.pathBase}`;
                    // c.path = `${c.pathBase}/${ubigeo}`;
                 });
-
                 this._ngxSpinner.hide();
-               
+
             }
         });
 

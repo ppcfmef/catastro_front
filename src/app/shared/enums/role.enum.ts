@@ -3,4 +3,5 @@ export enum Role {
     DISTRITAL = 4,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     NACIONAL = 1,
+
 };
