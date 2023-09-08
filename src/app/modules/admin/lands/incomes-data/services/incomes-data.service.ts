@@ -33,7 +33,7 @@ export class IncomesDataService {
     return this.http.get<IPagination<any>>(`${this.apiUrl}/incomes/rtprediocaracteristica/`, {params: queryParams});
   }
 
-  getRTPecaudacion(queryParams = {}): Observable<IPagination<any>> {
+  getRTRecaudacion(queryParams = {}): Observable<IPagination<any>> {
     return this.http.get<IPagination<any>>(`${this.apiUrl}/incomes/rtrecaudacion/`, {params: queryParams});
   }
 

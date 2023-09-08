@@ -15,53 +15,46 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="documentoDesc">
-    <th mat-header-cell *matHeaderCellDef> Tipo de Documento </th>
+  <ng-container matColumnDef="anoEjec">
+    <th mat-header-cell *matHeaderCellDef> Año Ejec </th>
     <td mat-cell *matCellDef="let element">
-        {{ element.documentoDesc }}
+        {{ element.anoEjec }}
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="numDoc">
-    <th mat-header-cell *matHeaderCellDef> Num. Documento </th>
+  <ng-container matColumnDef="sectorCatastral">
+    <th mat-header-cell *matHeaderCellDef> sect. Catastral </th>
     <td mat-cell *matCellDef="let element">
-        {{ element.numDoc }}
+        {{ element.sectorCatastral }}
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="nombre">
-    <th mat-header-cell *matHeaderCellDef> Nombres </th>
+  <ng-container matColumnDef="arancel">
+    <th mat-header-cell *matHeaderCellDef> Arancel </th>
     <td mat-cell *matCellDef="let element">
-        {{ element.nombre }}
+        {{ element.arancel }}
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="apellidoPaterno">
-    <th mat-header-cell *matHeaderCellDef> A. Paterno </th>
+  <ng-container matColumnDef="anoXProcesar">
+    <th mat-header-cell *matHeaderCellDef> Año por procesar </th>
     <td mat-cell *matCellDef="let element">
-        {{ element.apellidoPaterno }}
+        {{ element.anoXProcesar }}
     </td>
   </ng-container>
 
 
-  <ng-container matColumnDef="apellidoMaterno">
-    <th mat-header-cell *matHeaderCellDef> A. Materno </th>
+  <ng-container matColumnDef="arancelActual">
+    <th mat-header-cell *matHeaderCellDef> Arancel </th>
     <td mat-cell *matCellDef="let element">
-        {{ element.apellidoMaterno }}
+        {{ element.arancelActual }}
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="estado">
-    <th mat-header-cell *matHeaderCellDef> Estado </th>
+  <ng-container matColumnDef="idArancel">
+    <th mat-header-cell *matHeaderCellDef> ID Arancel </th>
     <td mat-cell *matCellDef="let element">
         {{ element.estado }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="username">
-    <th mat-header-cell *matHeaderCellDef> Usuario </th>
-    <td mat-cell *matCellDef="let element">
-        {{ element.username }}
     </td>
   </ng-container>
 

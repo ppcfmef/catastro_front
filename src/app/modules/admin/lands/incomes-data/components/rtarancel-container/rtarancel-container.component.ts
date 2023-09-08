@@ -13,7 +13,7 @@ import { IPagination } from 'app/core/common/interfaces/common.interface';
 export class RTArancelContainerComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns = ['nro', 'ubigeo', 'documentoDesc', 'numDoc', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'estado'];
+  displayedColumns = ['nro', 'ubigeo', 'anoEjec', 'sectorCatastral', 'arancel', 'anoXProcesar', 'arancelActual', 'idArancel'];
   dataSource = [];
   count = 0;
   pageIndex = 0;
@@ -23,7 +23,8 @@ export class RTArancelContainerComponent implements OnInit, AfterViewInit {
     private incomesDataService: IncomesDataService,
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngAfterViewInit(): void {
     merge(this.paginator?.page)
@@ -33,13 +34,17 @@ export class RTArancelContainerComponent implements OnInit, AfterViewInit {
         const limit = this.paginator.pageSize;
         const offset = limit * this.paginator.pageIndex;
         const queryParams = { limit, offset };
-        return this.incomesDataService.getRTContribuyente(queryParams);
+        return this.incomesDataService.getRTArancel(queryParams);
       })
     ).subscribe((response: IPagination<any>) => {
-        this.count = response.count;
-        this.pageIndex = this.paginator.pageIndex;
-        this.pageSize = this.paginator.pageSize;
-        this.dataSource = response.results;
+        this.initialPaginator(response);
     });
+  }
+
+  private initialPaginator(pagination: IPagination<any>): void {
+    this.count = pagination.count;
+    this.pageIndex = this.paginator.pageIndex;
+    this.pageSize = this.paginator.pageSize;
+    this.dataSource = pagination.results;
   }
 }
