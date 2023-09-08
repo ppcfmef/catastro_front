@@ -16,4 +16,8 @@ export class IncomesDataService {
   getRTContribuyente(queryParams = {}): Observable<IPagination<any>> {
     return this.http.get<IPagination<any>>(`${this.apiUrl}/incomes/rtcontribuyente/`, {params: queryParams});
   }
+
+  getRTMarcoPredio(queryParams = {}): Observable<IPagination<any>> {
+    return this.http.get<IPagination<any>>(`${this.apiUrl}/incomes/rtmarcopredio/`, {params: queryParams});
+  }
 }
