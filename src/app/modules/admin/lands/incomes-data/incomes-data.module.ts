@@ -17,6 +17,16 @@ import { RTArancelPage } from './pages/rtarancel/rtarancel.page';
 import { RTArancelContainerComponent } from './components/rtarancel-container/rtarancel-container.component';
 import { RTMarcoPredioContainerComponent } from './components/rtmarco-predio-container/rtmarco-predio-container.component';
 import { SelectIcomesTableComponent } from './components/select-icomes-table/select-icomes-table.component';
+import { RTPredioDatoPage } from './pages/rtpredio-dato/rtpredio-dato.page';
+import { RTPredioCaracteristicaPage } from './pages/rtpredio-caracteristica/rtpredio-caracteristica.page';
+import { RTDeudaPage } from './pages/rtdeuda/rtdeuda.page';
+import { RTEmisionPage } from './pages/rtemision/rtemision.page';
+import { RTBaseImponiblePage } from './pages/rtbase-imponible/rtbase-imponible.page';
+import { RTAlicuotaPage } from './pages/rtalicuota/rtalicuota.page';
+import { RTAmnistiaContribuyentePage } from './pages/rtamnistia-contribuyente/rtamnistia-contribuyente.page';
+import { RTAmnistiaMunicipalPage } from './pages/rtamnistia-municipal/rtamnistia-municipal.page';
+import { RTVaremMunicipalPage } from './pages/rtvarem-municipal/rtvarem-municipal.page';
+import { RTRecaudacionPage } from './pages/rtrecaudacion/rtrecaudacion.page';
 
 
 @NgModule({
@@ -28,6 +38,16 @@ import { SelectIcomesTableComponent } from './components/select-icomes-table/sel
     RTArancelContainerComponent,
     RTMarcoPredioContainerComponent,
     SelectIcomesTableComponent,
+    RTPredioDatoPage,
+    RTPredioCaracteristicaPage,
+    RTDeudaPage,
+    RTEmisionPage,
+    RTBaseImponiblePage,
+    RTAlicuotaPage,
+    RTAmnistiaContribuyentePage,
+    RTAmnistiaMunicipalPage,
+    RTVaremMunicipalPage,
+    RTRecaudacionPage,
   ],
   imports: [
     CommonModule,
