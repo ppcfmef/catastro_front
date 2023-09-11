@@ -1,0 +1,68 @@
+<app-select-icomes-table selectedTable="RT_PREDIO_CARACT"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="anoAplicacion">
+    <th mat-header-cell *matHeaderCellDef> Año Aplicacion </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.anoAplicacion }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="anoConstruccion">
+    <th mat-header-cell *matHeaderCellDef> Año Construccion </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.anoConstruccion }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="clasificacionPred">
+    <th mat-header-cell *matHeaderCellDef> Clasificacion </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.clasificacionPred }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="materialPred">
+    <th mat-header-cell *matHeaderCellDef> Material </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.materialPred }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="estadoConserva">
+    <th mat-header-cell *matHeaderCellDef> Conservacion </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.estadoConserva }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalAreaBienComun">
+    <th mat-header-cell *matHeaderCellDef> Area total </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.totalAreaBienComun }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>
+

@@ -1,0 +1,74 @@
+<app-select-icomes-table selectedTable="RT_AMNMUNICIPAL"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombAmnBenef">
+    <th mat-header-cell *matHeaderCellDef> Amnistía o beneficio </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nombAmnBenef }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nroOrdenanza">
+    <th mat-header-cell *matHeaderCellDef> Nro Ordenanza </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nroOrdenanza }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fechaIni">
+    <th mat-header-cell *matHeaderCellDef> Fecha de inicio </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.fechaIni }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="fechaFin">
+    <th mat-header-cell *matHeaderCellDef> Fecha de fin </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.fechaFin }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="tributoAfecto">
+    <th mat-header-cell *matHeaderCellDef> Tributo afecto </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.tributoAfecto }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="periodo">
+    <th mat-header-cell *matHeaderCellDef>Periodos</th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.periodo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="porcDesc">
+    <th mat-header-cell *matHeaderCellDef>% Descuento</th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.porcDesc }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>

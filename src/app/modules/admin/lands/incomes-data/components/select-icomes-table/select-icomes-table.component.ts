@@ -15,16 +15,16 @@ export class SelectIcomesTableComponent implements OnInit {
     { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente', path: '/rtcontribuyente' },
     { code: 'RT_MARCO_PREDIO', text: 'Tabla RT_MarcoPredio', path: '/rtmarco-predrio' },
     { code: 'RT_ARANCEL', text: 'Tabla RT_Arancel', path: '/rtarancel' },
-    { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato', path: '' },
-    { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract', path: '' },
-    { code: 'RT_RECAUDACION', text: 'Tabla RT_Recaudacion', path: '' },
-    { code: 'RT_DEUDA', text: 'Tabla RT_Deuda', path: '' },
-    { code: 'RT_EMISION', text: 'Tabla RT_Emision', path: '' },
-    { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible', path: '' },
-    { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota', path: '' },
-    { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente', path: '' },
-    { code: 'RT_AMNMUNICIPAL', text: 'Tabla RT_AmnMunicipal', path: '' },
-    { code: 'RT_VAREM_MUNI', text: 'Tabla RT_VarEm_muni', path: '' }
+    { code: 'RT_PREDIO_DATO', text: 'Tabla RT_Predio_dato', path: '/rtprediodato' },
+    { code: 'RT_PREDIO_CARACT', text: 'Tabla RT_Predio_caract', path: '/rtprediocaracteristica' },
+    { code: 'RT_RECAUDACION', text: 'Tabla RT_Recaudacion', path: '/rtrecaudacion' },
+    { code: 'RT_DEUDA', text: 'Tabla RT_Deuda', path: '/rtdeuda' },
+    { code: 'RT_EMISION', text: 'Tabla RT_Emision', path: '/rtemision' },
+    { code: 'RT_BIMPONIBLE', text: 'Tabla RT_BImponible', path: '/rtbaseimponible' },
+    { code: 'RT_ALICUOTA', text: 'Tabla RT_Alicuota', path: '/rtalicuota' },
+    { code: 'RT_AMNCONTRIBUYENTE', text: 'Tabla RT_AmnContribuyente', path: '/rtamnistiacontribuyente' },
+    { code: 'RT_AMNMUNICIPAL', text: 'Tabla RT_AmnMunicipal', path: '/rtamnistiamunicipal' },
+    { code: 'RT_VAREM_MUNI', text: 'Tabla RT_VarEm_muni', path: '/rtvaremmunicipal' }
   ];
 
   constructor(
