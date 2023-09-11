@@ -55,7 +55,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         }
     ];
     form: FormGroup;
-    params = {is_active: true, isMobileStaff:true };
+    params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
 
     constructor(
@@ -84,7 +84,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             console.log(ubigeo, 'ubideo  initi load');
             this._currentUserUbigeo = ubigeo ? ubigeo : '150101';
             this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-            this.params['district']=this._currentUserUbigeo;
+            this.params['district'] = this._currentUserUbigeo;
         });
 
         // this._userService.user$
@@ -135,7 +135,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     }
 
     redirecto(): void {
-        this._router.navigate(['../'],{ relativeTo: this.route });
+        this._router.navigate(['../'], { relativeTo: this.route });
         this._newLoadService.showIcon.next(false);
         this._newLoadService.triggerClearAllGraphics();
 
@@ -175,34 +175,34 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     emitFilter(): void {
         this.form.controls['dni'].valueChanges
-        .pipe(
-            debounceTime(600),
-        ).subscribe((dni) => {
-            console.log(dni, 'dni');
-            if(!dni){
-                this.operator = null;
-                this.form.controls['fEntrega'].disable();
-                return;
-            }
-            this.params['search'] = dni;
-            this.form.controls['fEntrega'].enable();
-            this.user = true;
-            this.getOperator();
-        });
+            .pipe(
+                debounceTime(600),
+            ).subscribe((dni) => {
+                console.log(dni, 'dni');
+                if (!dni) {
+                    this.operator = null;
+                    this.form.controls['fEntrega'].disable();
+                    return;
+                }
+                this.params['search'] = dni;
+                this.form.controls['fEntrega'].enable();
+                this.user = true;
+                this.getOperator();
+            });
     }
 
 
     async createWorkLoad() {
-        if(this.tableData.length === 0) {
+        if (this.tableData.length === 0) {
             this._messageProviderService.showSnackError('Debe seleccionar al menos una manzana');
         }
-        if(!this.form.value.loadName){
+        if (!this.form.value.loadName) {
             this._messageProviderService.showSnackError('Debe ingresar el nombre de la carga');
             return;
         }
 
-        if(this.operator){
-            if(!this.form.value.fEntrega){
+        if (this.operator) {
+            if (!this.form.value.fEntrega) {
                 this._messageProviderService.showSnackError('Debe seleccionar fecha de entrega');
                 return;
             }
@@ -218,9 +218,9 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         console.log(ubigeo, 'personal');
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
-        const codUserWorkLoad = this.operator ? this.operator.id :'';
-        const nomUserWorkLoad =this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
-        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD'): null;
+        const codUserWorkLoad = this.operator ? this.operator.id : '';
+        const nomUserWorkLoad = this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
+        const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD') : null;
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
         const id_predios = 'CARTO_PUNTO_CAMPO_4985';
@@ -356,6 +356,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     const allPromises = [];
                     const orderPromises = [];
                     const prediosSinManzana = [];
+                    const manzanasInei = []
                     for (const key of dataWorkLoad) {
                         if (key.tipo.toLowerCase() === 'manzana') {
                             switch (key.fuente) {
@@ -399,15 +400,27 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     orderPromises.push({ type: 'CFA', idmz: key.oid });
                                     break;
                                 case 'EU':
-                                    const queryEUMSL = new Query();
-                                    queryEUMSL.where = webMap.findLayerById(id_mz_inei).definitionExpression;
-                                    queryEUMSL.outFields = ['*'];
-                                    orderPromises.push({ type: 'EU', idmz: key.oid });
+                                    manzanasInei.push(key.oid.slice(1));
+                                    // const queryEUMSL = new Query();
+                                    // queryEUMSL.where = `${webMap.findLayerById(id_mz_inei).definitionExpression} AND ID_MZN_C = ${key.oid.slice(1)}`; //@daniel6
+                                    // queryEUMSL.outFields = ['*'];
+                                    // const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
+                                    // allPromises.push(promiseEUMSL);
+                                    // orderPromises.push({ type: 'EU', idmz: key.oid });
                                     break;
                             }
                         } else {
                             prediosSinManzana.push(key);
                         }
+                        if (manzanasInei.length > 0) {
+                            const queryEUMSL = new Query();
+                            queryEUMSL.where = `${webMap.findLayerById(id_mz_inei).definitionExpression} AND ID_MZN_C in (${manzanasInei.join(',')})`; //@daniel6
+                            queryEUMSL.outFields = ['*'];
+                            const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
+                            allPromises.push(promiseEUMSL);
+                            orderPromises.push({ type: 'EU', idmz: key.oid });
+                        }
+
                     }
                     const data = await Promise.all(allPromises);
                     return [data, orderPromises, prediosSinManzana];
@@ -438,7 +451,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
                                 ID_MZN_C: key.idmz,
                                 COD_EST_ENVIO_TICKET: 0,
-                                ESTADO_V:'1',
+                                ESTADO_V: '1',
                             };
                             switch (key.type) {
                                 case 'CF':
@@ -490,6 +503,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                             FEC_ULTIMA_ACTUALIZACION: new Date().valueOf(),
                             ID_MZN_C: '9999',
                             COD_EST_ENVIO_TICKET: 0,
+                            ESTADO_V: '1', //@daniel6
                             COD_PRE: key.codigo
                         };
                         tickets.push({ attributes: ticket, geometry: null });
@@ -514,12 +528,12 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 })
                 .then((response) => {
                     const predioUpdateData = response.features.map(row => ({
-                            attributes: {
-                                OBJECTID: row.attributes.OBJECTID,
-                                Estado_tra: stateTicket,
-                                ID_CARGA: `${ubigeo}${cod_carga}`
-                            }
-                        }));
+                        attributes: {
+                            OBJECTID: row.attributes.OBJECTID,
+                            Estado_tra: stateTicket,
+                            ID_CARGA: `${ubigeo}${cod_carga}`
+                        }
+                    }));
 
                     return webMap.findLayerById(id_predios).applyEdits({ updateFeatures: predioUpdateData });
                 })

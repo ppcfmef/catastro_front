@@ -23,9 +23,9 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
     templateUrl: './load-pending-assignment.component.html',
     styleUrls: ['./load-pending-assignment.component.scss'],
 })
-export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, OnDestroy{
+export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    _portalUrl =  'https://ws.mineco.gob.pe/portaldf';
+    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
     idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUser: User;
@@ -40,10 +40,10 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     };
 
     user: boolean = false;
-    params = {is_active: true, isMobileStaff:true };
+    params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
     form: FormGroup;
-    oparator= null;
+    oparator = null;
     cards = [
         {
             num: 21,
@@ -65,29 +65,29 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         protected _messageProviderService: MessageProviderService,
         private _operatorsService: OperatorService,
         private _widgetsService: WidgetService,
-        ) {
-            this.createFormActions();
-        }
+    ) {
+        this.createFormActions();
+    }
 
     ngOnInit(): void {
         this.setTableColumn();
 
-        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
+        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ cod }) => {
             if (cod) {
                 this.codLoad = cod;
             }
         });
 
         this._operatorsService.getUbigeo().subscribe((ubigeo) => {
-                this._currentUserUbigeo = ubigeo;
-                this.params['district']=this._currentUserUbigeo;
-                this._tableService.detailLoad( this.codLoad, this._currentUserUbigeo)
+            this._currentUserUbigeo = ubigeo;
+            this.params['district'] = this._currentUserUbigeo;
+            this._tableService.detailLoad(this.codLoad, this._currentUserUbigeo)
                 .then(data => this.dataSource = data)
                 .catch((err) => {
                     this.dataSource = [];
                     this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
                 });
-            });
+        });
 
 
 
@@ -103,20 +103,20 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
 
     ngAfterViewInit(): void {
         this.form.controls['operador'].valueChanges
-            .pipe(  debounceTime(600),
+            .pipe(debounceTime(600),
                 takeUntil(this._unsubscribeAll))
             .subscribe((dateOperator) => {
                 if (!dateOperator) {
                     this.operator = null;
                     console.log(dateOperator, 'dateOperator');
-                }else {
+                } else {
                     this.params['search'] = dateOperator;
                     console.log(this.params, '');
                     this.user = true;
                     this.getOperator();
                 }
-        }
-        );
+            }
+            );
     }
 
     ngOnDestroy(): void {
@@ -131,9 +131,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     setTableColumn(): void {
         this.tableColumns = [
             { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro' },
-            { matheaderdef: 'Codigo',matcolumndef: 'CODIGO',matcelldef: 'CODIGO'},
-            { matheaderdef: 'Tipo',matcolumndef: 'TIPO',matcelldef: 'TIPO'},
-            { matheaderdef: 'Fuente', matcolumndef: 'FUENTE', matcelldef: 'FUENTE'},
+            { matheaderdef: 'Codigo', matcolumndef: 'CODIGO', matcelldef: 'CODIGO' },
+            { matheaderdef: 'Tipo', matcolumndef: 'TIPO', matcelldef: 'TIPO' },
+            { matheaderdef: 'Fuente', matcolumndef: 'FUENTE', matcelldef: 'FUENTE' },
         ];
     }
 
@@ -142,7 +142,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     redirecto(): void {
-        this._router.navigate(['../../'], {relativeTo: this._activatedRoute});
+        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
     }
 
     async zoom(row): Promise<any> {
@@ -160,8 +160,8 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
         await this._operatorsService.getOperador(this.params).subscribe(async (data: IResult) => {
             this._fuseSplashScreenService.show();
             this.operator = data.results[0];
-            if(this.operator){
-                await this._widgetsService.widgetUser(this._currentUserUbigeo , this.operator.id).then(({attended ,pending }) => {
+            if (this.operator) {
+                await this._widgetsService.widgetUser(this._currentUserUbigeo, this.operator.id).then(({ attended, pending }) => {
                     this.cards[0].num = pending;
                     this.cards[1].num = attended;
                 });
@@ -194,13 +194,13 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
             .then(async (result) => {
                 console.log(result, 'result');
                 //this._tableService._updateTable.next(true);
-                await this._messageProviderService.showSnack('Asignado correctament');
+                await this._messageProviderService.showSnack('Asignado correctamente');
                 this.form.reset();
                 this.redirecto();
                 //window.location.reload();
                 this._fuseSplashScreenService.hide();
             })
-            .catch((error)=> {
+            .catch((error) => {
                 console.log(error, 'errr');
                 this._messageProviderService.showSnackError('Error al asignar carga');
                 window.location.reload();

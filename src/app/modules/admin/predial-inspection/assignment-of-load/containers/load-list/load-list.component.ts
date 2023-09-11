@@ -15,11 +15,11 @@ import { OperatorService } from '../../services/operator.service';
 
 
 @Component({
-  selector: 'app-load-list',
-  templateUrl:'./load-list.component.html',
-  styleUrls: ['./load-list.component.scss']
+    selector: 'app-load-list',
+    templateUrl: './load-list.component.html',
+    styleUrls: ['./load-list.component.scss']
 })
-export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
+export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     formFilters: FormGroup;
     filters;
@@ -28,8 +28,8 @@ export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
         'Unidad urbana'
     ];
     options = [
-        {id: 'code', description: 'Codigo'},
-        {id: 'urban', description: 'Unidad urbana'},
+        { id: 'code', description: 'Codigo' },
+        { id: 'urban', description: 'Unidad urbana' },
     ];
     listUnit = [];
     _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -44,9 +44,9 @@ export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
         private _ngxSpinner: NgxSpinnerService,
         private _userService: UserService,
         private _operatorService: OperatorService,
-        ) {
-            this.createFormFilters();
-        }
+    ) {
+        this.createFormFilters();
+    }
 
     ngOnInit(): void {
         this._operatorService.getUbigeo().subscribe((data) => {
@@ -80,29 +80,31 @@ export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
     createFormFilters(): void {
         this.formFilters = new FormGroup({
             option: new FormControl(),
-            search: new FormControl({value: null, disabled: true}),
+            search: new FormControl({ value: null, disabled: true }),
             cod: new FormControl(),
         });
     }
 
     getListUrbanUnit(): void {
         console.log(this._currentUserUbigeo, 'load list');
-        this._tableService.getListUrbantUnit(this._currentUserUbigeo).then((data) => {
-            this.listUnit = [...data];
-        });
+        setTimeout(() => {
+            this._tableService.getListUrbantUnit(this._currentUserUbigeo).then((data) => {
+                this.listUnit = [...data];
+            });
+        }, 1000);
     }
 
     optionSelected(e): void {
         this.optionSelect = e.value;
         console.log(this.optionSelect, 'here option');
 
-        if(this.formFilters.controls['search'].value){
+        if (this.formFilters.controls['search'].value) {
             this.formFilters.controls['search'].reset();
         }
 
-        if(this.formFilters.controls['cod'].value){
+        if (this.formFilters.controls['cod'].value) {
             this.formFilters.controls['cod'].reset();
-          }
+        }
 
         if (this.optionSelect) {
             this.formFilters.controls['search'].enable();
@@ -113,30 +115,30 @@ export class LoadListComponent implements OnInit,AfterViewInit,OnDestroy {
 
     emitFilter(): void {
         this.formFilters.valueChanges
-        .pipe(
-            debounceTime(600),
-            map(() => {
-                this._ngxSpinner.show();
-                const rawValue = this.formFilters.getRawValue();
-                const filters = FormUtils.deleteKeysNullInObject(rawValue);
-                if (filters['search']) {
-                    filters['type'] = this.optionSelect;
-                    console.log(filters, 'filt');
-                }
-                if(filters['cod']){
-                    filters['type'] = this.optionSelect;
-                }
-                if (filters['option']) {
-                    delete filters.option;
-                }
-                const newFilters = { ...filters } as any;
-                return newFilters;
-            })
-        ).subscribe((data) => {
-            this._tableService.searchBy.next(data);
-            this._ngxSpinner.hide();
-            console.log(data , 'dattt');
-        });
+            .pipe(
+                debounceTime(600),
+                map(() => {
+                    this._ngxSpinner.show();
+                    const rawValue = this.formFilters.getRawValue();
+                    const filters = FormUtils.deleteKeysNullInObject(rawValue);
+                    if (filters['search']) {
+                        filters['type'] = this.optionSelect;
+                        console.log(filters, 'filt');
+                    }
+                    if (filters['cod']) {
+                        filters['type'] = this.optionSelect;
+                    }
+                    if (filters['option']) {
+                        delete filters.option;
+                    }
+                    const newFilters = { ...filters } as any;
+                    return newFilters;
+                })
+            ).subscribe((data) => {
+                this._tableService.searchBy.next(data);
+                this._ngxSpinner.hide();
+                console.log(data, 'dattt');
+            });
     }
 
 

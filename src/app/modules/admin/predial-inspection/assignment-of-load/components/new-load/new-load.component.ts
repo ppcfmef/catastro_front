@@ -80,12 +80,12 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     onAction(tableAction: TableActions): void {
         switch (tableAction.action) {
             case TableAction.zoom:
-            this.onZoom(tableAction.row);
-            break;
+                this.onZoom(tableAction.row);
+                break;
 
             case TableAction.delete:
-            this.onDelete(tableAction.row);
-            break;
+                this.onDelete(tableAction.row);
+                break;
 
             default:
                 break;
@@ -95,6 +95,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     //   Implementar logica
     onZoom(row: any): void {
         console.log('zoom',);
+        this._newLoadService.emitRowZoomNewWorkLoad(row);  // @daniel
     }
 
     onDelete(row: IdataLoad): void {
@@ -106,13 +107,13 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     addkey(data: IdataLoad[]): void {
         data.map((item, index) => {
-            Object.assign(item, {nro: `${index+1}`});
+            Object.assign(item, { nro: `${index + 1}` });
         });
     }
 
     deleteItem(dataItem: IdataLoad[], row: IdataLoad): void {
         const index = dataItem.findIndex((data: IdataLoad) => data.codigo === row.codigo);
-        if (index === -1) {return;}
+        if (index === -1) { return; }
         this.data.splice(index, 1);
     }
 }

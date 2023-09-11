@@ -21,15 +21,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { OperatorService } from '../../services/operator.service';
 
 @Component({
-  selector: 'app-table-pending',
-  templateUrl: './table-pending.component.html',
-  styleUrls: ['./table-pending.component.scss']
+    selector: 'app-table-pending',
+    templateUrl: './table-pending.component.html',
+    styleUrls: ['./table-pending.component.scss']
 })
-export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
+export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     bySearch: any;
     _portalUrl = 'https://js.arcgis.com/4.27/';
-    tableColumns: TableColumn[] =[];
+    tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
         isAction: true,
         isEdit: true,
@@ -39,7 +39,7 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSource = [];
-    count=0;
+    count = 0;
     params = { limit: 10, offset: 0 };
     error: boolean = false;
     constructor(
@@ -51,33 +51,33 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
         private _tableService: TableService,
         private _userService: UserService,
         private _operatorService: OperatorService,
-        ) { }
+    ) { }
 
-        ngOnInit(): void {
-            this.setTableColumn();
-            this._operatorService.getUbigeo().subscribe((data) => {
-                this._currentUserUbigeo = data;
-                this.loadTable();
-            });
+    ngOnInit(): void {
+        this.setTableColumn();
+        this._operatorService.getUbigeo().subscribe((data) => {
+            this._currentUserUbigeo = data;
+            this.loadTable();
+        });
 
-            // this._userService.user$
-            // .pipe(takeUntil(this._unsubscribeAll))
-            // .subscribe((user: User) => {
-            //     console.log(user, 'user');
-            //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-            // });
-            // this._tableService._newUbigeo.subscribe((r) => {
-            //     this._currentUserUbigeo  = r;
-            //     console.log( this._currentUserUbigeo , r);
-            //     this.loadTable();
-            // });
+        // this._userService.user$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((user: User) => {
+        //     console.log(user, 'user');
+        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
+        // });
+        // this._tableService._newUbigeo.subscribe((r) => {
+        //     this._currentUserUbigeo  = r;
+        //     console.log( this._currentUserUbigeo , r);
+        //     this.loadTable();
+        // });
 
-            // this._tableService._newUbigeo.subscribe((r) => {
-            //     this._currentUserUbigeo  = r;
-            //     console.log( this._currentUserUbigeo , 'r');
-            //     this.loadTable();
-            // });
-        }
+        // this._tableService._newUbigeo.subscribe((r) => {
+        //     this._currentUserUbigeo  = r;
+        //     console.log( this._currentUserUbigeo , 'r');
+        //     this.loadTable();
+        // });
+    }
 
     ngAfterViewInit(): void {
         this._tableService.searchBy.subscribe((res) => {
@@ -86,16 +86,15 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
         });
     }
 
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
 
     setTableColumn(): void {
         this.tableColumns = [
-            {matheaderdef:'Nro.', matcolumndef:'nro', matcelldef: 'nro'},
-            {matheaderdef:'Cod. Carga', matcolumndef:'codCarga', matcelldef: 'codCarga'},
+            { matheaderdef: 'Nro.', matcolumndef: 'nro', matcelldef: 'nro' },
+            { matheaderdef: 'Cod. Carga', matcolumndef: 'codCarga', matcelldef: 'codCarga' },
             //{matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
         ];
 
@@ -104,12 +103,12 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
     onAction(tableAction: TableActions): void {
         switch (tableAction.action) {
             case TableAction.edit:
-            this.onEditAssigned(tableAction.row);
-            break;
+                this.onEditAssigned(tableAction.row);
+                break;
 
             case TableAction.delete:
-            this.onDelete(tableAction.row);
-            break;
+                this.onDelete(tableAction.row);
+                break;
 
             default:
                 break;
@@ -117,24 +116,24 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
     };
 
     onEditAssigned(row): void {
-        this._router.navigate([`pending/${row.codCarga}`] , {relativeTo: this._activatedRoute});
+        this._router.navigate([`pending/${row.codCarga}`], { relativeTo: this._activatedRoute });
     }
 
 
     onDelete(row): void {
         const cod = row.codCarga;
-        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' +cod)
+        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' + cod)
             .afterClosed()
             .subscribe(async (confirm) => {
                 this._fuseSplashScreenService.show(0);
-                if(confirm){
-                    await this._tableService.deleteRow(row,this._currentUserUbigeo)
-                    .then((data) => {
-                        this._messageProvider.showAlert(data);
-                        this.loadTable();
-                        this._fuseSplashScreenService.hide();
-                    })
-                    .catch(error => this._messageProvider.showSnackError(error));
+                if (confirm) {
+                    await this._tableService.deleteRow(row, this._currentUserUbigeo)
+                        .then((data) => {
+                            this._messageProvider.showAlert(data);
+                            this.loadTable();
+                            this._fuseSplashScreenService.hide();
+                        })
+                        .catch(error => this._messageProvider.showSnackError(error));
                     this._fuseSplashScreenService.hide();
                 }
                 this._fuseSplashScreenService.hide();
@@ -144,22 +143,29 @@ export class TablePendingComponent implements OnInit,AfterViewInit,OnDestroy {
 
     async loadTable(): Promise<void> {
         this._fuseSplashScreenService.show();
-        await this._tableService.dataCount('ESTADO = "1"', this._currentUserUbigeo, this.bySearch).then((count) => {
-            this.count = count;
-        })
-            .then(() => this._tableService.dataLoad('ESTADO = "1"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],
-                this._currentUserUbigeo, this.bySearch, this.params)
-            )
-            .then((data) => {
-                this.dataSource = data;
-                if (this.dataSource.length > 0) {
-                    this.error = false;
-                } else {
-                    this.error = true;
-                }
-            });
-        this._fuseSplashScreenService.hide();
 
+        // Agregar un retraso utilizando setTimeout
+        setTimeout(async () => {
+            await this._tableService.dataCount('ESTADO = "1"', this._currentUserUbigeo, this.bySearch).then((count) => {
+                this.count = count;
+            });
+
+            // Agregar otro retraso para la llamada a dataLoad
+            setTimeout(async () => {
+                await this._tableService.dataLoad('ESTADO = "1"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],
+                    this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
+                        this.dataSource = data;
+                        if (this.dataSource.length > 0) {
+                            this.error = false;
+                        } else {
+                            this.error = true;
+                        }
+
+                        // Ocultar el SplashScreen después de que se completen las llamadas
+                        this._fuseSplashScreenService.hide();
+                    });
+            }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
+        }, 1000); // Esperar 1 segundo antes de llamar a dataCount
     }
 
     page(e): void {
