@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
     Component,
     OnInit,
@@ -75,6 +76,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     homeButton;
 
+
     idView = 'inspre';
     constructor(
         protected _fuseSplashScreenService: FuseSplashScreenService,
@@ -100,12 +102,17 @@ export class MapComponent implements OnInit, AfterViewInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this._currentUser = user;
+                console.log('this._currentUser', this._currentUser);
                 // @SETUBIGEO
                 this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
-                if (this._currentUserUbigeo === '150101') {
+                localStorage.setItem('ubigeo',this._currentUserUbigeo);
+                this._operatorService.updateUbigeo();
+
+                if(this._currentUser.isSuperuser) {
                     this.hideSelectUbigeo = false;
                 }
+
             });
         this._newLoadService.clearAllGraphics.subscribe(() => this.clearSelection());
         this._newLoadService.oid.subscribe(oid => this.clearSelectionById(oid));
@@ -135,11 +142,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._webmap.findLayerById(id).refresh();
     }
 
-    onSelectUbigeo(ubigeo: string): void {
-        this._operatorService.updateUbigeo(ubigeo);
+    onSelectUbigeo(ubigeo: any): void {
         this._currentUserUbigeo = ubigeo;
-        console.log(this._currentUserUbigeo, 'this._currentUserUbigeo');
-        this._tableService._newUbigeo.next(this._currentUserUbigeo);
+        console.log('this.ubigeo ', this._currentUserUbigeo );
+        localStorage.setItem('ubigeo',this._currentUserUbigeo);
+        this._operatorService.updateUbigeo();
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
         this._fuseSplashScreenService.show(0);
         setTimeout(async () => {

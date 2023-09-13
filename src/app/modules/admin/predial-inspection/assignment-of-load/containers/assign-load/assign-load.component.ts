@@ -81,26 +81,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this._operatorsService.getUbigeo().subscribe((ubigeo) => {
-            console.log(ubigeo, 'ubideo  initi load');
             this._currentUserUbigeo = ubigeo ? ubigeo : '150101';
             this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
             this.params['district'] = this._currentUserUbigeo;
         });
 
-        // this._userService.user$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((user: User) => {
-        //         // @SETUBIGEO
-        //         this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        //         this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-        //         this.params['district']=this._currentUserUbigeo;
-        //     });
-
-        // this._tableService._newUbigeo.subscribe((newUbigeo) => {
-        //     this._currentUserUbigeo = newUbigeo;
-        //     this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
-        //     this.params['district']=this._currentUserUbigeo;
-        // });
 
         // Suscríbete al BehaviorSubject para datos de la tabla
         this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
@@ -120,17 +105,6 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
 
-        // this.form.get('codUser').valueChanges.subscribe((val) => {
-        //     if (val === '') {
-        //         this.user = false;
-        //         return;
-        //     }
-        //     this.params['search'] = val;
-        //     this.user = true;
-        //     this.getOperator();
-        // }
-        // );
-
         this.emitFilter();
     }
 
@@ -145,14 +119,6 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         this._widgetService.listWidget(this._currentUserUbigeo);
     }
 
-    // getOperator() {
-    //     this._fuseSplashScreenService.show();
-    //     this._operatorsService.getOperador(this.params).subscribe((data) => {
-    //         console.log(this.params, 'here paarams');
-    //         this.operator = data.results[0];
-    //         this._fuseSplashScreenService.hide();
-    //     });
-    // }
 
     async getOperator(): Promise<any> {
         await this._operatorsService.getOperador(this.params).subscribe(async (data) => {
@@ -356,7 +322,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     const allPromises = [];
                     const orderPromises = [];
                     const prediosSinManzana = [];
-                    const manzanasInei = []
+                    const manzanasInei = [];
                     for (const key of dataWorkLoad) {
                         if (key.tipo.toLowerCase() === 'manzana') {
                             switch (key.fuente) {
