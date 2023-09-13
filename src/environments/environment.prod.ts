@@ -1,4 +1,4 @@
-const host = 'https://catastro-fiscal.codtree.com/';
+const host = 'https://catastromef.apistoring.com/catastroback/';
 
 export const environment = {
     production: true,
