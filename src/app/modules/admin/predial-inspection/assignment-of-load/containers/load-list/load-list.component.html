@@ -42,8 +42,11 @@
                                 placeholder="Seleccionar unidad urbana"
                                 formControlName="cod">
                                 <mat-option [value]="">-----</mat-option>
+                                <ng-container *ngIf="listUnit.length===0">
+                                    <mat-option [value]="">No hay datos para este ubigeo</mat-option>
+                                </ng-container>
                                 <mat-option [value]="unit.cod" *ngFor="let unit of listUnit">
-                                {{unit.name}}
+                                    {{unit.name}}
                                 </mat-option>
                             </mat-select>
                         </div>

@@ -57,26 +57,11 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setTableColumn();
         this._operatorService.getUbigeo().subscribe((data) => {
             this._currentUserUbigeo = data;
-            this.loadTable();
+            setTimeout(() => {
+                this.loadTable();
+            }, 1000);
         });
 
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     console.log(user, 'user');
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        // this._tableService._newUbigeo.subscribe((r) => {
-        //     this._currentUserUbigeo  = r;
-        //     console.log( this._currentUserUbigeo , r);
-        //     this.loadTable();
-        // });
-
-        // this._tableService._newUbigeo.subscribe((r) => {
-        //     this._currentUserUbigeo  = r;
-        //     console.log( this._currentUserUbigeo , 'r');
-        //     this.loadTable();
-        // });
     }
 
     ngAfterViewInit(): void {
@@ -142,30 +127,20 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show();
+        this._fuseSplashScreenService.show(0);
+        const queryData = 'ESTADO = "1"';
+        const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'];
 
-        // Agregar un retraso utilizando setTimeout
-        setTimeout(async () => {
-            await this._tableService.dataCount('ESTADO = "1"', this._currentUserUbigeo, this.bySearch).then((count) => {
-                this.count = count;
-            });
+        this.count = await this._tableService.dataCount(queryData, this._currentUserUbigeo, this.bySearch);
+        this.dataSource = await this._tableService.dataLoad(queryData, fieldsDataLoad, this._currentUserUbigeo, this.bySearch, this.params);
 
-            // Agregar otro retraso para la llamada a dataLoad
-            setTimeout(async () => {
-                await this._tableService.dataLoad('ESTADO = "1"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'],
-                    this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
-                        this.dataSource = data;
-                        if (this.dataSource.length > 0) {
-                            this.error = false;
-                        } else {
-                            this.error = true;
-                        }
+        if (this.dataSource.length > 0) {
+            this.error = false;
+        } else {
+            this.error = true;
+        }
 
-                        // Ocultar el SplashScreen después de que se completen las llamadas
-                        this._fuseSplashScreenService.hide();
-                    });
-            }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
-        }, 1000); // Esperar 1 segundo antes de llamar a dataCount
+        this._fuseSplashScreenService.hide();
     }
 
     page(e): void {

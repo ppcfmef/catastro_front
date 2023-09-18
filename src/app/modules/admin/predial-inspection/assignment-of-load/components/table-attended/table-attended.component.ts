@@ -44,19 +44,11 @@ export class TableAttendedComponent implements OnInit, AfterViewInit, OnDestroy 
         this.setTableColumn();
         this._operatorService.getUbigeo().subscribe((data) => {
             this._currentUserUbigeo = data;
-            this.loadTable();
+            setTimeout(() => {
+                this.loadTable();
+            }, 1000);
         });
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        // this.loadTable();
-        // this._tableService._newUbigeo.subscribe((r) => {
-        //     this._currentUserUbigeo  = r;
-        //     console.log( this._currentUserUbigeo , 're');
-        //     this.loadTable();
-        // });
+        this._tableService.reloadTableAttended.subscribe(() => this.loadTable());
     }
 
     ngAfterViewInit(): void {
@@ -77,30 +69,42 @@ export class TableAttendedComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show();
+        const queryData = 'ESTADO = "4"';
+        const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'];
 
-        // Agregar un setTimeout para retrasar la llamada a dataCount
-        setTimeout(async () => {
-            await this._tableService.dataCount('ESTADO = "4"', this._currentUserUbigeo, this.bySearch).then((count) => {
-                this.count = count;
-            });
+        this.count = await this._tableService.dataCount(queryData, this._currentUserUbigeo, this.bySearch);
+        this.dataSource = await this._tableService.dataLoad(queryData, fieldsDataLoad, this._currentUserUbigeo, this.bySearch, this.params);
 
-            // Agregar otro setTimeout para retrasar la llamada a dataLoad
-            setTimeout(async () => {
-                await this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
-                    this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
-                        this.dataSource = data;
-                        if (this.dataSource.length > 0) {
-                            this.error = false;
-                        } else {
-                            this.error = true;
-                        }
+        if (this.dataSource.length > 0) {
+            this.error = false;
+        } else {
+            this.error = true;
+        }
 
-                        // Ocultar el SplashScreen después de que se completen las llamadas
-                        this._fuseSplashScreenService.hide();
-                    });
-            }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
-        }, 1000); // Esperar 1 segundo antes de llamar a dataCount
+        // this._fuseSplashScreenService.show();
+
+        // // Agregar un setTimeout para retrasar la llamada a dataCount
+        // setTimeout(async () => {
+        //     await this._tableService.dataCount('ESTADO = "4"', this._currentUserUbigeo, this.bySearch).then((count) => {
+        //         this.count = count;
+        //     });
+
+        //     // Agregar otro setTimeout para retrasar la llamada a dataLoad
+        //     setTimeout(async () => {
+        //         await this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
+        //             this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
+        //                 this.dataSource = data;
+        //                 if (this.dataSource.length > 0) {
+        //                     this.error = false;
+        //                 } else {
+        //                     this.error = true;
+        //                 }
+
+        //                 // Ocultar el SplashScreen después de que se completen las llamadas
+        //                 this._fuseSplashScreenService.hide();
+        //             });
+        //     }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
+        // }, 1000); // Esperar 1 segundo antes de llamar a dataCount
     }
 
     ngOnDestroy(): void {

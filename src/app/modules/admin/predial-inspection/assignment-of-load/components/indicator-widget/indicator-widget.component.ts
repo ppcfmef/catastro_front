@@ -36,13 +36,6 @@ export class IndicatorWidgetComponent implements OnInit, OnDestroy {
             this._widgetService.getDataWidget().subscribe(data => this.newCard = data);
         });
 
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        //this._tableService._newUbigeo.subscribe(resp =>this._widgetService.listWidget(resp) );
-
     }
 
     ngOnDestroy(): void {

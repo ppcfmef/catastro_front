@@ -21,24 +21,19 @@ export class OperatorService {
     private _httpClient: HttpClient,
     private _userService: UserService,
     ) {
-        this.setUbigeo();
+        //this.setUbigeo();
     }
 
     getUbigeo(): Observable<string>{
         return this._currentUserUbigeo.asObservable();
     }
 
-    updateUbigeo(ubigeo): void {
+    updateUbigeo(): void {
+        const ubigeo = localStorage.getItem('ubigeo');
         this._currentUserUbigeo.next(ubigeo);
     }
 
-    setUbigeo(): void{
-        this._userService.user$
-        .subscribe((user: User) => {
-            const userUbigeo = user.ubigeo ? user.ubigeo : '150101';
-            this._currentUserUbigeo.next(userUbigeo);
-        });
-    }
+
 
     getOperador(params): Observable<any> {
         return this._httpClient.get<any>(`${environment.apiUrl}/gap-analisys/user/`, {params});

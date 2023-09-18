@@ -54,22 +54,16 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
         this.setTableColumn();
         this._operatorService.getUbigeo().subscribe((data) => {
             this._currentUserUbigeo = data;
-            this.loadTable();
+            setTimeout(() => {
+                this.loadTable();
+            }, 1000);
         });
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        // this._tableService._newUbigeo.subscribe((r) => {
-        //     this._currentUserUbigeo  = r;
-        //     console.log( this._currentUserUbigeo , 're');
-        //     this.loadTable();
-        // });
     }
 
     ngAfterViewInit(): void {
-        this.loadTable();
+        setTimeout(() => {
+            this.loadTable();
+        }, 1000);
         this._tableService.searchBy.subscribe((res) => {
             this.bySearch = res;
             this.loadTable();
@@ -79,6 +73,8 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.loadTable();
             }
         });
+
+
     }
 
     ngOnDestroy(): void {
@@ -115,50 +111,60 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     onDelete(row): void {
         const cod = row.codCarga;
-        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' + cod)
-            .afterClosed()
-            .subscribe(async (confirm) => {
+
+        const messageDelete = `¿Está seguro de eliminar el la carga de trabajo: ${cod}?`;
+        const messageDeletePending = `No se puede eliminar la carga ${cod} porque contiene tickets resueltos. 
+        ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
+        const messageDeleteSuccess = `La carga de trabajo con código ${cod} ha sido eliminada`;
+        const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${cod}`;
+
+        // Check if the workload has attended tickets
+        this._tableService.hasAttendedTickets(cod, this._currentUserUbigeo).then(async (hasAttendedTickets) => {
+            let confirm = true;
+
+            if (hasAttendedTickets) {
+                confirm = await this._messageProvider.showConfirm(messageDeletePending).afterClosed().toPromise();
+            } else {
+                confirm = await this._messageProvider.showConfirm(messageDelete).afterClosed().toPromise();
+            }
+
+            if (confirm) {
                 this._fuseSplashScreenService.show(0);
-                if (confirm) {
-                    await this._tableService.deleteRow(row, this._currentUserUbigeo)
-                        .then((data) => {
-                            this._messageProvider.showAlert(data);
-                            this.loadTable();
-                            this._fuseSplashScreenService.hide();
-                        })
-                        .catch(error => this._messageProvider.showSnackError(error));
+                try {
+                    if (hasAttendedTickets) {
+                        await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo);
+                        this._messageProvider.showAlert(messageDeletePendingSuccess);
+                    }
+                    else {
+                        await this._tableService.deleteRow(row, this._currentUserUbigeo);
+                        this._messageProvider.showAlert(messageDeleteSuccess);
+                    }
+                    await this.loadTable();
+                    this._tableService.reloadTableAttended.emit();
+                    await this._tableService.reloadLayersAfterDelete();
+                    // this._tableService.triggerReloadTableAttended();
+                } catch (error) {
+                    this._messageProvider.showSnackError(error);
+                } finally {
                     this._fuseSplashScreenService.hide();
                 }
-                this._fuseSplashScreenService.hide();
-            });
+            }
+        });
 
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show();
+        const queryData = 'ESTADO IN ("2","3")';
+        const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'];
 
-        // Agregar un setTimeout para retrasar la llamada a dataCount
-        setTimeout(async () => {
-            await this._tableService.dataCount('ESTADO IN ("2","3")', this._currentUserUbigeo, this.bySearch).then((count) => {
-                this.count = count;
-            });
+        this.count = await this._tableService.dataCount(queryData, this._currentUserUbigeo, this.bySearch);
+        this.dataSource = await this._tableService.dataLoad(queryData, fieldsDataLoad, this._currentUserUbigeo, this.bySearch, this.params);
 
-            // Agregar otro setTimeout para retrasar la llamada a dataLoad
-            setTimeout(async () => {
-                await this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
-                    this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
-                        this.dataSource = data;
-                        if (this.dataSource.length > 0) {
-                            this.error = false;
-                        } else {
-                            this.error = true;
-                        }
-
-                        // Ocultar el SplashScreen después de que se completen las llamadas
-                        this._fuseSplashScreenService.hide();
-                    });
-            }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
-        }, 1000); // Esperar 1 segundo antes de llamar a dataCount
+        if (this.dataSource.length > 0) {
+            this.error = false;
+        } else {
+            this.error = true;
+        }
     }
 
     page(e): void {

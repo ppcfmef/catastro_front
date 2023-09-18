@@ -20,17 +20,17 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
     templateUrl: './load-attend.component.html',
     styleUrls: ['./load-attend.component.scss']
 })
-export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
-    _portalUrl =  'https://ws.mineco.gob.pe/portaldf';
+export class LoadAttendComponent implements OnInit, AfterViewInit, OnDestroy {
+    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
     idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUserUbigeo: string;
     _fecha;
 
-    tableColumns: TableColumn[] =[];
+    tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
         isAction: true,
-        isZoom:true,
+        isZoom: true,
     };
     dataSource = [];
     newCod: string;
@@ -38,10 +38,10 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     operator;
     dateOperator;
     result;
-    cards =[
+    cards = [
         {
             num: 0,
-            text: 'TICKETS ASIGNADAS ACTUALMENTE'
+            text: 'TICKETS PENDIENTES'
         },
         {
             num: 0,
@@ -58,48 +58,48 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
         private _operatorsService: OperatorService,
         private _widgetService: WidgetService,
         protected _messageProviderService: MessageProviderService,
-        ) { }
+    ) { }
 
-        ngOnInit(): void {
-            this.setTableColumn();
-            this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
-                if (cod) {
-                    this.newCod = cod;
-                }
-            });
+    ngOnInit(): void {
+        this.setTableColumn();
+        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ cod }) => {
+            if (cod) {
+                this.newCod = cod;
+            }
+        });
 
-            this._operatorsService.getUbigeo().subscribe((ubigeo) => {
-                    this._currentUserUbigeo = ubigeo;
-                    this._fuseSplashScreenService.show();
-                    this._tableService.detailLoad( this.newCod, this._currentUserUbigeo)
-                    .then((data) => {
-                        this.dataSource = data;
-                        this._tableService.getDataByWorkLoad(this._currentUserUbigeo, this.newCod).then((resp) => {
-                            this._fecha = resp.dateLimit;
-                            this.operator = resp.user;
-                            this.cards[0].num = resp.user.statsUser.pending;
-                            this.cards[1].num = resp.user.statsUser.attended;
-                            this._fuseSplashScreenService.hide();
-                        });
-                    })
-                    .catch((err) => {
-                        this.dataSource = [];
-                        this.cards[0].num = 0;
-                        this.cards[1].num = 0;
-                        this.operator = null;
-                        this._fecha = null;
-                        this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+        this._operatorsService.getUbigeo().subscribe((ubigeo) => {
+            this._currentUserUbigeo = ubigeo;
+            this._fuseSplashScreenService.show();
+            this._tableService.detailLoad(this.newCod, this._currentUserUbigeo)
+                .then((data) => {
+                    this.dataSource = data;
+                    this._tableService.getDataByWorkLoad(this._currentUserUbigeo, this.newCod).then((resp) => {
+                        this._fecha = resp.dateLimit;
+                        this.operator = resp.user;
+                        this.cards[0].num = resp.user.statsUser.pending;
+                        this.cards[1].num = resp.user.statsUser.attended;
                         this._fuseSplashScreenService.hide();
                     });
+                })
+                .catch((err) => {
+                    this.dataSource = [];
+                    this.cards[0].num = 0;
+                    this.cards[1].num = 0;
+                    this.operator = null;
+                    this._fecha = null;
+                    this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
+                    this._fuseSplashScreenService.hide();
                 });
+        });
 
 
-        }
+    }
 
-        ngAfterViewInit(): void {
-            console.log(this.result, 'resptafff');
+    ngAfterViewInit(): void {
+        console.log(this.result, 'resptafff');
 
-        }
+    }
 
 
     ngOnDestroy(): void {
@@ -110,22 +110,22 @@ export class LoadAttendComponent implements OnInit,AfterViewInit, OnDestroy {
     setTableColumn(): void {
         this.tableColumns = [
             { matheaderdef: 'Nro', matcolumndef: 'nro', matcelldef: 'nro' },
-            { matheaderdef: 'Codigo',matcolumndef: 'CODIGO',matcelldef: 'CODIGO'},
-            { matheaderdef: 'Tipo',matcolumndef: 'TIPO',matcelldef: 'TIPO'},
-            { matheaderdef: 'Fuente', matcolumndef: 'FUENTE', matcelldef: 'FUENTE'},
+            { matheaderdef: 'Codigo', matcolumndef: 'CODIGO', matcelldef: 'CODIGO' },
+            { matheaderdef: 'Tipo', matcolumndef: 'TIPO', matcelldef: 'TIPO' },
+            { matheaderdef: 'Fuente', matcolumndef: 'FUENTE', matcelldef: 'FUENTE' },
         ];
     }
 
-        onZoom(row: any): void {
-            this.zoom(row);
-        }
+    onZoom(row: any): void {
+        this.zoom(row);
+    }
 
-        redirecto(): void {
-            this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-        }
+    redirecto(): void {
+        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+    }
 
-        async zoom(row): Promise<any> {
-            await this._tableService.zoomRow(row).then(data =>  console.log(data));
-        }
+    async zoom(row): Promise<any> {
+        await this._tableService.zoomRow(row).then(data => console.log(data));
+    }
 
 }

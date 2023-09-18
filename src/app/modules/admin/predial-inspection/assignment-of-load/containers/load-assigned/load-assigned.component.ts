@@ -50,7 +50,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     cards = [
         {
             num: 0,
-            text: 'TICKETS ASIGNADAS ACTUALMENTE',
+            text: 'TICKETS PENDIENTES',
         },
         {
             num: 0,
@@ -77,17 +77,17 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         this.setTableColumn();
 
-        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({cod}) => {
+        this._activatedRoute.params.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ cod }) => {
             if (cod) {
                 this.codLoad = cod;
             }
         });
 
         this._operatorsService.getUbigeo().subscribe((ubigeo) => {
-                this._currentUserUbigeo = ubigeo;
-                console.log(this._currentUserUbigeo, 'assigned');
-                this.params['district']= this._currentUserUbigeo;
-                this._tableService.detailLoad( this.codLoad, this._currentUserUbigeo)
+            this._currentUserUbigeo = ubigeo;
+            console.log(this._currentUserUbigeo, 'assigned');
+            this.params['district'] = this._currentUserUbigeo;
+            this._tableService.detailLoad(this.codLoad, this._currentUserUbigeo)
                 .then((data) => {
                     this.dataSource = data;
                     this._tableService.getDataByWorkLoad(this._currentUserUbigeo, this.codLoad).then((resp) => {
@@ -105,7 +105,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.cards[1].num = 0;
                     this._messageProviderService.showSnackError(`${err} en el actual Ubigeo`);
                 });
-            });
+        });
 
         // this._userService.user$
         //     .pipe(takeUntil(this._unsubscribeAll))
@@ -191,15 +191,64 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         const ubigeo = this._currentUserUbigeo;
         const workload = this.codLoad;
         const operator = null;
-        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
-            .then(() => {
-                this.showsearch = true;
-                this.user = false;
-                //this.form.controls['codUser'].enable();
-                this.operator = null;
-                this.form.reset();
-            })
-            .catch();
+
+        const messageUnassign = `¿Está seguro que quiere desasignar la carga de trabajo: ${workload}?`;
+        const messageDeletePending = `No se puede desasignar la carga ${workload} porque contiene tickets resueltos. 
+        ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
+        const messageUnassignSuccess = `La carga de trabajo ${workload} fue desasignada`;
+        const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${workload}`;
+
+        // Check if the workload has attended tickets
+        this._tableService.hasAttendedTickets(workload, this._currentUserUbigeo).then(async (hasAttendedTickets) => {
+            let confirm = true;
+
+            if (hasAttendedTickets) {
+                confirm = await this._messageProviderService.showConfirm(messageDeletePending).afterClosed().toPromise();
+            } else {
+                confirm = await this._messageProviderService.showConfirm(messageUnassign).afterClosed().toPromise();
+            }
+
+            if (confirm) {
+                this._fuseSplashScreenService.show(0);
+                try {
+                    if (hasAttendedTickets) {
+                        await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo);
+                        await this._tableService.reloadLayersAfterDelete();
+                        this._messageProviderService.showAlert(messageDeletePendingSuccess)
+                            .afterClosed().subscribe(() => {
+                                this.redirecto();
+                            });
+                    }
+                    else {
+                        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
+                        this.showsearch = true;
+                        this.user = false;
+                        //this.form.controls['codUser'].enable();
+                        this.operator = null;
+                        this.form.reset();
+                        this._messageProviderService.showAlert(messageUnassignSuccess);
+                    }
+                    // await this.loadTable();
+                    // this._tableService.reloadTableAttended.emit();
+                    // await this._tableService.reloadLayersAfterDelete();
+                    // this._tableService.triggerReloadTableAttended();
+                } catch (error) {
+                    this._messageProviderService.showSnackError(error);
+                } finally {
+                    this._fuseSplashScreenService.hide();
+                }
+            }
+        });
+
+        // await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+        //     .then(() => {
+        //         this.showsearch = true;
+        //         this.user = false;
+        //         //this.form.controls['codUser'].enable();
+        //         this.operator = null;
+        //         this.form.reset();
+        //     })
+        //     .catch();
 
     }
     setTableColumn(): void {
@@ -244,19 +293,19 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.user = true;
             });
 
-            // .then((result) => {
-            //     console.log(result, 'result');
-            //     this.form.get('codUser').setValue('');
-            //     //this._messageProviderService.showSnack('Asignado correctament');
-            //     //window.location.reload();
-            //     this._fuseSplashScreenService.hide();
-            //     this.user = true;
-            // })
-            // .catch((error) => {
-            //     console.log(error, 'errr');
-            //     this._messageProviderService.showSnackError('Error al asignar carga');
-            //     this._fuseSplashScreenService.hide();
-            // });
+        // .then((result) => {
+        //     console.log(result, 'result');
+        //     this.form.get('codUser').setValue('');
+        //     //this._messageProviderService.showSnack('Asignado correctament');
+        //     //window.location.reload();
+        //     this._fuseSplashScreenService.hide();
+        //     this.user = true;
+        // })
+        // .catch((error) => {
+        //     console.log(error, 'errr');
+        //     this._messageProviderService.showSnackError('Error al asignar carga');
+        //     this._fuseSplashScreenService.hide();
+        // });
 
     }
 

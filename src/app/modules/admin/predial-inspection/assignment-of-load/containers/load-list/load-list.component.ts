@@ -4,7 +4,7 @@ import { NewLoadService } from '../../services/new-load.service';
 import { Subject } from 'rxjs';
 import { TableService } from '../../services/table.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil, catchError } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormUtils } from 'app/shared/utils/form.utils';
 import { UserService } from 'app/core/user/user.service';
@@ -53,13 +53,6 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
             this._currentUserUbigeo = data;
             this.getListUrbanUnit();
         });
-
-
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
     }
 
     ngAfterViewInit(): void {
@@ -89,7 +82,11 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(this._currentUserUbigeo, 'load list');
         setTimeout(() => {
             this._tableService.getListUrbantUnit(this._currentUserUbigeo).then((data) => {
-                this.listUnit = [...data];
+                if(typeof(data) === 'string') {
+                    this.listUnit = [];
+                }else{
+                    this.listUnit = [...data];
+                }
             });
         }, 1000);
     }
@@ -137,7 +134,6 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
             ).subscribe((data) => {
                 this._tableService.searchBy.next(data);
                 this._ngxSpinner.hide();
-                console.log(data, 'dattt');
             });
     }
 

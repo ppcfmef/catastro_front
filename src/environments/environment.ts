@@ -1,8 +1,8 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-// const host = 'https://catastromef.apistoring.com/catastroback/';
-const host = 'http://localhost:8001/';
+const host = 'https://catastromef.apistoring.com/catastroback/';
+// const host = 'http://localhost:8001/';
 export const environment = {
     production: false,
     url: host,
@@ -13,7 +13,7 @@ export const environment = {
     exportUrl: host + 'export',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv',
     defaultUbigeo: '150101',
-    apiKeyArcgis:'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9',
+    apiKeyArcgis: 'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9',
     apiUrlArcGisServer: 'https://ws.mineco.gob.pe/serverdf/rest/services',
 };
 
