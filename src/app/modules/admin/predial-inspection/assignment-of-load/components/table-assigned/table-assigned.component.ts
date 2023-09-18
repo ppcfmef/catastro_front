@@ -113,7 +113,8 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
         const cod = row.codCarga;
 
         const messageDelete = `¿Está seguro de eliminar el la carga de trabajo: ${cod}?`;
-        const messageDeletePending = `No se puede eliminar la carga ${cod} porque contiene tickets resueltos. ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
+        const messageDeletePending = `No se puede eliminar la carga ${cod} porque contiene tickets resueltos. 
+        ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
         const messageDeleteSuccess = `La carga de trabajo con código ${cod} ha sido eliminada`;
         const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${cod}`;
 

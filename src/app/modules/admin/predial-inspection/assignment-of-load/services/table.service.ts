@@ -35,9 +35,9 @@ export class TableService {
     public _updateTable: Subject<boolean> = new Subject();
     public _newUbigeo: Subject<string> = new Subject();
     public searchBy = new Subject();
+    public reloadTableAttended: EventEmitter<void> = new EventEmitter();
     private webMapSubject = new BehaviorSubject<any>(null);
     private wievSubject = new BehaviorSubject<any>(null);
-    public reloadTableAttended: EventEmitter<void> = new EventEmitter();
 
     constructor(
         private _fuseSplashScreenService: FuseSplashScreenService,
@@ -219,7 +219,8 @@ export class TableService {
 
                 if (predios.length > 0) {
                     const queryPoint = new newQuery();
-                    queryPoint.where = `COD_PRE IN ('${predios.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    // queryPoint.where = `COD_PRE IN ('${predios.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    queryPoint.where = 'COD_PRE IN (\'' + predios.join('\', \'') + '\') and ID_CARGA = \'' + currentUserUbigeo + codWorkLoad + '\'';
                     queryPoint.outFields = ['*'];
                     queryPoint.returnGeometry = false;
 
@@ -259,7 +260,9 @@ export class TableService {
 
                 if (manzanas.length > 0) {
                     const queryBlock = new newQuery();
-                    queryBlock.where = `ID_MZN_C NOT IN ('${manzanas.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    // queryBlock.where = `ID_MZN_C NOT IN ('${manzanas.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    queryBlock.where = 'ID_MZN_C NOT IN (\'' + manzanas.join('\', \'') + '\') and ID_CARGA = \'' + currentUserUbigeo + codWorkLoad + '\'';
+
                     queryBlock.outFields = ['OBJECTID'];
                     queryBlock.returnGeometry = false;
 

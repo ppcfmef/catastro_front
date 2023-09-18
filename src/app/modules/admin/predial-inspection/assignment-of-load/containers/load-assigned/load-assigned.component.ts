@@ -193,7 +193,8 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         const operator = null;
 
         const messageUnassign = `¿Está seguro que quiere desasignar la carga de trabajo: ${workload}?`;
-        const messageDeletePending = `No se puede desasignar la carga ${workload} porque contiene tickets resueltos. ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
+        const messageDeletePending = `No se puede desasignar la carga ${workload} porque contiene tickets resueltos. 
+        ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
         const messageUnassignSuccess = `La carga de trabajo ${workload} fue desasignada`;
         const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${workload}`;
 
@@ -213,10 +214,13 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (hasAttendedTickets) {
                         await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo);
                         await this._tableService.reloadLayersAfterDelete();
-                        this._messageProviderService.showAlert(messageDeletePendingSuccess);
+                        this._messageProviderService.showAlert(messageDeletePendingSuccess)
+                            .afterClosed().subscribe(() => {
+                                this.redirecto();
+                            });
                     }
                     else {
-                        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+                        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
                         this.showsearch = true;
                         this.user = false;
                         //this.form.controls['codUser'].enable();
