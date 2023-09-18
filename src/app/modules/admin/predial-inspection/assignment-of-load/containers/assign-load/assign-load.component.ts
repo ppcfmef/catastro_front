@@ -47,7 +47,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     cards = [
         {
             num: 0,
-            text: 'TICKETS ASIGNADOS ACTUALMENTE'
+            text: 'TICKETS PENDIENTES'
         },
         {
             num: 0,
@@ -181,7 +181,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         const nameWorkLoad = this.form.value.loadName;
         const descWorlLoad = this.form.value.description;
         const ubigeo = this._currentUserUbigeo;
-        console.log(ubigeo, 'personal');
+        // console.log(ubigeo, 'personal');
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
         const codUserWorkLoad = this.operator ? this.operator.id : '';
@@ -322,7 +322,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     const allPromises = [];
                     const orderPromises = [];
                     const prediosSinManzana = [];
-                    const manzanasInei = [];
+                    // const manzanasInei = [];
                     for (const key of dataWorkLoad) {
                         if (key.tipo.toLowerCase() === 'manzana') {
                             switch (key.fuente) {
@@ -366,26 +366,27 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     orderPromises.push({ type: 'CFA', idmz: key.oid });
                                     break;
                                 case 'EU':
-                                    manzanasInei.push(key.oid.slice(1));
-                                    // const queryEUMSL = new Query();
-                                    // queryEUMSL.where = `${webMap.findLayerById(id_mz_inei).definitionExpression} AND ID_MZN_C = ${key.oid.slice(1)}`; //@daniel6
-                                    // queryEUMSL.outFields = ['*'];
-                                    // const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
-                                    // allPromises.push(promiseEUMSL);
-                                    // orderPromises.push({ type: 'EU', idmz: key.oid });
+                                    // manzanasInei.push(key.oid.slice(1));
+                                    const queryEUMSL = new Query();
+                                    queryEUMSL.where = `UBIGEO = '${ubigeo}' AND ID_MZN_C = ${key.oid.slice(1)}`; //@daniel6
+                                    queryEUMSL.outFields = ['*'];
+                                    const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
+                                    allPromises.push(promiseEUMSL);
+                                    orderPromises.push({ type: 'EU', idmz: key.oid });
                                     break;
                             }
                         } else {
                             prediosSinManzana.push(key);
                         }
-                        if (manzanasInei.length > 0) {
-                            const queryEUMSL = new Query();
-                            queryEUMSL.where = `${webMap.findLayerById(id_mz_inei).definitionExpression} AND ID_MZN_C in (${manzanasInei.join(',')})`; //@daniel6
-                            queryEUMSL.outFields = ['*'];
-                            const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
-                            allPromises.push(promiseEUMSL);
-                            orderPromises.push({ type: 'EU', idmz: key.oid });
-                        }
+                        // console.log("revisaqui")
+                        // if (manzanasInei.length > 0) {
+                        //     const queryEUMSL = new Query();
+                        //     queryEUMSL.where = `UBIGEO = '${ubigeo}' AND ID_MZN_C = ${key.oid.slice(1)}`; //@daniel6
+                        //     queryEUMSL.outFields = ['*'];
+                        //     const promiseEUMSL = webMap.findLayerById(id_mz_inei).queryFeatures(queryEUMSL);
+                        //     allPromises.push(promiseEUMSL);
+                        //     orderPromises.push({ type: 'EU', idmz: key.oid });
+                        // }
 
                     }
                     const data = await Promise.all(allPromises);
@@ -443,7 +444,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                     tickets.push({ attributes: ticket, geometry: null });
                                     break;
                                 case 'EU':
-                                    ticket['ID_ENTIDAD'] = `E${ubigeo}${row.attributes.ID_MZN_C}`;
+                                    ticket['ID_ENTIDAD'] = `${ubigeo}E${row.attributes.ID_MZN_C}`;
                                     ticket['TIPO'] = 'Manzana sin lotes';
                                     ticket['COD_TIPO_TICKET'] = '4';
                                     ticket['OBS_TICKET_GABINETE'] = 'Manzana sin lotes';

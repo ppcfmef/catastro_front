@@ -106,10 +106,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                 // @SETUBIGEO
                 this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
-                localStorage.setItem('ubigeo',this._currentUserUbigeo);
+                localStorage.setItem('ubigeo', this._currentUserUbigeo);
                 this._operatorService.updateUbigeo();
 
-                if(this._currentUser.isSuperuser) {
+                if (this._currentUser.isSuperuser) {
                     this.hideSelectUbigeo = false;
                 }
 
@@ -144,8 +144,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     onSelectUbigeo(ubigeo: any): void {
         this._currentUserUbigeo = ubigeo;
-        console.log('this.ubigeo ', this._currentUserUbigeo );
-        localStorage.setItem('ubigeo',this._currentUserUbigeo);
+        console.log('this.ubigeo ', this._currentUserUbigeo);
+        localStorage.setItem('ubigeo', this._currentUserUbigeo);
         this._operatorService.updateUbigeo();
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
         this._fuseSplashScreenService.show(0);
@@ -553,7 +553,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                                 }
                                 return {
                                     oid: oid,
-                                    codigo: `E${row.attributes.ubigeo}${row.attributes.ID_MZN_C}`, //@daniel6
+                                    codigo: `${row.attributes.ubigeo}E${row.attributes.ID_MZN_C}`, //@daniel6
                                     tipo: 'Manzana',
                                     fuente: 'EU',
                                     status: status,

@@ -47,7 +47,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     cards = [
         {
             num: 21,
-            text: 'TICKETS ASIGNADAS ACTUALMENTE',
+            text: 'TICKETS PENDIENTES',
         },
         {
             num: 25,
