@@ -9,6 +9,7 @@
         "ng": "ng",
         "start": "ng serve",
         "build": "ng build",
+        "build:mef": "ng build -- --base-href /plataformaCF/catastrofront/ --deploy-url /plataformaCF/catastrofront",
         "test": "ng test",
         "lint": "ng lint",
         "covertest": "ng test --no-watch --code-coverage"
