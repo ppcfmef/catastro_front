@@ -132,16 +132,21 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
                 this._fuseSplashScreenService.show(0);
                 try {
                     if (hasAttendedTickets) {
-                        await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo);
-                        this._messageProvider.showAlert(messageDeletePendingSuccess);
+                        await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this._messageProvider.showAlert(messageDeletePendingSuccess);
+                            });
                     }
                     else {
-                        await this._tableService.deleteRow(row, this._currentUserUbigeo);
-                        this._messageProvider.showAlert(messageDeleteSuccess);
+                        await this._tableService.deleteRow(row, this._currentUserUbigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this._messageProvider.showAlert(messageDeleteSuccess);
+                            });
                     }
-                    await this.loadTable();
+                    this.loadTable();
                     this._tableService.reloadTableAttended.emit();
-                    await this._tableService.reloadLayersAfterDelete();
                     // this._tableService.triggerReloadTableAttended();
                 } catch (error) {
                     this._messageProvider.showSnackError(error);
