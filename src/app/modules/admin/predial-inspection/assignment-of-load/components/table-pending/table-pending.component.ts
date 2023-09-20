@@ -114,6 +114,7 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (confirm) {
                     await this._tableService.deleteRow(row, this._currentUserUbigeo)
                         .then((data) => {
+                            this._tableService.reloadLayersAfterDelete();
                             this._messageProvider.showAlert(data);
                             this.loadTable();
                             this._fuseSplashScreenService.hide();

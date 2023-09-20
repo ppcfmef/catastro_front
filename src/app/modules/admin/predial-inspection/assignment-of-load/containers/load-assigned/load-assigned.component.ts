@@ -212,21 +212,38 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._fuseSplashScreenService.show(0);
                 try {
                     if (hasAttendedTickets) {
-                        await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo);
-                        await this._tableService.reloadLayersAfterDelete();
-                        this._messageProviderService.showAlert(messageDeletePendingSuccess)
-                            .afterClosed().subscribe(() => {
-                                this.redirecto();
-                            });
+                        await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this._messageProviderService.showAlert(messageDeletePendingSuccess)
+                                    .afterClosed().subscribe(() => {
+                                        this.redirecto();
+                                    });
+                            })
+                        // this._tableService.reloadLayersAfterDelete();
+                        // this._messageProviderService.showAlert(messageDeletePendingSuccess)
+                        //     .afterClosed().subscribe(() => {
+                        //         this.redirecto();
+                        //     });
                     }
                     else {
-                        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo);
-                        this.showsearch = true;
-                        this.user = false;
-                        //this.form.controls['codUser'].enable();
-                        this.operator = null;
-                        this.form.reset();
-                        this._messageProviderService.showAlert(messageUnassignSuccess);
+                        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this.showsearch = true;
+                                this.user = false;
+                                //this.form.controls['codUser'].enable();
+                                this.operator = null;
+                                this.form.reset();
+                                this._messageProviderService.showAlert(messageUnassignSuccess);
+                            });
+
+                        // this.showsearch = true;
+                        // this.user = false;
+                        // //this.form.controls['codUser'].enable();
+                        // this.operator = null;
+                        // this.form.reset();
+                        // this._messageProviderService.showAlert(messageUnassignSuccess);
                     }
                     // await this.loadTable();
                     // this._tableService.reloadTableAttended.emit();
