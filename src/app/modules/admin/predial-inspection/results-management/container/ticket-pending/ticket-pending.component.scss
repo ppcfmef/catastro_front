@@ -5,13 +5,21 @@
 .title-primary {
     font-weight: bold;
     color: var(---black);
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .arrow-back {
     color: #0090F8;
 }
 
+.btnorange {
+    background-color: #EB8508;
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+}
 
 mat-accordion {
     .mat-expansion-panel {
@@ -49,9 +57,71 @@ mat-accordion {
 
 .container {
     height: calc(100vh - 64px);
-    padding: 32px 16px;
+    padding: 32px 0px;
 
 }
 
+.box {
+    height: 18px;
+    width: 18px;
+}
+
+.red {
+   background-color: #DE3F43;
+}
+
+.example-panel-red {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  .example-panel-green.mat-mdc-select-panel {
+    background: rgba(0, 255, 0, 0.5);
+  }
+
+.example-panel-blue :host ::ng-deep .mat-mdc-select-panel {
+    background: rgba(0, 0, 255, 0.5);
+  }
 
 
+  .mat-option {
+    display: flex !important;
+    width: 100%;
+    background-color: #E1F0FF;
+    color: white; /* Puedes ajustar el color del texto según tus necesidades */
+    justify-content: space-between;
+  }
+
+  :host::ng-deep .mat-option-text{
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mat-select-trigger {
+    background-color: blue;
+  }
+  .mat-select-value-text {
+    color: white;
+  }
+
+
+  .button-select {
+    display: inline-block;
+    position: relative;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .button-select::after {
+    content: '\25BE'; /* Código del carácter de flecha hacia abajo */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+
+  .button-select:hover {
+    background-color: #f5f5f5;
+  }
