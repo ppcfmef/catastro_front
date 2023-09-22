@@ -147,8 +147,6 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
       'hidden': (item): boolean => item?.id === 'gappointswithoutland'
     },
 
- 
-
   ];
 
   rutasAdicionales3 =   [{

@@ -13,6 +13,8 @@ import { TicketPendingComponent } from './container/ticket-pending/ticket-pendin
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DatalandComponent } from './components/dataland/dataland.component';
 import { TicketRejectedComponent } from './container/ticket-rejected/ticket-rejected.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -48,6 +50,8 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
     SharedModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatTableModule,
+    MatPaginatorModule,
     MatExpansionModule,
     ReactiveFormsModule,
     OverlayModule,
