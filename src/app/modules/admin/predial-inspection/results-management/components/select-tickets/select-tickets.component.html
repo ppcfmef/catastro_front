@@ -1,0 +1,24 @@
+
+<button class="button-select" (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+   {{ isOpen ? 'Seleccione Ubicación' : itemSelect}}
+</button>
+
+<ng-template
+cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="trigger"
+[cdkConnectedOverlayOpen]="isOpen"
+>
+    <ul>
+        <ng-container *ngFor="let item of tickets, let i = index">
+            <li (click)="navegateTo(item)">
+                <div class="flex gap-3">
+                    <div class="box"></div>
+                    <strong><span>{{i+1}}. Ubicacion</span></strong> <span>- {{item.totalCase}} predios </span>
+                </div>
+                <mat-icon svgIcon='iconsmind:manage'></mat-icon>
+            </li>
+        </ng-container>
+    </ul>
+</ng-template>
+
+

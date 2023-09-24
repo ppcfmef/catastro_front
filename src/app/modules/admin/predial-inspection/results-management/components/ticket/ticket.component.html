@@ -1,0 +1,23 @@
+<div class="flex flex-col flex-auto px-4 gap-4">
+    <div class="">
+        <app-dataland></app-dataland>
+    </div>
+    <ng-container *ngFor="let item of tickets">
+        <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
+            <div>
+                <app-case [ticket] = 'item'></app-case>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
+            <div>
+                <app-case-suministro [ticket] = 'item'></app-case-suministro>
+            </div>
+        </ng-container>
+    </ng-container>
+    <div class="flex w-full justify-around ">
+        <ng-container *ngIf="estado">
+            <button class="btnAdd" (click)="add()">Aprobar </button>
+            <button class="btnObs">observar </button> 
+        </ng-container>
+    </div>
+</div>

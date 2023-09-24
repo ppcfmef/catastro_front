@@ -5,6 +5,7 @@ import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-autho
 import { ResultsComponent } from './container/results/results.component';
 import { TicketPendingComponent } from './container/ticket-pending/ticket-pending.component';
 import { TicketRejectedComponent } from './container/ticket-rejected/ticket-rejected.component';
+import { TicketComponent } from './components/ticket/ticket.component';
 
 const routes: Routes = [
     {
@@ -14,7 +15,16 @@ const routes: Routes = [
         data: { id: 'resmanagip', permissionType: 'read' },
         children:[
             {path: '',component: ResultsComponent},
-            {path: 'ticket-pending',component: TicketPendingComponent},
+            {
+                path: 'ticket-pending/:id',
+                component: TicketPendingComponent,
+                children:[
+                    {
+                        path:'ticket/:id',
+                        component:TicketComponent
+                    }
+                ]
+            },
             {path: 'ticket-rejected',component: TicketRejectedComponent},
         ]
     }
