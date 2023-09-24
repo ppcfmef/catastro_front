@@ -22,7 +22,7 @@ import { OperatorService } from '../../services/operator.service';
     templateUrl: './table-assigned.component.html',
     styleUrls: ['./table-assigned.component.scss'],
 })
-export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
+export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     _portalUrl = 'https://js.arcgis.com/4.27/';
     tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
@@ -35,7 +35,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     error: boolean = false;
     bySearch: any;
-    count=0;
+    count = 0;
     params = { limit: 5, offset: 0 };
 
 
@@ -48,41 +48,36 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
         protected _tableService: TableService,
         private _userService: UserService,
         private _operatorService: OperatorService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.setTableColumn();
         this._operatorService.getUbigeo().subscribe((data) => {
             this._currentUserUbigeo = data;
-            this.loadTable();
+            setTimeout(() => {
+                this.loadTable();
+            }, 1000);
         });
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        // this._tableService._newUbigeo.subscribe((r) => {
-        //     this._currentUserUbigeo  = r;
-        //     console.log( this._currentUserUbigeo , 're');
-        //     this.loadTable();
-        // });
     }
 
     ngAfterViewInit(): void {
-        this.loadTable();
+        setTimeout(() => {
+            this.loadTable();
+        }, 1000);
         this._tableService.searchBy.subscribe((res) => {
             this.bySearch = res;
             this.loadTable();
         });
         this._tableService._updateTable.subscribe((resp) => {
-            if(resp){
+            if (resp) {
                 this.loadTable();
             }
         });
+
+
     }
 
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
@@ -90,9 +85,9 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     setTableColumn(): void {
         this.tableColumns = [
             { matheaderdef: 'Nro.', matcolumndef: 'nro', matcelldef: 'nro' },
-            { matheaderdef: 'Cod. Carga', matcolumndef: 'codCarga',matcelldef: 'codCarga'},
-            { matheaderdef: 'Operador', matcolumndef: 'operador', matcelldef: 'operador'},
-            { matheaderdef: 'Fecha', matcolumndef: 'fecha', matcelldef: 'fecha',},
+            { matheaderdef: 'Cod. Carga', matcolumndef: 'codCarga', matcelldef: 'codCarga' },
+            { matheaderdef: 'Operador', matcolumndef: 'operador', matcelldef: 'operador' },
+            { matheaderdef: 'Fecha', matcolumndef: 'fecha', matcelldef: 'fecha', },
         ];
     }
 
@@ -112,47 +107,69 @@ export class TableAssignedComponent implements OnInit, AfterViewInit,OnDestroy {
     }
 
     onEditAssigned(row): void {
-        this._router.navigate([`load-assigned/${row.codCarga}`] , {relativeTo: this._activatedRoute});
+        this._router.navigate([`load-assigned/${row.codCarga}`], { relativeTo: this._activatedRoute });
     }
     onDelete(row): void {
         const cod = row.codCarga;
-        this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' +cod)
-            .afterClosed()
-            .subscribe(async (confirm) => {
+
+        const messageDelete = `¿Está seguro de eliminar el la carga de trabajo: ${cod}?`;
+        const messageDeletePending = `No se puede eliminar la carga ${cod} porque contiene tickets resueltos. 
+        ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
+        const messageDeleteSuccess = `La carga de trabajo con código ${cod} ha sido eliminada`;
+        const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${cod}`;
+
+        // Check if the workload has attended tickets
+        this._tableService.hasAttendedTickets(cod, this._currentUserUbigeo).then(async (hasAttendedTickets) => {
+            let confirm = true;
+
+            if (hasAttendedTickets) {
+                confirm = await this._messageProvider.showConfirm(messageDeletePending).afterClosed().toPromise();
+            } else {
+                confirm = await this._messageProvider.showConfirm(messageDelete).afterClosed().toPromise();
+            }
+
+            if (confirm) {
                 this._fuseSplashScreenService.show(0);
-                if(confirm){
-                    await this._tableService.deleteRow(row,this._currentUserUbigeo)
-                    .then((data) => {
-                        this._messageProvider.showAlert(data);
-                        this.loadTable();
-                        this._fuseSplashScreenService.hide();
-                    })
-                    .catch(error => this._messageProvider.showSnackError(error));
+                try {
+                    if (hasAttendedTickets) {
+                        await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this._messageProvider.showAlert(messageDeletePendingSuccess);
+                            });
+                    }
+                    else {
+                        await this._tableService.deleteRow(row, this._currentUserUbigeo)
+                            .then(() => {
+                                this._tableService.reloadLayersAfterDelete();
+                                this._messageProvider.showAlert(messageDeleteSuccess);
+                            });
+                    }
+                    this.loadTable();
+                    this._tableService.reloadTableAttended.emit();
+                    // this._tableService.triggerReloadTableAttended();
+                } catch (error) {
+                    this._messageProvider.showSnackError(error);
+                } finally {
                     this._fuseSplashScreenService.hide();
                 }
-                this._fuseSplashScreenService.hide();
-            });
+            }
+        });
 
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show();
-        await this._tableService.dataCount('ESTADO IN ("2","3")', this._currentUserUbigeo, this.bySearch).then((count) => {
-            this.count = count;
-        })
-            .then(() => this._tableService.dataLoad('ESTADO IN ("2","3")', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
-                this._currentUserUbigeo, this.bySearch, this.params)
-            )
-            .then((data) => {
-                this.dataSource = data;
-                if (this.dataSource.length > 0) {
-                    this.error = false;
-                } else {
-                    this.error = true;
-                }
-            });
-        this._fuseSplashScreenService.hide();
+        const queryData = 'ESTADO IN ("2","3")';
+        const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'];
 
+        this.count = await this._tableService.dataCount(queryData, this._currentUserUbigeo, this.bySearch);
+        this.dataSource = await this._tableService.dataLoad(queryData, fieldsDataLoad, this._currentUserUbigeo, this.bySearch, this.params);
+
+        if (this.dataSource.length > 0) {
+            this.error = false;
+        } else {
+            this.error = true;
+        }
     }
 
     page(e): void {

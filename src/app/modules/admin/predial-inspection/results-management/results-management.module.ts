@@ -13,6 +13,20 @@ import { TicketPendingComponent } from './container/ticket-pending/ticket-pendin
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DatalandComponent } from './components/dataland/dataland.component';
 import { TicketRejectedComponent } from './container/ticket-rejected/ticket-rejected.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SelectTicketsComponent } from './components/select-tickets/select-tickets.component';
+import { TicketComponent } from './components/ticket/ticket.component';
+import { CaseComponent } from './components/case/case.component';
+import { CaseSuministroComponent } from './components/case-suministro/case-suministro.component';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 
 
 @NgModule({
@@ -21,7 +35,11 @@ import { TicketRejectedComponent } from './container/ticket-rejected/ticket-reje
     ResultsComponent,
     TicketPendingComponent,
     DatalandComponent,
-    TicketRejectedComponent
+    TicketRejectedComponent,
+    SelectTicketsComponent,
+    TicketComponent,
+    CaseComponent,
+    CaseSuministroComponent
   ],
   imports: [
     CommonModule,
@@ -30,8 +48,15 @@ import { TicketRejectedComponent } from './container/ticket-rejected/ticket-reje
     MatButtonModule,
     MatTabsModule,
     SharedModule,
-
+    MatSelectModule,
+    MatFormFieldModule,
+    MatTableModule,
+    MatPaginatorModule,
     MatExpansionModule,
+    ReactiveFormsModule,
+    OverlayModule,
+    ScrollingModule,
+    CdkAccordionModule
   ]
 })
 export class ResultsManagementModule { }

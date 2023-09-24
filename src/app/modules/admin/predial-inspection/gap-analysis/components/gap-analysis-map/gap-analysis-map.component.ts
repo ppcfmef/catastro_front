@@ -148,7 +148,7 @@ OnChanges { // @Input() view: any = null;
         }, 1000);
     }
 
-    async initializeMap(inputPoints : any[] = [], ubigeo? : string): Promise < void > {
+    async initializeMap(inputPoints: any[] = [], ubigeo?: string): Promise < void > {
         try {
             const container = this.mapViewEl.nativeElement;
 
@@ -359,7 +359,7 @@ esriConfig
             ], {position: 'top-right'});
 
             this.view.ui.add(legend, 'bottom-right');
-         
+
             this.view.when(() => {
                 this._fuseSplashScreenService.hide();
                 if (ubigeo) {
@@ -439,14 +439,14 @@ esriConfig
                             <td>${
                                 r.attributes['NOM_UU']
                             }</td>
-                    
+
                             </tr>
                             <tr>
                             <td>Referencia</td>
                             <td>${
                                 r.attributes['NOM_REF']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -454,7 +454,7 @@ esriConfig
                             <td>${
                                 r.attributes['MZN_URB']
                             }</td>
-                    
+
                             </tr>
 
 
@@ -463,7 +463,7 @@ esriConfig
                             <td>${
                                 r.attributes['LOT_URB']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -471,14 +471,14 @@ esriConfig
                             <td>${
                                 r.attributes['TIP_VIA']
                             }</td>
-                    
+
                             </tr>
                             <tr>
                             <td>Nombre de via</td>
                             <td>${
                                 r.attributes['NOM_VIA']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -486,7 +486,7 @@ esriConfig
                             <td>${
                                 r.attributes['NUM_MUN']
                             }</td>
-                    
+
                             </tr>
                             </table>
                             `;
@@ -525,14 +525,14 @@ esriConfig
                             <td>${
                                 r.attributes['NOM_UU']
                             }</td>
-                    
+
                             </tr>
                             <tr>
                             <td>Referencia</td>
                             <td>${
                                 r.attributes['NOM_REF']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -540,7 +540,7 @@ esriConfig
                             <td>${
                                 r.attributes['MZN_URB']
                             }</td>
-                    
+
                             </tr>
 
 
@@ -549,7 +549,7 @@ esriConfig
                             <td>${
                                 r.attributes['LOT_URB']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -557,14 +557,14 @@ esriConfig
                             <td>${
                                 r.attributes['TIP_VIA']
                             }</td>
-                    
+
                             </tr>
                             <tr>
                             <td>Nombre de via</td>
                             <td>${
                                 r.attributes['NOM_VIA']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -572,12 +572,12 @@ esriConfig
                             <td>${
                                 r.attributes['NUM_MUN']
                             }</td>
-                    
+
                             </tr>
                             </table>
                             `;
 
-                            
+
                             this.points.push(r);
 
                             this.view.popup.open({location: event.mapPoint, content: content, actions: [verificarAction]});

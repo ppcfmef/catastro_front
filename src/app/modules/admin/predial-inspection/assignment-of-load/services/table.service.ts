@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { loadModules } from 'esri-loader';
 import moment from 'moment';
@@ -35,6 +35,7 @@ export class TableService {
     public _updateTable: Subject<boolean> = new Subject();
     public _newUbigeo: Subject<string> = new Subject();
     public searchBy = new Subject();
+    public reloadTableAttended: EventEmitter<void> = new EventEmitter();
     private webMapSubject = new BehaviorSubject<any>(null);
     private wievSubject = new BehaviorSubject<any>(null);
 
@@ -149,33 +150,168 @@ export class TableService {
                 queryObjectPorAsignar.start = params.offset;
                 queryObjectPorAsignar.num = params.limit;
                 // query to feature layer
-                query.executeQueryJSON(urlCarga, queryObjectPorAsignar)
-                    .then((response) => {
-                        const data = response.features.map((feature, index) => (
-                            (state === 'ESTADO = "1"')
-                                ?
-                                ({
-                                    oid: feature.attributes.OBJECTID,
-                                    nro: index + 1,
-                                    codCarga: feature.attributes.COD_CARGA,
-                                    fecha: moment.utc(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
-                                })
-                                :
-                                ({
-                                    oid: feature.attributes.OBJECTID,
-                                    nro: index + 1,
-                                    codCarga: feature.attributes.COD_CARGA,
-                                    fecha: moment.utc(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
-                                    codOperador: feature.attributes.COD_USUARIO,
-                                    operador: feature.attributes.NOM_USUARIO
-                                })
-                        ));
-                        resolve(data);
-                    })
-                    .catch(error => reject(error));
+
+                const response = await query.executeQueryJSON(urlCarga, queryObjectPorAsignar);
+                const data = response.features.map((feature, index) => (
+                    (state === 'ESTADO = "1"')
+                        ?
+                        ({
+                            oid: feature.attributes.OBJECTID,
+                            nro: index + 1,
+                            codCarga: feature.attributes.COD_CARGA,
+                            fecha: moment.utc(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
+                        })
+                        :
+                        ({
+                            oid: feature.attributes.OBJECTID,
+                            nro: index + 1,
+                            codCarga: feature.attributes.COD_CARGA,
+                            fecha: moment.utc(feature.attributes.FEC_ENTREGA).format('DD-MM-YYYY'),
+                            codOperador: feature.attributes.COD_USUARIO,
+                            operador: feature.attributes.NOM_USUARIO
+                        })
+                ));
+                resolve(data);
+
             }
             catch (error) {
                 console.log('EsriLoader: ', error);
+            }
+        });
+    }
+
+    deletePendingTickets(codWorkLoad, currentUserUbigeo): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const [newQuery] = await loadModules(['esri/rest/support/Query',]);
+
+                const queryTicket = new newQuery();
+                queryTicket.where = `ID_CARGA = '${currentUserUbigeo}${codWorkLoad}' and ESTADO_V = '1' and ESTADO IN ('3', '4')`;
+                queryTicket.outFields = ['*'];
+                queryTicket.returnGeometry = false;
+
+                const predios = [];
+                const manzanas = [];
+
+                const ticketsResponse = await this._webmap.findTableById(this.idTicketLayer).queryFeatures(queryTicket);
+                if (ticketsResponse.features.length > 0) {
+                    const featuresTicket = ticketsResponse.features;
+                    featuresTicket.forEach((feature) => {
+                        feature.attributes.ESTADO_V = 0;
+                        if (feature.attributes.COD_TIPO_TICKET === '1' || feature.attributes.COD_TIPO_TICKET === '5') {
+                            predios.push(feature.attributes.ID_ENTIDAD.slice(6,));
+                        }
+                        // else if (feature.attributes.COD_TIPO_TICKET === '4') {
+                        //     manzanas.push(feature.attributes.ID_ENTIDAD.slice(6,));
+                        // }
+                    });
+                    const updateTicketResponse = await this._webmap.findTableById(this.idTicketLayer).applyEdits({ updateFeatures: featuresTicket });
+
+                    const updateFeatureResult = updateTicketResponse.updateFeatureResults;
+                    for (const stateFeatureResult of updateFeatureResult) {
+                        if (stateFeatureResult.error) {
+                            console.log(stateFeatureResult);
+                        }
+                    }
+                }
+
+
+
+                if (predios.length > 0) {
+                    const queryPoint = new newQuery();
+                    // queryPoint.where = `COD_PRE IN ('${predios.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    queryPoint.where = 'COD_PRE IN (\'' + predios.join('\', \'') + '\') and ID_CARGA = \'' + currentUserUbigeo + codWorkLoad + '\'';
+                    queryPoint.outFields = ['*'];
+                    queryPoint.returnGeometry = false;
+
+                    const responsePoint = await this._webmap.findLayerById(this.idFieldPointLayer).queryFeatures(queryPoint);
+                    if (responsePoint.features.length > 0) {
+                        const featuresPredios = responsePoint.features;
+                        featuresPredios.forEach((feature) => {
+                            feature.attributes.Estado_tra = 1;
+                            feature.attributes.ID_CARGA = null;
+                        });
+
+                        const updatePointResponse = await this._webmap.findLayerById(this.idFieldPointLayer).applyEdits({ updateFeatures: featuresPredios });
+
+                        const updateFeatureResult = updatePointResponse.updateFeatureResults;
+                        for (const stateFeatureResult of updateFeatureResult) {
+                            if (stateFeatureResult.error) {
+                                console.log(stateFeatureResult);
+                            }
+                        }
+                    }
+                }
+
+                const queryTicketResult = new newQuery();
+                queryTicketResult.where = `ID_CARGA = '${currentUserUbigeo}${codWorkLoad}' and ESTADO_V = '1'`;
+                queryTicketResult.outFields = ['ID_MZN_C'];
+                queryTicketResult.returnGeometry = false;
+
+                const responseTicketResult = await this._webmap.findTableById(this.idTicketLayer).queryFeatures(queryTicketResult);
+
+                if (responseTicketResult.features.length > 0) {
+                    const features = responseTicketResult.features;
+                    features.forEach((feature) => {
+                        manzanas.push(feature.attributes.ID_MZN_C);
+                    });
+                }
+
+
+                if (manzanas.length > 0) {
+                    const queryBlock = new newQuery();
+                    // queryBlock.where = `ID_MZN_C NOT IN ('${manzanas.join("', '")}') and ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                    queryBlock.where = 'ID_MZN_C NOT IN (\'' + manzanas.join('\', \'') + '\') and ID_CARGA = \'' + currentUserUbigeo + codWorkLoad + '\'';
+
+                    queryBlock.outFields = ['OBJECTID'];
+                    queryBlock.returnGeometry = false;
+
+                    const responseBlock = await this._webmap.findLayerById(this.idFieldBlockLayer).queryFeatures(queryBlock);
+
+                    if (responseBlock.features.length > 0) {
+
+                        const featuresBlock = responseBlock.features;
+
+                        const deleteBlockIneiResponse = await this._webmap.findLayerById(this.idFieldBlockLayer).applyEdits({ deleteFeatures: featuresBlock });
+
+                        const deleteFeatureResult = deleteBlockIneiResponse.deleteFeatureResults;
+                        for (const stateFeatureResult of deleteFeatureResult) {
+                            if (stateFeatureResult.error) {
+                                console.log(stateFeatureResult);
+                            }
+                        }
+                    }
+                }
+
+                const queryWorkLoad = new newQuery();
+                queryWorkLoad.where = `ID_CARGA = '${currentUserUbigeo}${codWorkLoad}'`;
+                queryWorkLoad.outFields = ['*'];
+                queryWorkLoad.returnGeometry = false;
+
+                const responseWorkLoad = await this._webmap.findLayerById(this.idWorkLoadLayer).queryFeatures(queryWorkLoad);
+
+                if (responseWorkLoad.features.length > 0) {
+                    const featureWorkload = responseWorkLoad.features[0];
+                    featureWorkload.attributes.ESTADO = 4;
+
+                    const updateWorkLoadResponse = await this._webmap.findLayerById(this.idWorkLoadLayer).applyEdits({ updateFeatures: [featureWorkload] });
+
+                    const updateWorkloadResult = updateWorkLoadResponse.updateFeatureResults[0];
+                    if (updateWorkloadResult.error) {
+                        console.log(updateWorkloadResult.error);
+                    }
+
+                }
+                const responseMessage = 'Se eliminaron los tickets pendientes de la carga de trabajo ' + codWorkLoad;
+                this.getWidget(currentUserUbigeo);
+                this._updateTable.next(true);
+                resolve(responseMessage);
+
+            } catch (err) {
+                console.log(err, 'error here');
+                const responseMessage = 'Ocurrio un error al intentar eliminar los tickets pendientes de la carga de trabajo ' + codWorkLoad;
+                reject(responseMessage);
+                //throw new Error('Err:' + err?.error?.statusText);
             }
         });
     }
@@ -184,7 +320,7 @@ export class TableService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery] = await loadModules(['esri/rest/support/Query',]);
-                console.log(workLoadData, currentUserUbigeo, 'here');
+                // console.log(workLoadData, currentUserUbigeo, 'here');
                 const queryWorkLoad = new newQuery();
                 queryWorkLoad.where = `OBJECTID = ${workLoadData.oid} and ESTADO NOT IN ('0', '4')`;
                 queryWorkLoad.outFields = ['*'];
@@ -271,20 +407,6 @@ export class TableService {
                         return null;
                     })
                     .then(() => {
-                        // refresh layers
-                        // aqui debes usar el servicio siguiente
-                        // this._stateService.triggerRefreshLayer(idPuntoImagenLayer)
-                        this._webmap.findLayerById(this.idWorkLoadLayer).refresh();
-                        this._webmap.findLayerById(this.idFieldPointLayer).refresh();
-                        this._webmap.findLayerById(this.idFieldBlockLayer).refresh();
-                        this._webmap.findLayerById(this.idPuntoImagenLayer).refresh();
-                        this._webmap.findLayerById(this.idLotesSinPredioLayer).refresh();
-                        this._webmap.findLayerById(this.idManzanaIneiLayer).refresh();
-                        this._webmap.findLayerById(this.idManzanaPrediosLayer).refresh();
-                        this._webmap.findLayerById(this.idPredioSinManzanaLayer).refresh();
-                        this._webmap.findLayerById(this.idManzanaPuntoImagenLayer).refresh();
-                        this._webmap.findLayerById(this.idPredSinCartoAsignadoLayer).refresh();
-                        // Aqui confirma que se elimino la carga de trabajo
                         const responseMessage = 'Se eliminó la carga de trabajo ' + workLoadData.codCarga;
                         this.getWidget(currentUserUbigeo);
                         resolve(responseMessage);
@@ -303,12 +425,51 @@ export class TableService {
 
     }
 
+    hasAttendedTickets(codWorkLoad, currentUserUbigeo): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const [newQuery] = await loadModules(['esri/rest/support/Query',]);
+                const queryTicket = new newQuery();
+                queryTicket.where = `ID_CARGA = '${currentUserUbigeo}${codWorkLoad}' and ESTADO NOT IN ('1', '2', '3', '4') AND ESTADO_V = '1'`;
+                queryTicket.outFields = ['*'];
+
+                this._webmap.findTableById(this.idTicketLayer).queryFeatures(queryTicket)
+                    .then((response) => {
+                        if (response.features.length > 0) {
+                            return resolve(true);
+                        }
+                        return resolve(false);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        reject(err);
+                    });
+            } catch (error) {
+                console.log('EsriLoader: ', error);
+            }
+        });
+    }
+
+    async reloadLayersAfterDelete(): Promise<void> {
+        await this._webmap.findLayerById(this.idWorkLoadLayer).refresh();
+        await this._webmap.findLayerById(this.idFieldPointLayer).refresh();
+        await this._webmap.findLayerById(this.idFieldBlockLayer).refresh();
+        await this._webmap.findLayerById(this.idPuntoImagenLayer).refresh();
+        await this._webmap.findLayerById(this.idLotesSinPredioLayer).refresh();
+        await this._webmap.findLayerById(this.idManzanaIneiLayer).refresh();
+        await this._webmap.findLayerById(this.idManzanaPrediosLayer).refresh();
+        await this._webmap.findLayerById(this.idPredioSinManzanaLayer).refresh();
+        await this._webmap.findLayerById(this.idManzanaPuntoImagenLayer).refresh();
+        await this._webmap.findLayerById(this.idPredSinCartoAsignadoLayer).refresh();
+    }
+
     zoomRow(unitData): Promise<any> {
         console.log(unitData.row.TIPO.toLowerCase(), 'unidsfd');
         return new Promise(async (resolve, reject) => {
             try {
-                const [newQuery] = await loadModules(['esri/rest/support/Query',]);
                 this._fuseSplashScreenService.show(0);
+                const [newQuery] = await loadModules(['esri/rest/support/Query',]);
+
                 const queryUnitData = new newQuery();
                 queryUnitData.returnGeometry = true;
                 let layerId = this.idFieldBlockLayer;
@@ -328,20 +489,15 @@ export class TableService {
                     return;
                 }
 
-                this._webmap.findLayerById(layerId).queryExtent(queryUnitData)
-                    .then((response) => {
-                        console.log(layerId, 'layeriDf');
-                        if (response.extent) {
-                            console.log(response.extent);
-                            this._view.goTo(response.extent);
-                        }
-                        this._fuseSplashScreenService.hide();
-                    }).catch((err) => {
-                        console.log(err);
-                        this._fuseSplashScreenService.hide();
-                    });
+                const response = await this._webmap.findLayerById(layerId).queryExtent(queryUnitData);
+                if (response.extent) {
+                    this._view.goTo(response.extent);
+                }
+                this._fuseSplashScreenService.hide();
+
             }
             catch (error) {
+                this._fuseSplashScreenService.hide();
                 console.log('EsriLoader: ', error);
             }
         });

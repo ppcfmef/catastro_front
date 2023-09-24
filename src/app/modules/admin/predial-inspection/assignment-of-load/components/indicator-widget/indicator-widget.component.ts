@@ -13,9 +13,9 @@ import { OperatorService } from '../../services/operator.service';
     templateUrl: './indicator-widget.component.html',
     styleUrls: ['./indicator-widget.component.scss']
 })
-export class IndicatorWidgetComponent implements OnInit, OnDestroy{
+export class IndicatorWidgetComponent implements OnInit, OnDestroy {
 
-    newCard =[];
+    newCard = [];
     _currentUserUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -25,26 +25,20 @@ export class IndicatorWidgetComponent implements OnInit, OnDestroy{
         private _tableService: TableService,
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _operatorService: OperatorService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this._operatorService.getUbigeo().subscribe((ubigeo) => {
             this._currentUserUbigeo = ubigeo;
-            this._widgetService.listWidget(this._currentUserUbigeo);
-            this._widgetService.getDataWidget().subscribe(data =>  this.newCard = data);
+            setTimeout(() => {
+                this._widgetService.listWidget(this._currentUserUbigeo);
+            }, 1000);
+            this._widgetService.getDataWidget().subscribe(data => this.newCard = data);
         });
-
-        // this._userService.user$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: User) => {
-        //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-        // });
-        //this._tableService._newUbigeo.subscribe(resp =>this._widgetService.listWidget(resp) );
 
     }
 
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }

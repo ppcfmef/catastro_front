@@ -100,6 +100,7 @@ mat-form-field.mat-form-field-appearance-fill {
 
 :host ::ng-deep .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
     margin-bottom: 0px !important;
+    padding-right: 15px;
     border-right: 1px solid #D2D2D2;
 
     .mat-form-field-flex {
@@ -110,8 +111,7 @@ mat-form-field.mat-form-field-appearance-fill {
     }
 }
 
+:host ::ng-deep .mat-select .mat-select-trigger {
+    width: 240px !important;
+}
 
-
-// :host ::ng-deep .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
-//     width: 2px;
-// }

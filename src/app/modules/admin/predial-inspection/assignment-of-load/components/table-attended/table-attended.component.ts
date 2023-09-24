@@ -11,13 +11,13 @@ import { TableService } from '../../services/table.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { OperatorService } from '../../services/operator.service';
 @Component({
-  selector: 'app-table-attended',
-  templateUrl: './table-attended.component.html',
-  styleUrls: ['./table-attended.component.scss']
+    selector: 'app-table-attended',
+    templateUrl: './table-attended.component.html',
+    styleUrls: ['./table-attended.component.scss']
 })
-export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
+export class TableAttendedComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    tableColumns: TableColumn[] =[];
+    tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
         isAction: true,
         isEdit: true,
@@ -28,7 +28,7 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
     _currentUserUbigeo: string;
     error: boolean = false;
     bySearch: any;
-    count=0;
+    count = 0;
     params = { limit: 5, offset: 0 };
 
     constructor(
@@ -38,26 +38,18 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
         private _userService: UserService,
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _operatorService: OperatorService,
-        ) { }
+    ) { }
 
     ngOnInit(): void {
         this.setTableColumn();
         this._operatorService.getUbigeo().subscribe((data) => {
             this._currentUserUbigeo = data;
-            this.loadTable();
+            setTimeout(() => {
+                this.loadTable();
+            }, 1000);
         });
-            // this._userService.user$
-            // .pipe(takeUntil(this._unsubscribeAll))
-            // .subscribe((user: User) => {
-            //     this._currentUserUbigeo = user.ubigeo ? user.ubigeo : '150101';
-            // });
-            // this.loadTable();
-            // this._tableService._newUbigeo.subscribe((r) => {
-            //     this._currentUserUbigeo  = r;
-            //     console.log( this._currentUserUbigeo , 're');
-            //     this.loadTable();
-            // });
-        }
+        this._tableService.reloadTableAttended.subscribe(() => this.loadTable());
+    }
 
     ngAfterViewInit(): void {
         this._tableService.searchBy.subscribe((res) => {
@@ -68,42 +60,60 @@ export class TableAttendedComponent implements OnInit,AfterViewInit,OnDestroy {
 
     setTableColumn(): void {
         this.tableColumns = [
-            {matheaderdef:'Nro.', matcolumndef:'nro', matcelldef: 'nro'},
-            {matheaderdef:'Cod. Carga', matcolumndef:'codCarga', matcelldef: 'codCarga'},
-            {matheaderdef:'Operador', matcolumndef:'operador', matcelldef: 'operador'},
-            {matheaderdef:'Fecha', matcolumndef:'fecha', matcelldef: 'fecha'},
+            { matheaderdef: 'Nro.', matcolumndef: 'nro', matcelldef: 'nro' },
+            { matheaderdef: 'Cod. Carga', matcolumndef: 'codCarga', matcelldef: 'codCarga' },
+            { matheaderdef: 'Operador', matcolumndef: 'operador', matcelldef: 'operador' },
+            { matheaderdef: 'Fecha', matcolumndef: 'fecha', matcelldef: 'fecha' },
         ];
 
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show();
-        await this._tableService.dataCount('ESTADO = "4"', this._currentUserUbigeo, this.bySearch).then((count) => {
-            this.count = count;
-        })
-            .then(() => this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
-                this._currentUserUbigeo, this.bySearch, this.params)
-            )
-            .then((data) => {
-                this.dataSource = data;
-                if (this.dataSource.length > 0) {
-                    this.error = false;
-                } else {
-                    this.error = true;
-                }
-            });
-        this._fuseSplashScreenService.hide();
+        const queryData = 'ESTADO = "4"';
+        const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'];
 
+        this.count = await this._tableService.dataCount(queryData, this._currentUserUbigeo, this.bySearch);
+        this.dataSource = await this._tableService.dataLoad(queryData, fieldsDataLoad, this._currentUserUbigeo, this.bySearch, this.params);
+
+        if (this.dataSource.length > 0) {
+            this.error = false;
+        } else {
+            this.error = true;
+        }
+
+        // this._fuseSplashScreenService.show();
+
+        // // Agregar un setTimeout para retrasar la llamada a dataCount
+        // setTimeout(async () => {
+        //     await this._tableService.dataCount('ESTADO = "4"', this._currentUserUbigeo, this.bySearch).then((count) => {
+        //         this.count = count;
+        //     });
+
+        //     // Agregar otro setTimeout para retrasar la llamada a dataLoad
+        //     setTimeout(async () => {
+        //         await this._tableService.dataLoad('ESTADO = "4"', ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA', 'COD_USUARIO', 'NOM_USUARIO'],
+        //             this._currentUserUbigeo, this.bySearch, this.params).then((data) => {
+        //                 this.dataSource = data;
+        //                 if (this.dataSource.length > 0) {
+        //                     this.error = false;
+        //                 } else {
+        //                     this.error = true;
+        //                 }
+
+        //                 // Ocultar el SplashScreen después de que se completen las llamadas
+        //                 this._fuseSplashScreenService.hide();
+        //             });
+        //     }, 1000); // Esperar 1 segundo antes de llamar a dataLoad
+        // }, 1000); // Esperar 1 segundo antes de llamar a dataCount
     }
 
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
 
-    onEdit({row}): void {
-        this._router.navigate([`load-attend/${row.codCarga}`], {relativeTo: this._activatedRoute});
+    onEdit({ row }): void {
+        this._router.navigate([`load-attend/${row.codCarga}`], { relativeTo: this._activatedRoute });
     }
     page(e): void {
         this.params['limit'] = e.pageSize;

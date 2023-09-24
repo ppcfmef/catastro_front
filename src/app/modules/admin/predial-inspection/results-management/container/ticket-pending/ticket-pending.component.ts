@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-pending',
@@ -9,12 +11,20 @@ export class TicketPendingComponent implements OnInit {
 
     ticket = {
         cod:125,
-        gap:'Punto imagen'
+        gap:'Sin Geo',
+        totalTicket: 6,
     };
-    panelOpenState = false;
-  constructor() { }
+  constructor(
+    private _router: Router,
+    private _activeRoure: ActivatedRoute,
+  ) {
+  }
 
   ngOnInit(): void {
   }
 
+  navegateTo(): void {
+    this._router.navigate(['land-inspection/results-management/'] );
+  }
 }
+

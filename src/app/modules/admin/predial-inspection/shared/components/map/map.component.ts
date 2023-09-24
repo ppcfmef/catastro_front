@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
     Component,
     OnInit,
@@ -75,6 +76,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     homeButton;
 
+
     idView = 'inspre';
     constructor(
         protected _fuseSplashScreenService: FuseSplashScreenService,
@@ -100,17 +102,22 @@ export class MapComponent implements OnInit, AfterViewInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this._currentUser = user;
+                console.log('this._currentUser', this._currentUser);
                 // @SETUBIGEO
                 this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
-                if (this._currentUserUbigeo === '150101') {
+                localStorage.setItem('ubigeo', this._currentUserUbigeo);
+                this._operatorService.updateUbigeo();
+
+                if (this._currentUser.isSuperuser) {
                     this.hideSelectUbigeo = false;
                 }
+
             });
         this._newLoadService.clearAllGraphics.subscribe(() => this.clearSelection());
         this._newLoadService.oid.subscribe(oid => this.clearSelectionById(oid));
         this._newLoadService.refreshLayer.subscribe(id => this.refreshLayerById(id));
-
+        this._newLoadService.getRowZoomNewWorkLoad().subscribe(row => this.zoomRowByNewWorkLoad(row));  // @daniel
     }
 
     clearSelection(): void {
@@ -135,11 +142,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._webmap.findLayerById(id).refresh();
     }
 
-    onSelectUbigeo(ubigeo: string): void {
-        this._operatorService.updateUbigeo(ubigeo);
+    onSelectUbigeo(ubigeo: any): void {
         this._currentUserUbigeo = ubigeo;
-        console.log(this._currentUserUbigeo,'this._currentUserUbigeo');
-        this._tableService._newUbigeo.next(this._currentUserUbigeo);
+        console.log('this.ubigeo ', this._currentUserUbigeo);
+        localStorage.setItem('ubigeo', this._currentUserUbigeo);
+        this._operatorService.updateUbigeo();
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
         this._fuseSplashScreenService.show(0);
         setTimeout(async () => {
@@ -172,15 +179,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                     // console.log(this._webmap.findLayerById(this.idManzanaPrediosLayer).definitionExpression)
                     this._webmap.findLayerById(this.idManzanaPuntoImagenLayer).definitionExpression =
-                    `${this.defaultFilters[this.idManzanaPuntoImagenLayer]} AND (${this._queryUbigeo})`;
+                        `${this.defaultFilters[this.idManzanaPuntoImagenLayer]} AND (${this._queryUbigeo})`;
                     this._webmap.findLayerById(this.idWorkLoadLayer).definitionExpression =
-                    `(${this.defaultFilters[this.idWorkLoadLayer]}) AND (${this._queryUbigeo})`;
+                        `(${this.defaultFilters[this.idWorkLoadLayer]}) AND (${this._queryUbigeo})`;
                     this._webmap.findLayerById(this.idPredioSinManzanaLayer).definitionExpression =
-                    `${this.defaultFilters[this.idPredioSinManzanaLayer]} AND (${this._queryUbigeo})`;
+                        `${this.defaultFilters[this.idPredioSinManzanaLayer]} AND (${this._queryUbigeo})`;
                     this._webmap.findLayerById(this.idFieldPointLayer).definitionExpression =
-                    `${this.defaultFilters[this.idFieldPointLayer]} AND (${this._queryUbigeo})`;
+                        `${this.defaultFilters[this.idFieldPointLayer]} AND (${this._queryUbigeo})`;
                     this._webmap.findLayerById(this.idPredSinCartoAsignadoLayer).definitionExpression =
-                    `${this.defaultFilters[this.idPredSinCartoAsignadoLayer]} AND (${this._queryUbigeo})`;
+                        `${this.defaultFilters[this.idPredSinCartoAsignadoLayer]} AND (${this._queryUbigeo})`;
 
                     // zoom extent by ubigeo
                     const limitesNacionalesUrl = this._webmap.findLayerById(this.idLimitesLayer).url;
@@ -546,7 +553,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                                 }
                                 return {
                                     oid: oid,
-                                    codigo: `E${row.attributes.UBIGEO}${row.attributes.ID_MZN_C}`,
+                                    codigo: `${row.attributes.ubigeo}E${row.attributes.ID_MZN_C}`, //@daniel6
                                     tipo: 'Manzana',
                                     fuente: 'EU',
                                     status: status,
@@ -649,7 +656,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
                 self.defaultFilters[self.idWorkLoadLayer] = self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression;
                 self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression =
-                `(${self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression}) AND (${this._queryUbigeo})`;
+                    `(${self._webmap.findLayerById(self.idWorkLoadLayer).definitionExpression}) AND (${this._queryUbigeo})`;
 
                 self.defaultFilters[self.idPredioSinManzanaLayer] = self._webmap.findLayerById(self.idPredioSinManzanaLayer).definitionExpression;
                 self._webmap.findLayerById(self.idPredioSinManzanaLayer).definitionExpression += ` AND (${this._queryUbigeo})`;
@@ -683,5 +690,9 @@ export class MapComponent implements OnInit, AfterViewInit {
             console.log('EsriLoader: ', error);
             //window.location.reload();
         }
+    }
+
+    zoomRowByNewWorkLoad(unitData): void {
+        this._view.goTo(this._graphicsIds[unitData.oid]);
     }
 }

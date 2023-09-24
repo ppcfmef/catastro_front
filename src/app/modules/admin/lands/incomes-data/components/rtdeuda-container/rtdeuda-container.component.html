@@ -1,0 +1,67 @@
+<app-select-icomes-table selectedTable="RT_DEUDA"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="codContr">
+    <th mat-header-cell *matHeaderCellDef> cod. Contribuyente </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.codContr }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="deudaArb">
+    <th mat-header-cell *matHeaderCellDef> Determinación de arbitrios </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.deudaArb }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="saldoTP">
+    <th mat-header-cell *matHeaderCellDef> Saldos T Predial </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.saldoTP }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="saldoT1P">
+    <th mat-header-cell *matHeaderCellDef> Saldos T-1 Predial </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.saldoT1P }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="anoDeudaT">
+    <th mat-header-cell *matHeaderCellDef> Años de deuda de arbitrios </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.anoDeudaT }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="anoDeudaP">
+    <th mat-header-cell *matHeaderCellDef> Años de deuda de predial </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.anoDeudaP }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>

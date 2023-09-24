@@ -1,1 +1,67 @@
-<p>rtmarco-predio-container works!</p>
+<app-select-icomes-table selectedTable="RT_MARCO_PREDIO"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="codPre">
+    <th mat-header-cell *matHeaderCellDef> Cod. Predio </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.codPre }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="codigoCpu">
+    <th mat-header-cell *matHeaderCellDef> CPU </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.codigoCpu }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombrePredio">
+    <th mat-header-cell *matHeaderCellDef> Predio </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nombrePredio }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombreHabilitacion">
+    <th mat-header-cell *matHeaderCellDef> Habilitacion </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nombreHabilitacion }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="nombreVia">
+    <th mat-header-cell *matHeaderCellDef> Via </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nombreVia }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="estado">
+    <th mat-header-cell *matHeaderCellDef> Estado </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.estado }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>

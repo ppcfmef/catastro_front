@@ -1,0 +1,74 @@
+<app-select-icomes-table selectedTable="RT_VAREM_MUNI"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="muni2802">
+    <th mat-header-cell *matHeaderCellDef> Minicipalidad 2802<br /> 1= si, 0=no </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.muni2802 }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="muni3103">
+    <th mat-header-cell *matHeaderCellDef> Minicipalidad 3103<br /> 1= si, 0=no </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.muni3103 }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="muniXx">
+    <th mat-header-cell *matHeaderCellDef> Minicipalidad XX<br /> 1= si, 0=no </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.muniXx }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="nroContribT">
+    <th mat-header-cell *matHeaderCellDef> Nro de contribuyentes<br /> registrados t </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nroContribT }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nroContribT1">
+    <th mat-header-cell *matHeaderCellDef> Nro de contribuyentes<br /> registrados t-1 </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nroContribT1 }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nroOrdXAmnistia">
+    <th mat-header-cell *matHeaderCellDef>Nro ordenanzas de amnistía</th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nroOrdXAmnistia }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nroPredInafecto">
+    <th mat-header-cell *matHeaderCellDef>Nro de predios <br /> inafectos por distrito</th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.nroPredInafecto }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>

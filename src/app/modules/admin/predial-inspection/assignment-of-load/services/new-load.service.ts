@@ -15,7 +15,8 @@ export class NewLoadService {
     public refreshLayer: EventEmitter<void> = new EventEmitter();
     private tableDataSubject = new BehaviorSubject<IdataLoad[]>([]);
     private graphicsIdSubject = new BehaviorSubject<any>(null);
-    constructor() {}
+    private rowZoomNewWorkLoad = new Subject<any>();  // @daniel
+    constructor() { }
 
     // update state
     setTableData(data: IdataLoad[]): void {
@@ -42,7 +43,15 @@ export class NewLoadService {
     triggerRefreshLayer(id): void {
         this.refreshLayer.emit(id);
     }
+    // @daniel
+    emitRowZoomNewWorkLoad(row): void {
+        this.rowZoomNewWorkLoad.next(row);
+    }
 
+    // @daniel
+    getRowZoomNewWorkLoad(): Observable<any> {
+        return this.rowZoomNewWorkLoad.asObservable();
+    }
 }
 
 

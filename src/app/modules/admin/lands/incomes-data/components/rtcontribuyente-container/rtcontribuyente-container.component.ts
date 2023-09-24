@@ -36,10 +36,14 @@ export class RTContribuyenteContainerComponent implements OnInit, AfterViewInit 
         return this.incomesDataService.getRTContribuyente(queryParams);
       })
     ).subscribe((response: IPagination<any>) => {
-        this.count = response.count;
-        this.pageIndex = this.paginator.pageIndex;
-        this.pageSize = this.paginator.pageSize;
-        this.dataSource = response.results;
+        this.initialPaginator(response);
     });
+  }
+
+  private initialPaginator(pagination: IPagination<any>): void {
+    this.count = pagination.count;
+    this.pageIndex = this.paginator.pageIndex;
+    this.pageSize = this.paginator.pageSize;
+    this.dataSource = pagination.results;
   }
 }

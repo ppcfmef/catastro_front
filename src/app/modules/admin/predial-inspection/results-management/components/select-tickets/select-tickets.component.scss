@@ -1,0 +1,35 @@
+.button-select {
+    width: 100%;
+    background-color: #0795FA;
+    color: white;
+    padding: 18px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.box {
+    height: 22px;
+    width: 22px;
+    background-color: #DE3F43;
+}
+ul {
+    height: 100vh;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    background-color: #E1F0FF;
+    gap: 12px;
+}
+
+li {
+
+    display: flex;
+    padding: 12px;
+    width: 396px;
+    height: 45px;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 8px;
+
+}

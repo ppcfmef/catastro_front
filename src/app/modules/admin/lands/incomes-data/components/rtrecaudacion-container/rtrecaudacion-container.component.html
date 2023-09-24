@@ -1,0 +1,69 @@
+<app-select-icomes-table selectedTable="RT_RECAUDACION"></app-select-icomes-table>
+<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+  <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef> Nro.</th>
+      <td mat-cell *matCellDef="let element; let i = index">
+          {{ (pageIndex * pageSize) + i + 1 }}
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ubigeo">
+    <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.ubigeo }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="codContr">
+    <th mat-header-cell *matHeaderCellDef> cod. Contribuyente </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.codContr }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="recImpPred">
+    <th mat-header-cell *matHeaderCellDef> Imp. Predial </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.recImpPred }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="recArb">
+    <th mat-header-cell *matHeaderCellDef> Arbitrios </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.recArb }}
+    </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="recImpVeh">
+    <th mat-header-cell *matHeaderCellDef> Imp. Vehicular </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.recImpVeh }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="recImpPredNc">
+    <th mat-header-cell *matHeaderCellDef> Imp. Pred. No corriente </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.recImpPredNc }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fechaData">
+    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+    <td mat-cell *matCellDef="let element">
+        {{ element.fechaData }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="count"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100, 250, 500]">
+</mat-paginator>
+
+
