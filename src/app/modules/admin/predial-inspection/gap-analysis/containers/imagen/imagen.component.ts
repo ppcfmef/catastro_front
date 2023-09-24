@@ -25,7 +25,7 @@ export class ImagenComponent implements OnInit {
     title ='Puntos en imagen';
     ubigeo = '040703';
     rowZoom: any;
-    typeGapAnalisys = TypeGapAnalisys.MANZANA_SIN_LOTES;
+    typeGapAnalisys = TypeGapAnalisys.PUNTO_IMAGEN;
 
     tableColumns: TableColumn[] = [];
 
@@ -44,7 +44,7 @@ export class ImagenComponent implements OnInit {
 
     where = '';
     idManzana = 3;
-    idPredio = 0;
+    idPredio = 4;
     idPuntoCampo = 4;
     layersInfo = [
         {
@@ -162,7 +162,7 @@ export class ImagenComponent implements OnInit {
         },
 
         {
-            title: 'Punto Lote',
+            title: 'Punto Imagen',
             id: 4,
             layerId: 0,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,

@@ -39,6 +39,19 @@ export class AuthService
         return localStorage.getItem('accessToken') ?? '';
     }
 
+
+        /**
+         * Setter & getter for access token
+         */
+    set accessTokenArcGis(token: string)
+    {
+        localStorage.setItem('accessTokenArcGis', token);
+    }
+
+    get accessTokenArcGis(): string
+    {
+        return localStorage.getItem('accessTokenArcGis') ?? '';
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -81,7 +94,7 @@ export class AuthService
 
                 // Store the access token in the local storage
                 this.accessToken = response.token;
-
+                this.accessTokenArcGis = response.tokenArcGis;
                 // Set the authenticated flag to true
                 this._authenticated = true;
 

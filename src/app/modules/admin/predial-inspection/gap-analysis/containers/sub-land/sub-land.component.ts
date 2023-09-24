@@ -20,7 +20,7 @@ import { ExportUtils } from 'app/shared/utils/export.util';
 })
 export class SubLandComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title='Predios Subvaluados';
+    title='Predios para verificacion';
     ubigeo = '040703';
     rowZoom: any;
     typeGapAnalisys = TypeGapAnalisys.PREDIO_SUBVALUADO;
@@ -147,7 +147,7 @@ export class SubLandComponent implements OnInit {
         },
 
         {
-            title: 'Predios Subvaluados',
+            title: 'Predios para verificacion',
             id: 5,
             layerId: 0,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_PUNTO_CAMPO/FeatureServer`,

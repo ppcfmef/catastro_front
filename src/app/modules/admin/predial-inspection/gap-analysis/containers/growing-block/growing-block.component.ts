@@ -45,7 +45,7 @@ export class GrowingBlockComponent implements OnInit {
 
     where = '';
     idManzana = 3;
-    idPredio = 0;
+    idPredio = 4;
     idPuntoCampo = 4;
     layersInfo = [
         {

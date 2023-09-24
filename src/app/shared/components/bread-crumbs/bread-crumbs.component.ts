@@ -284,5 +284,18 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
     }
 
   }
+    /**
+     * Redirect page
+     *
+     * @param element
+     */
+    redirectPage(element): void {
+      if (element?.link) {
+          this.router.navigateByUrl(element.link);
+          return;
+      }
 
+      const queryParams = {parentId: element.id};
+      this.router.navigate(['home', 'items'], {queryParams});
+  }
 }

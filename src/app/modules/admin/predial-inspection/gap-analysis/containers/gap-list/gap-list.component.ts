@@ -41,7 +41,7 @@ export class GapListComponent implements OnInit , OnDestroy{
         },
         {
             type: TypeGapAnalisys.PREDIO_SUBVALUADO,
-            title: 'PREDIOS SUBVALUADOS',
+            title: 'PREDIOS PARA VERIFICACION',
             numb: '0',
             color: '#66BB6A',
             pathBase:'./sub-land',
