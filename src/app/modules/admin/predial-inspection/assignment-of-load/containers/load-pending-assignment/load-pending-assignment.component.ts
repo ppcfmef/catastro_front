@@ -25,8 +25,6 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
 })
 export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
-    idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUser: User;
     _currentUserUbigeo: string;
