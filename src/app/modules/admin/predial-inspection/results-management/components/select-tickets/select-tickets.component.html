@@ -1,24 +1,23 @@
 
-<button class="button-select" (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-   {{ isOpen ? 'Seleccione Ubicación' : itemSelect}}
-</button>
-
-<ng-template
-cdkConnectedOverlay
-[cdkConnectedOverlayOrigin]="trigger"
-[cdkConnectedOverlayOpen]="isOpen"
->
-    <ul>
-        <ng-container *ngFor="let item of tickets, let i = index">
-            <li (click)="navegateTo(item)">
-                <div class="flex gap-3">
-                    <div class="box"></div>
-                    <strong><span>{{i+1}}. Ubicacion</span></strong> <span>- {{item.totalCase}} predios </span>
-                </div>
-                <mat-icon svgIcon='iconsmind:manage'></mat-icon>
-            </li>
-        </ng-container>
-    </ul>
-</ng-template>
-
-
+<cdk-accordion class="example-accordion">
+    <cdk-accordion-item
+      #accordionItem="cdkAccordionItem">
+      <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+        {{ isOpen ? 'Seleccione Ubicación' : itemSelect}}
+      </div>
+      <div
+        [style.display]="accordionItem.expanded ? '' : 'none'">
+        <ul>
+            <ng-container *ngFor="let item of tickets, let i = index">
+                <li (click)="navegateTo(item); accordionItem.close()" >
+                    <div class="flex gap-3">
+                        <div class="box" [ngClass]="item.state ===0 ? 'default':'complete'"></div>
+                        <strong><span>{{i+1}}. Ubicacion</span></strong> <span>- {{item.totalCase}} predios </span>
+                    </div>
+                    <mat-icon svgIcon="{{ item.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
+                </li>
+            </ng-container>
+        </ul>
+      </div>
+    </cdk-accordion-item>
+  </cdk-accordion>

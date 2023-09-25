@@ -17,7 +17,8 @@ export class CaseSuministroComponent implements OnInit {
             codCase: '00986',
             firstname: 'Jhon',
             lastname:'Perez',
-            dni:'44458926'
+            dni:'44458926',
+            state:1
         };
 
   constructor() { }

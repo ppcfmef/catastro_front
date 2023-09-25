@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-results',
@@ -51,9 +52,25 @@ export class ResultsComponent implements OnInit {
     },
   ];
 
-  constructor() { }
+  constructor(
+    private _route: Router,
+    private _activeRouter: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
   }
 
+  onZoom(row: any): void {
+    this._route.navigate([`ticket-pending/${row.ticket}`], {relativeTo: this._activeRouter});
+    console.log('onZoom', row);
+  }
+
+  onZoomObservado(row: any): void {
+    this._route.navigate([`ticket-rejected/${row.ticket}`], {relativeTo: this._activeRouter});
+    console.log('onZoomObservado', row);
+  }
+
+  onZoomTerminado(row: any): void {
+    console.log('onZoomTerminado', row);
+  }
 }

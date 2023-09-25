@@ -18,7 +18,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -27,7 +27,9 @@ import { TicketComponent } from './components/ticket/ticket.component';
 import { CaseComponent } from './components/case/case.component';
 import { CaseSuministroComponent } from './components/case-suministro/case-suministro.component';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
-
+import { TableComponent } from './components/table/table.component';
+import { ModalComponent } from './components/modal/modal.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
     SelectTicketsComponent,
     TicketComponent,
     CaseComponent,
-    CaseSuministroComponent
+    CaseSuministroComponent,
+    TableComponent,
+    ModalComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +60,9 @@ import {CdkAccordionModule} from '@angular/cdk/accordion';
     ReactiveFormsModule,
     OverlayModule,
     ScrollingModule,
-    CdkAccordionModule
+    CdkAccordionModule,
+    MatDialogModule,
+    FormsModule
   ]
 })
 export class ResultsManagementModule { }
