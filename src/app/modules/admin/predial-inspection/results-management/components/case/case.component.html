@@ -1,52 +1,13 @@
 
-<!-- <div class="h-40">
-    <button class="buttonCase" (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-        Codigo de predio - {{tickets.codCase}}
-         <mat-icon svgIcon='iconsmind:manage'></mat-icon>
-      </button>
-
-      <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="trigger"
-      [cdkConnectedOverlayOpen]="isOpen"
-      >
-         <div class="flex flex-col items-center pl-3">
-             <div class="flex w-90 py-4 justify-between">
-                 <div class="flex flex-col">
-                     <strong><span>Nombres y apellidos</span></strong>
-                     <span>{{tickets.firstname}} {{tickets.lastname}}</span>
-                 </div>
-                 <div class="flex flex-col">
-                     <strong><span>DNI</span></strong>
-                     <span>{{tickets.dni}}</span>
-                 </div>
-             </div>
-             <button class="btnGenerar w-full">
-                 {{  tickets.tipo === 0 ? 'Generar predio' : 'Reasignar'}}
-             </button>
-         </div>
-
-     </ng-template>
-</div> -->
 <cdk-accordion class="example-accordion">
     <cdk-accordion-item
-      #accordionItem="cdkAccordionItem"
-      class="example-accordion-item"
-      role="button"
-      tabindex="0"
-      [attr.id]="'accordion-header-'"
-      [attr.aria-expanded]="accordionItem.expanded"
-      [attr.aria-controls]="'accordion-body-'">
-      <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+      #accordionItem="cdkAccordionItem">
+      <div class="example-accordion-item-header" [ngClass]="tickets.state===0 ? 'inactive': 'active'" (click)="accordionItem.toggle()">
         Codigo de predio - {{tickets.codCase}}
-        <mat-icon svgIcon='iconsmind:manage'></mat-icon>
+        <mat-icon svgIcon="{{ tickets.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
       </div>
       <div
-        class="example-accordion-item-body"
-        role="region"
-        [style.display]="accordionItem.expanded ? '' : 'none'"
-        [attr.id]="'accordion-body-'"
-        [attr.aria-labelledby]="'accordion-header-'">
+        [style.display]="accordionItem.expanded ? '' : 'none'">
         <div class="flex flex-col items-center pl-3">
             <div class="flex w-90 py-4 justify-between">
                 <div class="flex flex-col">
