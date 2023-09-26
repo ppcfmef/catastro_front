@@ -21,8 +21,6 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
     styleUrls: ['./load-attend.component.scss']
 })
 export class LoadAttendComponent implements OnInit, AfterViewInit, OnDestroy {
-    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
-    idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUserUbigeo: string;
     _fecha;

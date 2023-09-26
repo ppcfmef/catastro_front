@@ -79,12 +79,11 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getListUrbanUnit(): void {
-        console.log(this._currentUserUbigeo, 'load list');
         setTimeout(() => {
             this._tableService.getListUrbantUnit(this._currentUserUbigeo).then((data) => {
-                if(typeof(data) === 'string') {
+                if (typeof (data) === 'string') {
                     this.listUnit = [];
-                }else{
+                } else {
                     this.listUnit = [...data];
                 }
             });

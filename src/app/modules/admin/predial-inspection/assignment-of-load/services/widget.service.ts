@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +28,7 @@ export class WidgetService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
-                const urlDetailWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/6';
+                const urlDetailWorkLoad = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION_AC/MapServer/6`;
                 const queryStats = new newQuery();
                 queryStats.where = `UBIGEO= '${ubigeo}'`;
                 queryStats.outFields = ['*'];
@@ -70,7 +71,7 @@ export class WidgetService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
-                const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
+                const urlStatsUser = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION_AC/MapServer/7`;
                 const queryStatsUser = new newQuery();
                 queryStatsUser.where = `UBIGEO = '${ubigeo}' AND COD_USUARIO = ${codUser}`;
                 queryStatsUser.outFields = ['*'];

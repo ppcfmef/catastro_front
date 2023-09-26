@@ -21,6 +21,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FormUtils } from 'app/shared/utils/form.utils';
 import { kMaxLength } from 'buffer';
 import { labels } from '../../../../../../mock-api/apps/mailbox/data';
+import { environment } from 'environments/environment';
 
 
 
@@ -81,7 +82,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this._operatorsService.getUbigeo().subscribe((ubigeo) => {
-            this._currentUserUbigeo = ubigeo ? ubigeo : '150101';
+            this._currentUserUbigeo = ubigeo ? ubigeo : environment.defaultUbigeo;
             this._queryUbigeo = `${this._field_ubigeo} = '${this._currentUserUbigeo}'`;
             this.params['district'] = this._currentUserUbigeo;
         });
@@ -184,8 +185,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         // console.log(ubigeo, 'personal');
         const graphicsId = this.graphicsIdsData;
         const webMap = this.webMapData;
-        const codUserWorkLoad = this.operator ? this.operator.id : '';
-        const nomUserWorkLoad = this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : '';
+        const codUserWorkLoad = this.operator ? this.operator.id : null;
+        const nomUserWorkLoad = this.operator ? `${this.operator.firstName} ${this.operator.lastName}` : null;
         const dateWorkLoad = this.operator ? moment(this.form.controls.fEntrega.value).format('YYYY-MM-DD') : null;
         const id_mz_pred = 'CAPAS_INSPECCION_AC_1236';
         const id_carga = 'carto_asignacion_carga_8124';
@@ -306,7 +307,8 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                     YMIN: fullExtent_g.ymin,
                     XMAX: fullExtent_g.xmax,
                     YMAX: fullExtent_g.ymax,
-                    NOM_USUARIO: nomUserWorkLoad
+                    NOM_USUARIO: nomUserWorkLoad,
+                    ANIO: new Date().getFullYear(),
                 };
                 graphic.geometry = Polygon.fromExtent(fullExtent_g);
                 graphics.push(graphic);
@@ -419,6 +421,9 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                                 ID_MZN_C: key.idmz,
                                 COD_EST_ENVIO_TICKET: 0,
                                 ESTADO_V: '1',
+                                ANIO: new Date().getFullYear(),
+                                FEC_ENTREGA: dateWorkLoad,
+                                NOM_USUARIO: nomUserWorkLoad,
                             };
                             switch (key.type) {
                                 case 'CF':
@@ -471,7 +476,10 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                             ID_MZN_C: '9999',
                             COD_EST_ENVIO_TICKET: 0,
                             ESTADO_V: '1', //@daniel6
-                            COD_PRE: key.codigo
+                            COD_PRE: key.codigo,
+                            ANIO: new Date().getFullYear(),
+                            FEC_ENTREGA: dateWorkLoad,
+                            NOM_USUARIO: nomUserWorkLoad,
                         };
                         tickets.push({ attributes: ticket, geometry: null });
                     });
