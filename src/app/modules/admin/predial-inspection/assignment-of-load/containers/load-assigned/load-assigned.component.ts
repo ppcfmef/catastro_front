@@ -217,7 +217,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                                     .afterClosed().subscribe(() => {
                                         this.redirecto();
                                     });
-                            })
+                            });
                         // this._tableService.reloadLayersAfterDelete();
                         // this._messageProviderService.showAlert(messageDeletePendingSuccess)
                         //     .afterClosed().subscribe(() => {
