@@ -23,6 +23,7 @@ import {TypeGapAnalisys} from 'app/shared/enums/type-gap-analisys.enum';
 import {PuntoCampoModel} from '../../models/punto-campo.model';
 import {PuntoCampoService} from '../../services/punto-campo.service';
 import {FuseSplashScreenService} from '@fuse/services/splash-screen';
+import { AuthService } from 'app/core/auth/auth.service';
 
 let _this: any;
 @Component({selector: 'app-gap-analysis-map', templateUrl: './gap-analysis-map.component.html', styleUrls: ['./gap-analysis-map.component.scss']})
@@ -131,7 +132,10 @@ OnChanges { // @Input() view: any = null;
     };
     // private _rowZoom: any;
     // eslint-disable-next-line max-len
-    constructor(private _confirmationService: CustomConfirmationService, private _puntoCampoService: PuntoCampoService, private _fuseSplashScreenService: FuseSplashScreenService) {}
+    constructor(private _confirmationService: CustomConfirmationService, private _puntoCampoService: PuntoCampoService, private _fuseSplashScreenService: FuseSplashScreenService,
+         private _authService: AuthService
+        
+        ) {}
 
     ngOnInit(): void {
         this._fuseSplashScreenService.show(0);
@@ -172,6 +176,8 @@ OnChanges { // @Input() view: any = null;
                 Popup,
                // eslint-disable-next-line @typescript-eslint/naming-convention
                Legend,
+// eslint-disable-next-line @typescript-eslint/naming-convention
+esriConfig
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -184,9 +190,18 @@ OnChanges { // @Input() view: any = null;
                 'esri/widgets/Expand',
                 'esri/widgets/Search',
                 'esri/widgets/Popup',
-                'esri/widgets/Legend'
+                'esri/widgets/Legend',
+                'esri/config'
             ]);
 
+            esriConfig.request.interceptors.push({
+
+            before: (params)=> {
+                params.requestOptions.query = params.requestOptions.query || {};
+                params.requestOptions.query.token = this._authService.accessTokenArcGis;
+            },
+
+            });
             const mapProperties = {
                 basemap: 'streets-vector'
             };
@@ -365,6 +380,41 @@ OnChanges { // @Input() view: any = null;
                     this.points = [];
                     this.view.popup.close();
                     this.view.graphics.removeAll();
+
+                    if(this.typeGapAnalisys === TypeGapAnalisys.PUNTO_IMAGEN){
+                        const layerPuntoImagen = this.layersInfo.find((l: any) => l.id === this.idPredio) ?. featureLayer;
+                        const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(layerPuntoImagen, event.mapPoint, 5, 'meters');
+
+                        if (results && results.length > 0) {
+                            const r = results[0];
+                            const geometry = r.geometry;
+                            const graphic = new Graphic(geometry, this.pointSelectSymbol);
+                            this.view.graphics.add(graphic);
+                            // const content='holass';
+                            const  content = `<table class="esri-widget__table">
+                          
+                            <td>Ubigeo </td>
+                            <td>${
+                                r.attributes['ubigeo ']
+                            }</td>
+                    
+                            </tr>
+
+                            <tr>
+                            <td>ID Imagen</td>
+                            <td>${
+                                r.attributes['ID_IMG']
+                            }</td>
+                    
+                            </tr>
+                            </table>
+                            `;
+
+                            this.points.push(r);
+
+                            this.view.popup.open({location: event.mapPoint, content: content});
+                        }
+                    }
 
                     if (this.typeGapAnalisys === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO) {
                         const layerPredio = this.layersInfo.find((l: any) => l.id === this.idPredio) ?. featureLayer;

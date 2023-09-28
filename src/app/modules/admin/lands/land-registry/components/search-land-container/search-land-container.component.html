@@ -1,8 +1,8 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
-  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-4/12 input-icon-form">
+  <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-5/12 input-icon-form">
     <mat-label>Buscar</mat-label>
     <input type="text" matInput formControlName="search"
-           placeholder=" Buscar por CPU - ID lote o ID Imagen"
+           placeholder=" Buscar por CPU -Codigo de predio municipal- ID lote o ID Imagen"
            autocomplete="off">
     <mat-select formControlName="view" matPrefix
     (selectionChange)="onChangeView()">
@@ -44,7 +44,7 @@
   </div>
   
   <!-- fin select ubigeo -->
-  <div style="width: 100%; padding-top: 20px;">
+  <div style=" padding-top: 20px;">
     <button mat-flat-button [color]="'primary'" style="float: right;"
     (click)="onDownloadReport()"
     >

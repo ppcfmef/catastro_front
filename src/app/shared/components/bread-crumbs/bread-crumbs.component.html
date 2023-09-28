@@ -9,8 +9,8 @@
         <a [routerLink]="'/home'">
             <mat-icon svgIcon="heroicons_outline:home"></mat-icon> 
             <span>Inicio</span></a>
-        <a *ngFor="let bread of breadCrumbTemplate; let i = index"
-        [routerLink]="bread.link" class="bread-mid" [ngClass]="{active : (breadCrumbTemplate.length -1) === i }">
+        <a *ngFor="let bread of breadCrumbTemplate; let i = index" (click)="redirectPage(bread)"
+         class="bread-mid" [ngClass]="{active : (breadCrumbTemplate.length -1) === i }">
             <span>{{ bread.title}}</span>
         </a>
     </ng-template>

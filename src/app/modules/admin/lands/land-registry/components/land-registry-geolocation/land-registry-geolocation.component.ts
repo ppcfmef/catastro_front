@@ -437,6 +437,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
   displayPopupDiv='none';
   popupDiv: any;
+  landRegistryMapServiceSubscription: any;
+
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
@@ -448,6 +450,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
     ngOnDestroy(): void {
        this._messageProviderService=null;
+       this._unsubscribeAll.next();
+       this._unsubscribeAll.complete();
+     
     }
 
 
@@ -496,6 +501,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
+                            this.view.popup.close();
                         }
                         this._landRegistryMapService.setEstado(Estado.LEER);
 
@@ -508,7 +514,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
                 else {
 
-                    console.log('land>>',land);
+                    //console.log('land>>',land);
                     this._messageProviderService.showAlert(
                         'Por favor elija un punto en el mapa'
                     );
@@ -720,7 +726,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 },
                 labelPlacement: 'above-center',
                 labelExpressionInfo: {
-                    expression: '$feature.TIP_VIA +" "+ $feature.NOM_VIA',
+                    expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
                 },
             };
             const labelClassManzana = {
@@ -741,6 +747,23 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 },
             };
 
+            const labelClassLote = {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 10,
+                        weight: 'bold',
+
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.COD_LOTE',
+                },
+            };
 
             this.layersInfo.reverse().map((l) => {
                 const options = {
@@ -757,6 +780,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     options['labelingInfo'] = [labelClassManzana];
                 }
 
+                else if(l.title.includes('Lotes Poligono Zona')){
+                    options['labelingInfo'] = [labelClassLote];
+                }
 
                 l.featureLayer = new FeatureLayer(options);
             });
@@ -799,14 +825,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             });
 
                             if(results.length>0){
-                                //console.log('results>>',results);
-                                this.displayPopupDiv='inline';
-                                this.view.popup.open({
+
+                                /*this.displayPopupDiv='inline';*/
+                                /*this.view.popup.open({
                                     title: 'Predio',
                                     //container: this.popupDiv,
                                     location: event.mapPoint,
                                    content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
-                                  });
+                                  });*/
                             }
 
                         });
@@ -1498,15 +1524,18 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     className: "esri-icon-zoom-out-magnifying-glass"
                    };*/
 
+                   /*
                 this.view?.popup?.open({
                     title: 'Predio',
                     //content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
                     location: pointGraphic.geometry,
                     content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
-                    /*actions:[
-                        actionEdit
-                    ]*/
-                  });
+                    //actions:[actionEdit]
+                  });*/
+
+
+
+
 
                  // this.view.popup.alignment = 'top-right';
                  // this.view.popup.collapseEnabled= false;
@@ -1570,7 +1599,24 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
         //this.generatePDF(this.view,this.landRegistryMapModel,this.landOwner);
     }
 
+isNullOrBlank(data: any): boolean{
+    let resp = true;
+    if(data &&  (typeof data ==='number') && data.toString().replace(' ','').length>0)
+        {resp=false;}
+    else if (data &&  (typeof data ==='string') && data.replace(' ','').length>0)
+        {resp=false;}
+    return resp;
+}
 
+getFrase(data: any,frase: string='Holas'): string{
+    let resp ='';
+
+    if (!this.isNullOrBlank(data))
+    {
+        resp = `${frase} ${data}`;
+    }
+    return resp;
+}
 
     async generatePDF(view: any, land: LandRegistryMap, landOwner: LandOwner): Promise<void> {
         console.log('land>>',land);
@@ -1645,7 +1691,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                         {
                             content:
                              // eslint-disable-next-line max-len
-                            `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${uuType? uuType.name:''} ${land.habilitacionName? land.habilitacionName:'' } ${streetType?  ', '+streetType.name:' '}${(streetType && land.streetName)? ' '+land.streetName:''}  ${land.urbanMza?',Manzana '+land.urbanMza:''} ${land.urbanLotNumber?',Lote '+land.urbanLotNumber:''} ${land.block?',Bloque '+land.block:''}${land.municipalNumber?' ,Nro Puerta '+land.municipalNumber:''}${land.block?' ,Nro. Bloque '+land.block:''}${land.indoor?' ,Interior '+land.indoor:''}${land.indoor?' ,Piso '+land.indoor:''}${land.apartmentNumber? ' ,Nro. Dpto '+land.apartmentNumber:''}${land.km?' ,Kilometro '+land.km:''}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
+                            `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${uuType? uuType.name:''} ${this.getFrase(land.habilitacionName,'')} ${streetType?  ', '+streetType.name:' '} ${(streetType && land.streetName)? ' '+land.streetName:''}  ${this.getFrase(land.urbanMza,',Manzana ')} ${this.getFrase(land.urbanLotNumber,',Lote ')} ${this.getFrase(land.block,',Bloque ')} ${this.getFrase(land.municipalNumber,',Nro Puerta ')} ${this.getFrase(land.apartmentNumber,',Nro Dpto ')} ${this.getFrase(land.km,',Kilometro ')}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
                                 colSpan: 2,
                                 styles: {
                                     halign: 'justify',
@@ -1704,7 +1750,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                     [
                         // eslint-disable-next-line max-len
                         {
-                            content: (land.cup)?` Codigo CPU: ${land.cup}`:` Codigo Imagen: ${land.idCartographicImg}` ,
+                            content: (land.cup)?`${this.getFrase(land.cup,'Codigo CPU: ')}`:`  ${this.getFrase(land.idCartographicImg,'Codigo Imagen: ')}`,
                             colSpan: 2,
                             styles: {
                                 halign: 'center',
@@ -1812,7 +1858,7 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                             'JPEG',
                             data.cell.x +40,
                             data.cell.y ,
-                            100,
+                            120,
                             100
                         );
                     }
@@ -1822,15 +1868,6 @@ async generateMaxSecuen(layer: any, land: LandRegistryMapModel): Promise<number>
                         //console.log('data>>',data);
                         doc.rect( data.cell.x+15 ,
                             data.cell.y+5 , 30, 30);
-                        /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
-                       /* doc.addImage(
-                            screenshot.dataUrl,
-                            'JPEG',
-                            data.cell.x + 40,
-                            data.cell.y ,
-                            100,
-                            100
-                        );*/
                     }
 
                 },

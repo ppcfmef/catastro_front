@@ -19,7 +19,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class GapAnalysisBlockListComponent implements OnInit, OnChanges {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    @Input() title: string='Predios Subvaluados';
+    @Input() title: string='Predios para verificacion';
     @Input() view;
     @Input() length: number;
     @Input() tableColumns: TableColumn[] = [];
