@@ -10,6 +10,8 @@
 
 .arrow-back {
     color: #0090F8;
+    height: 24px;
+    width: 24px;
 }
 
 
@@ -18,14 +20,31 @@
     padding-top: 24px;
 }
 
-.mat-icon {
-    height: 24px;
-    width: 24px;
+.btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0090F8;
+    padding: 8px ;
+    color: white ;
+    border-radius: 7px;
+
 }
+
 
 .title {
     background-color: #DE3F43 ;
     color: white;
     font-weight: bold ;
     padding: 10px 15px;
+}
+
+
+:host ::ng-deep .example-accordion-item-header {
+    background-color: #bfbdbd !important ;
+    color: #041430 !important;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
 }

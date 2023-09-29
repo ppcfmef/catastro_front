@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageProviderService } from 'app/shared/services/message-provider.service';
-import { ModalComponent } from '../modal/modal.component';
 
 @Component({
-  selector: 'app-ticket',
-  templateUrl: './ticket.component.html',
-  styleUrls: ['./ticket.component.scss']
+  selector: 'app-ticket-done',
+  templateUrl: './ticket-done.component.html',
+  styleUrls: ['./ticket-done.component.scss']
 })
-export class TicketComponent implements OnInit {
+export class TicketDoneComponent implements OnInit {
+
+    ticket = {
+        cod:125,
+        gap:'Punto imagen'
+    };
+    comment =
+    'Predio no encontrado ';
+    panelOpenState = false;
 
     tickets =[
         {
@@ -16,7 +22,7 @@ export class TicketComponent implements OnInit {
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926',
-            state:0,
+            state:1,
         },
         {
             tipo:1,
@@ -24,7 +30,7 @@ export class TicketComponent implements OnInit {
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926',
-            state:0,
+            state:1,
         },
         {
             tipo:2,
@@ -32,7 +38,7 @@ export class TicketComponent implements OnInit {
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926',
-            state:0,
+            state:1,
         },
         {
             tipo:3,
@@ -43,17 +49,10 @@ export class TicketComponent implements OnInit {
             state:1,
         },
     ];
-  constructor(
-    private _messageProviderService: MessageProviderService,
-  ) { }
+
+  constructor() { }
 
   ngOnInit(): void {
   }
-  add(): void {
-    //
-  }
 
-  obsTicket(): void{
-    this._messageProviderService.showModal(ModalComponent,{width:430} );
-  }
 }

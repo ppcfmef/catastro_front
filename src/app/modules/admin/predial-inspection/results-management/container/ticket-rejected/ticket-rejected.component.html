@@ -87,17 +87,22 @@
         <ng-container *ngFor="let item of tickets">
             <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
                 <div>
-                    <app-case [ticket] = 'item'></app-case>
+                    <app-case [ticket] = 'item' disabled></app-case>
                 </div>
             </ng-container>
             <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
                 <div>
-                    <app-case-suministro [ticket] = 'item'></app-case-suministro>
+                    <app-case-suministro [ticket] = 'item' disabled></app-case-suministro>
                 </div>
             </ng-container>
         </ng-container>
     </div>
-
+    <div class="w-full flex gap-x-4 justify-center mb-4">
+        <button class="btn">
+            <mat-icon class="text-white h-12 w-13" svgIcon="mat_solid:picture_as_pdf"></mat-icon>
+            Descargar PDF
+        </button>
+    </div>
    </div>
 
 
