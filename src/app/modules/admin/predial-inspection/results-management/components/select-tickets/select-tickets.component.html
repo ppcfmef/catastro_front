@@ -6,9 +6,9 @@
         {{ isOpen ? 'Seleccione Ubicación' : itemSelect}}
       </div>
       <div
-        [style.display]="accordionItem.expanded ? '' : 'none'">
+        [style.display]="accordionItem.expanded ? closeTrue : 'none'">
         <ul>
-            <ng-container *ngFor="let item of tickets, let i = index">
+            <ng-container *ngFor="let item of ticket.ubicaciones, let i = index">
                 <li (click)="navegateTo(item); accordionItem.close()" >
                     <div class="flex gap-3">
                         <div class="box" [ngClass]="item.state ===0 ? 'default':'complete'"></div>

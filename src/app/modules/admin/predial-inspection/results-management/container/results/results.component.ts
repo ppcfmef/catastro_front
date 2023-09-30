@@ -71,6 +71,7 @@ export class ResultsComponent implements OnInit {
   }
 
   onZoomTerminado(row: any): void {
+    this._route.navigate([`ticket-done/${row.ticket}`], {relativeTo: this._activeRouter});
     console.log('onZoomTerminado', row);
   }
 }

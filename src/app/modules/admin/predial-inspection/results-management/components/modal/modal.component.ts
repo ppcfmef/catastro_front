@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-modal',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModalComponent implements OnInit {
     data;
+    inputControl: FormControl = new FormControl('');
+
   constructor() { }
 
   ngOnInit(): void {

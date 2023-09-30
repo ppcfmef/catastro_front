@@ -1,0 +1,71 @@
+<div class="flex flex-col flex-auto gap-4 w-full h-full justify-between">
+    <div class="flex flex-col gap-4">
+        <div class="px-4">
+            <app-dataland ></app-dataland>
+        </div>
+        <ng-container *ngIf="!hidden">
+            <div class="px-4 flex flex-col gap-1">
+                <span  class="text-bold">Agregar {{accept?'Referencia': 'dirección'}}</span>
+                <input
+                    class="border border-gray-400 rounded p-2"
+                    type="text"
+                    placeholder="{{accept?'Referencia': 'dirección'}}">
+            </div>
+        </ng-container>
+
+        <div class="divData">
+            <span>Datos del conttribuyente</span>
+        </div>
+
+        <div class="flex items-center px-4">
+            <div class="flex flex-col gap-y-3 w-48">
+                <div class="flex flex-col">
+                    <span class="text-bold">Contribuyente</span>
+                    <span class="text">{{ data.name }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-bold">Correo</span>
+                    <span class="text">{{ data.email }}</span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-y-3">
+                <div class="flex flex-col">
+                    <span class="text-bold">DNI</span>
+                    <span class="text">{{ data.dni }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-bold">Telefono</span>
+                    <span class="text">{{ data.email }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="hidden" >
+        <div class="flex w-full justify-around">
+            <button class="btn btnAdd" (click)="add()">
+                <mat-icon svgIcon="mat_solid:check_circle"></mat-icon>
+                Aprobar
+            </button>
+
+            <button class="btn btnObs" (click)="obsTicket()">
+                <mat-icon svgIcon="mat_solid:wrong_location"></mat-icon>
+                observar
+            </button>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!hidden" >
+        <div class="flex gap-3 self-center">
+            <button class="btn green" (click)="action()">
+                <mat-icon svgIcon="mat_solid:location_on"></mat-icon>
+                {{accept? 'Generar punto imagen': 'Validar ubicación'}}
+            </button>
+            <button class="btn btnAdd" (click)="actionTwo()">
+                <mat-icon svgIcon="mat_solid:add_location_alt"></mat-icon>
+                {{accept? 'Generar predio': 'Nueva dirección'}}
+            </button>
+        </div>
+    </ng-container>
+
+</div>

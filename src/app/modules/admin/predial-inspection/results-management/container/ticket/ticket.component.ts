@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
-  selector: 'app-ticket-rejected',
-  templateUrl: './ticket-rejected.component.html',
-  styleUrls: ['./ticket-rejected.component.scss']
+  selector: 'app-ticket',
+  templateUrl: './ticket.component.html',
+  styleUrls: ['./ticket.component.scss']
 })
-export class TicketRejectedComponent implements OnInit {
-    ticket = {
-        cod:125,
-        gap:'Punto imagen'
-    };
-    comment =
-    'Predio no encontrado ';
-    panelOpenState = false;
+export class TicketComponent implements OnInit {
 
     tickets =[
         {
@@ -45,13 +40,20 @@ export class TicketRejectedComponent implements OnInit {
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926',
-            state:0,
+            state:1,
         },
     ];
-
-  constructor() { }
+  constructor(
+    private _messageProviderService: MessageProviderService,
+  ) { }
 
   ngOnInit(): void {
   }
+  add(): void {
+    //
+  }
 
+  obsTicket(): void{
+    this._messageProviderService.showModal(ModalComponent,{width:430} );
+  }
 }

@@ -50,6 +50,15 @@ mat-accordion {
 }
 
 
+.content {
+    height: calc(100vh - 200px);
+}
+
+:host ::ng-deep app-ticket-predio-subvaluado.ng-star-inserted{
+    height: 100% !important;
+}
 
 
-
+:host ::ng-deep app-ticket-base.ng-star-inserted{
+    height: 100% !important;
+}

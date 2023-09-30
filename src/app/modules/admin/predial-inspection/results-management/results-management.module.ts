@@ -23,13 +23,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectTicketsComponent } from './components/select-tickets/select-tickets.component';
-import { TicketComponent } from './components/ticket/ticket.component';
+import { TicketComponent } from './container/ticket/ticket.component';
 import { CaseComponent } from './components/case/case.component';
 import { CaseSuministroComponent } from './components/case-suministro/case-suministro.component';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { TableComponent } from './components/table/table.component';
 import { ModalComponent } from './components/modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { TicketDoneComponent } from './container/ticket-done/ticket-done.component';
+import { PrevisualizacionComponent } from './container/previsualizacion/previsualizacion.component';
+import { ShortTableComponent } from './components/short-table/short-table.component';
+import { ListImagesComponent } from './container/list-images/list-images.component';
+import { TicketPredioSubvaluadoComponent } from './container/ticket-predio-subvaluado/ticket-predio-subvaluado.component';
+import { TicketBaseComponent } from './container/ticket-base/ticket-base.component';
+import { MatInputModule } from '@angular/material/input';
+
+
 
 @NgModule({
   declarations: [
@@ -43,7 +52,14 @@ import {MatDialogModule} from '@angular/material/dialog';
     CaseComponent,
     CaseSuministroComponent,
     TableComponent,
-    ModalComponent
+    ModalComponent,
+    TicketDoneComponent,
+    PrevisualizacionComponent,
+    ShortTableComponent,
+    ListImagesComponent,
+    TicketPredioSubvaluadoComponent,
+    TicketBaseComponent,
+
   ],
   imports: [
     CommonModule,
@@ -62,7 +78,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     ScrollingModule,
     CdkAccordionModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    MatInputModule,
   ]
 })
 export class ResultsManagementModule { }
