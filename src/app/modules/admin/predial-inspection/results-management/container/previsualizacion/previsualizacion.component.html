@@ -1,0 +1,55 @@
+<div class="flex flex-col items-center justify-center gap-5 bg-white ">
+    <div class="flex flex-col items-center justify-center gap-5 p-4">
+        <h1 class="text-lg font-bold">INFORMACIÓN DE CAMPO</h1>
+
+        <div class="flex gap-3" >
+            <app-short-table *ngFor="let item of data" [dataTable] = item></app-short-table>
+        </div>
+
+        <app-table
+            [dataSource]="dataSource"
+            [columns]="tableColumns"
+        >
+        </app-table>
+
+        <div class="font-bold text-lg self-start">INSTALACIONES</div>
+        <div class=" self-start">
+            <app-table
+            [dataSource]="dataSourceInst"
+            [columns]="tableColumnsInst"
+        >
+        </app-table>
+        </div>
+
+    </div>
+
+    <div class="flex flex-col items-center justify-center gap-5 p-4">
+        <h1 class="text-lg font-bold">INFORMACIÓN DE CAMPO</h1>
+
+        <div class="flex gap-3" >
+            <app-short-table *ngFor="let item of data" [dataTable] = item></app-short-table>
+        </div>
+
+        <app-table
+            [dataSource]="dataSource"
+            [columns]="tableColumns"
+        >
+        </app-table>
+
+        <div class="font-bold text-lg self-start">INSTALACIONES</div>
+        <div class=" self-start">
+            <app-table
+            [dataSource]="dataSourceInst"
+            [columns]="tableColumnsInst"
+        >
+        </app-table>
+        </div>
+
+    </div>
+
+    <div  class="flex gap-4">
+        <button class="blue btn">Predio Conforme</button>
+        <button class="red btn">Predio Subvaluado</button>
+    </div>
+
+</div>

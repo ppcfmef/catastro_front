@@ -10,30 +10,14 @@
 
 .arrow-back {
     color: #0090F8;
+    height: 24px;
+    width: 24px;
 }
 
 
-mat-accordion {
-    .mat-expansion-panel {
-        border-radius: 1px !important;
-        box-shadow: none !important;
-        border-bottom: 1px solid #DAE8F2;
-        &.mat-expanded,
-        &:hover {
-            box-shadow: none !important;
-        }
-    }
-    .mat-expansion-panel-header-title {
-        color: #0D2753;
-        font-weight: bold ;
-    }
-
-}
-
-:host ::ng-deep .mat-expansion-indicator:after {
-    color: #0090F8 !important;
-    height: 12px;
-    width: 12px;
+.container {
+    height: calc(100vh - 64px);
+    padding-top: 24px;
 }
 
 .btn {
@@ -48,14 +32,19 @@ mat-accordion {
 
 }
 
-.container {
-    height: calc(100vh - 64px);
-    padding: 32px 16px;
 
-
+.title {
+    background-color: #DE3F43 ;
+    color: white;
+    font-weight: bold ;
+    padding: 10px 15px;
 }
 
-.mat-icon {
-    height: 48px;
-    width: 50px;
+
+:host ::ng-deep .example-accordion-item-header {
+    background-color: #bfbdbd !important ;
+    color: #041430 !important;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
 }

@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { WidgetService } from './widget.service';
 import { OperatorService } from './operator.service';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { environment } from 'environments/environment';
 @Injectable({
     providedIn: 'root'
 })
@@ -27,7 +28,6 @@ export class TableService {
     _graphicsIds: any;
     webMapData: any;
     _webmap = null;
-    _portalUrl = 'https://js.arcgis.com/4.27/';
     _view = null;
     operator;
 
@@ -67,10 +67,10 @@ export class TableService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query', 'esri/config',]);
-                esriConfig.portalUrl = this._portalUrl;
+                // esriConfig.portalUrl = this._portalUrl;
                 // Url del servicio de cargas
-                const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
-                const urlUnidadesUrbanas = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6';
+                const urlCarga = `${environment.apiUrlArcGisServer}/pruebas/carto_asignacion_carga/FeatureServer/0`;
+                const urlUnidadesUrbanas = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/6`;
 
                 // Realizamos el filtro
                 const queryObjectCount = new newQuery();
@@ -115,10 +115,10 @@ export class TableService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query', 'esri/config',]);
-                esriConfig.portalUrl = this._portalUrl;
+                // esriConfig.portalUrl = this._portalUrl;
                 // Url del servicio de cargas
-                const urlCarga = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
-                const urlUnidadesUrbanas = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6';
+                const urlCarga = `${environment.apiUrlArcGisServer}/pruebas/carto_asignacion_carga/FeatureServer/0`;
+                const urlUnidadesUrbanas = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/6`;
 
                 // Realizamos el filtro
                 const queryObjectPorAsignar = new newQuery();
@@ -512,7 +512,7 @@ export class TableService {
             try {
                 const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
 
-                const idDetailWorkLoadLayer = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/5';
+                const idDetailWorkLoadLayer = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION_AC/MapServer/5`;
                 const ubigeo = ubigeouser;
 
                 const queryDetailWorkLoad = new newQuery();
@@ -546,7 +546,7 @@ export class TableService {
             try {
                 const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
 
-                const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
+                const urlWorkLoad = `${environment.apiUrlArcGisServer}/pruebas/carto_asignacion_carga/FeatureServer/0`;
                 const ubigeo = ubigeouser;
 
                 // @process
@@ -578,7 +578,7 @@ export class TableService {
     getListUrbantUnit(ubigeo): Promise<string> {
         return new Promise(async (resolve, reject) => {
             const [newQuery, query] = await loadModules(['esri/rest/support/Query', 'esri/rest/query']);
-            const urlUrbanUnits = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer/6';
+            const urlUrbanUnits = `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/6`;
 
             // @process
 
@@ -609,9 +609,9 @@ export class TableService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [newQuery, query, esriConfig] = await loadModules(['esri/rest/support/Query', 'esri/rest/query', 'esri/config',]);
-                esriConfig.portalUrl = this._portalUrl;
-                const urlWorkLoad = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/carto_asignacion_carga/FeatureServer/0';
-                const urlStatsUser = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CAPAS_INSPECCION_AC/MapServer/7';
+                // esriConfig.portalUrl = this._portalUrl;
+                const urlWorkLoad = `${environment.apiUrlArcGisServer}/pruebas/carto_asignacion_carga/FeatureServer/0`;
+                const urlStatsUser = `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION_AC/MapServer/7`;
 
                 // @process
                 const queryWorkLoad = new newQuery();
@@ -715,6 +715,8 @@ export class TableService {
                 feature.attributes.COD_USUARIO = operator;
                 feature.attributes.FEC_ASIGNACION = dateUpdate;
                 feature.attributes.FEC_ULTIMA_ACTUALIZACION = dateUpdate;
+                feature.attributes.FEC_ENTREGA = dateLimit;
+                feature.attributes.NOM_USUARIO = nameOperator;
             });
 
             const resultUpdateTicket = await this._webmap.findTableById(idTicketLayer).applyEdits({ updateFeatures: featuresTicket });

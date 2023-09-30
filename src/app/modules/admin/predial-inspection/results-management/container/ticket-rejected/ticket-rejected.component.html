@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto gap-y-3 container">
+<!-- <div class="flex flex-col flex-auto gap-y-3 container">
     <div class="flex gap-x-4 items-center">
         <button class="green-button-solid">
             <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
@@ -62,6 +62,47 @@
         </button>
     </div>
 
-</div>
+</div> -->
+
+
+<div class="flex flex-col flex-auto gap-y-3 container">
+    <div class="flex items-center justify-between px-4">
+        <div class="flex gap-x-1">
+            <button>
+                <mat-icon svgIcon="arrow_back_ios" class="arrow-back"></mat-icon>
+            </button>
+            <span class="title-primary">Ticket  {{ticket.cod}}  -   {{ticket.gap}}</span>
+        </div>
+    </div>
+    <div class="title">
+        <span>OBSERVACIÓN</span>
+    </div>
+    <div class="p-4">
+        <span>Predio no ubicado</span>
+    </div>
+    <div class="p-4">
+       <app-dataland></app-dataland>
+    </div>
+    <div class="flex flex-col flex-auto px-4 gap-4">
+        <ng-container *ngFor="let item of tickets">
+            <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
+                <div>
+                    <app-case [ticket] = 'item' disabled></app-case>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
+                <div>
+                    <app-case-suministro [ticket] = 'item' disabled></app-case-suministro>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div class="w-full flex gap-x-4 justify-center mb-4">
+        <button class="btn">
+            <mat-icon class="text-white h-12 w-13" svgIcon="mat_solid:picture_as_pdf"></mat-icon>
+            Descargar PDF
+        </button>
+    </div>
+   </div>
 
 

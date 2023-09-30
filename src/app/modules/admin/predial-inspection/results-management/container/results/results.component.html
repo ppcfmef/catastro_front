@@ -15,60 +15,25 @@
     <div class="w-full">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
             <mat-tab label="Pendiente">
-                <table mat-table [dataSource]="dataSource" class="table-list w-full">
-                    <!-- Cabecera de la tabla -->
-                    <ng-container matColumnDef="nro">
-                      <th mat-header-cell *matHeaderCellDef > Nro. </th>
-                      <td mat-cell *matCellDef="let element"  > {{ element.nro }} </td>
-                    </ng-container>
-                  
-                    <ng-container matColumnDef="ticket">
-                      <th mat-header-cell *matHeaderCellDef > Ticket </th>
-                      <td mat-cell *matCellDef="let element"  > {{ element.ticket }} </td>
-                    </ng-container>
-                  
-                    <ng-container matColumnDef="tipoBrecha">
-                      <th mat-header-cell *matHeaderCellDef  > Tipo Brecha </th>
-                      <td mat-cell *matCellDef="let element" colspan="2"  >
-                        <!-- Tabla anidada -->
-                        <table  class="w-full">
-                          <tr>
-                            <td>{{ element.tipoBrecha }}</td>
-                            <td>{{ element.fechaBrecha }}</td>
-                          </tr>
-                          <tr>
-                            <td colspan="2"> <div class="text-domicilio">
-                                {{ element.direccion }}
-                            </div></td>
-                          </tr>
-                        </table>
-                      </td>
-                    </ng-container>
-                  
-                    <ng-container matColumnDef="fecha">
-                      <th mat-header-cell *matHeaderCellDef  > Fecha </th>
-                      <td mat-cell *matCellDef="let element" style="display: none;"></td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element"  >
-                            <button matTooltip="Ver">
-                                <mat-icon svgIcon="zoom_in" class="blue-icon"></mat-icon>
-                            </button>
-                        </td>
-                      </ng-container>
-                  
-                    <!-- Filas de la tabla -->
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-                  </table>
+                <app-table-manageresult
+                    [dataTable]="dataSource"
+                    [colums]="displayedColumns"
+                    (action)="onZoom($event)">
+                </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Observado">
-
+                <app-table-manageresult
+                    [dataTable]="dataSource"
+                    [colums]="displayedColumns"
+                    (action)="onZoomObservado($event)">
+                </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Terminado">
-
+                <app-table-manageresult
+                [dataTable]="dataSource"
+                [colums]="displayedColumns"
+                (action)="onZoomTerminado($event)">
+            </app-table-manageresult>
             </mat-tab>
         </mat-tab-group>
     </div>

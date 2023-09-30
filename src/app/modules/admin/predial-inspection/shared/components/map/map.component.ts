@@ -18,6 +18,7 @@ import { NavigationAuthorizationService } from 'app/shared/services/navigation-a
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { TableService } from '../../../assignment-of-load/services/table.service';
 import { OperatorService } from '../../../assignment-of-load/services/operator.service';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'app-map',
@@ -102,9 +103,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this._currentUser = user;
-                console.log('this._currentUser', this._currentUser);
                 // @SETUBIGEO
-                this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : '150101';
+                this._currentUserUbigeo = this._currentUser.ubigeo ? this._currentUser.ubigeo : environment.defaultUbigeo;
                 this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
                 localStorage.setItem('ubigeo', this._currentUserUbigeo);
                 this._operatorService.updateUbigeo();
@@ -258,7 +258,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                 'esri/geometry/support/webMercatorUtils',
             ]);
             // Properties of the map
-            const _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
             const _idWebMap = '66adf64572f7438c892056ad832ea39d';
             let _layersMap = [];
 
@@ -287,7 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 },
             };
 
-            esriConfig.portalUrl = _portalUrl;
+            esriConfig.portalUrl = environment.portalUrl;
 
             self._webmap = new WebMap({
                 portalItem: {

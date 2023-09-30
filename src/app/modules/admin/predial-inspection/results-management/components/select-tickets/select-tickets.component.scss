@@ -1,20 +1,21 @@
-.button-select {
-    width: 100%;
-    background-color: #0795FA;
-    color: white;
-    padding: 18px;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-}
 
 .box {
     height: 22px;
     width: 22px;
-    background-color: #DE3F43;
 }
+
+.default{
+    background-color: #DE3F43;
+
+}
+
+.complete {
+    background-color: #66BB6A;
+}
+
+
 ul {
-    height: 100vh;
+    height: calc(100vh - 200px);
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -32,4 +33,22 @@ li {
     background-color: white;
     border-radius: 8px;
 
+}
+
+
+.example-accordion-item-header,
+.example-accordion-item-body {
+  padding: 6px;
+  display: flex;
+}
+.example-accordion-item-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #0795FA;
+    color: white;
+    padding: 18px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
 }

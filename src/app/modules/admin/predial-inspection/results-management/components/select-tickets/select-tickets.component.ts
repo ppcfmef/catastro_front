@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { state } from '@angular/animations';
+import { BreadCrumbsComponent } from '../../../../../../shared/components/bread-crumbs/bread-crumbs.component';
 
 @Component({
   selector: 'app-select-tickets',
@@ -8,46 +12,47 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./select-tickets.component.scss']
 })
 export class SelectTicketsComponent implements OnInit {
+
+    @Input() ticket: any;
+    closeTrue = '';
     isOpen = false;
     itemSelect = 'Seleccione Ubicación';
-    tickets = [
-        {
-            id:'001',
-            totalCase:4
-        },
-        {
-            id:'002',
-            totalCase:4
-        },
-        {
-            id:'003',
-            totalCase:3
-        },
-        {
-            id:'004',
-            totalCase:2
-        },
-        {
-            id:'005',
-            totalCase:4
-        },
-        {
-            id:'006',
-            totalCase:4
-        }
-    ];
   constructor(
     private _router: Router,
-    private _activeRoure: ActivatedRoute,
+    private _activeRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
+
+    if(this.ticket.gap === 'punto imagen'|| this.ticket.gap ==='predio subvaluado'||this.ticket.gap ==='predio sin geo') {
+        this.selectRoute(this.ticket.cod);
+        this.closeTrue = 'closed';
+        this.itemSelect = '01. Ubicación';
+    }else {
+        this._router.navigate([`predio/${this.ticket.ubicaciones[0]}`] , {relativeTo: this._activeRoute});
+        this.itemSelect =`${this.ticket.ubicaciones[0].id}. Ubicaciones`;
+    }
+
   }
 
   navegateTo(item: any): void {
     this.itemSelect = `${item.id}. Ubicación`;
-    this.isOpen=false;
+    this._router.navigate([`predio/${item.id}`] , {relativeTo: this._activeRoute});
     console.log(item, 'item');
-    this._router.navigate([`ticket/${item.id}`] , {relativeTo: this._activeRoure});
   }
+
+    selectRoute(item): void {
+        switch (this.ticket.gap) {
+            case 'predio sin geo':
+                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
+            break;
+            case 'punto imagen':
+                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
+            break;
+            case 'predio subvaluado':
+                this._router.navigate([`sub/${item}`] , {relativeTo: this._activeRoute});
+            break;
+        }
+    }
+
 }

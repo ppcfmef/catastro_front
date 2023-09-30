@@ -23,7 +23,6 @@ import { OperatorService } from '../../services/operator.service';
     styleUrls: ['./table-assigned.component.scss'],
 })
 export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
-    _portalUrl = 'https://js.arcgis.com/4.27/';
     tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
         isAction: true,

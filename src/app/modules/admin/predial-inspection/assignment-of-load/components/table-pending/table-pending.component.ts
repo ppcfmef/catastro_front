@@ -28,7 +28,6 @@ import { OperatorService } from '../../services/operator.service';
 export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     bySearch: any;
-    _portalUrl = 'https://js.arcgis.com/4.27/';
     tableColumns: TableColumn[] = [];
     tableConfig: TableConifg = {
         isAction: true,

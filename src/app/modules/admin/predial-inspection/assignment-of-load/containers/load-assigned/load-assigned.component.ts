@@ -23,8 +23,6 @@ import { IOperator, IResult } from '../../interfaces/operator.interface';
     styleUrls: ['./load-assigned.component.scss'],
 })
 export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
-    _portalUrl = 'https://ws.mineco.gob.pe/portaldf';
-    idWebMap = '66adf64572f7438c892056ad832ea39d';
     _unsubscribeAll: Subject<any> = new Subject<any>();
     _currentUser: User;
     _currentUserUbigeo: string;
@@ -219,7 +217,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                                     .afterClosed().subscribe(() => {
                                         this.redirecto();
                                     });
-                            })
+                            });
                         // this._tableService.reloadLayersAfterDelete();
                         // this._messageProviderService.showAlert(messageDeletePendingSuccess)
                         //     .afterClosed().subscribe(() => {

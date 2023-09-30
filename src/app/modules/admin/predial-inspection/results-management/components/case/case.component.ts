@@ -7,7 +7,6 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CaseComponent implements OnInit {
 
-    isOpen = false;
     @Input() set ticket(data: any) {
         this.tickets = data;
     }
@@ -16,6 +15,7 @@ export class CaseComponent implements OnInit {
         {
             tipo:1,
             codCase: '00986',
+            state:1,
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926'
