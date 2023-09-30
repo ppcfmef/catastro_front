@@ -7,9 +7,8 @@ import { TicketPendingComponent } from './container/ticket-pending/ticket-pendin
 import { TicketRejectedComponent } from './container/ticket-rejected/ticket-rejected.component';
 import { TicketComponent } from './container/ticket/ticket.component';
 import { TicketDoneComponent } from './container/ticket-done/ticket-done.component';
-import { PrevisualizacionComponent } from './container/previsualizacion/previsualizacion.component';
 import { TicketPredioSubvaluadoComponent } from './container/ticket-predio-subvaluado/ticket-predio-subvaluado.component';
-import { TicketPuntoImagenComponent } from './container/ticket-punto-imagen/ticket-punto-imagen.component';
+import { TicketBaseComponent } from './container/ticket-base/ticket-base.component';
 
 const routes: Routes = [
     {
@@ -21,7 +20,7 @@ const routes: Routes = [
             {path: '',component: ResultsComponent},
             {path: 'ticket-pending/:id',component: TicketPendingComponent,
                 children:[
-                    {path:'puntoImagen/:id',component:TicketPuntoImagenComponent},
+                    {path:'ticket/:id',component:TicketBaseComponent},
                     {path:'predio/:id',component:TicketComponent},
                     {path:'sub/:id',component:TicketPredioSubvaluadoComponent}
                 ]

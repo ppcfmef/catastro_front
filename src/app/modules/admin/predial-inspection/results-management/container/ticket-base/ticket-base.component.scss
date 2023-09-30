@@ -1,10 +1,18 @@
 .btn {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     color: white;
     height: 38px;
-    width: 131px;
+    width: max-content;
+    padding: 20px 20px;
+    text-align: center;
     border-radius: 15px;
 }
 
+mat-icon {
+    color: white;
+}
   .btnObs {
     background-color: #DE3F43;
 
@@ -57,4 +65,8 @@
     color: #0795FA;
     font-size: 14px;
     font-weight: bold;
+}
+
+.green {
+    background-color: #52B46C;
 }

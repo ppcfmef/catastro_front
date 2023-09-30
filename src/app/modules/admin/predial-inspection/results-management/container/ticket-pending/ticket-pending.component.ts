@@ -14,7 +14,7 @@ export class TicketPendingComponent implements OnInit, OnDestroy {
     _unsubscribeAll: Subject<any> = new Subject<any>();
     ticket = {
         cod:'125',
-        gap:'predio sin lote ',
+        gap:'predio sin geo',
         totalTicket: 6,
         ubicaciones: [
                         {

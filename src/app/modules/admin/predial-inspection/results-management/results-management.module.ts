@@ -35,7 +35,8 @@ import { PrevisualizacionComponent } from './container/previsualizacion/previsua
 import { ShortTableComponent } from './components/short-table/short-table.component';
 import { ListImagesComponent } from './container/list-images/list-images.component';
 import { TicketPredioSubvaluadoComponent } from './container/ticket-predio-subvaluado/ticket-predio-subvaluado.component';
-import { TicketPuntoImagenComponent } from './container/ticket-punto-imagen/ticket-punto-imagen.component';
+import { TicketBaseComponent } from './container/ticket-base/ticket-base.component';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -57,7 +58,7 @@ import { TicketPuntoImagenComponent } from './container/ticket-punto-imagen/tick
     ShortTableComponent,
     ListImagesComponent,
     TicketPredioSubvaluadoComponent,
-    TicketPuntoImagenComponent,
+    TicketBaseComponent,
 
   ],
   imports: [
@@ -78,6 +79,7 @@ import { TicketPuntoImagenComponent } from './container/ticket-punto-imagen/tick
     CdkAccordionModule,
     MatDialogModule,
     FormsModule,
+    MatInputModule,
   ]
 })
 export class ResultsManagementModule { }

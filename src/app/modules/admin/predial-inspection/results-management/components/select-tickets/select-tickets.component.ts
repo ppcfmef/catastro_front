@@ -24,7 +24,7 @@ export class SelectTicketsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.ticket.gap === 'punto imagen'|| this.ticket.gap ==='predio subvaluado') {
+    if(this.ticket.gap === 'punto imagen'|| this.ticket.gap ==='predio subvaluado'||this.ticket.gap ==='predio sin geo') {
         this.selectRoute(this.ticket.cod);
         this.closeTrue = 'closed';
         this.itemSelect = '01. Ubicación';
@@ -43,11 +43,11 @@ export class SelectTicketsComponent implements OnInit {
 
     selectRoute(item): void {
         switch (this.ticket.gap) {
-            case 'Predio sin geo':
-                this._router.navigate([`predio/${item}`] , {relativeTo: this._activeRoute});
+            case 'predio sin geo':
+                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
             break;
             case 'punto imagen':
-                this._router.navigate([`puntoImagen/${item}`] , {relativeTo: this._activeRoute});
+                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
             break;
             case 'predio subvaluado':
                 this._router.navigate([`sub/${item}`] , {relativeTo: this._activeRoute});
