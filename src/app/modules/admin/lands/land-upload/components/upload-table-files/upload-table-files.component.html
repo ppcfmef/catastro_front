@@ -36,13 +36,21 @@
                         </ng-container>
                     </td>
                 </ng-container>
-    
+                
+                <ng-container matColumnDef="line">
+                    <th mat-header-cell *matHeaderCellDef> Fila </th>                
+                    <ng-container >
+                        <td mat-cell *matCellDef="let element">{{ element.orderRecord }}</td>
+                    </ng-container>                
+                </ng-container>
+
                 <ng-container matColumnDef="data">
-                    <th mat-header-cell *matHeaderCellDef> Fila Excel </th>                
+                    <th mat-header-cell *matHeaderCellDef> Datos </th>                
                     <ng-container >
                         <td mat-cell *matCellDef="let element">
-                            CPU:{{ element.record.codCpu }}<br />
-                            CPM: {{ element.record.codPre }}<br />
+                            UBIGEO:{{ element.record.ubigeo }}<br />
+                            COD_PRE: {{ element.record.codPre }}<br />
+                            COD_CONTR: {{ element.record.codContr }}<br />
                             {{ element.record.nombre + ' ' + element.record.apPat }}
                         </td>
                     </ng-container>                
