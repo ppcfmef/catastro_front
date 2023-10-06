@@ -96,7 +96,7 @@
                             </button>
                         </ng-template>
 
-                        <ng-container *ngIf="recordSumary?.status === 'INITIAL' || recordSumary?.status === 'IN_PROGRESS_TMP'">
+                        <ng-container *ngIf="recordSumary?.status === 'INITIAL'">
                             <div class="flex flex-row w-full mt-4 items-center">
                                 <mat-spinner [color]="accent" [diameter]="40"
                                 matTooltip="En curso"
@@ -126,7 +126,22 @@
 </div>
 </ng-container>
 
+
 <div class="flex-row w-full justify-center">
+
+    <!-- Estado en progreso temporal -->
+    <div *ngIf="recordSumary?.status === 'IN_PROGRESS_TMP'"
+    class="flex flex-row w-full mt-4 items-center">
+        <mat-spinner [color]="accent" [diameter]="40"
+        matTooltip="En curso"
+        matTooltipPosition="right"
+        ></mat-spinner>
+        <p class="ml-4">
+            Espere mientras cargamos y validamos el archivo,<br>
+            en este proceso se valida formato y consistencia de datos,<br>
+            una vez validado los datos confirme la carga</p>
+    </div>
+
     <!-- Tablas de errores post revision de archivo -->
     <ng-container *ngIf="recordSumary?.status === 'LOADED_TMP' && recordSumary.errors > 0">
         <div class="flex-row w-full">
