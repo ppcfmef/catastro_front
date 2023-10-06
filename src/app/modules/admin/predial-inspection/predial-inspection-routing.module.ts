@@ -31,6 +31,10 @@ const routes: Routes = [
             path: 'results-management',
             loadChildren: () => import('./results-management/results-management.module').then(m => m.ResultsManagementModule)
         },
+        {
+          path: 'dashboard',
+          loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+      },
 
     ];
 @NgModule({
