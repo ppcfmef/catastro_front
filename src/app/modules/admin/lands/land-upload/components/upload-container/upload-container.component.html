@@ -1,5 +1,5 @@
 <div class="flex-row w-auto">
-    <section class="block-information">
+    <section class="block-information" *ngIf="false">
         <div>
             Verifique que el archivo a cargar tenga la estructura requerida, puede ingresar al módulo de acondicionamiento información.
         </div>
@@ -96,7 +96,7 @@
                             </button>
                         </ng-template>
 
-                        <ng-container *ngIf="recordSumary?.status === 'INITIAL' || recordSumary?.status === 'IN_PROGRESS_TMP'">
+                        <ng-container *ngIf="recordSumary?.status === 'INITIAL'">
                             <div class="flex flex-row w-full mt-4 items-center">
                                 <mat-spinner [color]="accent" [diameter]="40"
                                 matTooltip="En curso"
@@ -126,7 +126,22 @@
 </div>
 </ng-container>
 
+
 <div class="flex-row w-full justify-center">
+
+    <!-- Estado en progreso temporal -->
+    <div *ngIf="recordSumary?.status === 'IN_PROGRESS_TMP'"
+    class="flex flex-row w-full mt-4 items-center">
+        <mat-spinner [color]="accent" [diameter]="40"
+        matTooltip="En curso"
+        matTooltipPosition="right"
+        ></mat-spinner>
+        <p class="ml-4">
+            Espere mientras cargamos y validamos el archivo,<br>
+            en este proceso se valida formato y consistencia de datos,<br>
+            una vez validado los datos confirme la carga</p>
+    </div>
+
     <!-- Tablas de errores post revision de archivo -->
     <ng-container *ngIf="recordSumary?.status === 'LOADED_TMP' && recordSumary.errors > 0">
         <div class="flex-row w-full">
@@ -137,32 +152,52 @@
         </div>
 
         <div class="flex flex-row w-full items-center mt-8">
-        <div class="flex flex-col w-80 mr-8">
-        <h3 class="title-file">{{ fileName }}</h3>
-        <p class="subtitle">
-            <b>Total de registros :</b>   {{ recordSumary.total }}
-        </p>
-        </div>
-        <div class="flex gap-4">
-        <!--
-        <div class="block-summary-table b-rose">
-            <h3>Errores de <br>
-                formato:</h3>
-            <h4>0</h4>
-        </div>
-        -->
-        <div class="block-summary-table b-rose">
-            <h3>Errores de <br>
-                consistencia:</h3>
-            <h4>{{ recordSumary.errors }}</h4>
-        </div>
-        <div class="block-summary-table b-green">
-            <h3>Registros <br>
-                validos:</h3>
-            <h4>{{ recordSumary.corrects }}</h4>
-        </div>
+            <div class="flex flex-col w-80 mr-8">
+                <h3 class="title-file">{{ fileName }}</h3>
+                <p class="subtitle">
+                    <b>Total de registros :</b>  <b>{{ recordSumary.total }}</b>
+                </p>
+            </div>
+            <div class="flex gap-4">
+            <!--
+            <div class="block-summary-table b-rose">
+                <h3>Errores de <br>
+                    formato:</h3>
+                <h4>0</h4>
+            </div>
+            -->
+                <div class="block-summary-table b-rose">
+                    <h3>Errores de <br>
+                        consistencia:</h3>
+                    <h4>{{ recordSumary.errors }}</h4>
+                </div>
 
-        </div>
+                <div class="block-summary-table b-green">
+                    <h3>Registros <br>
+                        validos:</h3>
+                    <h4>{{ recordSumary.corrects }}</h4>
+                </div>
+
+            </div>
+
+            <!-- Estado carga temporal en progreso -->
+            <div class="flex flex-col mt-4 ml-4 float-right" *ngIf="recordSumary?.status === 'LOADED_TMP'">
+                <button *ngIf="selectForm.get('selectType').value === 99; else btnValidSave"
+                class="btn-blue" [disabled]="false"
+                (click)="onValidSaveMultipleUpload()">
+                    <mat-icon svgIcon="mat_solid:upload"></mat-icon>
+                    <span class="mr-2">Realizar Carga de datos</span>
+                </button> <!-- [disabled]="recordSumary?.correctsData ? false : true"-->
+                <ng-template #btnValidSave>
+                    <button
+                    class="btn-blue" [disabled]="false"
+                    (click)="onValidSaveUpload()">
+                        <mat-icon svgIcon="mat_solid:upload"></mat-icon>
+                        <span class="mr-2">Realizar Carga de datos</span>
+                    </button>
+                </ng-template>
+            </div>
+        
         </div>
 
 

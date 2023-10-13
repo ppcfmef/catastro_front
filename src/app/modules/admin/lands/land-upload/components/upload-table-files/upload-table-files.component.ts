@@ -59,11 +59,6 @@ export class UploadTableFilesComponent implements OnInit, AfterViewInit, OnChang
     }
 
   generateColumns(): void{
-      if(this.posicionExcel){
-          this.displayedColumns = ['index','status', 'errorCode', 'data'];
-      }else{
-          this.displayedColumns = ['index', 'depCensal', 'provCensal', 'distCensal','jb','empadronador','periodo','nivel','codigo', 'ruta', 'estadoUdra'];
-      }
-
+    this.displayedColumns = ['index','status', 'errorCode', 'line', 'data'];
   }
 }

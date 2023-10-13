@@ -28,7 +28,9 @@
                         <ng-container [ngSwitch]="element.errorCode">
                             <ng-container *ngSwitchCase="'IS_REQUIRED[ubigeo]'">UBIGEO es requerido</ng-container>
                             <ng-container *ngSwitchCase="'IS_REQUIRED[cod_pre]'">COD_PRE es requerido</ng-container>
-                            <ng-container *ngSwitchCase="'WARNING[cod_contr_empty]'">COD_CONTR esta vacio</ng-container>
+                            <ng-container *ngSwitchCase="'CODE_ERROR[cod_pre]'">COD_PRE incorrecto</ng-container>
+                            <ng-container *ngSwitchCase="'CODE_ERROR[cod_contr]'">COD_CONTR incorrecto</ng-container>
+                            <ng-container *ngSwitchCase="'IS_REQUIRED[cod_contr]'">COD_CONTR es requerido</ng-container>
                             <ng-container *ngSwitchCase="'NOT_INSERT[exists_owner_with_document]'">Ya existe Controbuyente con este DNI</ng-container>
                             <ng-container *ngSwitchCase="'DUPLICATE'">REGISTRO DUPLICADO</ng-container>
                             <ng-container *ngSwitchCase="'DUPLICATE[owner]'">CONTRIBUYENTE DUPLICADO </ng-container>
@@ -36,13 +38,21 @@
                         </ng-container>
                     </td>
                 </ng-container>
-    
+                
+                <ng-container matColumnDef="line">
+                    <th mat-header-cell *matHeaderCellDef> Fila </th>                
+                    <ng-container >
+                        <td mat-cell *matCellDef="let element">{{ element.orderRecord }}</td>
+                    </ng-container>                
+                </ng-container>
+
                 <ng-container matColumnDef="data">
-                    <th mat-header-cell *matHeaderCellDef> Fila Excel </th>                
+                    <th mat-header-cell *matHeaderCellDef> Datos </th>                
                     <ng-container >
                         <td mat-cell *matCellDef="let element">
-                            CPU:{{ element.record.codCpu }}<br />
-                            CPM: {{ element.record.codPre }}<br />
+                            UBIGEO:{{ element.record.ubigeo }}<br />
+                            COD_PRE: {{ element.record.codPre }}<br />
+                            COD_CONTR: {{ element.record.codContr }}<br />
                             {{ element.record.nombre + ' ' + element.record.apPat }}
                         </td>
                     </ng-container>                
