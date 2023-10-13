@@ -28,7 +28,9 @@
                         <ng-container [ngSwitch]="element.errorCode">
                             <ng-container *ngSwitchCase="'IS_REQUIRED[ubigeo]'">UBIGEO es requerido</ng-container>
                             <ng-container *ngSwitchCase="'IS_REQUIRED[cod_pre]'">COD_PRE es requerido</ng-container>
-                            <ng-container *ngSwitchCase="'WARNING[cod_contr_empty]'">COD_CONTR esta vacio</ng-container>
+                            <ng-container *ngSwitchCase="'CODE_ERROR[cod_pre]'">COD_PRE incorrecto</ng-container>
+                            <ng-container *ngSwitchCase="'CODE_ERROR[cod_contr]'">COD_CONTR incorrecto</ng-container>
+                            <ng-container *ngSwitchCase="'IS_REQUIRED[cod_contr]'">COD_CONTR es requerido</ng-container>
                             <ng-container *ngSwitchCase="'NOT_INSERT[exists_owner_with_document]'">Ya existe Controbuyente con este DNI</ng-container>
                             <ng-container *ngSwitchCase="'DUPLICATE'">REGISTRO DUPLICADO</ng-container>
                             <ng-container *ngSwitchCase="'DUPLICATE[owner]'">CONTRIBUYENTE DUPLICADO </ng-container>
