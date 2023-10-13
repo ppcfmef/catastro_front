@@ -37,6 +37,20 @@ export class DetailItemComponent implements OnInit, OnDestroy {
             ).subscribe((navigation: Navigation) => {
             // set values in queryPrams
             this.navigationItems = this.getNavigationItems(navigation);
+            const filtrados = this.navigationItems.filter((item)=>{
+                const orders = [4151, 4130, 4132, 4134];
+                // eslint-disable-next-line @typescript-eslint/prefer-for-of
+                for (let index = 0; index < orders.length; index++) {
+                    if(item['order'] === orders[index]){
+                        console.log('encointrado');
+                        return false;
+                    }
+                }
+
+                return item;
+            });
+
+            this.navigationItems = filtrados;
         });
     }
 
