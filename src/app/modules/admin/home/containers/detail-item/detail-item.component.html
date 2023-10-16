@@ -4,7 +4,6 @@
         <!-- Items -->
         <ng-container *ngFor="let item of navigationItems; trackBy:trackByFn">
             <div>
-                {{item | json}}
                 <app-card-menu-item (eventPageRedirect)="redirectPage(item)"
                 [bgColor]="'#67b4f1'" [item]="item"></app-card-menu-item>
             </div>
