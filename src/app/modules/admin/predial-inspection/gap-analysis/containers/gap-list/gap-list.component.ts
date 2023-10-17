@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
-import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
+import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { ManzanaPrediosSubvaluadosService } from '../../services/manzana-sub-valuado.service';
 import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.service';
 import { ManzanaSinLoteService } from '../../services/manzana-sin-lote.service';
@@ -24,7 +24,7 @@ export class GapListComponent implements OnInit , OnDestroy{
     ubigeo = '040703';
     cards = [
         {
-            type: TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO,
+            type: TypeGap.PUNTOS_LOTE_SIN_PREDIO,
             title: 'PUNTOS LOTES SIN PREDIOS',
             numb: '120',
             color: '#DE3F43',
@@ -32,7 +32,7 @@ export class GapListComponent implements OnInit , OnDestroy{
             path: `./points-without-land/${this.ubigeo}`,
         },
         {
-            type: TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION,
+            type: TypeGap.PREDIO_SIN_GEORREFERENCIACION,
             title: 'PREDIOS SIN GEOREFERENCIACION',
             numb: '284',
             color: '#0090F8',
@@ -40,7 +40,7 @@ export class GapListComponent implements OnInit , OnDestroy{
             path: `./geo/${this.ubigeo}`,
         },
         {
-            type: TypeGapAnalisys.PREDIO_SUBVALUADO,
+            type: TypeGap.PREDIO_SUBVALUADO,
             title: 'PREDIOS PARA VERIFICACION',
             numb: '0',
             color: '#66BB6A',
@@ -48,7 +48,7 @@ export class GapListComponent implements OnInit , OnDestroy{
             path: `./sub-land/${this.ubigeo}`,
         },
         {
-            type: TypeGapAnalisys.MANZANA_SIN_LOTES,
+            type: TypeGap.MANZANA_SIN_LOTES,
             title: 'MANZANAS SIN LOTES',
             numb: '180',
             color: '#F89500',
@@ -56,7 +56,7 @@ export class GapListComponent implements OnInit , OnDestroy{
             path: `./without-batch/${this.ubigeo}`,
         },
         {
-            type: TypeGapAnalisys.PUNTO_IMAGEN,
+            type: TypeGap.PUNTO_IMAGEN,
             title: 'PUNTOS EN IMAGEN',
             numb: '110',
             color: '#0090F8',
@@ -64,7 +64,7 @@ export class GapListComponent implements OnInit , OnDestroy{
             path: `./imagen/${this.ubigeo}`,
         },
         {
-            type: TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA,
+            type: TypeGap.ACTUALIZACION_CARTOGRAFICA,
             title: 'MANZANAS ACTUALIZACION',
             numb: '5',
             color: '#1E293B',
@@ -98,8 +98,8 @@ export class GapListComponent implements OnInit , OnDestroy{
     ) {}
     ngOnDestroy(): void {
         console.log('destroy');
-        /*localStorage.removeItem('ubigeoBrechas');
-        localStorage.removeItem('idLand');*/
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     }
 
     ngOnInit(): void {
@@ -136,6 +136,11 @@ export class GapListComponent implements OnInit , OnDestroy{
             this.updateUbigeoCards(this.ubigeo);
         });
     }
+
+
+
+
+    
     searchDistrict(event: any): void {
         const search = event.target.value;
         if (search && search !== '' && search.length > 3) {
@@ -175,24 +180,24 @@ export class GapListComponent implements OnInit , OnDestroy{
 
                 this.cards.forEach( (c) => {
 
-                    if(c.type === TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION){
+                    if(c.type === TypeGap.PREDIO_SIN_GEORREFERENCIACION){
                         c.numb = String(total1);
                     }
-                    if(c.type === TypeGapAnalisys.PREDIO_SUBVALUADO){
+                    if(c.type === TypeGap.PREDIO_SUBVALUADO){
                         c.numb = String(total2);
                     }
-                    if(c.type === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO){
+                    if(c.type === TypeGap.PUNTOS_LOTE_SIN_PREDIO){
                         c.numb = String(total3);
                     }
 
-                    if(c.type === TypeGapAnalisys.MANZANA_SIN_LOTES){
+                    if(c.type === TypeGap.MANZANA_SIN_LOTES){
                         c.numb = String(total4);
                     }
 
-                    if(c.type === TypeGapAnalisys.PUNTO_IMAGEN){
+                    if(c.type === TypeGap.PUNTO_IMAGEN){
                         c.numb = String(total5);
                     }
-                    if(c.type === TypeGapAnalisys.ACTUALIZACION_CARTOGRAFICA){
+                    if(c.type === TypeGap.ACTUALIZACION_CARTOGRAFICA){
                         c.numb = String(total6);
                     }
 

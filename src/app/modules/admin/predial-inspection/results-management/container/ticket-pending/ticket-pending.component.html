@@ -4,17 +4,19 @@
             <button>
                 <mat-icon svgIcon="arrow_back_ios" class="arrow-back" (click)="navegateTo()"></mat-icon>
             </button>
-            <span class="title-primary">Ticket  {{ticket.cod}}  -   {{ticket.gap}}</span>
+            <span class="title-primary">Ticket  {{ticket?.codTicket}}  -   {{ticket?.tipoTicket}}</span>
         </div>
         <div class="btnorange">
-            <span >{{ticket.totalTicket}} LOTES</span>
+            <span >{{totalUbicaciones}}  {{ totalUbicaciones>1?  "LOTES": "LOTE" }}  </span>
         </div>
     </div>
+    
     <div>
-        <app-select-tickets [ticket]="ticket"></app-select-tickets>
+        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" ></app-select-tickets>
     </div>
     <div class="content">
-        <router-outlet></router-outlet>
+        <app-location [ticket]="ticket" ></app-location>
+
     </div>
    </div>
 

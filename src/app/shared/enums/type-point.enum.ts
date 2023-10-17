@@ -3,6 +3,9 @@ export enum TypePoint {
 
     LOTE = 'lote',
 
-    NUEVO_PUNTO_CAMPO ='nuevo punto campo'
+    NUEVO_PUNTO_CAMPO ='nuevo punto campo',
+
+    PUNTO_IMAGEN ='punto imagen',
+
 
 };

@@ -122,7 +122,7 @@ export class PredioService {
             /* eslint-disable @typescript-eslint/prefer-for-of */
             let s = 0;
             for (let i = 0; i < temp.length; i++) {
-                s = parseInt(temp[i], 10) * factores[0] + s;
+                s = parseInt(temp[i], 10) * factores[i] + s;
             }
             /* eslint-enable @typescript-eslint/prefer-for-of */
             //let v = 11-s%11;

@@ -1,32 +1,36 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TableActions } from '../../../shared/interfaces/table-actions.interface';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
+} from '@angular/core';
+import {TableActions} from '../../../shared/interfaces/table-actions.interface';
 
-@Component({
-  selector: 'app-table-manageresult',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
-})
+@Component({selector: 'app-table-manageresult', templateUrl: './table.component.html', styleUrls: ['./table.component.scss']})
 export class TableComponent implements OnInit {
-
+    @Input()pageIndex = 0;
+    @Input()pageSize = 0;
     @Output()
-    public action: EventEmitter<TableActions> = new EventEmitter();
+    public action: EventEmitter < TableActions > = new EventEmitter();
 
     dataSource;
     displayedColumns;
 
-    @Input() set dataTable(data: any) {
+    @Input()set dataTable(data: any) {
         this.dataSource = data;
     }
 
-    @Input() set colums(data: any) {
+    @Input()set colums(data: any) {
         this.displayedColumns = data;
     }
-  constructor() { }
 
-  ngOnInit(): void {
-  }
 
-  rowTicket(element: any): void {
-    this.action.emit(element);
-  }
+    constructor() {}
+
+    ngOnInit(): void {}
+
+    rowTicket(element: any): void {
+        this.action.emit(element);
+    }
 }

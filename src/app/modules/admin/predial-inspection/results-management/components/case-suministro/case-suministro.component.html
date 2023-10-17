@@ -1,7 +1,7 @@
 
 
 <!-- <button class="buttonCase" (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-    Codigo de Suministro - {{tickets.codCase}}
+    Codigo de Suministro - {{item.codCase}}
      <mat-icon svgIcon='iconsmind:manage'></mat-icon>
   </button>
 
@@ -23,10 +23,11 @@
 <cdk-accordion class="example-accordion">
     <cdk-accordion-item
       #accordionItem="cdkAccordionItem"
+      (opened)="onClickOpenItem()"
     >
-      <div class="example-accordion-item-header" [ngClass]="tickets.state===0 ? 'inactive': 'active'" (click)="accordionItem.toggle()">
-        Codigo de Suministro - {{tickets.codCase}}
-        <mat-icon svgIcon="{{ tickets.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
+      <div class="example-accordion-item-header" [ngClass]="item.state===0 ? 'inactive': 'active'" (click)="accordionItem.toggle()">
+        Codigo de Suministro - {{item.codCase}}
+        <mat-icon svgIcon="{{ item.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
       </div>
       <div
         [style.display]="accordionItem.expanded ? '' : 'none'"
@@ -34,7 +35,7 @@
         <div class="flex flex-col">
             <div class="flex items-center justify-between widthnew pl-3">
                 <div class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-                    <input class="w-full" placeholder="Codigo de predio" />
+                    <input class="w-full" placeholder="Nombre de contribuyente o DNI" />
                     <span class="flex">
                         <mat-icon   mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>

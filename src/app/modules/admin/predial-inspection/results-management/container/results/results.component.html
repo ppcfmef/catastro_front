@@ -16,23 +16,23 @@
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
             <mat-tab label="Pendiente">
                 <app-table-manageresult
-                    [dataTable]="dataSource"
+                    [dataTable]="dataSourcePendiente"
                     [colums]="displayedColumns"
                     (action)="onZoom($event)">
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Observado">
                 <app-table-manageresult
-                    [dataTable]="dataSource"
+                    [dataTable]="dataSourceObservado"
                     [colums]="displayedColumns"
-                    (action)="onZoomObservado($event)">
+                    (action)="onZoom($event)">
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Terminado">
                 <app-table-manageresult
-                [dataTable]="dataSource"
+                [dataTable]="dataSourceAceptado"
                 [colums]="displayedColumns"
-                (action)="onZoomTerminado($event)">
+                (action)="onZoom($event)">
             </app-table-manageresult>
             </mat-tab>
         </mat-tab-group>

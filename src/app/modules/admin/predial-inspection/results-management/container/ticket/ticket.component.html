@@ -1,22 +1,24 @@
-<div class="flex flex-col flex-auto px-4 gap-4">
-    <div class="">
-        <app-dataland></app-dataland>
+<div class="flex flex-col flex-auto gap-y-3 container">
+    <div class="flex items-center justify-between px-4">
+        <div class="flex gap-x-1">
+            <button>
+                <mat-icon svgIcon="arrow_back_ios" class="arrow-back" (click)="navegateTo()"></mat-icon>
+            </button>
+            <span class="title-primary">Ticket  {{ticket?.codTicket}}  -   {{ticket?.tipoTicket}}</span>
+        </div>
+        <div class="btnorange">
+            <span >{{totalUbicaciones}}  {{ totalUbicaciones>1?  "LOTES": "LOTE" }}  </span>
+        </div>
     </div>
-    <ng-container *ngFor="let item of tickets">
-        <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
-            <div>
-                <app-case [ticket] = 'item'></app-case>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
-            <div>
-                <app-case-suministro [ticket] = 'item'></app-case-suministro>
-            </div>
-        </ng-container>
-    </ng-container>
-    <div class="flex w-full justify-around ">
+    
+    <div>
+        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" ></app-select-tickets>
+    </div>
+    <div class="content">
+        <app-location [ticket]="ticket"   ></app-location>
 
-        <button class=" btn btnAdd" (click)="add()">Aprobar </button>
-        <button class="btn btnObs" (click)="obsTicket()">observar </button>
     </div>
-</div>
+   </div>
+
+
+

@@ -19,7 +19,7 @@ import {CustomConfirmationService} from 'app/shared/services/custom-confirmation
 import {environment} from 'environments/environment';
 import {loadModules} from 'esri-loader';
 import {MapUtils} from 'app/shared/utils/map.utils';
-import {TypeGapAnalisys} from 'app/shared/enums/type-gap-analisys.enum';
+import {TypeGap} from 'app/shared/enums/type-gap.enum';
 import {PuntoCampoModel} from '../../models/punto-campo.model';
 import {PuntoCampoService} from '../../services/punto-campo.service';
 import {FuseSplashScreenService} from '@fuse/services/splash-screen';
@@ -30,7 +30,7 @@ let _this: any;
 export class GapAnalysisMapComponent implements OnInit,
 OnChanges { // @Input() view: any = null;
     @Input()rowZoom : any = null;
-    @Input()typeGapAnalisys = TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION;
+    @Input()typeGapAnalisys = TypeGap.PREDIO_SIN_GEORREFERENCIACION;
     @Input()event : any;
     @Input()x : number = -71.955921;
     @Input()y : number = -13.53063;
@@ -284,7 +284,7 @@ esriConfig
 
 
                 if (this.ubigeo && this.ubigeo !== '') {
-                    console.log('options.definitionExpressionBase>>', l.definitionExpressionBase);
+                    //console.log('options.definitionExpressionBase>>', l.definitionExpressionBase);
                     if (l.definitionExpressionBase && l.definitionExpressionBase !== '') {
                         l.definitionExpression = `${
                             l.definitionExpressionBase
@@ -305,9 +305,9 @@ esriConfig
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 l.definitionExpression ? (options.definitionExpression = l.definitionExpression) : null;
-                console.log(options);
+                //console.log(options);
                 l.featureLayer = new FeatureLayer(options);
-                console.log('l.definitionExpression>>', l.definitionExpression);
+                //console.log('l.definitionExpression>>', l.definitionExpression);
                 this.map.add(l.featureLayer);
             });
 
@@ -381,7 +381,7 @@ esriConfig
                     this.view.popup.close();
                     this.view.graphics.removeAll();
 
-                    if(this.typeGapAnalisys === TypeGapAnalisys.PUNTO_IMAGEN){
+                    if(this.typeGapAnalisys === TypeGap.PUNTO_IMAGEN){
                         const layerPuntoImagen = this.layersInfo.find((l: any) => l.id === this.idPredio) ?. featureLayer;
                         const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(layerPuntoImagen, event.mapPoint, 5, 'meters');
 
@@ -416,7 +416,7 @@ esriConfig
                         }
                     }
 
-                    if (this.typeGapAnalisys === TypeGapAnalisys.PUNTOS_LOTE_SIN_PREDIO) {
+                    if (this.typeGapAnalisys === TypeGap.PUNTOS_LOTE_SIN_PREDIO) {
                         const layerPredio = this.layersInfo.find((l: any) => l.id === this.idPredio) ?. featureLayer;
                         const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(layerPredio, event.mapPoint, 5, 'meters');
 
@@ -497,7 +497,7 @@ esriConfig
                         }
                     }
 
-                    if (this.typeGapAnalisys === TypeGapAnalisys.PREDIO_SUBVALUADO) {
+                    if (this.typeGapAnalisys === TypeGap.PREDIO_SUBVALUADO) {
                         const layerPredio = this.layersInfo.find((l : any) => l.id === this.idPredio) ?. featureLayer;
 
                         const layerManzana = this.layersInfo.find((l : any) => l.id === this.idManzana) ?. featureLayer;
@@ -634,7 +634,7 @@ esriConfig
                     if (event.action.id === 'verificar') {
                         const puntosCampo = this.points.map((p : any) => {
                             const puntoCampo = new PuntoCampoModel(p.attributes);
-                            puntoCampo.Cod_Tipo_Ticket = String(TypeGapAnalisys.PREDIO_SUBVALUADO);
+                            puntoCampo.Cod_Tipo_Ticket = String(TypeGap.PREDIO_SUBVALUADO);
                             puntoCampo.Estado_tra = 1;
 
                             console.log('p>>>', p.attributes, 'puntoCampo>>', puntoCampo);

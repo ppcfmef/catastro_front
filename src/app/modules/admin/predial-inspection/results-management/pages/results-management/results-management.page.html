@@ -1,14 +1,20 @@
+<!--<router-outlet></router-outlet>-->
+
+
 <div class="flex w-full">
     <div class="container-list-load">
         <router-outlet></router-outlet>
     </div>
-    <div class="relative">
+
+    <div class="flex-auto w-3/4 block relative">
+        <app-ticket-map [user]="user" [ubigeo]="ubigeo"></app-ticket-map>
+    </div>
+
+<!--    <div class="relative">
         <div class="flex flex-auto">
         <div class="img">
             <app-list-images></app-list-images>
         </div>
     </div>
-
-
-    </div>
+    </div>-->
 </div>

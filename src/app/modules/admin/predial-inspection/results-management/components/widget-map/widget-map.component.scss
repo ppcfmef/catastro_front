@@ -1,0 +1,23 @@
+
+.esri-view {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+  #mapViewNode {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  :host ::ng-deep{
+
+    div.esri-component.esri-legend.esri-widget.esri-widget--panel {
+      max-width: 175px;
+      background-color: rgba(255, 255, 255, 0.75);
+     /* background-color: rgba(15, 15, 15, 0.75);*/
+    }
+
+  }

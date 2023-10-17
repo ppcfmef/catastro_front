@@ -1,29 +1,75 @@
-
 <cdk-accordion class="example-accordion">
-    <cdk-accordion-item
-      #accordionItem="cdkAccordionItem">
-      <div class="example-accordion-item-header" [ngClass]="tickets.state===0 ? 'inactive': 'active'" (click)="accordionItem.toggle()">
-        Codigo de predio - {{tickets.codCase}}
-        <mat-icon svgIcon="{{ tickets.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
-      </div>
-      <div
-        [style.display]="accordionItem.expanded ? '' : 'none'">
-        <div class="flex flex-col items-center pl-3">
-            <div class="flex w-90 py-4 justify-between">
-                <div class="flex flex-col">
-                    <strong><span>Nombres y apellidos</span></strong>
-                    <span>{{tickets.firstname}} {{tickets.lastname}}</span>
-                </div>
-                <div class="flex flex-col">
-                    <strong><span>DNI</span></strong>
-                    <span>{{tickets.dni}}</span>
-                </div>
-            </div>
-            <button class="btnGenerar w-full">
-                {{  tickets.tipo === 0 ? 'Generar predio' : 'Reasignar'}}
-            </button>
+    <cdk-accordion-item #accordionItem="cdkAccordionItem" [expanded]="defaultExpanded"  (opened)="onClickOpenItem()" >
+        <div
+            class="example-accordion-item-header"
+            [ngClass]="item.state === 0 ? 'inactive' : 'active'"
+            (click)="accordionItem.toggle()"
+        >
+            Codigo de predio - {{ item.codCase }}
+            <mat-icon
+                svgIcon="{{
+                    item.state === 0
+                        ? 'iconsmind:manage'
+                        : 'iconsmind:manageTrue'
+                }}"
+            ></mat-icon>
         </div>
-      </div>
-    </cdk-accordion-item>
-  </cdk-accordion>
+        <div [style.display]="accordionItem.expanded ? '' : 'none'">
+            <div class="flex flex-col items-center pl-3">
+                <div class="flex w-90 py-4 justify-between">
+                    <div class="flex flex-col">
+                        <strong><span>Nombres y apellidos</span></strong>
+                        <span
+                            >{{ item.firstname }}
+                            {{ item.lastname }}</span
+                        >
+                    </div>
+                    <div class="flex flex-col">
+                        <strong><span>DNI</span></strong>
+                        <span>{{ item.dni }}</span>
+                    </div>
+                </div>
 
+
+                <ng-container *ngIf="codTypeGap === 2 ;else second">
+
+                  <button class="btnGenerar w-full"  *ngIf="item.state===0" >
+                    {{ item.tipo === 0 ? "Generar predio" : "Reasignar" }}
+                  </button>
+
+
+                </ng-container>
+                <ng-template #second>
+                    
+                
+                  <div class="flex w-full justify-around " *ngIf="item.state===0">
+
+                    <button
+                    class="btnGenerar green "
+                    (click)="onClickGenerarPredio()"
+                    [disabled]="predioButtonDisabled"
+                      >
+                    <mat-icon svgIcon="mat_solid:add_location_alt"></mat-icon>
+                    Generar predio
+                    </button>
+
+                    <button
+                    class="btnGenerar btnAdd "
+                    (click)="onClickGenerarPuntoImagen()"
+                    [disabled]="puntoImagenDisabled"
+                    >
+                    <mat-icon svgIcon="mat_solid:location_on"   ></mat-icon>
+                    Generar punto imagen
+                    </button>
+
+                  </div>
+           
+
+                </ng-template>
+
+
+
+            </div>
+        </div>
+    </cdk-accordion-item>
+</cdk-accordion>

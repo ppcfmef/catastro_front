@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ResultsService } from '../../services/results.service';
+import { TicketService } from '../../services/ticket.service';
+import { ITicket } from '../../interfaces/ticket.interface';
+import { type } from 'os';
+import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 
 @Component({
   selector: 'app-results',
@@ -7,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-  displayedColumns: string[] = ['nro', 'ticket', 'tipoBrecha', 'fecha', 'actions'];
+  displayedColumns: string[] = ['nro', 'codTicket', 'tipoBrecha', 'fecha', 'actions'];
 
   dataSource = [
     {
@@ -52,26 +57,81 @@ export class ResultsComponent implements OnInit {
     },
   ];
 
+  dataSourcePendiente=[];
+  dataSourceObservado=[];
+  dataSourceAceptado=[];
   constructor(
     private _route: Router,
     private _activeRouter: ActivatedRoute,
-  ) { }
+    private _tickerService: TicketService,
+    private _resultService: ResultsService
+    ) { }
 
   ngOnInit(): void {
+    this.getTicketsPendientes();
+    this.getTicketsAceptados();
+    this.getTicketsObservados();
+    this._resultService.setResetMap(1);
   }
 
-  onZoom(row: any): void {
+  getTicketsPendientes(): void{
+    const params= {codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS};
+    this._tickerService.getList( params).subscribe( (res: any)=>{
+
+      this.dataSourcePendiente =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+    });
+  }
+  getTicketsObservados(): void {
+    const params= {codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS};
+    this._tickerService.getList( params).subscribe( (res: any)=>{
+
+      this.dataSourceObservado =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+    });
+  }
+
+  getTicketsAceptados(): void{
+    const params= {codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS};
+    this._tickerService.getList( params).subscribe( (res: any)=>{
+
+      this.dataSourceAceptado =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+    });
+    
+  }
+  /*onZoom(row: any): void {
     this._route.navigate([`ticket-pending/${row.ticket}`], {relativeTo: this._activeRouter});
+    console.log('onZoom', row);
+  }*/
+
+  onZoom(row: any): void {
+    this._route.navigate([`ticket/${row.id}`], {relativeTo: this._activeRouter});
     console.log('onZoom', row);
   }
 
   onZoomObservado(row: any): void {
-    this._route.navigate([`ticket-rejected/${row.ticket}`], {relativeTo: this._activeRouter});
+    this._route.navigate([`ticket-rejected/${row.id}`], {relativeTo: this._activeRouter});
     console.log('onZoomObservado', row);
   }
 
   onZoomTerminado(row: any): void {
-    this._route.navigate([`ticket-done/${row.ticket}`], {relativeTo: this._activeRouter});
+    this._route.navigate([`ticket-done/${row.id}`], {relativeTo: this._activeRouter});
     console.log('onZoomTerminado', row);
   }
 }

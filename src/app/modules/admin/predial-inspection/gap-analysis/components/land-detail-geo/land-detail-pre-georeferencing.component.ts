@@ -18,7 +18,7 @@ import { LandStatus } from 'app/shared/enums/land-status.enum';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { Router } from '@angular/router';
-import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
+import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { LandGeorreferencingStatusGapAnalisys } from 'app/shared/enums/land-georreferencing-status-gap-analisys.enum';
 import { ActionsGapAnalisys } from 'app/shared/enums/actions-gap-analisys.enum';
 @Component({
@@ -137,7 +137,7 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         puntoCampo.UBIGEO = this.land.ubigeo;
                         puntoCampo.REFEREN = this.land.referenceName;
                         puntoCampo.Cod_Tipo_Ticket = String(
-                            TypeGapAnalisys.PREDIO_SIN_GEORREFERENCIACION
+                            TypeGap.PREDIO_SIN_GEORREFERENCIACION
                         );
                         puntoCampo.Estado_tra = 0;
                         this.land.longitude = puntoCampo.COORD_X;
@@ -216,10 +216,11 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                                     this.dataPoint.point
                                 );
 
-                                if (res && res.COD_CPU) {
+                                if (res && res.COD_CPU && res.ID_PRED) {
                                     predio.UBIGEO = this.land.ubigeo;
                                     predio.COD_PRE = this.land.cpm;
                                     predio.COD_CPU = res.COD_CPU;
+                                    predio.ID_PRED = res.ID_PRED;
                                     predio.REFEREN = this.land.referenceName;
                                     this.land.cup = res.COD_CPU;
                                     this.land.longitude = predio.COORD_X;

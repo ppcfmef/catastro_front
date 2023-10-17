@@ -1,0 +1,80 @@
+.btn {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: white;
+    height: 38px;
+    width: max-content;
+    padding: 20px 20px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+mat-icon {
+    color: white;
+}
+  .btnObs {
+    background-color: #DE3F43;
+
+  }
+
+  .btnAdd {
+    background-color: #0090F8;
+  }
+
+
+  .divData {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #0795FA;
+    color: white;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}
+
+
+:root {
+    ---black: #1E293B;
+}
+@mixin text() {
+    color: #1E293B;
+    font-size: 14px;
+}
+
+.text-bold {
+    @include text;
+    font-weight: bold;
+}
+
+.text {
+    @include text;
+}
+
+.buttonMap {
+    display: flex;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #0795FA;
+
+}
+
+.title {
+    color: #0795FA;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.green {
+    background-color: #52B46C;
+}
+
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

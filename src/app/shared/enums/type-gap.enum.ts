@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export enum TypeGapAnalisys {
+export enum TypeGap {
     PREDIO_SIN_GEORREFERENCIACION = 1,
 
     PUNTOS_LOTE_SIN_PREDIO = 2,

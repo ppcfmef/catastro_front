@@ -39,6 +39,11 @@ import { TicketBaseComponent } from './container/ticket-base/ticket-base.compone
 import { MatInputModule } from '@angular/material/input';
 
 
+import { TicketMapComponent } from './container/ticket-map/ticket-map.component';
+import { WidgetMapComponent } from './components/widget-map/widget-map.component';
+import { LocationComponent } from './container/location/location.component';
+
+
 
 @NgModule({
   declarations: [
@@ -59,6 +64,9 @@ import { MatInputModule } from '@angular/material/input';
     ListImagesComponent,
     TicketPredioSubvaluadoComponent,
     TicketBaseComponent,
+    TicketMapComponent,
+    WidgetMapComponent,
+    LocationComponent,
 
   ],
   imports: [
