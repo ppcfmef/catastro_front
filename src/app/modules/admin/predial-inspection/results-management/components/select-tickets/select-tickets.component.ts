@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { state } from '@angular/animations';
 import { BreadCrumbsComponent } from '../../../../../../shared/components/bread-crumbs/bread-crumbs.component';
+import { TypeGap } from 'app/shared/enums/type-gap.enum';
+import { ITicket } from '../../interfaces/ticket.interface';
 
 @Component({
   selector: 'app-select-tickets',
@@ -13,7 +15,8 @@ import { BreadCrumbsComponent } from '../../../../../../shared/components/bread-
 })
 export class SelectTicketsComponent implements OnInit {
 
-    @Input() ticket: any;
+    @Input() ticket: ITicket;
+    @Input() ubicaciones: any[];
     closeTrue = '';
     isOpen = false;
     itemSelect = 'Seleccione Ubicación';
@@ -23,36 +26,51 @@ export class SelectTicketsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    /*this.ticket.codTipoTicket*/
+    //if(this.ticket.codTipoTicket === 'punto imagen'|| this.ticket.gap ==='predio subvaluado'||this.ticket.gap ==='predio sin geo') {
 
-    if(this.ticket.gap === 'punto imagen'|| this.ticket.gap ==='predio subvaluado'||this.ticket.gap ==='predio sin geo') {
-        this.selectRoute(this.ticket.cod);
+    //console.log('ticket seleccionado>>',this.ticket);
+      if(this.ticket.codTipoTicket === TypeGap.PREDIO_SIN_GEORREFERENCIACION || this.ticket.codTipoTicket === TypeGap.PUNTO_IMAGEN ) {
+
         this.closeTrue = 'closed';
         this.itemSelect = '01. Ubicación';
-    }else {
-        this._router.navigate([`predio/${this.ticket.ubicaciones[0]}`] , {relativeTo: this._activeRoute});
-        this.itemSelect =`${this.ticket.ubicaciones[0].id}. Ubicaciones`;
+        this.selectRoute(this.ticket.ubicacion[0]);
+    }else if (this.ticket.codTipoTicket === TypeGap.PUNTOS_LOTE_SIN_PREDIO) {
+
+
+        this.itemSelect =`${this.ticket.ubicacion[0].id}. Ubicaciones`;
+        this.selectRoute(this.ticket.ubicacion[0]);
+    }
+
+    else{
+
     }
 
   }
 
   navegateTo(item: any): void {
+    localStorage.setItem('idUbicacion', item.id);
     this.itemSelect = `${item.id}. Ubicación`;
-    this._router.navigate([`predio/${item.id}`] , {relativeTo: this._activeRoute});
-    console.log(item, 'item');
+
   }
 
     selectRoute(item): void {
-        switch (this.ticket.gap) {
-            case 'predio sin geo':
-                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
+      localStorage.setItem('idUbicacion', item.id);
+        /*switch (this.ticket.codTipoTicket) {
+            case TypeGap.PREDIO_SIN_GEORREFERENCIACION:
+                //this._router.navigate(['ticket'] , {relativeTo: this._activeRoute});
             break;
-            case 'punto imagen':
-                this._router.navigate([`ticket/${item}`] , {relativeTo: this._activeRoute});
+            case TypeGap.PUNTO_IMAGEN:
+                //this._router.navigate(['ticket'] , {relativeTo: this._activeRoute});
+            break;
+
+            case TypeGap.PUNTOS_LOTE_SIN_PREDIO:
+                //this._router.navigate(['predio'] , {relativeTo: this._activeRoute});
             break;
             case 'predio subvaluado':
-                this._router.navigate([`sub/${item}`] , {relativeTo: this._activeRoute});
+                //this._router.navigate([`sub/${item}`] , {relativeTo: this._activeRoute});
             break;
-        }
+        }*/
     }
 
 }

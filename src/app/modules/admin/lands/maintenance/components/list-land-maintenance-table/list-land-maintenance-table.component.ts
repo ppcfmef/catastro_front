@@ -94,7 +94,7 @@ export class ListLandMaintenanceTableComponent implements OnInit {
 
           dialogRef.afterClosed().subscribe((result: any) => {
 
-            console.log(result);
+            //console.log(result);
             if(result && result.option){
 
                 const application = new ApplicationModel();

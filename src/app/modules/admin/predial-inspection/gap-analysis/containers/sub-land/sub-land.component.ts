@@ -4,7 +4,7 @@ import { TableColumn } from '../../../shared/interfaces/table-columns.interface'
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
-import { TypeGapAnalisys } from 'app/shared/enums/type-gap-analisys.enum';
+import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { ManzanaPrediosSubvaluadosService } from '../../services/manzana-sub-valuado.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
@@ -23,7 +23,7 @@ export class SubLandComponent implements OnInit {
     title='Predios para verificacion';
     ubigeo = '040703';
     rowZoom: any;
-    typeGapAnalisys = TypeGapAnalisys.PREDIO_SUBVALUADO;
+    typeGapAnalisys = TypeGap.PREDIO_SUBVALUADO;
 
     tableColumns: TableColumn[] = [];
 

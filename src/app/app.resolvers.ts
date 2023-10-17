@@ -6,6 +6,8 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { UserService } from 'app/core/user/user.service';
+import { ticketMocks } from './modules/admin/predial-inspection/results-management/mocks/ticket.mock';
+import { ubicacionMock, ubicacionMocks } from './modules/admin/predial-inspection/results-management/mocks/ubicacion.mock';
 
 @Injectable({
     providedIn: 'root'
@@ -37,6 +39,10 @@ export class InitialDataResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
+        localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));
+        localStorage.setItem('ubicacionMocks', JSON.stringify(ubicacionMocks));
+        //ticketsMock
+
         // Fork join multiple API endpoint calls to wait all of them to finish
         return forkJoin([
             this._navigationService.get(),

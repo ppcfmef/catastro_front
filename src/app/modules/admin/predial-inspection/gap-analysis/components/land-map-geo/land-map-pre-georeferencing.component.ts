@@ -608,7 +608,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                             const intersectFeature =
                                             MapUtils.queryIntersectFeaturelayer(
                                                 new FeatureLayer(this.urlManzana),
-                                                point,5,'meters'
+                                                pointGeometry,5,'meters'
                                             );
 
                                         intersectFeature.then((data: any) => {
@@ -618,16 +618,15 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                             }
 
                                                 this.setPoint(
-                                                    data,
+                                                    lote,
                                                     TypePoint.NUEVO_PUNTO_CAMPO
                                                 );
                                             });
                                         }
                                         else{
-                                            lote['ID_MZN_C']=9999;
+                                            //lote['ID_MZN_C']=9999;
                                             this.setPoint(lote, TypePoint.LOTE);
                                         }
-
                                     }
                                 }
                             } else {
@@ -650,7 +649,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                 const intersectFeature =
                                     MapUtils.queryIntersectFeaturelayer(
                                         new FeatureLayer(this.urlManzana),
-                                        point,5,'meters'
+                                        pointGeometry,5,'meters'
                                     );
 
                                 intersectFeature.then((data: any) => {
@@ -662,7 +661,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                         pointData['ID_MZN_C'] =
                                             data['ID_MZN_C'];
                                         pointData['UBIGEO'] =
-                                            data['ID_MZN_C'];
+                                            data['UBIGEO'];
                                     }
                                     else{
                                         pointData['ID_MZN_C'] =9999;

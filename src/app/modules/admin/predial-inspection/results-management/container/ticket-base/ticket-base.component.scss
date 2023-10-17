@@ -70,3 +70,23 @@ mat-icon {
 .green {
     background-color: #52B46C;
 }
+.buttonCase {
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #EBEBEB;
+    width: 100%;
+    height: 34px;
+    color: #0D2855;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.btnGenerar {
+    background-color: #0795FA;
+    color: white;
+    height: 33px;
+    border-radius: 8px;
+}
+

@@ -16,6 +16,7 @@
     color: white;
     height: 33px;
     border-radius: 8px;
+    padding: 0 6px;
 }
 
 
@@ -45,3 +46,32 @@
   cursor: pointer;
 }
 
+.btn {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: white;
+    height: 38px;
+    width: max-content;
+    padding: 20px 20px;
+    text-align: center;
+    border-radius: 15px;
+}
+.green {
+    background-color: #52B46C;
+}
+
+.btnAdd {
+    background-color: #0090F8;
+  }
+  mat-icon {
+    color: white;
+}
+
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

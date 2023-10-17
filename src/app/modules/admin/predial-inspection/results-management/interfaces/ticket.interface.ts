@@ -1,9 +1,9 @@
-import { IUbicacion } from "./ubicacion.interface";
+import { IUbicacion } from './ubicacion.interface';
 
 export interface ITicket{
     id: number;
     obsTicketUsuario: string;
-    codEstTrabajoTicket: number,
+    codEstTrabajoTicket: number;
     codUsuario: number;
     fecInicioTrabajo: string;
     fecAsignacion: string;
@@ -11,6 +11,8 @@ export interface ITicket{
     codEstEnvioTicket: number;
     codTicket: string;
     codTipoTicket: number;
+    tipoTicket: string;
     obsTicketGabinete: string;
     ubicacion: IUbicacion[];
+    estado: number;
 }

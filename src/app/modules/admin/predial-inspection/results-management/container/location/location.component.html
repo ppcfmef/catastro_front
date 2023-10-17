@@ -1,0 +1,60 @@
+<div class="flex flex-col flex-auto px-4 gap-4 ">
+    <div class="">
+        <app-dataland [ubicacion]="ubicacion" (clickPosition)="onClickPosition($event)"></app-dataland>
+    </div>
+
+    <ng-container *ngIf="ticket?.codTipoTicket === 2 ;else second">
+        <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+            <ng-container *ngIf="item.codTipoTit ===1 ">
+                <div>
+                    <app-case [registro] = 'item' [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)" ></app-case>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="item.codTipoTit ===2 ">
+                <div>
+                    <app-case-suministro [registro] = 'item' [codTypeGap]="ticket?.codTipoTicket"  (eventOpenItem)="eventOpenItem($event)" ></app-case-suministro>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+
+<!--
+        <ng-container *ngIf="ticket?.codTipoTicket === 2 ;else second">
+            <ng-container *ngFor="let item of items">
+                <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
+                    <div>
+                        <app-case [item] = 'item' [codTypeGap]="ticket?.codTipoTicket"  ></app-case>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
+                    <div>
+                        <app-case-suministro [ticket] = 'item'></app-case-suministro>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    -->
+        <ng-template #second>
+            <app-case 
+            [defaultExpanded]="true" 
+            [predioButtonDisabled]="predioButtonDisabled" 
+            [puntoImagenDisabled]="puntoImagenDisabled"  
+            (eventGenerarPuntoImagen)="generarPuntoImagen($event)"
+            (eventGenerarPredio)="generarPredio($event)"
+
+            [registro]="ubicacion.registroTitularidad[0]"
+            [codTypeGap]="ticket?.codTipoTicket"
+            ></app-case>
+    
+        </ng-template>
+    
+
+
+
+    <div class="flex w-full justify-around " *ngIf="ubicacion.estado===0">
+
+        <button class=" btn btnAdd" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled"  >Aprobar </button>
+        <button class="btn btnObs" (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >observar </button>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+import { IContribuyente } from './contribuyente.interface';
 
 
 export interface IPredio{
@@ -13,7 +14,8 @@ export interface IPredio{
     codPre: string;
     numDpto: string;
     codigoUso: string;
-    estado: string;
+    estado: number;
     block: string;
     numSumiGas: string;
+    contribuyente: IContribuyente;
 }

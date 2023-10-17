@@ -1,13 +1,20 @@
 <table mat-table [dataSource]="dataSource" class="table-list w-full">
     <!-- Cabecera de la tabla -->
-    <ng-container matColumnDef="nro">
+    <!--<ng-container matColumnDef="nro">
       <th mat-header-cell *matHeaderCellDef > Nro. </th>
       <td mat-cell *matCellDef="let element"  > {{ element.nro }} </td>
     </ng-container>
+  -->
+    <ng-container matColumnDef="nro">
+      <th mat-header-cell *matHeaderCellDef>Nro.</th>
+        <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+            {{ (pageIndex * pageSize) + i + 1 }}
+        </td>
+  </ng-container>
 
-    <ng-container matColumnDef="ticket">
+    <ng-container matColumnDef="codTicket">
       <th mat-header-cell *matHeaderCellDef > Ticket </th>
-      <td mat-cell *matCellDef="let element"  > {{ element.ticket }} </td>
+      <td mat-cell *matCellDef="let element"  > {{ element.codTicket }} </td>
     </ng-container>
 
     <ng-container matColumnDef="tipoBrecha">

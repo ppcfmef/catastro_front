@@ -4,4 +4,5 @@ export interface ISuministro{
     codTipoSumi:string;
     numSumis:string;
     obsSumis:string;
+    estado: number;
 }

@@ -18,13 +18,10 @@ const routes: Routes = [
         data: { id: 'resmanagip', permissionType: 'read' },
         children:[
             {path: '',component: ResultsComponent},
-            {path: 'ticket-pending/:id',component: TicketPendingComponent,
-                children:[
-                    {path:'ticket/:id',component:TicketBaseComponent},
-                    {path:'predio/:id',component:TicketComponent},
-                    {path:'sub/:id',component:TicketPredioSubvaluadoComponent}
-                ]
-            },
+
+            /*{path: 'location/:id',component: TicketPendingComponent,
+            },*/
+            {path: 'ticket/:id',component: TicketComponent,},
             {path: 'ticket-rejected/:id',component: TicketRejectedComponent},
             {path: 'ticket-done/:id',component: TicketDoneComponent},
         ]

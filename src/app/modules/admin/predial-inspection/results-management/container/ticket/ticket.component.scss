@@ -1,16 +1,76 @@
-
-.btn {
-    color: white;
-    height: 38px;
-    width: 131px;
-    border-radius: 15px;
+:root {
+  ---black: #1E293B;
 }
 
-  .btnObs {
-    background-color: #DE3F43;
+.title-primary {
+  font-weight: bold;
+  color: var(---black);
+  font-size: 16px;
+}
 
+.arrow-back {
+  color: #0090F8;
+}
+
+.btnorange {
+  background-color: #EB8508;
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+mat-accordion {
+  .mat-expansion-panel {
+      border-radius: 1px !important;
+      box-shadow: none !important;
+      border-bottom: 1px solid #DAE8F2;
+      &.mat-expanded,
+      &:hover {
+          box-shadow: none !important;
+      }
+  }
+  .mat-expansion-panel-header-title {
+      color: #0D2753;
+      font-weight: bold ;
   }
 
-  .btnAdd {
-    background-color: #0090F8;
-  }
+}
+
+.container {
+  height: calc(100vh - 64px);
+  padding: 32px 0px;
+  overflow-y: scroll;
+  max-height: calc(100vh - 64px);
+}
+
+.box {
+  height: 18px;
+  width: 18px;
+}
+
+
+.content {
+  height: calc(100vh - 200px);
+}
+
+:host ::ng-deep app-ticket-predio-subvaluado.ng-star-inserted{
+  height: 100% !important;
+}
+
+
+:host ::ng-deep app-ticket-base.ng-star-inserted{
+  height: 100% !important;
+}

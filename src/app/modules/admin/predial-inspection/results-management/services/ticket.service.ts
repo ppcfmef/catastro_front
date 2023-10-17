@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'environments/environment';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
-import { ticketMock, ticketsMock } from '../mocks/ticket.mock';
+import { ticketMock, ticketMocks } from '../mocks/ticket.mock';
+import { ITicket } from '../interfaces/ticket.interface';
 
 
 @Injectable({
@@ -13,20 +14,40 @@ import { ticketMock, ticketsMock } from '../mocks/ticket.mock';
 export class TicketService {
 
   apiUrl = environment.apiUrl;
-
+  jsonTicketMocks =[];
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    
 
-  getList(queryParams): Observable<IPagination<any>> {
+   }
+
+   getData(): ITicket[]{
+
+    let jsonTicketMocks=[];
+    const stringTicketMocks=localStorage.getItem('ticketMocks');
+    if (stringTicketMocks){
+      jsonTicketMocks =JSON.parse(stringTicketMocks);
+    }
+    return jsonTicketMocks;
+   }
+
+  getList(queryParams?: any): Observable<IPagination<any>> {
+    /*localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));*/
+    this.jsonTicketMocks = this.getData();
+    if (queryParams && queryParams.codTicket){
+      this.jsonTicketMocks = this.getData().filter((r: ITicket)=> r.codTicket ===queryParams.codTicket);
+    }
+    else if (queryParams && queryParams.codEstTrabajoTicket){
+      this.jsonTicketMocks = this.getData().filter((r: ITicket)=> r.codEstTrabajoTicket ===queryParams.codEstTrabajoTicket);
+    }
 
     const res: IPagination<any> = {
-        count: 2,
+        count: this.jsonTicketMocks.length,
         next: '0',
         previous: '0',
-        results: ticketsMock,
+        results: this.jsonTicketMocks,
     };
-
 
     return new Observable((observer) => {
       observer.next(res);
@@ -34,8 +55,11 @@ export class TicketService {
     //return this.http.get<IPagination<any>>(`${this.apiUrl}/gap-analisys/land/`, {params: queryParams});
   }
 
-  get(id: string): Observable<any> {
-    const res = ticketMock;
+  get(id: number): Observable<any> {
+    this.jsonTicketMocks =this.getData();
+    const ticket = this.jsonTicketMocks.filter(t=> t.id == id);
+    const res =  this.jsonTicketMocks.length>0? ticket[0]:{};
+    //console.log('res>>',res);
 
     return new Observable((observer) => {
       observer.next(res);
@@ -43,9 +67,14 @@ export class TicketService {
 
   }
 
-  update(id,data): Observable<any> {
-    const res = ticketMock;
-
+  update(id,data: ITicket): Observable<any> {
+    this.jsonTicketMocks =this.getData();
+    /*const ticket: ITicket = this.jsonTicketMocks.find(t=> t.id == id);
+    */
+    const index=this.jsonTicketMocks.findIndex(t=> t.id == id);
+    this.jsonTicketMocks[index]= data;
+    localStorage.setItem('ticketMocks',JSON.stringify(this.jsonTicketMocks) ) ;
+    const res = data;
     return new Observable((observer) => {
       observer.next(res);
     });

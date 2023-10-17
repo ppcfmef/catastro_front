@@ -1,6 +1,7 @@
-import { IRegistroTitularidad } from "./registro-titularidad.interface";
+import { IRegistroTitularidad } from './registro-titularidad.interface';
 
 export interface IUbicacion{
+    id: number;
     codTipVia: string;
     numAlt: string;
     nomAlt: string;
@@ -14,15 +15,16 @@ export interface IUbicacion{
     y: number;
     lotUrb: string;
     codUU: string;
-    numMun: string
+    numMun: string;
     codTicket: string;
     codVia: string;
     x: number;
     codUbicacion: string;
     nomVia: string;
     mznUrb: string;
-    codEstado: number;
+    estado: number;
     registroTitularidad: IRegistroTitularidad[];
+    ubigeo: string;
 
 }
 

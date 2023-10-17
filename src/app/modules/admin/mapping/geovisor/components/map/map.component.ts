@@ -367,7 +367,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
             this._fuseSplashScreenService.show(0);
             const res=await MapUtils.zoomToFeature(this.view, featureZonaUrbana, where);
-            console.log('res>>',res);
+            //console.log('res>>',res);
             this._fuseSplashScreenService.hide();
 
 
