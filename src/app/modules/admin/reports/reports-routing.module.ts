@@ -5,6 +5,7 @@ import { ReportCartographicComponent } from './components/report-cartographic/re
 import { ReportSituationalComponent } from './components/report-situational/report-situational.component';
 import { ReportControlNationalComponent } from './components/report-control-national/report-control-national.component';
 import { NavigationAuthorizationGuard } from 'app/shared/guards/navigation-authorization.guard';
+import { ReportMunicipalIndicatorsComponent } from './components/report-municipal-indicators/report-municipal-indicators.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,12 @@ const routes: Routes = [
         component: ReportSituationalComponent,
         canActivate: [NavigationAuthorizationGuard],
         data: { id: 'repositua', permissionType: 'read' },
+      },
+      {
+        path: 'municipal-indicators',
+        component: ReportMunicipalIndicatorsComponent,
+        canActivate: [NavigationAuthorizationGuard],
+        data: { id: 'repoindmun', permissionType: 'read' },
       }
     ]
   }

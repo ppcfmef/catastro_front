@@ -10,6 +10,7 @@ import { ReportSituationalComponent } from './components/report-situational/repo
 import {MatIconModule} from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ReportControlNationalComponent } from './components/report-control-national/report-control-national.component';
+import { ReportMunicipalIndicatorsComponent } from './components/report-municipal-indicators/report-municipal-indicators.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ReportControlNationalComponent } from './components/report-control-nati
     ReportCartographicComponent,
     ReportSituationalComponent,
     ReportControlNationalComponent,
+    ReportMunicipalIndicatorsComponent,
   ],
   imports: [
     CommonModule,
