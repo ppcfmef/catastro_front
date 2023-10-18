@@ -2,8 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 //const host = 'https://catastro-fiscal.codtree.com/';
-/*const host = 'https://catastromef.apistoring.com/catastroback';*/
-const host = 'http://127.0.0.1:8000/';
+const host = 'https://catastromef.apistoring.com/catastroback';
+/*const host = 'http://127.0.0.1:8000/';*/
 export const environment = {
     production: false,
     url: host,
