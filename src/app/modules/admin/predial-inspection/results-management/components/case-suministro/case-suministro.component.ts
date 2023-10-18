@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.interface';
+import { LandOwnerService } from 'app/modules/admin/lands/land-registry/services/land-owner.service';
+import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land-owner.interface';
+import { IPagination } from 'app/core/common/interfaces/common.interface';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-case-suministro',
@@ -24,17 +28,22 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
             state:1
         };
         isOpen = false;
-  constructor() { }
+        landOwner: LandOwner;
+        formFilters: FormGroup;
+        foundLandOwner = true;
+
+  constructor(  private _landOwnerService: LandOwnerService,) { }
   ngOnChanges(changes: SimpleChanges): void {
     console.log('changes>>',changes);
-    this.refreshForm();
+    this.getDataItem();
   }
 
   ngOnInit(): void {
-    this.refreshForm();
+    this.createFormFilters();
+    this.getDataItem();
   }
 
-  refreshForm(): void{
+  getDataItem(): void{
     this.item.codCase = this.registro?.suministro?.numSumis;
     this.item.tipo = 2;
     this.item.dni = this.registro?.predio?.contribuyente?.docIden;
@@ -48,6 +57,32 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
   }
 
   onClickOpenItem(): void{
-    this.eventOpenItem.emit();
-}
+    this.eventOpenItem.emit(this.registro);
+  }
+
+  onEventSearchContribuyente(): void{
+    const rawValue = this.formFilters.getRawValue();
+    const search = rawValue?.search || '';
+    const queryParams = { search };
+    if(search!==''){
+      this._landOwnerService.getList(queryParams)
+      .subscribe((response: IPagination<LandOwner>) => {
+        if( response && response.results && response.results.length>0 ){
+          this.landOwner = response.results[0];
+          this.foundLandOwner =true;
+        }
+        else{
+          this.foundLandOwner =false;
+        }
+  
+      });
+    }
+
+  }
+  private createFormFilters(): void {
+    this.formFilters = new FormGroup({
+      search: new FormControl(),
+    });
+  }
+
 }

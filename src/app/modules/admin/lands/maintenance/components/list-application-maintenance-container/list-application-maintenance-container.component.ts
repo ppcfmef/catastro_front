@@ -6,6 +6,10 @@ import { ApplicationUI } from '../../interfaces/application';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
+import { UserService } from 'app/core/user/user.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { User } from 'app/core/user/user.types';
 
 @Component({
   selector: 'app-list-application-maintenance-container',
@@ -51,16 +55,47 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
      offset=null;
      limit =this.defaultTableLimit;
      ordering='';
+     _unsubscribeAll: Subject<any> = new Subject<any>();
+     user: User;
+     idView='gapana';
+     _emailUserAdmin='jcramireztello@gmail.com';
+     isAdmin = true;
+     ubigeo: string= '';
   constructor(
     private _applicationMaintenanceService: ApplicationMaintenanceService,
     private _router: Router,
     private fb: FormBuilder,
+    private _userService: UserService,
     ) {
 
         this.createFormFilters();
     }
 
   ngOnInit(): void {
+    this._userService.user$
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((user: User) => {
+        this.user = user;
+        const permissionsNavigation: any[]=this.user?.permissionsNavigation;
+        const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
+        console.log('readAll>>',readAll);
+
+        if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+
+          this.isAdmin = false;
+          this.ubigeo =
+          this.user && this.user.ubigeo
+              ? this.user.ubigeo
+              : this.ubigeo;
+          localStorage.setItem('ubigeo',this.ubigeo);
+           
+        console.log('this.ubigeo>>',this.ubigeo);
+        }
+
+      
+    });
+
+
     this.getInitList();
   }
 
@@ -99,14 +134,17 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
   }
 
   getList(): void {
-
+    let ubigeo=null;
+    if (!this.isAdmin){
+      ubigeo = this.ubigeo;
+    }
     const limit = this.limit;
     const offset = this.offset;
     const filters = this.formFilters.getRawValue();
     const ordering=this.ordering;
     const search = this.search;
 
-    const filterRawValue = { limit, offset, ordering,...filters,...search };
+    const filterRawValue = { ubigeo,limit, offset, ordering,...filters,...search };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
 
     this._applicationMaintenanceService.getList(queryParams)

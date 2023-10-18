@@ -77,6 +77,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         data: {action:Actions.CREAR},
         width: '600px',
+        height:'100%'
       });
       dialogRef.afterClosed().subscribe((result) => {
 

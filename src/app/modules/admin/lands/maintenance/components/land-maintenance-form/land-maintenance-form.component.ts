@@ -110,10 +110,10 @@ export class LandMaintenanceFormComponent implements OnInit {
             codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
             habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
             codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
-            streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}],
-            streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}],
-            urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly}],
-            urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}],
+            streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
+            streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
+            urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
+            urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
             block: [{value:this.landModel?.block,disabled:this.readOnly}],
             indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
             floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
@@ -137,6 +137,37 @@ export class LandMaintenanceFormComponent implements OnInit {
         }
 
       }
+
+      toggleRequired(): void {
+        const municipalNumberControl = this.formLand.get('municipalNumber');
+        const  urbanMzaControl = this.formLand.get('urbanMza');
+        const urbanLotNumberControl = this.formLand.get('urbanLotNumber');
+
+        if (municipalNumberControl && municipalNumberControl.value) {
+          if (municipalNumberControl.value!=='') {
+            urbanMzaControl.clearValidators();
+            urbanLotNumberControl.clearValidators();
+          } else {
+            urbanMzaControl.setValidators(Validators.required);
+            urbanLotNumberControl.setValidators(Validators.required);
+          }
+          urbanMzaControl.updateValueAndValidity();
+          urbanLotNumberControl.updateValueAndValidity();
+        }
+
+
+
+        if (urbanMzaControl && urbanMzaControl.value && urbanMzaControl && urbanMzaControl.value ) {
+          if (urbanMzaControl.value!=='') {
+            municipalNumberControl.clearValidators();
+          } else {
+            municipalNumberControl.setValidators(Validators.required);
+          }
+          municipalNumberControl.updateValueAndValidity();
+
+        }
+      }
+
 
 
 }

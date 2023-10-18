@@ -3,39 +3,9 @@
         <app-dataland [ubicacion]="ubicacion" (clickPosition)="onClickPosition($event)"></app-dataland>
     </div>
 
-    <ng-container *ngIf="ticket?.codTipoTicket === 2 ;else second">
-        <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
-            <ng-container *ngIf="item.codTipoTit ===1 ">
-                <div>
-                    <app-case [registro] = 'item' [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)" ></app-case>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="item.codTipoTit ===2 ">
-                <div>
-                    <app-case-suministro [registro] = 'item' [codTypeGap]="ticket?.codTipoTicket"  (eventOpenItem)="eventOpenItem($event)" ></app-case-suministro>
-                </div>
-            </ng-container>
-        </ng-container>
-    </ng-container>
 
-
-<!--
-        <ng-container *ngIf="ticket?.codTipoTicket === 2 ;else second">
-            <ng-container *ngFor="let item of items">
-                <ng-container *ngIf="item.tipo ===0 ||item.tipo ===1">
-                    <div>
-                        <app-case [item] = 'item' [codTypeGap]="ticket?.codTipoTicket"  ></app-case>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="item.tipo ===2 ||item.tipo ===3">
-                    <div>
-                        <app-case-suministro [ticket] = 'item'></app-case-suministro>
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    -->
-        <ng-template #second>
+    <container-element [ngSwitch]="ticket?.codTipoTicket">
+        <some-element *ngSwitchCase="1">
             <app-case 
             [defaultExpanded]="true" 
             [predioButtonDisabled]="predioButtonDisabled" 
@@ -46,9 +16,42 @@
             [registro]="ubicacion.registroTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
             ></app-case>
-    
-        </ng-template>
-    
+
+        </some-element>
+
+        <some-element *ngSwitchCase="2">
+
+            <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+                <ng-container *ngIf="item.codTipoTit ===1 ">
+                    <div>
+                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"   
+                        [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)"  [disabled]="ubicacion?.estado===0? false: true" ></app-case>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="item.codTipoTit ===2 ">
+                    <div>
+                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket" 
+                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventOpenItem($event)" [disabled]="ubicacion?.estado===0? false: true" ></app-case-suministro>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </some-element>
+
+        <some-element *ngSwitchCase="3">
+
+            <app-case 
+            [defaultExpanded]="true" 
+            [predioButtonDisabled]="predioButtonDisabled" 
+            [puntoImagenDisabled]="puntoImagenDisabled"  
+            (eventNuevaDireccion)="generarNuevaDireccion($event)"
+            (eventValidarUbicacion)="validarUbicacion($event)"
+
+            [registro]="ubicacion.registroTitularidad[0]"
+            [codTypeGap]="ticket?.codTipoTicket"
+            ></app-case>
+        </some-element>
+
+    </container-element>
 
 
 

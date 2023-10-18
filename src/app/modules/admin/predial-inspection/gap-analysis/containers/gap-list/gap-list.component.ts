@@ -104,9 +104,6 @@ export class GapListComponent implements OnInit , OnDestroy{
 
     ngOnInit(): void {
 
-
-
-
         this._userService.user$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: User) => {

@@ -38,6 +38,7 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
         const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
             data: {land:land,action:this.typeAction,ubigeo :this.ubigeo},
             width: '600px',
+            height:'100%'
           });
 
           if(this.typeAction===Actions.EDITAR){

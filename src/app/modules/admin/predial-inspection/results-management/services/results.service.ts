@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IUbicacion } from '../interfaces/ubicacion.interface';
+import { ITicket } from '../interfaces/ticket.interface';
 
 
 @Injectable({
@@ -8,19 +9,30 @@ import { IUbicacion } from '../interfaces/ubicacion.interface';
 })
 export class ResultsService {
 
-    public ubicacionSubject: Subject<IUbicacion> = new Subject();
+    public ubicacionSubject: Subject<{ubicacion: IUbicacion; ticket: ITicket}> = new Subject();
+    public ticketSubject: Subject<ITicket> = new Subject();
     public estadoSubject: Subject<any> = new Subject();
     public pointSubject: Subject<any> = new Subject();
     public resetMapSubject: Subject<any> = new Subject();
     constructor() { }
 
+
+       setTicketData(data: ITicket): void {
+        this.ticketSubject.next(data);
+    }
+
+    // Get ticket
+    getTicketData(): Observable<ITicket> {
+        return this.ticketSubject.asObservable();
+    }
+
     // update ubicacion
-    setUbicacionData(data: IUbicacion): void {
+    setUbicacionData(data: {ubicacion: IUbicacion; ticket: ITicket} ): void {
         this.ubicacionSubject.next(data);
     }
 
     // Get ubicacion
-    getUbicacionData(): Observable<IUbicacion> {
+    getUbicacionData(): Observable<{ubicacion: IUbicacion; ticket: ITicket}> {
         return this.ubicacionSubject.asObservable();
     }
 

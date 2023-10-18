@@ -15,7 +15,8 @@
     }
 
     .integrated-search-button{
-        width: 360px;
+        //width: 360px;
+        width: calc(100%)!important;
         .mat-form-field-flex{
             border-radius:11px !important;
             button{
