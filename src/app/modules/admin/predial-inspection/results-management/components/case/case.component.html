@@ -33,16 +33,19 @@
 
                 <ng-container *ngIf="codTypeGap === 2 ;else second">
 
-                  <button class="btnGenerar w-full"  *ngIf="item.state===0" >
-                    {{ item.tipo === 0 ? "Generar predio" : "Reasignar" }}
+                  <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="item.state===0 &&  item.tipo === 0"   (click)="onClickGenerarPredio()" >
+                    Generar predio
                   </button>
 
+                  <button class="btnGenerar w-full"   [disabled]="predioButtonDisabled" *ngIf="item.state===0 &&  item.tipo === 1"   (click)="onClickGenerarPredio()" >
+                    Reasignar
+                  </button>
 
                 </ng-container>
                 <ng-template #second>
                     
                 
-                  <div class="flex w-full justify-around " *ngIf="item.state===0">
+                  <div class="flex w-full justify-around " *ngIf="item.state===0 && codTypeGap === 1 ">
 
                     <button
                     class="btnGenerar green "
@@ -50,6 +53,8 @@
                     [disabled]="predioButtonDisabled"
                       >
                     <mat-icon svgIcon="mat_solid:add_location_alt"></mat-icon>
+
+                  
                     Generar predio
                     </button>
 
@@ -60,6 +65,30 @@
                     >
                     <mat-icon svgIcon="mat_solid:location_on"   ></mat-icon>
                     Generar punto imagen
+                    </button>
+
+                  </div>
+
+
+                  <div class="flex w-full justify-around " *ngIf="item.state===0 && codTypeGap === 3 ">
+
+                    <button
+                    class="btnGenerar green "
+                    (click)="onClickNuevaDireccion()"
+                    [disabled]="predioButtonDisabled"
+                      >
+                    <mat-icon svgIcon="mat_solid:add_location_alt"></mat-icon>
+
+                    Nueva dirección
+                    </button>
+
+                    <button
+                    class="btnGenerar btnAdd "
+                    (click)="onClickValidarUbicacion()"
+                    [disabled]="puntoImagenDisabled"
+                    >
+                    <mat-icon svgIcon="mat_solid:location_on"   ></mat-icon>
+                    Validar ubicación
                     </button>
 
                   </div>

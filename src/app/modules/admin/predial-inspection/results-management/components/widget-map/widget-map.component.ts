@@ -33,6 +33,7 @@ import { TypePoint } from 'app/shared/enums/type-point.enum';
 import { User } from 'app/core/user/user.types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ITicket } from '../../interfaces/ticket.interface';
 
 @Component({
   selector: 'app-widget-map',
@@ -51,13 +52,16 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input() idLoteLayer =1;
   @Input() idPredioLayer =1;
   @Input() idUbicacionLayer=5;
-  @Input() typeGap = TypeGap.PREDIO_SIN_GEORREFERENCIACION;
+
   @Input() ubicacion: IUbicacion;
   @Input() estado = Estado.LEER;
   @Input() resetMap =0;
   @Output() pointClickEvent = new EventEmitter();
   
   @ViewChild('mapViewNode', {static: true})private mapViewEl: ElementRef;
+  
+  ticket: ITicket;
+  typeGap = TypeGap.PREDIO_SIN_GEORREFERENCIACION;
   pointIni: any;
   apiKey = environment.apiKeyArcgis;
   view: any = null;
@@ -129,10 +133,17 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
 
   ngOnInit(): void {
 
-    this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((u: IUbicacion) => {
-      if (u) {
-          this.ubicacion = u;
-          this.estado = (this.ubicacion.estado===TicketStatus.RESUELTO_GESTION_RESULTADOS || this.typeGap === TypeGap.PUNTOS_LOTE_SIN_PREDIO )? Estado.LEER: Estado.EDITAR;
+    this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
+      if (res) {
+          this.ticket = res.ticket;
+          this.ubicacion = res.ubicacion;
+          this.typeGap = this.ticket.codTipoTicket;
+          /*this.estado = Estado.LEER;*/
+          console.log('this.ubicacion.estado',this.ubicacion.estado);
+          console.log('this.typeGap',this.typeGap);
+          this.estado = (  this.ubicacion.estado===0  &&
+            [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.typeGap))? Estado.EDITAR: Estado.LEER;
+            console.log('this.estado>>',this.estado);
           this.onUbicacion(this.ubicacion);
       }
   });

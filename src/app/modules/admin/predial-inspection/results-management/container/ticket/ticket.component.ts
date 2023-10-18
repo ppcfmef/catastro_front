@@ -19,7 +19,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   _unsubscribeAll: Subject<any> = new Subject<any>();
   ticket: ITicket;
-  typeGap=TypeGap;
+  //typeGap=TypeGap;
   appTicketBaseShow= false;
   appTicketShow= false;
   totalUbicaciones: number;
@@ -62,7 +62,6 @@ getDataTicket(idTicket: number): void{
           };
           return r;
       });
-
   });
 
 }

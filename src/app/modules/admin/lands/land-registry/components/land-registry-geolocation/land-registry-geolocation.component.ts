@@ -732,7 +732,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             const labelClassManzana = {
                 symbol: {
                     type: 'text', // autocasts as new TextSymbol()
-                    color: 'black',
+                    color: 'blue',
+                    haloColor: 'white',
+                    haloSize: 1,
                     font: {
                         // autocast as new Font()
                         family: 'arial',

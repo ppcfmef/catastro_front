@@ -97,6 +97,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
         //data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
         data: {action:Actions.CREAR,land:this.landRecords[0]},
         width: '600px',
+        height:'100%'
       });
 
       dialogRef.afterClosed().subscribe((result) => {

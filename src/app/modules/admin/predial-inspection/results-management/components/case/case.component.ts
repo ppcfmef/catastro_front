@@ -35,6 +35,9 @@ export class CaseComponent implements OnInit , OnChanges{
 
     @Output() eventGenerarPuntoImagen: EventEmitter<any> = new EventEmitter<any>();
     @Output() eventGenerarPredio: EventEmitter<any> = new EventEmitter<any>();
+    @Output() eventNuevaDireccion: EventEmitter<any> = new EventEmitter<any>();
+    @Output() eventValidarUbicacion: EventEmitter<any> = new EventEmitter<any>();
+
     @Output() eventOpenItem: EventEmitter<any> = new EventEmitter<any>();
 
     constructor() {
@@ -68,5 +71,13 @@ export class CaseComponent implements OnInit , OnChanges{
 
     onClickOpenItem(): void{
         this.eventOpenItem.emit(this.registro);
+    }
+
+    onClickNuevaDireccion(): void {
+        this.eventNuevaDireccion.emit(this.registro);
+    }
+
+    onClickValidarUbicacion(): void{
+        this.eventValidarUbicacion.emit(this.registro);
     }
 }

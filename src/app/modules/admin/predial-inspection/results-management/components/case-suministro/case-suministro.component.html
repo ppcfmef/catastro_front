@@ -33,20 +33,26 @@
         [style.display]="accordionItem.expanded ? '' : 'none'"
         >
         <div class="flex flex-col">
-            <div class="flex items-center justify-between widthnew pl-3">
-                <div class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-                    <input class="w-full" placeholder="Nombre de contribuyente o DNI" />
+            <div class="flex items-center justify-between widthnew pl-3" *ngIf="item.state===0">
+                <div [formGroup]="formFilters" class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700">
+                    <input class="w-full" placeholder="Buscar por Nombres o Documento" autocomplete="off" formControlName="search" />
                     <span class="flex">
                         <mat-icon   mat-icon svgIcon="mat_outline:search"></mat-icon>
                     </span>
                 </div>
-                <button class="btnAsignar">Asignar</button>
+
+                <button class="btnAsignar" (click)="onEventSearchContribuyente()">Buscar</button>
+                <!--<button class="btnAsignar">Asignar</button>-->
             </div>
-            <div class="flex flex-col ml-4">
-                <strong><span>DNI:</span></strong>
-                <strong><span>Nombre:</span></strong>
+            <div class="flex flex-col ml-4" *ngIf="landOwner && foundLandOwner">
+                <strong><span>DNI: {{landOwner?.dni}}</span></strong>
+                <strong><span>Nombre: {{landOwner?.name}} {{landOwner?.paternalSurname}} {{landOwner?.maternalSurname}}</span></strong>
             </div>
-            <button class="btnNotify">Notificar</button>
+            
+           
+              <div class="flex flex-col ml-4" *ngIf="!foundLandOwner"> <strong><span>No se encontro el contribuyente</span></strong></div> 
+           
+            <button class="btnNotify" *ngIf="item.state===0" (click)="onClickGenerarNotificacion()" >Notificar</button>
           </div>
         </div>
 

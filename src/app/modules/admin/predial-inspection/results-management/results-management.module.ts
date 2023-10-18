@@ -9,7 +9,6 @@ import { ResultsComponent } from './container/results/results.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TicketPendingComponent } from './container/ticket-pending/ticket-pending.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DatalandComponent } from './components/dataland/dataland.component';
 import { TicketRejectedComponent } from './container/ticket-rejected/ticket-rejected.component';
@@ -35,7 +34,6 @@ import { PrevisualizacionComponent } from './container/previsualizacion/previsua
 import { ShortTableComponent } from './components/short-table/short-table.component';
 import { ListImagesComponent } from './container/list-images/list-images.component';
 import { TicketPredioSubvaluadoComponent } from './container/ticket-predio-subvaluado/ticket-predio-subvaluado.component';
-import { TicketBaseComponent } from './container/ticket-base/ticket-base.component';
 import { MatInputModule } from '@angular/material/input';
 
 
@@ -49,7 +47,6 @@ import { LocationComponent } from './container/location/location.component';
   declarations: [
     ResultsManagementPage,
     ResultsComponent,
-    TicketPendingComponent,
     DatalandComponent,
     TicketRejectedComponent,
     SelectTicketsComponent,
@@ -63,7 +60,6 @@ import { LocationComponent } from './container/location/location.component';
     ShortTableComponent,
     ListImagesComponent,
     TicketPredioSubvaluadoComponent,
-    TicketBaseComponent,
     TicketMapComponent,
     WidgetMapComponent,
     LocationComponent,
