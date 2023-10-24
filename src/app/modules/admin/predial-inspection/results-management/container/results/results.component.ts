@@ -5,6 +5,7 @@ import { TicketService } from '../../services/ticket.service';
 import { ITicket } from '../../interfaces/ticket.interface';
 import { type } from 'os';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-results',
@@ -60,11 +61,14 @@ export class ResultsComponent implements OnInit {
   dataSourcePendiente=[];
   dataSourceObservado=[];
   dataSourceAceptado=[];
+  form: FormGroup;
+  queryParams: any;
   constructor(
     private _route: Router,
     private _activeRouter: ActivatedRoute,
     private _tickerService: TicketService,
-    private _resultService: ResultsService
+    private _resultService: ResultsService,
+    private _fb: FormBuilder
     ) { }
 
   ngOnInit(): void {
@@ -72,11 +76,37 @@ export class ResultsComponent implements OnInit {
     this.getTicketsAceptados();
     this.getTicketsObservados();
     this._resultService.setResetMap(1);
+    this.initForm();
+  }
+
+  initForm(): void {
+
+    this.form = this._fb.group({
+      search: [''],
+    });
+  }
+
+  onSearch(e: any): void {
+    const search = this.form.get('search').value;
+    this.queryParams={codTicket:search};
+    this.getTicketsPendientes();
+    this.getTicketsAceptados();
+    this.getTicketsObservados();
+
+  }
+
+  onCleanSearch(e: any): void {
+    this.queryParams={};
+    this.form.get('search').setValue(null);
+    this.getTicketsPendientes();
+    this.getTicketsAceptados();
+    this.getTicketsObservados();
+
   }
 
   getTicketsPendientes(): void{
-    const params= {codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS};
-    this._tickerService.getList( params).subscribe( (res: any)=>{
+    const params= {codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,...this.queryParams };
+    this._tickerService.getList(params).subscribe( (res: any)=>{
 
       this.dataSourcePendiente =res.results.map((r: ITicket)=>({
           id:r.id,
@@ -88,7 +118,7 @@ export class ResultsComponent implements OnInit {
     });
   }
   getTicketsObservados(): void {
-    const params= {codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS};
+    const params= {codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS,...this.queryParams};
     this._tickerService.getList( params).subscribe( (res: any)=>{
 
       this.dataSourceObservado =res.results.map((r: ITicket)=>({
@@ -102,9 +132,9 @@ export class ResultsComponent implements OnInit {
   }
 
   getTicketsAceptados(): void{
-    const params= {codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS};
+    const params= {codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS,...this.queryParams};
     this._tickerService.getList( params).subscribe( (res: any)=>{
-
+      console.log('res>>',res);
       this.dataSourceAceptado =res.results.map((r: ITicket)=>({
           id:r.id,
           codTicket: r.codTicket,
@@ -113,12 +143,8 @@ export class ResultsComponent implements OnInit {
           direccion: '',
           fecha: r.fecUltimaActualizacion}));
     });
-    
+
   }
-  /*onZoom(row: any): void {
-    this._route.navigate([`ticket-pending/${row.ticket}`], {relativeTo: this._activeRouter});
-    console.log('onZoom', row);
-  }*/
 
   onZoom(row: any): void {
     this._route.navigate([`ticket/${row.id}`], {relativeTo: this._activeRouter});

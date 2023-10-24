@@ -1,7 +1,14 @@
 <div class="flex flex-col flex-auto px-4 gap-4 ">
-    <div class="">
+
+
+    <div class="p-4" *ngIf="ubicacion?.estado===98">
+        <span>{{ubicacion?.obsUbicacion}}</span>
+    </div>
+
+    <div class="p-4">
         <app-dataland [ubicacion]="ubicacion" (clickPosition)="onClickPosition($event)"></app-dataland>
     </div>
+
 
 
     <container-element [ngSwitch]="ticket?.codTipoTicket">
@@ -12,7 +19,7 @@
             [puntoImagenDisabled]="puntoImagenDisabled"  
             (eventGenerarPuntoImagen)="generarPuntoImagen($event)"
             (eventGenerarPredio)="generarPredio($event)"
-
+            [disabled]="ubicacion?.estado===0? false: true"
             [registro]="ubicacion.registroTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
             ></app-case>
@@ -20,8 +27,9 @@
         </some-element>
 
         <some-element *ngSwitchCase="2">
-
-            <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+            <div class="flex flex-col flex-auto px-4 gap-4">            
+                
+                <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
                 <ng-container *ngIf="item.codTipoTit ===1 ">
                     <div>
                         <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"   
@@ -35,6 +43,10 @@
                     </div>
                 </ng-container>
             </ng-container>
+
+
+            </div>
+
         </some-element>
 
         <some-element *ngSwitchCase="3">
@@ -45,7 +57,7 @@
             [puntoImagenDisabled]="puntoImagenDisabled"  
             (eventNuevaDireccion)="generarNuevaDireccion($event)"
             (eventValidarUbicacion)="validarUbicacion($event)"
-
+            [disabled]="ubicacion?.estado===0? false: true"
             [registro]="ubicacion.registroTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
             ></app-case>

@@ -44,7 +44,8 @@ const suministro: ISuministro = {
     codTipoSumi: '1',
     numSumis: '040703142243',
     obsSumis: 'oifuef oufuehf uheufiwadfuhfjkjfa',
-    estado:TicketStatus.PENDIENTE_GESTION_RESULTADOS
+    estado:TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+    contribuyente:null
 };
 /*
 export const regitroTitularidadMock: IRegistroTitularidad = {

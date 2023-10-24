@@ -1,12 +1,28 @@
 <div class="flex flex-col px-4 pt-6 flex-auto gap-y-3">
     <span class="title-primary">Gestion de resultados</span>
     <div class="flex items-center justify-between">
-        <div class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-            <input class="w-full" placeholder="Ticket" />
-            <span class="flex">
-                <mat-icon   mat-icon svgIcon="mat_outline:search"></mat-icon>
+        <div class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700" [formGroup]="form">
+            <input class="w-full" placeholder="Ticket"  formControlName="search"  (keyup.enter)="onSearch($event)" />
+           <span class="flex">
+
+            <mat-icon
+        
+            class="hidden sm:flex icon-size-5"
+            [svgIcon]="'heroicons_solid:x'"
+            (click)="onCleanSearch($event)"
+            [style.visibility]=" !form.get('search').value || form.get('search').value===''?'hidden':'visible' "
+          ></mat-icon>
+
+                <mat-icon   mat-icon svgIcon="mat_outline:search" (click)="onSearch($event)"></mat-icon>
             </span>
+
+  
         </div>
+
+
+
+
+
         <button mat-button>
             <mat-icon class="text-white height mr-2" svgIcon="mat_solid:download"></mat-icon>
             Descargar Excel

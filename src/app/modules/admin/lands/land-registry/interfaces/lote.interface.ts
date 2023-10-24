@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface Lote {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -65,6 +66,12 @@ export interface Lote {
     RAN_CPU: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_LOTE_P: number;
+
+    ZONA_UTM: number;
+
+    SEC_EJEC: number;
+
+    VAL_ACT: number;
 }
 
 

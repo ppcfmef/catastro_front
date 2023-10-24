@@ -55,6 +55,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
   }
 
   onClearSearch(): void{
+    this.search = null;
     this.getInitList();
   }
   getInitList(): void {

@@ -1949,10 +1949,18 @@ async saveNewPointGestionPredio(): Promise<void>{
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio(data);
             _predio.NOM_USER = this.user.username;
             _predio.NOM_PC = 'PLATAFORMA';
-            _predio.ID_LOTE_P =this.lote.ID_LOTE_P;
+            _predio.ID_LOTE_P =(this.lote && this.lote?.ID_LOTE_P)?this.lote.ID_LOTE_P:null;
             _predio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
             _predio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;
-
+            _predio.ZONA_UTM = (this.lote && this.lote?.ZONA_UTM)?this.lote.ZONA_UTM:null;
+            _predio.SEC_EJEC = (this.lote && this.lote?.SEC_EJEC)?this.lote.SEC_EJEC:null;
+            _predio.ID_ARANC = (this.lote && this.lote?.ID_ARANC)?this.lote.ID_ARANC:null;
+            _predio.COD_VIA =(this.lote && this.lote?.COD_VIA)?this.lote.COD_VIA:null;
+            _predio.CUADRA=(this.lote && this.lote?.CUADRA)?this.lote.CUADRA:null;
+            _predio.LADO =(this.lote && this.lote?.LADO)?this.lote.LADO:null;
+            _predio.ANIO_CART=(this.lote && this.lote?.ANIO_CART)?this.lote.ANIO_CART:null;
+            _predio.FUENTE =(this.lote && this.lote?.FUENTE)?this.lote.FUENTE:null;
+            _predio.VAL_ACT =(this.lote && this.lote?.VAL_ACT)?this.lote.VAL_ACT:null;
 
             const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 

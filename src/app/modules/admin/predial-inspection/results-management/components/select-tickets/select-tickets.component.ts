@@ -7,6 +7,8 @@ import { state } from '@angular/animations';
 import { BreadCrumbsComponent } from '../../../../../../shared/components/bread-crumbs/bread-crumbs.component';
 import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { ITicket } from '../../interfaces/ticket.interface';
+import { IUbicacion } from '../../interfaces/ubicacion.interface';
+import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.interface';
 
 @Component({
   selector: 'app-select-tickets',
@@ -19,27 +21,22 @@ export class SelectTicketsComponent implements OnInit {
     @Input() ubicaciones: any[];
     closeTrue = '';
     isOpen = false;
-    itemSelect = 'Seleccione Ubicación';
+    itemSelect: any; //= 'Seleccione Ubicación';
+    text ='Seleccione Ubicación';
   constructor(
     private _router: Router,
     private _activeRoute: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
-    /*this.ticket.codTipoTicket*/
-    //if(this.ticket.codTipoTicket === 'punto imagen'|| this.ticket.gap ==='predio subvaluado'||this.ticket.gap ==='predio sin geo') {
 
-    //console.log('ticket seleccionado>>',this.ticket);
       if(this.ticket.codTipoTicket === TypeGap.PREDIO_SIN_GEORREFERENCIACION || this.ticket.codTipoTicket === TypeGap.PUNTO_IMAGEN ) {
-
         this.closeTrue = 'closed';
-        this.itemSelect = '01. Ubicación';
-        this.selectRoute(this.ticket.ubicacion[0]);
+        this.itemSelect= this.ubicaciones[0];
+        this.navegateTo(this.itemSelect);
     }else if (this.ticket.codTipoTicket === TypeGap.PUNTOS_LOTE_SIN_PREDIO) {
-
-
-        this.itemSelect =`${this.ticket.ubicacion[0].id}. Ubicaciones`;
-        this.selectRoute(this.ticket.ubicacion[0]);
+        this.itemSelect= this.ubicaciones[0];
+        this.navegateTo(this.itemSelect);
     }
 
     else{
@@ -50,12 +47,13 @@ export class SelectTicketsComponent implements OnInit {
 
   navegateTo(item: any): void {
     localStorage.setItem('idUbicacion', item.id);
-    this.itemSelect = `${item.id}. Ubicación`;
-
+    this.itemSelect =  item; //  `${item.id}. Ubicación`;
+    this.text = `${item.id}. Ubicación`;
   }
 
     selectRoute(item): void {
       localStorage.setItem('idUbicacion', item.id);
+      this.text = `${item.id}. Ubicación`;
         /*switch (this.ticket.codTipoTicket) {
             case TypeGap.PREDIO_SIN_GEORREFERENCIACION:
                 //this._router.navigate(['ticket'] , {relativeTo: this._activeRoute});
