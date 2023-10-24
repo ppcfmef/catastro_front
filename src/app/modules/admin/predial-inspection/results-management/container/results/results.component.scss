@@ -1,3 +1,5 @@
+@import '~styles/mixins';
+
 :root {
     ---black: #1e293b;
 }
@@ -95,3 +97,14 @@
     }
 }
 
+
+
+:host ::ng-deep{
+
+
+    .mat-icon{
+        cursor: pointer !important;
+
+    }
+
+}

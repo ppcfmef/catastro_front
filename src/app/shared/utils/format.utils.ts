@@ -51,8 +51,7 @@ export class FormatUtils {
 /* eslint-disable @typescript-eslint/naming-convention */
 public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapModel): GestionPredio{
     const gestion: GestionPredio ={
-
-        OBJECTID:  land.idObjectImg,
+        OBJECTID: land.idObjectImg,
 
         UBIGEO: land.ubigeo,
 
@@ -130,15 +129,16 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 
         ESTADO: 0,
 
-        ID_IMG:land.idCartographicImg,
-        SECUEN : land.secuen,
+        ID_IMG: land.idCartographicImg,
+        SECUEN: land.secuen,
 
         PARTIDA: land.departure,
         LADO: land.side,
-        RAN_NUM : land.ranNum,
-        CUADRA : land.streetBlock,
-        NOM_USER:'',
-        NOM_PC:''
+        RAN_NUM: land.ranNum,
+        CUADRA: land.streetBlock,
+        NOM_USER: '',
+        NOM_PC: '',
+        ZONA_UTM: 0
     };
     return gestion;
 }
@@ -146,8 +146,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 
 public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  Predio{
     const predio: Predio ={
-
-        OBJECTID:null,
+        OBJECTID: null,
 
         ID_LOTE: land.idPlot,
 
@@ -217,17 +216,19 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
 
 
-         PARTIDA: land.departure,
+        PARTIDA: land.departure,
 
-         LADO: land.side,
-         RAN_NUM : land.ranNum,
-         CUADRA : land.streetBlock,
-         RAN_CPU : land.cup? parseInt(land.cup.split('-')[0],10):null,
-         COD_UI: land.cup? parseInt(land.cup.split('-')[1],10):null,
-         COD_VER :land.cup? parseInt(land.cup.split('-')[2],10):null,
-         NOM_USER:'',
-         NOM_PC:'',
-         ID_LOTE_P:0,
+        LADO: land.side,
+        RAN_NUM: land.ranNum,
+        CUADRA: land.streetBlock,
+        RAN_CPU: land.cup ? parseInt(land.cup.split('-')[0], 10) : null,
+        COD_UI: land.cup ? parseInt(land.cup.split('-')[1], 10) : null,
+        COD_VER: land.cup ? parseInt(land.cup.split('-')[2], 10) : null,
+        NOM_USER: '',
+        NOM_PC: '',
+        ID_LOTE_P: 0,
+        ZONA_UTM: 0,
+        VAL_ACT: 0
     };
     return predio;
 

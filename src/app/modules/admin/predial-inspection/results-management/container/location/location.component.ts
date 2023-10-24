@@ -23,6 +23,8 @@ import { TicketService } from '../../services/ticket.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import moment from 'moment';
+import { User } from 'app/core/user/user.types';
+import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 
 moment.locale('es');
 
@@ -33,6 +35,7 @@ moment.locale('es');
 })
 export class LocationComponent implements OnInit {
   @Input() ticket: ITicket;
+  @Input() user: User;
   /*@Output() eventResetMap: EventEmitter<any> = new EventEmitter();*/
   ubicacion: IUbicacion;
     items =[
@@ -80,7 +83,7 @@ export class LocationComponent implements OnInit {
     dialogRef: any;
     predio: IPredio;
 
-   
+   distrito : DistrictResource;
   constructor(
     private _messageProviderService: MessageProviderService,
     private _ubicacionService: UbicacionService,
@@ -95,6 +98,8 @@ export class LocationComponent implements OnInit {
   ngOnInit(): void {
 
     const idUbicacion=localStorage.getItem('idUbicacion')?localStorage.getItem('idUbicacion'):'0';
+    //JSON.parse(data)
+    this.distrito=localStorage.getItem('distrito')?JSON.parse(localStorage.getItem('distrito')):{};
     this._ubicacionService.get(parseInt(idUbicacion,10)).subscribe( (data: IUbicacion) =>{
       /*this.predio=data.registroTitularidad[0].predio;*/
 
@@ -105,8 +110,17 @@ export class LocationComponent implements OnInit {
     this._resultsService.getPoint().subscribe( (res: any)=>{
         this.dataPoint = res;
         if(this.dataPoint.type === TypePoint.PUNTO_IMAGEN){
-          this.puntoImagenDisabled= false;
-          this.predioButtonDisabled = true;
+            if (   [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTOS_LOTE_SIN_PREDIO].includes(this.ticket.codTipoTicket))
+            {
+              this.puntoImagenDisabled= false;
+              this.predioButtonDisabled = true;
+            }
+            else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
+            {
+              this.puntoImagenDisabled= false;
+              this.predioButtonDisabled = false;
+            }
+
         }
 
         else if(this.dataPoint.type === TypePoint.LOTE){
@@ -149,11 +163,16 @@ export class LocationComponent implements OnInit {
   onClickObsTicket(): void {
     this.dialogRef = this._messageProviderService.showModal(ModalComponent,{width:430} );
     this.dialogRef.afterClosed().subscribe((result: any) => {
-
-      if(result && result==='confirmed'){
+      console.log('result obs',result);
+      if(result && result.option){
         console.log(result.data);
         this.ubicacion.obsUbicacion= result.data;
         this.ubicacion.estado = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+
+        this.ubicacion.registroTitularidad.forEach((r: IRegistroTitularidad)=>{
+          r.estado = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+        });
+        
         this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe(r=>{
           this.ubicacion= r;
           const index=this.ticket.ubicacion.findIndex(u=>u.id === this.ubicacion.id);
@@ -433,7 +452,7 @@ generarNotificacion(data: IRegistroTitularidad): void{
 
         [
             {
-                content: 'CARTA DE INVITACION Nº1-2023',
+                content: `CARTA DE INVITACION N${this.ticket.codTicket}-${data.id}-2023`,
                 styles: { halign: 'center' },
             },
         ],
@@ -447,28 +466,25 @@ generarNotificacion(data: IRegistroTitularidad): void{
 
         ],
 
-        /*[
+        [
 
           {
-            content: `
-            Presente.-
-
-            De mi mayor consideración:
-
-            La Municipalidad Distrital de (Municipalidad), a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.
-            
-            Tenga en cuenta que la no presentación de la declaración jurada del Impuesto Predial conlleva a ser calificado como evasor ha dicho impuesto por lo que correspondería la aplicación de una multa por infringir lo señalado en el Código Tributario.
-            
-            Estimado vecino, tributar es el camino al desarrollo de nuestro distrito, del mismo modo el pago de los arbitrios municipales (limpieza pública, parques y jardines y serenazgo) garantizamos la prestación eficiente y eficaz de estos servicios como también la seguridad ciudadana del distrito; mejorando así nuestra calidad de vida.
-
-            Atentamente
-            `,
-           
+            content:  'Estimado vecino(a)',
+            styles: { halign: 'right' },
         },
 
-        ],*/
+        ],
+        [
 
+          {
+            content:  `SR. ${data.suministro.contribuyente.nombre} ${data.suministro.contribuyente.apPat} ${data.suministro.contribuyente.apMat}`,
+            styles: { halign: 'right' },
+        },
 
+        ],
+        /*SR. BREINER A. CONDORI LIMA (Titular del predio)
+        AA.HH. ASOCIACION DE VIVIENDA “30 DE MARZO” DE ALTO CAYMA MZ. A LOTE 6 (dirección del Predio)
+        */
 
         [
 
@@ -491,7 +507,7 @@ generarNotificacion(data: IRegistroTitularidad): void{
         [
 
           {
-            content: 'La Municipalidad Distrital de (Municipalidad), a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.',
+            content: `La Municipalidad Distrital de ${this.distrito.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`,
             styles: { halign: 'justify' },
         },
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface Predio {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_CPU: string;
@@ -82,6 +83,10 @@ export interface Predio {
 
      // eslint-disable-next-line @typescript-eslint/naming-convention
      ID_LOTE_P: number;
+
+     ZONA_UTM: number;
+
+     VAL_ACT: number;
 }
 
 

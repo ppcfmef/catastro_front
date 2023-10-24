@@ -45,6 +45,7 @@ export interface GestionPredio {
     SECUEN: number;
     NOM_USER: string;
     NOM_PC: string;
+    ZONA_UTM: number;
 
 
 }

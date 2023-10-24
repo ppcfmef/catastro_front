@@ -50,6 +50,7 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
     this.item.firstname = this.registro?.predio?.contribuyente?.nombre;
     this.item.lastname = `${this.registro?.predio?.contribuyente?.apPat} ${this.registro?.predio?.contribuyente?.apMat}`;
     this.item.state = this.registro?.estado;
+    
   }
 
   onClickGenerarNotificacion(): void {
@@ -69,6 +70,10 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
       .subscribe((response: IPagination<LandOwner>) => {
         if( response && response.results && response.results.length>0 ){
           this.landOwner = response.results[0];
+          this.registro.suministro.contribuyente.docIden = this.landOwner.dni;
+          this.registro.suministro.contribuyente.apMat = this.landOwner.maternalSurname;
+          this.registro.suministro.contribuyente.apMat = this.landOwner.paternalSurname;
+          this.registro.suministro.contribuyente.nombre = this.landOwner.name;
           this.foundLandOwner =true;
         }
         else{

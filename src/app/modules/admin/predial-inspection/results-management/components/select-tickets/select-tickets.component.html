@@ -2,20 +2,37 @@
 <cdk-accordion class="example-accordion">
     <cdk-accordion-item
       #accordionItem="cdkAccordionItem">
-      <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-        {{ isOpen ? 'Seleccione Ubicación' : itemSelect}}
+      <div class="example-accordion-item-header" (click)="accordionItem.toggle()" *ngIf="itemSelect?.state!==98" >
+        {{ isOpen ? 'Seleccione Ubicación' : text}}
       </div>
+
+      <div class="title-obs" *ngIf="itemSelect?.state===98" >
+        <span>OBSERVADO</span>
+      </div>
+
       <div
         [style.display]="accordionItem.expanded ? closeTrue : 'none'">
         <ul>
             <ng-container *ngFor="let item of ubicaciones, let i = index">
                 <li (click)="navegateTo(item); accordionItem.close()" >
                     <div class="flex gap-3">
-                        <div class="box" [ngClass]="item.state ===0 ? 'default':'complete'"></div>
+                          
+
+                        <div class="box" [ngClass]=" item.state ===0 ? 'default':'complete'"></div>
                         <strong><span>{{i+1}}. Ubicacion</span></strong> <span>- {{item.totalCase}} predios </span>
                     </div>
+
+                  
                     <mat-icon svgIcon="{{ item.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
+
+                    
+
                 </li>
+
+                
+                
+
+                
             </ng-container>
         </ul>
       </div>

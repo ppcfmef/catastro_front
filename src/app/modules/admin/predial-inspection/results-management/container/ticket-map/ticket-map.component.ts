@@ -148,6 +148,37 @@ export class TicketMapComponent implements OnInit, OnDestroy {
 
         },
 
+        {
+            title: 'Punto Imagen',
+            id: 5,
+            layerId: 0,
+            urlBase: `${
+                environment.apiUrlArcGisServer
+            }/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            definitionExpressionBase: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: 4326,
+            visible: false,
+            selected: false,
+            /*renderer: {
+                type: 'simple',
+                symbol: {
+                  type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
+                  url: '/assets/images/map/location_out2.png',
+                  width: '20px',
+                  height: '30px',
+                  yoffset: '15px',
+                },
+            },*/
+
+
+        },
+
         /*{
           title: 'Ubicacion',
           id: 5,

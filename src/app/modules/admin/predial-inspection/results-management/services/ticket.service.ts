@@ -36,10 +36,10 @@ export class TicketService {
     /*localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));*/
     this.jsonTicketMocks = this.getData();
     if (queryParams && queryParams.codTicket){
-      this.jsonTicketMocks = this.getData().filter((r: ITicket)=> r.codTicket ===queryParams.codTicket);
+      this.jsonTicketMocks =  this.jsonTicketMocks.filter((r: ITicket)=> r.codTicket ===queryParams.codTicket);
     }
-    else if (queryParams && queryParams.codEstTrabajoTicket){
-      this.jsonTicketMocks = this.getData().filter((r: ITicket)=> r.codEstTrabajoTicket ===queryParams.codEstTrabajoTicket);
+     if (queryParams && queryParams.codEstTrabajoTicket){
+      this.jsonTicketMocks = this.jsonTicketMocks.filter((r: ITicket)=> r.codEstTrabajoTicket ===queryParams.codEstTrabajoTicket);
     }
 
     const res: IPagination<any> = {
