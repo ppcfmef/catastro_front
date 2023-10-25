@@ -87,7 +87,10 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
           this.user && this.user.ubigeo
               ? this.user.ubigeo
               : this.ubigeo;
-        
+        }
+
+        else{
+          this.ubigeo = '';
         }
         localStorage.setItem('ubigeo',this.ubigeo);
         console.log('this.ubigeo>>',this.ubigeo);

@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LandUI } from '../../interfaces/land.interface';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 
 @Component({
   selector: 'app-search-land',
@@ -12,6 +13,7 @@ export class SearchLandComponent implements OnInit {
     search: FormGroup;
     landRecords: LandUI[]=[];
     cupSelect: string;
+    ubigeo='';
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() agregarPredioEvent: EventEmitter<any> = new EventEmitter();
   constructor(private _fb: FormBuilder,private _landMaintenanceService: LandMaintenanceService) {
@@ -19,6 +21,7 @@ export class SearchLandComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):null;
     this.search = this._fb.group({
         search: [''],
     });
@@ -30,7 +33,8 @@ export class SearchLandComponent implements OnInit {
   }
   onClickSearch(): void {
     const search = this.search.get('search').value;
-    const queryParams={search};
+    const filterRawValue={search, ubigeo: this.ubigeo};
+    const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     this._landMaintenanceService.getList(queryParams)
        .toPromise()
        .then(
@@ -50,7 +54,7 @@ export class SearchLandComponent implements OnInit {
         this.cupSelect=null;
     }
     onSelectedPredio(event: any): void{
-
+        console.log('event>>',event);
         this.cupSelect=event.option.value;
     }
 
@@ -58,7 +62,8 @@ export class SearchLandComponent implements OnInit {
     onClickAgregarPredio(): void{
 
         if(this.cupSelect){
-            const queryParams={search:this.cupSelect};
+            const filterRawValue={cpm:this.cupSelect,ubigeo:this.ubigeo};
+            const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
             this._landMaintenanceService.getList(queryParams)
                .toPromise()
                .then(
