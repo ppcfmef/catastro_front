@@ -69,8 +69,9 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
   }
 
   onAgregarPredio(land: LandUI): void{
+    console.log('land>>',land);
     const copy=[... this.landRecords];
-    const el=copy.find(e=> e.cup===land.cup);
+    const el=copy.find(e=> {if( (e?.cup && e.cup===land.cup) || (e?.cpm && e.cpm===land.cpm) ){return e;}  } );
     if(!el){
         copy.push(land);
         this.landRecords=copy;

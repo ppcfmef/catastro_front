@@ -72,7 +72,7 @@
                 <mat-icon svgIcon="heroicons_outline:pencil" [ngClass]=" 'c-success'" ></mat-icon>
                 </button>
             </ng-template>
-            <ng-conteiner *ngIf="isRemove">
+            <ng-conteiner *ngIf="(isRemove && typeMaintenace!=='Acumulacion') || (isRemove && typeMaintenace==='Acumulacion' && i>0) ">
 
                 <button  mat-button
                 (click)="removeSelection(element)"

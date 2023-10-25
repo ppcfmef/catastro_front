@@ -32,7 +32,7 @@ export class SearchLandTableComponent implements OnInit {
     const search = this.search.get('search').value;
     const queryParams={search};
     console.log('datos',queryParams);
-    this.searchEvent.emit(queryParams);
+    this.searchEvent.emit(search);
 
   }
 

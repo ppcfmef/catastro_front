@@ -37,8 +37,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     //const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
-    const ubigeo = this.ubigeo;
-    const filterRawValue = { limit, offset, ...this.search,ubigeo };
+    const filterRawValue = { limit, offset, search: this.search,ubigeo:this.ubigeo };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
     .toPromise()
@@ -48,7 +47,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
   onSearch( search: any ): void{
     this.search = search;
     const ubigeo = this.ubigeo;
-    const filterRawValue = { ...search,ubigeo:ubigeo };
+    const filterRawValue = { search,ubigeo:this.ubigeo };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     console.log('queryParams>>',queryParams);
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
@@ -64,11 +63,11 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     this.getInitList();
   }
   getInitList(): void {
-    const ubigeo = this.ubigeo;
-    const filterRawValue = { limit: this.defaultTableLimit, ubigeo};
+   
+    const filterRawValue = { limit: this.defaultTableLimit, ubigeo:this.ubigeo};
 
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
-
+    console.log('queryParams>>',queryParams);
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
         .toPromise()
         .then(

@@ -1961,6 +1961,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             _predio.ANIO_CART=(this.lote && this.lote?.ANIO_CART)?this.lote.ANIO_CART:null;
             _predio.FUENTE =(this.lote && this.lote?.FUENTE)?this.lote.FUENTE:null;
             _predio.VAL_ACT =(this.lote && this.lote?.VAL_ACT)?this.lote.VAL_ACT:null;
+            _predio.ESTADO =1;
 
             const urlBase=`${_urlBase.replace('MapServer','FeatureServer')}/0/addFeatures`;
 

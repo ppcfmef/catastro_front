@@ -87,6 +87,8 @@ export interface Predio {
      ZONA_UTM: number;
 
      VAL_ACT: number;
+
+     ESTADO: number;
 }
 
 

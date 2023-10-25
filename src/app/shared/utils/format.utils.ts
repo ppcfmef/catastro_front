@@ -228,7 +228,8 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         NOM_PC: '',
         ID_LOTE_P: 0,
         ZONA_UTM: 0,
-        VAL_ACT: 0
+        VAL_ACT: 0,
+        ESTADO:1,
     };
     return predio;
 
