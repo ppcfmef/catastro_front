@@ -17,6 +17,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     landRecords: LandUI[];
     tableLength: number;
     search: any;
+    ubigeo: string =null;
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     private defaultTableLimit = 5;
@@ -26,6 +27,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):null;
     this.getInitList();
 }
 
@@ -33,10 +35,10 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
 
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     //const ownerFilter = { owner: this.landOwnerId };
-
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
-    const filterRawValue = { limit, offset, ...this.search };
+    const ubigeo = this.ubigeo;
+    const filterRawValue = { limit, offset, ...this.search,ubigeo };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
     .toPromise()
@@ -45,8 +47,11 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
 
   onSearch( search: any ): void{
     this.search = search;
-    /*console.log('queryParams>>',queryParams);*/
-    this.landMaintenanceService.getHasNotApplicationsList(this.search)
+    const ubigeo = this.ubigeo;
+    const filterRawValue = { ...search,ubigeo:ubigeo };
+    const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
+    console.log('queryParams>>',queryParams);
+    this.landMaintenanceService.getHasNotApplicationsList(queryParams)
     .toPromise()
     .then((result) => {
         this.landRecords = result.results;
@@ -59,8 +64,10 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     this.getInitList();
   }
   getInitList(): void {
+    const ubigeo = this.ubigeo;
+    const filterRawValue = { limit: this.defaultTableLimit, ubigeo};
 
-    const queryParams = { limit: this.defaultTableLimit };
+    const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
 
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
         .toPromise()

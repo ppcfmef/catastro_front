@@ -392,11 +392,181 @@ generarPredio(data: IRegistroTitularidad): void {
 
 
 generarNuevaDireccion(data: IRegistroTitularidad): void {
-  console.log('data>>',data);
+  this.predio = data.predio;
+  /*this.predio = data;*/
+
+  if (!this.dataPoint) {
+      this._confirmationService.error(
+          'Alerta',
+          'Por favor seleccione un punto de referencia'
+      );
+  }  else if (
+      this.dataPoint
+  ) {
+      this.dialogRef = this._confirmationService.info(
+          'Guardar',
+          'Esta seguro de guardar el punto para trabajo de campo?'
+      );
+
+      this.dialogRef
+          .afterClosed()
+          .toPromise()
+          .then((option) => {
+              if (option === 'confirmed') {
+                  const puntoImagen = new CFPuntoImagenModel(
+                      this.dataPoint.point
+                  );
+                  //puntoImagen.COD_PRE = this.land.cpm;
+                  puntoImagen.UBIGEO = this.ubicacion.ubigeo;
+                  puntoImagen.COD_VIA = this.ubicacion.codVia;
+                  puntoImagen.NUM_MUN = this.ubicacion.numMun;
+                  puntoImagen.MZN_URB = this.ubicacion.mznUrb;
+                  puntoImagen.LOT_URB = this.ubicacion.lotUrb;
+                  puntoImagen.COD_UU = this.ubicacion.codUU;
+                  puntoImagen.TIPO_UU = this.ubicacion.codTipoUU;
+                  puntoImagen.KM = this.ubicacion.km;
+                  puntoImagen.NOM_UU = this.ubicacion.nomUU;
+                  puntoImagen.NOM_VIA = this.ubicacion.nomVia;
+                  puntoImagen.COD_PRE = this.predio.codPre;
+                  puntoImagen.PISO=this.predio.piso;
+                  puntoImagen.TIP_DOC=this.predio.contribuyente.tipDoc;
+                  puntoImagen.AP_MAT=this.predio.contribuyente.apMat;
+                  puntoImagen.AP_PAT=this.predio.contribuyente.apPat;
+                  puntoImagen.DOC_IDEN =this.predio.contribuyente.docIden;
+                  puntoImagen.DIR_FISCAL = this.predio.contribuyente.dirFiscal;
+                  puntoImagen.INTERIOR = this.predio.interior;
+                  puntoImagen.BLOCK = this.predio.block;
+                  puntoImagen.PISO=this.predio.piso;
+                  puntoImagen.COD_PRE = this.predio.codPre;
+                  puntoImagen.NOM_USER = '';
+                  puntoImagen.NOM_PC = 'PLATAFORMA';
+
+                  puntoImagen.REFERENCIA = this.ubicacion.nomRef;
+
+
+                  data.estado =1;
+
+                  const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
+                  this.ubicacion.registroTitularidad[0]= data;
+                  this._cfpuntoImagenService.getMaxSecuen(this.ubicacion.ubigeo).then((res)=>{
+
+                    const secuen=res+1;
+                    const idImg=`i${this.utm}${this.ubicacion.ubigeo}${secuen}`;
+                    puntoImagen.ID_IMG = idImg;
+                    puntoImagen.SECUEN =secuen;
+
+
+                    this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
+                      this._cfpuntoImagenService
+                      .crearPunto(puntoImagen)
+                      .then((result) => {
+                          if (result) {
+                            this._confirmationService
+                            .success(
+                                'Exito',
+                                'punto guardado'
+                            )
+                            .afterClosed()
+                            .toPromise()
+                            .then((e) => {
+                              this.ubicacion= r;
+                              this.getStatusButton();
+                              this._resultsService.setResetMap(2);
+                              this._resultsService.setEstado(Estado.LEER);
+                            });
+                          }
+                      });
+                    });
+
+                  });
+              }
+          });
+  }
 }
 
 validarUbicacion(data: IRegistroTitularidad): void {
-  console.log('data>>',data);
+  this.predio = data.predio;
+  if (!this.dataPoint) {
+      this._confirmationService.error(
+          'Alerta',
+          'Por favor seleccione un punto '
+      );
+  }  else if (
+      this.dataPoint
+  ) {
+      this.dialogRef = this._confirmationService.info(
+          'Guardar',
+          'Esta seguro de asignar el predio?'
+      );
+
+      this.dialogRef
+          .afterClosed()
+          .toPromise()
+          .then((option) => {
+              if (option === 'confirmed') {
+                  this._cfpredioService
+                      .generateMaxCPU(this.dataPoint.point)
+                      .then((res) => {
+                          const predio = new CFPredioModel(
+                              this.dataPoint.point
+                          );
+
+                          if (res && res.COD_CPU) {
+                              predio.UBIGEO = this.ubicacion.ubigeo;
+                              predio.COD_PRE = this.predio.codPre;
+                              predio.COD_CPU = res.COD_CPU;
+                              predio.NOM_USER = '';
+                              predio.NOM_PC = 'PLATAFORMA';
+                                                  //puntoImagen.NOM_USER = this.user.username;
+                              data.estado=1;
+                              /*this.predio.codCPU = res.COD_CPU;
+                              this.predio.longitude = predio.COORD_X;
+                              this.predio.latitude = predio.COORD_Y;
+                              this.land.statusGapAnalisys =
+                                  LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PREDIO;
+                              this.land.status =
+                                  LandStatus.CON_CARTOGRAFIA_LOTE;
+                              this.land =
+                                  FormUtils.deleteKeysNullInObject(
+                                      this.land
+                                  );*/
+
+                                  const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
+                                  this.ubicacion.registroTitularidad[index]= data;
+                                  this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
+
+                                    this._cfpredioService
+                                    .crearPredio(predio)
+                                    .then((result) => {
+                                      if (result) {
+                                        this._confirmationService
+                                        .success(
+                                            'Exito',
+                                            'punto guardado'
+                                        )
+                                        .afterClosed()
+                                        .toPromise()
+                                        .then((e) => {
+
+                                          this._ubicacionService.get(this.ubicacion.id).subscribe((u)=>{
+                                            console.log('u>>',u);
+                                            this.ubicacion= { ...u};
+                                          });
+                                          this.getStatusButton();
+                                          this._resultsService.setResetMap(2);
+                                          this._resultsService.setEstado(Estado.LEER);
+
+                                        });
+                                    }
+                                  });
+
+                                  });
+
+                          }
+                      });
+              }
+          });
+  }
 }
 
 getStatusButton(): void{
