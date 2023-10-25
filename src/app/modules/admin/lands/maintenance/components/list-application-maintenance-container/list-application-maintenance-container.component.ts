@@ -60,7 +60,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
      idView='gapana';
      _emailUserAdmin='jcramireztello@gmail.com';
      isAdmin = true;
-     ubigeo: string= '';
+     ubigeo: string= '220901';
   constructor(
     private _applicationMaintenanceService: ApplicationMaintenanceService,
     private _router: Router,
@@ -87,12 +87,14 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
           this.user && this.user.ubigeo
               ? this.user.ubigeo
               : this.ubigeo;
-          localStorage.setItem('ubigeo',this.ubigeo);
-           
-        console.log('this.ubigeo>>',this.ubigeo);
+        
         }
+        localStorage.setItem('ubigeo',this.ubigeo);
+        console.log('this.ubigeo>>',this.ubigeo);
+        /*else{
+          this.ubigeo = '240104';
+        }*/
 
-      
     });
 
 

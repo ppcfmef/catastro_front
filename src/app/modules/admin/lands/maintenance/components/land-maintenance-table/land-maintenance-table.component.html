@@ -20,6 +20,10 @@
         <td mat-cell *matCellDef="let element" > {{element.cpm}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="cup">
+        <th mat-header-cell *matHeaderCellDef> Codigo de predio Unico</th>
+        <td mat-cell *matCellDef="let element" > {{element.cup}} </td>
+      </ng-container>
       <ng-container matColumnDef="idLote">
         <th mat-header-cell *matHeaderCellDef> Id Lote </th>
         <td mat-cell *matCellDef="let element" > {{element.idLote}} </td>

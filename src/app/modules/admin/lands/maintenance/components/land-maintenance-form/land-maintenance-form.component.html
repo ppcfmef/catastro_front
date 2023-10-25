@@ -79,6 +79,17 @@
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
             <mat-label>Código de Habilitación</mat-label>
             <input matInput type="text" formControlName="codUu" maxlength="4">
+            <mat-error *ngIf="formLand.get('streetName').hasError('required')">
+                El campo es obligatorio.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
+            <mat-label>Nombre de Habilitacion(*)</mat-label>
+            <input matInput type="text" formControlName="habilitacionName">
+            <mat-error *ngIf="formLand.get('habilitacionName').hasError('required')">
+                El campo es obligatorio.
+            </mat-error>
         </mat-form-field>
 
        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
