@@ -51,6 +51,39 @@ export const ticketMocks: ITicket []=[
         ubicacion:[ubicacionMocks[2]],
         estado:0
     },
+
+    {   id: 104,
+        obsTicketUsuario: '',
+        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codUsuario: 63,
+        fecInicioTrabajo: '12/10/2023',
+        fecAsignacion: '12/10/2023',
+        fecUltimaActualizacion: '12/10/2023',
+        codEstEnvioTicket: 0,
+        codTicket: 'G04070300001004',
+        codTipoTicket: TypeGap.MANZANA_SIN_LOTES,
+        tipoTicket: 'Manzana sin Lotes',
+        obsTicketGabinete: '',
+        ubicacion:[ubicacionMocks[3],ubicacionMocks[4]],
+        estado:0
+    },
+
+
+    {   id: 105,
+        obsTicketUsuario: '',
+        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codUsuario: 63,
+        fecInicioTrabajo: '12/10/2023',
+        fecAsignacion: '12/10/2023',
+        fecUltimaActualizacion: '12/10/2023',
+        codEstEnvioTicket: 0,
+        codTicket: 'G04070300001005',
+        codTipoTicket: TypeGap.PREDIO_SUBVALUADO,
+        tipoTicket: 'Predio Subvaluado',
+        obsTicketGabinete: '',
+        ubicacion:[ubicacionMocks[5]],
+        estado:0
+    },
 ];
 
 

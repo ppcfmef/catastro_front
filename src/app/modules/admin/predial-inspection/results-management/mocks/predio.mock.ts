@@ -32,4 +32,5 @@ estado: 0,
 block: '',
 numSumiGas: '',
 contribuyente:contribuyenteMock,
+status:0
 };

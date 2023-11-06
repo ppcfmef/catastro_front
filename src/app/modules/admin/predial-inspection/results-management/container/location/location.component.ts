@@ -25,6 +25,8 @@ import autoTable from 'jspdf-autotable';
 import moment from 'moment';
 import { User } from 'app/core/user/user.types';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { PrevisualizacionComponent } from '../previsualizacion/previsualizacion.component';
+import { CommonService } from 'app/core/common/services/common.service';
 
 moment.locale('es');
 
@@ -92,7 +94,8 @@ export class LocationComponent implements OnInit {
     private _cfpuntoImagenService: CFPuntoImagenService,
     private _cfpredioService: CFPredioService,
     private _router: Router,
-    private _ticketService: TicketService
+    private _ticketService: TicketService,
+    private _commonService: CommonService
     ) { }
 
   ngOnInit(): void {
@@ -110,16 +113,16 @@ export class LocationComponent implements OnInit {
     this._resultsService.getPoint().subscribe( (res: any)=>{
         this.dataPoint = res;
         if(this.dataPoint.type === TypePoint.PUNTO_IMAGEN){
-            if (   [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTOS_LOTE_SIN_PREDIO].includes(this.ticket.codTipoTicket))
+            if (   [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket))
             {
               this.puntoImagenDisabled= false;
               this.predioButtonDisabled = true;
             }
-            else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
+           /* else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
             {
               this.puntoImagenDisabled= false;
               this.predioButtonDisabled = false;
-            }
+            }*/
 
         }
 
@@ -172,7 +175,6 @@ export class LocationComponent implements OnInit {
         this.ubicacion.registroTitularidad.forEach((r: IRegistroTitularidad)=>{
           r.estado = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
         });
-        
         this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe(r=>{
           this.ubicacion= r;
           const index=this.ticket.ubicacion.findIndex(u=>u.id === this.ubicacion.id);
@@ -212,8 +214,6 @@ export class LocationComponent implements OnInit {
 
   generarPuntoImagen(data: IRegistroTitularidad): void {
     this.predio = data.predio;
-    /*this.predio = data;*/
-
     if (!this.dataPoint) {
         this._confirmationService.error(
             'Alerta',
@@ -224,7 +224,7 @@ export class LocationComponent implements OnInit {
     ) {
         this.dialogRef = this._confirmationService.info(
             'Guardar',
-            'Esta seguro de guardar el punto para trabajo de campo?'
+            'Esta seguro de guardar el punto imagen?'
         );
 
         this.dialogRef
@@ -304,8 +304,7 @@ export class LocationComponent implements OnInit {
   }
 
 
-
-generarPredio(data: IRegistroTitularidad): void {
+  generarPredio(data: IRegistroTitularidad): void {
     this.predio = data.predio;
     if (!this.dataPoint) {
         this._confirmationService.error(
@@ -354,6 +353,7 @@ generarPredio(data: IRegistroTitularidad): void {
 
                                     const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
                                     this.ubicacion.registroTitularidad[index]= data;
+                                    this.ubicacion.registroTitularidad[index].predio.codCPU=res.COD_CPU;
                                     this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
 
                                       this._cfpredioService
@@ -484,7 +484,7 @@ generarNuevaDireccion(data: IRegistroTitularidad): void {
   }
 }
 
-validarUbicacion(data: IRegistroTitularidad): void {
+ validarUbicacion(data: IRegistroTitularidad): void {
   this.predio = data.predio;
   if (!this.dataPoint) {
       this._confirmationService.error(
@@ -496,74 +496,18 @@ validarUbicacion(data: IRegistroTitularidad): void {
   ) {
       this.dialogRef = this._confirmationService.info(
           'Guardar',
-          'Esta seguro de asignar el predio?'
+          'Esta seguro de validar la ubicacion?'
       );
 
       this.dialogRef
           .afterClosed()
           .toPromise()
-          .then((option) => {
+          .then(async (option) => {
               if (option === 'confirmed') {
-                  this._cfpredioService
-                      .generateMaxCPU(this.dataPoint.point)
-                      .then((res) => {
-                          const predio = new CFPredioModel(
-                              this.dataPoint.point
-                          );
 
-                          if (res && res.COD_CPU) {
-                              predio.UBIGEO = this.ubicacion.ubigeo;
-                              predio.COD_PRE = this.predio.codPre;
-                              predio.COD_CPU = res.COD_CPU;
-                              predio.NOM_USER = '';
-                              predio.NOM_PC = 'PLATAFORMA';
-                                                  //puntoImagen.NOM_USER = this.user.username;
-                              data.estado=1;
-                              /*this.predio.codCPU = res.COD_CPU;
-                              this.predio.longitude = predio.COORD_X;
-                              this.predio.latitude = predio.COORD_Y;
-                              this.land.statusGapAnalisys =
-                                  LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PREDIO;
-                              this.land.status =
-                                  LandStatus.CON_CARTOGRAFIA_LOTE;
-                              this.land =
-                                  FormUtils.deleteKeysNullInObject(
-                                      this.land
-                                  );*/
 
-                                  const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
-                                  this.ubicacion.registroTitularidad[index]= data;
-                                  this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
 
-                                    this._cfpredioService
-                                    .crearPredio(predio)
-                                    .then((result) => {
-                                      if (result) {
-                                        this._confirmationService
-                                        .success(
-                                            'Exito',
-                                            'punto guardado'
-                                        )
-                                        .afterClosed()
-                                        .toPromise()
-                                        .then((e) => {
 
-                                          this._ubicacionService.get(this.ubicacion.id).subscribe((u)=>{
-                                            console.log('u>>',u);
-                                            this.ubicacion= { ...u};
-                                          });
-                                          this.getStatusButton();
-                                          this._resultsService.setResetMap(2);
-                                          this._resultsService.setEstado(Estado.LEER);
-
-                                        });
-                                    }
-                                  });
-
-                                  });
-
-                          }
-                      });
               }
           });
   }
@@ -745,5 +689,9 @@ generarNotificacion(data: IRegistroTitularidad): void{
 
   });
 
+}
+
+prev(): void {
+  this._messageProviderService.showModal(PrevisualizacionComponent,{width:1100, height:720, data: {gabinete: this.ubicacion.registroTitularidad[0]},} );
 }
 }

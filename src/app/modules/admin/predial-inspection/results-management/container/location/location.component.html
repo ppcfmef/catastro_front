@@ -27,7 +27,7 @@
         </some-element>
 
         <some-element *ngSwitchCase="2">
-            <div class="flex flex-col flex-auto px-4 gap-4">            
+            <div class="flex flex-col flex-auto  gap-4">            
                 
                 <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
                 <ng-container *ngIf="item.codTipoTit ===1 ">
@@ -61,6 +61,41 @@
             [registro]="ubicacion.registroTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
             ></app-case>
+        </some-element>
+
+
+        <some-element *ngSwitchCase="4">
+            <div class="flex flex-col flex-auto  gap-4">            
+                
+                <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+                <ng-container *ngIf="item.codTipoTit ===1 ">
+                    <div>
+                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"   
+                        [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)"  [disabled]="ubicacion?.estado===0? false: true" ></app-case>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="item.codTipoTit ===2 ">
+                    <div>
+                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket" 
+                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventOpenItem($event)" [disabled]="ubicacion?.estado===0? false: true" ></app-case-suministro>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+
+            </div>
+
+        </some-element>
+
+        <some-element *ngSwitchCase="5">
+            <div class="flex flex-col flex-auto  gap-4">            
+                <div class="flex w-full justify-around ">
+                    <button class="btnAdd2 self-end" (click)="prev()">Previsualizacion </button>
+                </div>
+              
+
+            </div>
+
         </some-element>
 
     </container-element>

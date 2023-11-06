@@ -24,6 +24,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   appTicketShow= false;
   totalUbicaciones: number;
   ubicaciones: any[];
+  openLocation: boolean = true;
 constructor(
   private _router: Router,
   private _activatedRoute: ActivatedRoute,
@@ -64,6 +65,14 @@ getDataTicket(idTicket: number): void{
       });
   });
 
+
+  if([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket) ) {
+
+    this.openLocation= true;
+  }else {
+      this.openLocation= false;
+  }
+
 }
 
 ngOnDestroy(): void {
@@ -76,5 +85,9 @@ navegateTo(): void {
   this._router.navigate(['land-inspection/results-management/'] );
 }
 
+
+eventOpenLocation(event: any): void {
+  this.openLocation = event;
+};
 }
 

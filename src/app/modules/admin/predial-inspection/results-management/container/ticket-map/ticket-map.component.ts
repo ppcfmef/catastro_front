@@ -20,6 +20,9 @@ export class TicketMapComponent implements OnInit, OnDestroy {
     idLotePoligonoLayer = 3;
     idUbicacionLayer=5;
     estado = Estado.LEER;
+    idManzanaImagenLayer=5;
+    idPuntoImagenLayer=6;
+    idManzanaSinLote=7;
     layersInfo = [
 
         {
@@ -148,6 +151,8 @@ export class TicketMapComponent implements OnInit, OnDestroy {
 
         },
 
+
+        /*
         {
             title: 'Punto Imagen',
             id: 5,
@@ -165,18 +170,220 @@ export class TicketMapComponent implements OnInit, OnDestroy {
             projection: 4326,
             visible: false,
             selected: false,
-            /*renderer: {
+
+            renderer: null,
+        },
+*/
+
+        {
+            title: 'Manzanas crecimiento',
+            id: 5,
+            layerId: 3,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'CONT_PIM >0',
+            definitionExpression:'',
+            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}' AND CONT_PIM >0`  : 'CONT_PIM >0',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: false,
+            selected: false,
+            labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    yoffset: 5,
+                    font: {
+                        // autocast as new Font()
+                        family: 'Playfair Display',
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.ID_MZN_U',
+                },
+            },
+            renderer: {
                 type: 'simple',
                 symbol: {
-                  type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                  url: '/assets/images/map/location_out2.png',
-                  width: '20px',
-                  height: '30px',
-                  yoffset: '15px',
+                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+                    color: [0, 255, 255, 0],
+                    style: 'solid',
+                    outline: {
+                        // autocasts as new SimpleLineSymbol()
+                        color: [0, 255, 255],
+                        width: 1.5,
+                    },
                 },
-            },*/
+            },
+        },
+        
+        /* 
 
+             {
+            title: 'Manzanas con Punto Imagen',
+            id: 3,
+            layerId: 3,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'CONT_PIM >0',
+            definitionExpression:'',
+            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}' AND CONT_PIM >0`  : 'CONT_PIM >0',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: true,
+            selected: false,
+            labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    yoffset: 5,
+                    font: {
+                        // autocast as new Font()
+                        family: 'Playfair Display',
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.ID_MZN_U',
+                },
+            },
+            renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+                    color: [0, 255, 255, 0],
+                    style: 'solid',
+                    outline: {
+                        // autocasts as new SimpleLineSymbol()
+                        color: [0, 255, 255],
+                        width: 1.5,
+                    },
+                },
+            },
+        },
 
+        {
+            title: 'Punto Imagen',
+            id: 4,
+            layerId: 0,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'',
+            definitionExpression:'',
+            //definitionExpression: this.ubigeo?`UBIGEO = '${this.ubigeo}'`  : '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: true,
+            selected: false,
+            renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-marker',
+                    style: 'square',
+                    size: '10px', // pixels
+                    color: [0, 255, 255, 0.2],
+                    fillOpacity: 0.2,
+                    outline: {
+                        color: [0, 255, 255], // White
+                        width: 1.5,
+                    },
+                },
+            },
+        },
+
+        */
+
+       // https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer
+        {
+            title: 'Ubicacion declarada',
+            id: 6,
+            layerId: 0,
+            urlBase: `${environment.apiUrlArcGisServer}/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:' ESTADO=1  ',
+            definitionExpression:' ',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible: false,
+            selected: false,
+            renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-marker',
+                    style: 'square',
+                    size: '10px', // pixels
+                    color: [0, 255, 255, 0.2],
+                    fillOpacity: 0.2,
+                    outline: {
+                        color: [0, 255, 255], // White
+                        width: 1.5,
+                    },
+                },
+            },
+        },
+        {
+            title: 'Manzana sin Lotes',
+            id: 7,
+            layerId: 2,
+            urlBase: `${environment.apiUrlArcGisServer}/pruebas/CAPAS_INSPECCION/MapServer`,
+            order: 0,
+            featureLayer: null,
+            definitionExpressionBase:'',
+            definitionExpression:'',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: 4326,
+            visible: false,
+            selected: false,
+            labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color:  [255, 255, 0],
+                    yoffset: 5,
+                    font: {
+                        // autocast as new Font()
+                        family: 'Playfair Display',
+                        size: 12,
+                        weight: 'bold',
+                    },
+
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.ID_MZN_C',
+                },
+            },
+            renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+                    color: [0, 0, 0, 0],
+                    style: 'solid',
+                    outline: {
+                        // autocasts as new SimpleLineSymbol()
+                        color: [255, 255, 0],
+                        width: 1.5,
+                    },
+                },
+            },
         },
 
         /*{

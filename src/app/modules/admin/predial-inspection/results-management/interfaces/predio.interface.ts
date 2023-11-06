@@ -18,4 +18,5 @@ export interface IPredio{
     block: string;
     numSumiGas: string;
     contribuyente: IContribuyente;
+    status: number;
 }

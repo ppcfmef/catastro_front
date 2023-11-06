@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -10,6 +10,7 @@ import { ITicket } from '../../interfaces/ticket.interface';
 import { IUbicacion } from '../../interfaces/ubicacion.interface';
 import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.interface';
 
+
 @Component({
   selector: 'app-select-tickets',
   templateUrl: './select-tickets.component.html',
@@ -19,10 +20,13 @@ export class SelectTicketsComponent implements OnInit {
 
     @Input() ticket: ITicket;
     @Input() ubicaciones: any[];
+    @Input() openLocation: boolean = true;
+    @Output() eventOpenLocation: EventEmitter<any> = new EventEmitter() ;
     closeTrue = '';
     isOpen = false;
     itemSelect: any; //= 'Seleccione Ubicación';
     text ='Seleccione Ubicación';
+
   constructor(
     private _router: Router,
     private _activeRoute: ActivatedRoute,
@@ -30,17 +34,24 @@ export class SelectTicketsComponent implements OnInit {
 
   ngOnInit(): void {
 
-      if(this.ticket.codTipoTicket === TypeGap.PREDIO_SIN_GEORREFERENCIACION || this.ticket.codTipoTicket === TypeGap.PUNTO_IMAGEN ) {
-        this.closeTrue = 'closed';
+      if(
+        [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket)
+       // this.ticket.codTipoTicket === TypeGap.PREDIO_SIN_GEORREFERENCIACION || this.ticket.codTipoTicket === TypeGap.PUNTO_IMAGEN
+
+        ) {
+        //this.closeTrue = 'closed';
         this.itemSelect= this.ubicaciones[0];
         this.navegateTo(this.itemSelect);
-    }else if (this.ticket.codTipoTicket === TypeGap.PUNTOS_LOTE_SIN_PREDIO) {
-        this.itemSelect= this.ubicaciones[0];
-        this.navegateTo(this.itemSelect);
+        /*this.openLocation= true;*/
     }
 
-    else{
+    /*else if (this.ticket.codTipoTicket === TypeGap.PUNTOS_LOTE_SIN_PREDIO) {
+        this.itemSelect= this.ubicaciones[0];
+        this.navegateTo(this.itemSelect);
+    }*/
 
+    else{
+      /*this.openLocation= false;*/
     }
 
   }
@@ -49,6 +60,8 @@ export class SelectTicketsComponent implements OnInit {
     localStorage.setItem('idUbicacion', item.id);
     this.itemSelect =  item; //  `${item.id}. Ubicación`;
     this.text = `${item.id}. Ubicación`;
+    this.openLocation = true;
+    this.eventOpenLocation.emit(this.openLocation);
   }
 
     selectRoute(item): void {
@@ -69,6 +82,13 @@ export class SelectTicketsComponent implements OnInit {
                 //this._router.navigate([`sub/${item}`] , {relativeTo: this._activeRoute});
             break;
         }*/
+    }
+
+
+    opened(event: any): void{
+      console.log('event>>',event);
+      this.openLocation = false;
+      this.eventOpenLocation.emit(this.openLocation);
     }
 
 }

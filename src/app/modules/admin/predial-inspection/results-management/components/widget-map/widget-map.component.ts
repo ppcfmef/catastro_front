@@ -52,7 +52,9 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input() idLoteLayer =1;
   @Input() idPredioLayer =1;
   @Input() idUbicacionLayer=5;
-  @Input() idPuntoImagenLayer=5;
+  @Input() idManzanaImagenLayer=5;
+  @Input() idPuntoImagenLayer=6;
+  @Input() idManzanaSinLote=7;
   @Input() ubicacion: IUbicacion;
   @Input() estado = Estado.LEER;
   @Input() resetMap =0;
@@ -153,22 +155,33 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
           this.ubicacion = res.ubicacion;
           this.typeGap = this.ticket.codTipoTicket;
           /*this.estado = Estado.LEER;*/
-          console.log('this.ubicacion.estado',this.ubicacion.estado);
-          console.log('this.typeGap',this.typeGap);
+          /*console.log('this.ubicacion.estado',this.ubicacion.estado);
+          console.log('this.typeGap',this.typeGap);*/
           this.estado = (  this.ubicacion.estado===0  &&
             [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.typeGap))? Estado.EDITAR: Estado.LEER;
-            console.log('this.estado>>',this.estado);
+            /*console.log('this.estado>>',this.estado);*/
+
+
+            const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
+            const featureManzanaLayer=this.layersInfo.find(e=> e.id === this.idManzanaImagenLayer).featureLayer;
+            const featureManzanaSinLoteLayer = this.layersInfo.find(e=> e.id === this.idManzanaSinLote).featureLayer;
 
             if(this.typeGap === TypeGap.PUNTO_IMAGEN)
             {
-              const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
               featureLayer.visible=true;
+              featureManzanaLayer.visible=true;
+            }
+
+            else if(this.typeGap === TypeGap.MANZANA_SIN_LOTES)
+            {
+              featureManzanaSinLoteLayer.visible=true;
             }
 
             else
             {
-              const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
               featureLayer.visible=false;
+              featureManzanaLayer.visible=false;
+              featureManzanaSinLoteLayer.visible= false;
             }
             
           this.onChangeUbicacion(this.ubicacion);
@@ -455,7 +468,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             this.view.graphics.remove(g);
           });
           this.graphics = [];
-          if(this.estado === Estado.EDITAR &&  [TypeGap.PREDIO_SIN_GEORREFERENCIACION, TypeGap.PUNTOS_LOTE_SIN_PREDIO].includes(this.typeGap) ){
+          if(this.estado === Estado.EDITAR &&  [TypeGap.PREDIO_SIN_GEORREFERENCIACION].includes(this.typeGap) ){
 
               const layerManzana = this.layersInfo.find((l: any) => l.id === this.idManzanaLayer) ?. featureLayer;
 
@@ -527,14 +540,52 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
 
           }
 
-          else if(this.estado === Estado.EDITAR &&  [TypeGap.PUNTO_IMAGEN].includes(this.typeGap)){
+          else if(this.estado === Estado.EDITAR &&  [ TypeGap.PUNTOS_LOTE_SIN_PREDIO].includes(this.typeGap) ){
+            const layerManzana = this.layersInfo.find((l: any) => l.id === this.idManzanaLayer) ?. featureLayer;
+
+            const loteLayer = this.layersInfo.find((l: any) => l.id === this.idLoteLayer) ?. featureLayer;
+            const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(loteLayer, event.mapPoint, 3, 'meters');
+            if (results && results.length > 0) {
+                const r = results[0];
+                const pointGeometry = r.geometry;
+                const predio = r.attributes;
+                const graphic = new Graphic(pointGeometry, this.predioSymbol);
+                r.attributes['COORD_X'] =pointGeometry.longitude;
+                r.attributes['COORD_Y'] =pointGeometry.latitude;
+
+                if(!predio['ID_MZN_C']){
+                    const intersectFeature =
+                    MapUtils.queryIntersectFeaturelayer(
+                      layerManzana,
+                      pointGeometry,5,'meters'
+                    );
+
+                    intersectFeature.then((data: any) => {
+                        if (data && data.attributes) {
+                            predio['ID_MZN_C']=data['ID_MZN_C'];
+                        }
+
+                        this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
+
+                    });
+                }
+                else{
+                  this.pointClickEvent.emit({point:predio,type:TypePoint.LOTE});
+                }
+
+                this.view.graphics.add(graphic);
+                this.graphics.push(graphic);
+
+            }
+          }
+          else if(this.estado === Estado.EDITAR &&  [TypeGap.PUNTO_IMAGEN].includes(this.typeGap) ){
 
             const loteLayer = this.layersInfo.find((l: any) => l.id === this.idLoteLayer) ?. featureLayer;
             const puntoImagenLayer = this.layersInfo.find((l: any) => l.id === this.idPuntoImagenLayer) ?. featureLayer;
 
             const layerManzana = this.layersInfo.find((l: any) => l.id === this.idManzanaLayer) ?. featureLayer;
-            const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(loteLayer, event.mapPoint, 3, 'meters');
-            const results2: any[] = await MapUtils.queryIntersectFeaturelayerResults(puntoImagenLayer, event.mapPoint, 3, 'meters');
+            const results: any[] = await MapUtils.queryIntersectFeaturelayerResults(puntoImagenLayer, event.mapPoint, 3, 'meters');
+            //const results2: any[] = await MapUtils.queryIntersectFeaturelayerResults(puntoImagenLayer, event.mapPoint, 3, 'meters');
 
             if (results && results.length > 0) {
               const r = results[0];
@@ -545,8 +596,12 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
               r.attributes['COORD_X'] =pointGeometry.longitude;
               r.attributes['COORD_Y'] =pointGeometry.latitude;
               this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
+              
+              /*
+              
 
-              /*if(!predio['ID_MZN_C']){
+              
+              if(!predio['ID_MZN_C']){
                   const intersectFeature =
                   MapUtils.queryIntersectFeaturelayer(
                     layerManzana,
@@ -571,7 +626,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
 
           }
 
-          else if (results2 && results2.length > 0) {
+          /*else if (results2 && results2.length > 0) {
             const r = results2[0];
 
             const pointGeometry = r.geometry;
@@ -582,7 +637,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
             this.view.graphics.add(graphic);
             this.graphics.push(graphic);
-          }
+          }*/
 
           else{
             const puntoImagen: any = {};

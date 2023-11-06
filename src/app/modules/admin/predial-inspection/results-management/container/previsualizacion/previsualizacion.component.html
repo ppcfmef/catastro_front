@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center justify-center gap-5 bg-white ">
     <div class="flex flex-col items-center justify-center gap-5 p-4">
-        <h1 class="text-lg font-bold">INFORMACIÓN DE CAMPO</h1>
+        <h1 class="text-lg font-bold">INFORMACIÓN DE GABINETE</h1>
 
         <div class="flex gap-3" >
             <app-short-table *ngFor="let item of data" [dataTable] = item></app-short-table>
@@ -46,10 +46,10 @@
         </div>
 
     </div>
-
+    <app-list-images></app-list-images>
     <div  class="flex gap-4">
-        <button class="blue btn">Predio Conforme</button>
-        <button class="red btn">Predio Subvaluado</button>
+        <button class="blue btn"  (click)="onClickConfirmarPredio($event)" >Predio Conforme</button>
+        <button class="red btn" (click)="onClickSubvaluarPredio($event)" >Predio Subvaluado</button>
     </div>
 
 </div>
