@@ -1,8 +1,8 @@
 
 <cdk-accordion class="example-accordion">
     <cdk-accordion-item
-      #accordionItem="cdkAccordionItem">
-      <div class="example-accordion-item-header" (click)="accordionItem.toggle()" *ngIf="itemSelect?.state!==98" >
+      #accordionItem="cdkAccordionItem"   [expanded]="!openLocation" (opened)="opened($event)">
+      <div class="example-accordion-item-header"    (click)=" accordionItem.toggle(); " *ngIf="itemSelect?.state!==98" >
         {{ isOpen ? 'Seleccione Ubicación' : text}}
       </div>
 
@@ -25,7 +25,6 @@
                   
                     <mat-icon svgIcon="{{ item.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
 
-                    
 
                 </li>
 

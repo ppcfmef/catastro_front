@@ -25,12 +25,14 @@ export class CaseComponent implements OnInit , OnChanges{
     @Input() predio: IPredio;
     @Input() registro: IRegistroTitularidad;
     @Input() item = {
-        tipo:1,
+        landStatus:0,
         codCase: '00986',
         state:1,
         firstname: 'Jhon',
         lastname:'Perez',
-        dni:'44458926'
+        dni:'44458926',
+        codCPU:''
+
     };
 
     @Output() eventGenerarPuntoImagen: EventEmitter<any> = new EventEmitter<any>();
@@ -54,11 +56,12 @@ export class CaseComponent implements OnInit , OnChanges{
 
     refreshForm(): void{
         this.item.codCase = this.registro?.predio?.codPre;
-        this.item.tipo = 0;
+        this.item.landStatus = this.registro?.predio?.status;
         this.item.dni = this.registro?.predio?.contribuyente?.docIden;
         this.item.firstname = this.registro?.predio?.contribuyente?.nombre;
         this.item.lastname = `${this.registro?.predio?.contribuyente?.apPat} ${this.registro?.predio?.contribuyente?.apMat}`;
         this.item.state = this.registro?.estado;
+        this.item.codCPU = this.registro?.predio.codCPU;
     }
 
     onClickGenerarPuntoImagen(): void{

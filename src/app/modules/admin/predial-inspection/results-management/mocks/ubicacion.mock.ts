@@ -4,6 +4,9 @@ import {IPredio} from '../interfaces/predio.interface';
 import {IRegistroTitularidad} from '../interfaces/registro-titularidad.interface';
 import {ISuministro} from '../interfaces/suministro.interface';
 import {IUbicacion} from '../interfaces/ubicacion.interface';
+import { ICaracteristica } from '../interfaces/caracteristica.interface';
+import { IInstalacion } from '../interfaces/instalacion.interface';
+import { IFoto } from '../interfaces/foto.interface';
 
 
 export const contribuyenteMock: IContribuyente = {
@@ -29,14 +32,35 @@ const predio: IPredio = {
     interior: '',
     obsPredio: '',
     codTit: '04070314-10-0001',
-    codCPU: '30807399-0001-2',
+    codCPU: '',
     codPre: '14-10-0001',
     numDpto: '',
     codigoUso: '',
     estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
     block: '',
     numSumiGas: '',
-    contribuyente: contribuyenteMock
+    contribuyente: contribuyenteMock,
+    status: 0
+};
+
+const predio2: IPredio = {
+    piso: '',
+    numSumiAgua: '',
+    codTipoPredio: 'PU',
+    numSumiLuz: '',
+    usoEspecifico: 'RESIDENCIAL - CASA HABITACION',
+    interior: '',
+    obsPredio: '',
+    codTit: '04070314-10-0002',
+    codCPU: '',
+    codPre: '14-10-0002',
+    numDpto: '',
+    codigoUso: '',
+    estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+    block: '',
+    numSumiGas: '',
+    contribuyente: contribuyenteMock,
+    status: 1
 };
 
 const suministro: ISuministro = {
@@ -47,6 +71,87 @@ const suministro: ISuministro = {
     estado:TicketStatus.PENDIENTE_GESTION_RESULTADOS,
     contribuyente:null
 };
+
+const  caracteristica: ICaracteristica[] =[{
+    categoriaElectrica: 'A',
+    piso: '1',
+    estadoConserva: 'Bueno',
+    anioConstruccion: 2002,
+    catergoriaTecho: 'A',
+    longitudFrente: 6,
+    categoriaMuroColumna: 'A',
+    catergoriaPuertaVentana: 'B',
+    arancel: 45,
+    materialPred: '',
+    codTit: '04070314-10-0001',
+    categoriaRevestimiento: 'C',
+    areaTerreno: 200.0,
+    clasificacionPred: 'Casa',
+    catergoriaPiso: 'G',
+    catergoriaBano: 'G',
+    areaConstruida: 18.0
+},
+
+{
+    categoriaElectrica: 'A',
+    piso: '1',
+    estadoConserva: 'Bueno',
+    anioConstruccion: 2002,
+    catergoriaTecho: 'A',
+    longitudFrente: 6,
+    categoriaMuroColumna: 'A',
+    catergoriaPuertaVentana: 'B',
+    arancel: 45,
+    materialPred: '',
+    codTit: '04070314-10-0001',
+    categoriaRevestimiento: 'C',
+    areaTerreno: 200.0,
+    clasificacionPred: 'Casa',
+    catergoriaPiso: 'G',
+    catergoriaBano: 'G',
+    areaConstruida: 20
+}
+
+];
+
+const instalaciones: IInstalacion[]=[       {
+    'codTit': '04070314-19-0002',
+    'codInst': '04070314-19-0002-01',
+    'codTipoInst': '1',
+    'anioConstruccion': '2012',
+    'estadoConserva': 'bueno',
+    'dimension': '15'
+},
+{
+    'codTit': '04070314-19-0002',
+    'codInst': '04070314-19-0002-02',
+    'codTipoInst': '2',
+    'anioConstruccion': '2013',
+    'estadoConserva': 'malo',
+    'dimension': '14'
+}];
+
+const fotos: IFoto[]= [
+    {
+    'codFoto': '140923135959',
+    'codUbicacion': '04070314-19-0002',
+    'codTipoFoto': '1',
+    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+},
+{
+    'codFoto': '140923135959',
+    'codUbicacion': '04070314-19-0002',
+    'codTipoFoto': '1',
+    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+},
+{
+    'codFoto': '140923135959',
+    'codUbicacion': '04070314-19-0002',
+    'codTipoFoto': '1',
+    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+}
+];
+
 /*
 export const regitroTitularidadMock: IRegistroTitularidad = {
     codTit: '04070314-19-0001',
@@ -86,6 +191,8 @@ export const regitroTitularidadMock4: IRegistroTitularidad = {
 };*/
 
 
+
+
 export const registrosMock: IRegistroTitularidad[]=[
 
     {   id:1,
@@ -94,16 +201,23 @@ export const registrosMock: IRegistroTitularidad[]=[
         codUbicacion: '04070314-19-0001',
         predio: predio,
         suministro: null,
-        estado: 0
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+
     },
 
     {   id:2,
         codTit: '04070314-19-0002',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0002',
-        predio: predio,
+        predio: predio2,
         suministro: null,
-        estado: 0
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
     },
     {   id:3,
         codTit: '04070314-19-0003',
@@ -111,7 +225,10 @@ export const registrosMock: IRegistroTitularidad[]=[
         codUbicacion: '04070314-19-0003',
         predio: predio,
         suministro: null,
-        estado: 0
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
     },
     {   id:4,
         codTit: '04070314-19-0004',
@@ -119,7 +236,66 @@ export const registrosMock: IRegistroTitularidad[]=[
         codUbicacion: '04070314-19-0004',
         predio: null,
         suministro: suministro,
-        estado: 0
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+    },
+    {   id:5,
+        codTit: '04070314-19-0005',
+        codTipoTit: 1,
+        codUbicacion: '04070314-19-0004',
+        predio: predio2,
+        suministro: null,
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+    },
+    {   id:6,
+        codTit: '04070314-19-0006',
+        codTipoTit: 1,
+        codUbicacion: '04070314-19-0004',
+        predio: predio,
+        suministro: null,
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+    },
+    {   id:7,
+        codTit: '04070314-19-0007',
+        codTipoTit: 1,
+        codUbicacion: '04070314-19-0004',
+        predio: predio,
+        suministro: null,
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+    }
+    ,
+    {   id:8,
+        codTit: '04070314-19-0008',
+        codTipoTit: 2,
+        codUbicacion: '04070314-19-0004',
+        predio: null,
+        suministro: suministro,
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
+    },
+    {   id:9,
+        codTit: '04070314-19-0009',
+        codTipoTit: 1,
+        codUbicacion: '04070314-19-0004',
+        predio: predio,
+        suministro: null,
+        estado: 0,
+        fotos:fotos,
+        instalaciones:instalaciones,
+        caracteristicas:caracteristica
     }
 ];
 
@@ -215,6 +391,84 @@ export const ubicacionMocks: IUbicacion[] = [
         nomRef: '',
         referencia: '',
         km: '0',
+        y: -17.127261122644466,
+        lotUrb: '6',
+        codUU: '0023',
+        numMun: '',
+        codTicket: 'G04070300001024',
+        codVia: '0213',
+        x: -71.80572539909576,
+        codUbicacion: '04070314-19-0002',
+        nomVia: 'CUCARDAS',
+        mznUrb: 'G',
+        estado: 0,
+        registroTitularidad: [registrosMock[2]],
+        ubigeo: '040703'
+
+    },
+
+    {id:4,
+        codTipVia: '02',
+        numAlt: '',
+        nomAlt: 'CUCARDAS (A.H. EL FRISCO)',
+        codTipoUU: '01',
+        codUsuario: '63',
+        nomUU: 'EL FRISCO',
+        obsUbicacion: '',
+        nomRef: '',
+        referencia: '',
+        km: '0',
+        y: -17.1286882795,
+        lotUrb: '6',
+        codUU: '0023',
+        numMun: '',
+        codTicket: 'G04070300001025',
+        codVia: '0213',
+        x: -71.80894738,
+        codUbicacion: '04070314-19-0002',
+        nomVia: 'CUCARDAS',
+        mznUrb: 'G',
+        estado: 0,
+        registroTitularidad: [registrosMock[4],registrosMock[5],registrosMock[7]],
+        ubigeo: '040703'
+    },
+    {   id:5,
+        codTipVia: '02',
+        numAlt: '',
+        nomAlt: 'CUCARDAS (A.H. EL FRISCO)',
+        codTipoUU: '01',
+        codUsuario: '63',
+        nomUU: 'EL FRISCO',
+        obsUbicacion: '',
+        nomRef: '',
+        referencia: '',
+        km: '0',
+        y: -17.131704059055085,
+        lotUrb: '6',
+        codUU: '0023',
+        numMun: '',
+        codTicket: 'G04070300001024',
+        codVia: '0213',
+        x: -71.8134378337222,
+        codUbicacion: '04070314-19-0002',
+        nomVia: 'CUCARDAS',
+        mznUrb: 'G',
+        estado: 0,
+        registroTitularidad: [registrosMock[6]],
+        ubigeo: '040703'
+
+    },
+    {   id:6,
+        codTipVia: '02',
+        numAlt: '',
+        nomAlt: 'CUCARDAS (A.H. EL FRISCO)',
+        codTipoUU: '01',
+        codUsuario: '63',
+        nomUU: 'EL FRISCO',
+        obsUbicacion: '',
+        nomRef: '',
+        referencia: '',
+        km: '0',
         y: -17.12870163901372,
         lotUrb: '6',
         codUU: '0023',
@@ -226,7 +480,7 @@ export const ubicacionMocks: IUbicacion[] = [
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
         estado: 0,
-        registroTitularidad: [registrosMock[2]],
+        registroTitularidad: [registrosMock[8]],
         ubigeo: '040703'
 
     }

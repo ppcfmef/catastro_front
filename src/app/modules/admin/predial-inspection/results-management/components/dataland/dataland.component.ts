@@ -26,7 +26,7 @@ export class DatalandComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log('this.ubicacion>>',this.ubicacion);
-    this.datosPredio.ubigeo ='';
+    this.datosPredio.ubigeo = this.ubicacion.ubigeo;
     this.datosPredio.hab = this.ubicacion.nomUU;
     this.datosPredio.mz = this.ubicacion.mznUrb;
     this.datosPredio.lote = this.ubicacion.lotUrb;

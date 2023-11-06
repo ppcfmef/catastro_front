@@ -12,11 +12,10 @@
     </div>
     
     <div>
-        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" ></app-select-tickets>
+        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" [openLocation]="openLocation" (eventOpenLocation)="eventOpenLocation($event)" ></app-select-tickets>
     </div>
-    <div class="content">
+    <div class="content" *ngIf="openLocation">
         <app-location [ticket]="ticket"   ></app-location>
-
     </div>
    </div>
 
