@@ -134,7 +134,7 @@ OnChanges { // @Input() view: any = null;
     // eslint-disable-next-line max-len
     constructor(private _confirmationService: CustomConfirmationService, private _puntoCampoService: PuntoCampoService, private _fuseSplashScreenService: FuseSplashScreenService,
          private _authService: AuthService
-        
+
         ) {}
 
     ngOnInit(): void {
@@ -377,6 +377,8 @@ esriConfig
                 this.view.on('click', async (event) => { /*function createPopupContent(target) {
                         return 'holassss';
                     };*/
+
+                    console.log('event.mapPoint',event.mapPoint);
                     this.points = [];
                     this.view.popup.close();
                     this.view.graphics.removeAll();
@@ -392,12 +394,12 @@ esriConfig
                             this.view.graphics.add(graphic);
                             // const content='holass';
                             const  content = `<table class="esri-widget__table">
-                          
+
                             <td>Ubigeo </td>
                             <td>${
                                 r.attributes['ubigeo ']
                             }</td>
-                    
+
                             </tr>
 
                             <tr>
@@ -405,7 +407,7 @@ esriConfig
                             <td>${
                                 r.attributes['ID_IMG']
                             }</td>
-                    
+
                             </tr>
                             </table>
                             `;

@@ -1,5 +1,5 @@
 import { IContribuyente } from '../interfaces/contribuyente.interface';
-import { IPredio } from '../interfaces/predio.interface';
+import { IPredioInspeccion } from '../interfaces/predio-inspeccion.interface';
 
 export const contribuyenteMock: IContribuyente ={
     condContr: '',
@@ -15,7 +15,7 @@ export const contribuyenteMock: IContribuyente ={
 
 };
 
-export const predioMock: IPredio ={
+export const predioMock: IPredioInspeccion ={
 piso: '',
 numSumiAgua: '',
 codTipoPredio: 'PU',
@@ -24,7 +24,7 @@ usoEspecifico: 'RESIDENCIAL - CASA HABITACION',
 interior: '',
 obsPredio: '',
 codTit: '04070314-10-0001',
-codCPU: '30807399-0001-2',
+codCpu: '30807399-0001-2',
 codPre: '14-10-0001',
 numDpto: '',
 codigoUso: '',

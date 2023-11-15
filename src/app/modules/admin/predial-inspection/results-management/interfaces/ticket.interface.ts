@@ -10,9 +10,9 @@ export interface ITicket{
     fecUltimaActualizacion: string;
     codEstEnvioTicket: number;
     codTicket: string;
-    codTipoTicket: number;
+    codTipoTicket: any;
     tipoTicket: string;
     obsTicketGabinete: string;
-    ubicacion: IUbicacion[];
+    ubicaciones: IUbicacion[];
     estado: number;
 }

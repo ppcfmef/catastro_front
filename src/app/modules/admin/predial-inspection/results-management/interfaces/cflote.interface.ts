@@ -1,6 +1,5 @@
-export interface ICFPredio {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    COD_CPU: string;
+export interface ICFLote {
+
     // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_PRE: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -65,28 +64,25 @@ export interface ICFPredio {
     TIP_VIA: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     UBIGEO: string;
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_CUC: string;
-// eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     AREA: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     RAN_CPU: number;
-     // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_UI: number;
-// eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     COD_VER: number;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     NOM_USER: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     NOM_PC: string;
-
      // eslint-disable-next-line @typescript-eslint/naming-convention
-     ID_LOTE_P: number;
+    ID_LOTE_P: number;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
     ID_MZN_C: number;
-// eslint-disable-next-line @typescript-eslint/naming-convention
-    ESTADO : number;
 }
 
 

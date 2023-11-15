@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -16,7 +16,7 @@ import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.inte
   templateUrl: './select-tickets.component.html',
   styleUrls: ['./select-tickets.component.scss']
 })
-export class SelectTicketsComponent implements OnInit {
+export class SelectTicketsComponent implements OnInit,OnChanges {
 
     @Input() ticket: ITicket;
     @Input() ubicaciones: any[];
@@ -31,13 +31,15 @@ export class SelectTicketsComponent implements OnInit {
     private _router: Router,
     private _activeRoute: ActivatedRoute,
   ) { }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log('this.ticket select-tickets>>',this.ticket);
+    }
 
   ngOnInit(): void {
-
+    console.log('this.openLocation>>>',this.openLocation);
+    //console.log('this.ticket select-tickets>>',this.ticket);
       if(
         [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket)
-       // this.ticket.codTipoTicket === TypeGap.PREDIO_SIN_GEORREFERENCIACION || this.ticket.codTipoTicket === TypeGap.PUNTO_IMAGEN
-
         ) {
         //this.closeTrue = 'closed';
         this.itemSelect= this.ubicaciones[0];
@@ -57,16 +59,17 @@ export class SelectTicketsComponent implements OnInit {
   }
 
   navegateTo(item: any): void {
-    localStorage.setItem('idUbicacion', item.id);
+    //localStorage.setItem('codUbicacion', item.codUbicacion);
     this.itemSelect =  item; //  `${item.id}. Ubicación`;
-    this.text = `${item.id}. Ubicación`;
+    this.text = `${item.id}. Ubicación ${item.codUbicacion}`;
     this.openLocation = true;
-    this.eventOpenLocation.emit(this.openLocation);
+    console.log({openLocation:this.openLocation,codUbicacion:item.codUbicacion});
+    this.eventOpenLocation.emit({openLocation:this.openLocation,codUbicacion:item.codUbicacion});
   }
 
     selectRoute(item): void {
-      localStorage.setItem('idUbicacion', item.id);
-      this.text = `${item.id}. Ubicación`;
+      localStorage.setItem('codUbicacion', item.codUbicacion);
+      this.text = `${item.id}. Ubicación ${item.codUbicacion}`;
         /*switch (this.ticket.codTipoTicket) {
             case TypeGap.PREDIO_SIN_GEORREFERENCIACION:
                 //this._router.navigate(['ticket'] , {relativeTo: this._activeRoute});
@@ -86,9 +89,9 @@ export class SelectTicketsComponent implements OnInit {
 
 
     opened(event: any): void{
-      console.log('event>>',event);
+      //console.log('event>>',event);
       this.openLocation = false;
-      this.eventOpenLocation.emit(this.openLocation);
+      this.eventOpenLocation.emit({openLocation:this.openLocation,codUbicacion:null});
     }
 
 }

@@ -1,10 +1,23 @@
-<h1 mat-dialog-title>Desea Observar la Ubicación </h1>
+<h1 mat-dialog-title>Desea Observar la Ubicación?</h1>
 <div mat-dialog-content>
 
-<textarea name="" id="" cols="43" rows="7"  [(ngModel)]="data" placeholder="Ingrese observación" [formControl]="inputControl"></textarea>
+<textarea name="" id="" cols="64" rows="7"  [(ngModel)]="data" placeholder="Ingrese observación" [formControl]="inputControl"></textarea>
 
 </div>
-<div mat-dialog-actions class="flex w-full justify-end gap-4">
-  <button class="btn red"  (click)="save()">Observar</button>
+<div mat-dialog-actions class="flex  flex-row">
+
+<div class="flex  w-1/2 justify-first">
+    <button class="btn2 red" (click)="fileInput.click()">
+
+        <mat-icon svgIcon="mat_solid:attach_file"></mat-icon>  Adjuntar
+    </button>
+    <input hidden (change)="onFileSelected($event)" #fileInput type="file">
+    <span class="file-name">{{selectedFile?.name}}</span>
+</div>
+
+<div class="flex w-1/2 justify-end gap-4">
+    <button class="btn red"  (click)="save()">Observar</button>
   <button class="btn blue" (click)="close()" >Cerrar</button>
+</div>
+
 </div>

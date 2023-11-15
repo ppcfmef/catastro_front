@@ -452,7 +452,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
        this._messageProviderService=null;
        this._unsubscribeAll.next();
        this._unsubscribeAll.complete();
-     
+
     }
 
 
@@ -2032,7 +2032,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             _gestionPredio.NOM_USER = this.user.username;
             _gestionPredio.NOM_PC = 'PLATAFORMA';
 
-            const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;;
+            const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
             const formData = new FormData();

@@ -47,5 +47,6 @@ export interface ICFPuntoImagen {
     NOM_PC: string;
 
 ID_MZN_U: number;
+ESTADO_P: number;
 }
 /* eslint-enable @typescript-eslint/naming-convention  */

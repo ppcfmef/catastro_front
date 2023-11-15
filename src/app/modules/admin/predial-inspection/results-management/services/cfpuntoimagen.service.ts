@@ -50,6 +50,31 @@ export class CFPuntoImagenService {
 
     }
 
+
+    async updatePunto(data: ICFPuntoImagen): Promise < any > {
+        const wkid = 4326;
+        const _predio = data;
+
+        this.apiUrl = `${
+            this.apiUrlPuntoImagen.replace('MapServer', 'FeatureServer')
+        }/updateFeatures`;
+
+        const jsonData = await MapUtils.createArcgisJSON([_predio], wkid);
+        const formData = new FormData();
+        formData.append('features', JSON.stringify(jsonData));
+        formData.append('F', 'json');
+
+        const response = await fetch(`${
+            this.apiUrl
+        }`, {
+            method: 'POST',
+            body: formData
+        });
+        const responseJson: any = await response.json();
+        return responseJson;
+
+    }
+
     async getMaxSecuen( ubigeo: string): Promise<number>{
         const res: any = {};
         const [FeatureLayer,] = await loadModules(['esri/layers/FeatureLayer']);

@@ -1,6 +1,6 @@
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import {IContribuyente} from '../interfaces/contribuyente.interface';
-import {IPredio} from '../interfaces/predio.interface';
+import {IPredioInspeccion} from '../interfaces/predio-inspeccion.interface';
 import {IRegistroTitularidad} from '../interfaces/registro-titularidad.interface';
 import {ISuministro} from '../interfaces/suministro.interface';
 import {IUbicacion} from '../interfaces/ubicacion.interface';
@@ -23,7 +23,8 @@ export const contribuyenteMock: IContribuyente = {
 
 };
 
-const predio: IPredio = {
+const predio: IPredioInspeccion = {
+    id:1,
     piso: '',
     numSumiAgua: '',
     codTipoPredio: 'PU',
@@ -32,18 +33,20 @@ const predio: IPredio = {
     interior: '',
     obsPredio: '',
     codTit: '04070314-10-0001',
-    codCPU: '',
+    codCpu: '',
     codPre: '14-10-0001',
     numDpto: '',
     codigoUso: '',
     estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
     block: '',
     numSumiGas: '',
-    contribuyente: contribuyenteMock,
-    status: 0
+    predioContribuyente: null,
+    status: 0,
+    ubigeo:''
 };
 
-const predio2: IPredio = {
+const predio2: IPredioInspeccion = {
+    id: 2,
     piso: '',
     numSumiAgua: '',
     codTipoPredio: 'PU',
@@ -52,27 +55,42 @@ const predio2: IPredio = {
     interior: '',
     obsPredio: '',
     codTit: '04070314-10-0002',
-    codCPU: '',
+    codCpu: '',
     codPre: '14-10-0002',
     numDpto: '',
     codigoUso: '',
     estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
     block: '',
     numSumiGas: '',
-    contribuyente: contribuyenteMock,
-    status: 1
+    predioContribuyente: null,
+    status: 1,
+    ubigeo: ''
 };
 
 const suministro: ISuministro = {
+    codSuministro:'1',
     codTit: '04070314-19-0002',
     codTipoSumi: '1',
     numSumis: '040703142243',
+    tipoSumi: 'Suministri de Agua',
     obsSumis: 'oifuef oufuehf uheufiwadfuhfjkjfa',
     estado:TicketStatus.PENDIENTE_GESTION_RESULTADOS,
-    contribuyente:null
+    contribuyente: {
+        condContr: '',
+        dirFiscal: '',
+        apMat: '',
+        docIden: '',
+        codContr: '',
+        apPat: '',
+        tipDoc: '',
+        contribuyente: '',
+        nombre: '',
+        conyuge: ''
+    },
+    codContr:null
 };
 
-const  caracteristica: ICaracteristica[] =[{
+const  caracteristica: ICaracteristica= {
     categoriaElectrica: 'A',
     piso: '1',
     estadoConserva: 'Bueno',
@@ -90,29 +108,7 @@ const  caracteristica: ICaracteristica[] =[{
     catergoriaPiso: 'G',
     catergoriaBano: 'G',
     areaConstruida: 18.0
-},
-
-{
-    categoriaElectrica: 'A',
-    piso: '1',
-    estadoConserva: 'Bueno',
-    anioConstruccion: 2002,
-    catergoriaTecho: 'A',
-    longitudFrente: 6,
-    categoriaMuroColumna: 'A',
-    catergoriaPuertaVentana: 'B',
-    arancel: 45,
-    materialPred: '',
-    codTit: '04070314-10-0001',
-    categoriaRevestimiento: 'C',
-    areaTerreno: 200.0,
-    clasificacionPred: 'Casa',
-    catergoriaPiso: 'G',
-    catergoriaBano: 'G',
-    areaConstruida: 20
-}
-
-];
+};
 
 const instalaciones: IInstalacion[]=[       {
     'codTit': '04070314-19-0002',
@@ -136,59 +132,22 @@ const fotos: IFoto[]= [
     'codFoto': '140923135959',
     'codUbicacion': '04070314-19-0002',
     'codTipoFoto': '1',
-    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+    'foto': 'ahpuiasldmvasldvnuasnruvnarvn'
 },
 {
     'codFoto': '140923135959',
     'codUbicacion': '04070314-19-0002',
     'codTipoFoto': '1',
-    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+    'foto': 'ahpuiasldmvasldvnuasnruvnarvn'
 },
 {
     'codFoto': '140923135959',
     'codUbicacion': '04070314-19-0002',
     'codTipoFoto': '1',
-    'urlFoto': 'ahpuiasldmvasldvnuasnruvnarvn'
+    'foto': 'ahpuiasldmvasldvnuasnruvnarvn'
 }
 ];
 
-/*
-export const regitroTitularidadMock: IRegistroTitularidad = {
-    codTit: '04070314-19-0001',
-    codTipoTit: '1',
-    codUbicacion: '04070314-19-0001',
-    predio: predio,
-    suministro: null,
-    estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS
-};
-
-
-export const regitroTitularidadMock3: IRegistroTitularidad = {
-    codTit: '04070314-19-0002',
-    codTipoTit: '1',
-    codUbicacion: '04070314-19-0002',
-    predio: predio,
-    suministro: null,
-    estado: TicketStatus.PENDIENTE_GESTION_RESULTADOS
-};
-*/
-/*
-export const regitroTitularidadMock2: IRegistroTitularidad = {
-    codTit: '04070314-19-0003',
-    codTipoTit: '2',
-    codUbicacion: '04070314-19-0003',
-    predio: null,
-    suministro: suministro
-};
-
-export const regitroTitularidadMock4: IRegistroTitularidad = {
-
-    codTit: '04070314-19-0004',
-    codTipoTit: '2',
-    codUbicacion: '04070314-19-0004',
-    predio: null,
-    suministro: suministro
-};*/
 
 
 
@@ -199,12 +158,14 @@ export const registrosMock: IRegistroTitularidad[]=[
         codTit: '04070314-19-0001',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0001',
-        predio: predio,
+        predioInspeccion: predio,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
+
 
     },
 
@@ -212,96 +173,105 @@ export const registrosMock: IRegistroTitularidad[]=[
         codTit: '04070314-19-0002',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0002',
-        predio: predio2,
+        predioInspeccion: predio2,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:3,
         codTit: '04070314-19-0003',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0003',
-        predio: predio,
+        predioInspeccion: predio,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:4,
         codTit: '04070314-19-0004',
         codTipoTit: 2,
         codUbicacion: '04070314-19-0004',
-        predio: null,
+        predioInspeccion: null,
         suministro: suministro,
-        estado: 0,
-        fotos:fotos,
+        predioPadron: null,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:5,
         codTit: '04070314-19-0005',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0004',
-        predio: predio2,
+        predioInspeccion: predio2,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:6,
         codTit: '04070314-19-0006',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0004',
-        predio: predio,
+        predioInspeccion: predio,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:7,
         codTit: '04070314-19-0007',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0004',
-        predio: predio,
+        predioInspeccion: predio,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     }
     ,
     {   id:8,
         codTit: '04070314-19-0008',
         codTipoTit: 2,
         codUbicacion: '04070314-19-0004',
-        predio: null,
+        predioInspeccion: null,
+        predioPadron: null,
         suministro: suministro,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     },
     {   id:9,
         codTit: '04070314-19-0009',
         codTipoTit: 1,
         codUbicacion: '04070314-19-0004',
-        predio: predio,
+        predioInspeccion: predio,
+        predioPadron: null,
         suministro: null,
-        estado: 0,
-        fotos:fotos,
+        status: 0,
+
         instalaciones:instalaciones,
-        caracteristicas:caracteristica
+        caracteristicas:caracteristica,inicio:false
     }
 ];
 
 
 export const ubicacionMock: IUbicacion =
-    {   id:3,
+    {
+        id: 3,
         codTipVia: '02',
         numAlt: '',
         nomAlt: 'CUCARDAS (A.H. EL FRISCO)',
@@ -322,9 +292,10 @@ export const ubicacionMock: IUbicacion =
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[0]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[0]],
+        ubigeo: '040703',
+        fotos: []
     };
 
 
@@ -351,9 +322,10 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[0]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[0]],
+        ubigeo: '040703',
+        fotos:[]
     },
      {id:2,
         codTipVia: '02',
@@ -376,9 +348,11 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[1],registrosMock[3]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[1],registrosMock[3]],
+        ubigeo: '040703',
+        fotos:[]
+
     },
     {   id:3,
         codTipVia: '02',
@@ -401,9 +375,10 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[2]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[2]],
+        ubigeo: '040703',
+        fotos:[]
 
     },
 
@@ -428,9 +403,10 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[4],registrosMock[5],registrosMock[7]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[4],registrosMock[5],registrosMock[7]],
+        ubigeo: '040703',
+        fotos:[]
     },
     {   id:5,
         codTipVia: '02',
@@ -453,9 +429,10 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[6]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[6]],
+        ubigeo: '040703',
+        fotos:[]
 
     },
     {   id:6,
@@ -479,9 +456,10 @@ export const ubicacionMocks: IUbicacion[] = [
         codUbicacion: '04070314-19-0002',
         nomVia: 'CUCARDAS',
         mznUrb: 'G',
-        estado: 0,
-        registroTitularidad: [registrosMock[8]],
-        ubigeo: '040703'
+        status: 0,
+        registrosTitularidad: [registrosMock[8]],
+        ubigeo: '040703',
+        fotos:[]
 
     }
 

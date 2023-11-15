@@ -1,22 +1,54 @@
 <cdk-accordion class="example-accordion">
-    <cdk-accordion-item #accordionItem="cdkAccordionItem" [expanded]="defaultExpanded"  (opened)="onClickOpenItem()" >
+    <cdk-accordion-item #accordionItem="cdkAccordionItem" [expanded]="defaultExpanded"   >
         <div
             class="example-accordion-item-header"
-            [ngClass]="item.state === 0 ? 'inactive' : 'active'"
+            [ngClass]="item.state === 0 ? 'inactive' :
+            item.state ===98? 'obs':'active' "
             (click)="accordionItem.toggle()"
         >
-            Codigo de predio - {{ item.codCase }}
-             <mat-icon
-                svgIcon="{{
-                    item.state === 0
-                        ? 'iconsmind:manage'
-                        : 'iconsmind:manageTrue'
-                }}"
-            ></mat-icon>
+        <ng-container *ngIf="this.registro?.predioPadron">
+            Codigo de predio - {{ item.codCase}}  encontrado en padron de predios
+            <mat-icon
+               svgIcon="{{
+                item.state === 0 ?  'iconsmind:manage':
+                item.state ===98? 'iconsmind:manageObs':'iconsmind:manageTrue'
+               }}"
+           ></mat-icon>
+
+        </ng-container>
+
+        <ng-container *ngIf="!this.registro?.predioPadron">
+            Codigo de predio - {{ item.codCase  }}  no encontrado
+            en el padron de predios
+            <mat-icon
+               svgIcon="{{
+                item.state === 0 ?  'iconsmind:manage':
+                item.state ===98? 'iconsmind:manageObs':'iconsmind:manageTrue'
+               }}"
+           ></mat-icon>
+
+        </ng-container>
+
         </div>
         <div [style.display]="accordionItem.expanded ? '' : 'none'">
             <div class="flex flex-col items-center pl-3">
+
+                <div class="flex w-90 py-2 justify-between"  *ngIf="this.registro?.predioPadron" >
+
+
+                    <div class="flex flex-col">
+                        <strong><span>Direccion declarada</span></strong>
+                        <span
+                            >{{ registro?.predioPadron?.address}}
+                           </span
+                        >
+                    </div>
+
+                </div>
+
+
                 <div class="flex w-90 py-2 justify-between">
+
 
                     <div class="flex flex-col">
                         <strong><span>Nombres y apellidos</span></strong>
@@ -31,8 +63,8 @@
                     </div>
                 </div>
 
-                
-                <div class="flex w-90  justify-between" *ngIf="item.codCPU && item.codCPU !=='' ">
+
+                <div class="flex w-90  justify-between" *ngIf="item.codCPU && item.codCPU !=='' && item.landStatus===1">
 
                   <div class="flex flex-col">
                       <strong><span>Codigo de CPU</span></strong>
@@ -41,20 +73,24 @@
                 </div>
 
 
-
-                
- 
-
-        
             </div>
 
             <ng-container *ngIf=" item.state===0 ">
 
               <container-element [ngSwitch]="codTypeGap">
                 <some-element *ngSwitchCase="1">
-                         
-                  <div class="flex w-full justify-around " >
-          
+                    <div class="flex w-full" *ngIf="!iniciar" >
+                        <button
+                        class="btnGenerar green w-full "
+                        (click)="onClickOpenItem()"
+                        >
+                        Iniciar
+                        </button>
+
+
+                    </div>
+                  <div class="flex w-full justify-around " *ngIf="iniciar" >
+
                     <button
                     class="btnGenerar green "
                     (click)="onClickGenerarPredio()"
@@ -63,7 +99,7 @@
                     <mat-icon svgIcon="mat_solid:add_location_alt"></mat-icon>
                     Generar predio
                     </button>
-          
+
                     <button
                     class="btnGenerar btnAdd "
                     (click)="onClickGenerarPuntoImagen()"
@@ -72,71 +108,199 @@
                     <mat-icon svgIcon="mat_solid:location_on"   ></mat-icon>
                     Generar punto imagen
                     </button>
-          
+
                   </div>
-          
+
                 </some-element>
-          
+
                 <some-element *ngSwitchCase="2">
-                   
-                  <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="item.landStatus === 0"   (click)="onClickGenerarPredio()" >
-                    Generar predio
-                  </button>
-          
-                  <button class="btnGenerar w-full"   [disabled]="predioButtonDisabled" *ngIf=" item.landStatus === 1"   (click)="onClickGenerarPredio()" >
-                    Reasignar
-                  </button>
-          
+                    <div class="flex w-full" *ngIf="!iniciar" >
+                        <button
+                        class="btnGenerar green w-full "
+                        (click)="onClickOpenItem()"
+                        >
+                        Iniciar
+                        </button>
+
+
+                    </div>
+                    <div class="flex w-full justify-around gap-2"  *ngIf="iniciar">
+
+                        <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="iniciar && item.landStatus === 0"   (click)="onClickGenerarPredio()" >
+                            Generar predio
+                          </button>
+
+                          <button class="btnGenerar w-full"   [disabled]="predioButtonDisabled" *ngIf="iniciar &&  item.landStatus === 1"   (click)="onClickReasignarPredio()" >
+                            Reasignar
+                          </button>
+
+                          <button class="btnNotify w-full" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
+                            Notificar
+                        </button>
+                    </div>
+
+
                 </some-element>
-          
+
                 <some-element *ngSwitchCase="3">
-          
-                   
-                  <div class="flex w-full justify-around " >
-          
+                    <div class="flex w-full" *ngIf="!iniciar" >
+                        <button
+                        class="btnGenerar green w-full "
+                        (click)="onClickOpenItem()"
+                        >
+                        Iniciar
+                        </button>
+
+
+                    </div>
+
+                  <div class="flex w-full justify-around gap-2"  *ngIf="iniciar">
+
                     <button
-                    class="btnGenerar green "
+                    class="btnGenerar green w-1/2 justify-around "
                     (click)="onClickValidarUbicacion()"
                     [disabled]="predioButtonDisabled"
                       >
                     <mat-icon svgIcon="mat_solid:location_on"></mat-icon>
                     Validar ubicación
                     </button>
-          
+
                     <button
-                    class="btnGenerar btnAdd "
+                    class="btnGenerar btnAdd w-1/2 justify-around"
                     (click)="onClickNuevaDireccion()"
                     [disabled]="puntoImagenDisabled"
                     >
                     <mat-icon svgIcon="mat_solid:add_location_alt"   ></mat-icon>
                     Nueva dirección
                     </button>
-          
+
+                    <!--<div class="flex w-full justify-around gap-2" *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='2' || ticket?.codTipoTicket==='4'  )">
+
+                        <button class=" btn btnAdd w-1/2 justify-around" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled" >Aprobar </button>
+                        <button class="btn btnObs w-1/2 justify-around" (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
+                    </div>
+                -->
+
                   </div>
                 </some-element>
-          
-          
+
+
                 <some-element *ngSwitchCase="4">
-                    <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="item.landStatus === 0"   (click)="onClickGenerarPredio()" >
+
+                    <div class="flex w-full" *ngIf="!iniciar" >
+                        <button
+                        class="btnGenerar green w-full "
+                        (click)="onClickOpenItem()"
+                        >
+                        Iniciar
+                        </button>
+
+
+                    </div>
+
+                    <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="iniciar  && registro?.predioPadron"   (click)="onClickValidarUbicacion()" >
                       Generar predio
                     </button>
 
-                    <button class="btnNotify w-full" *ngIf="item.landStatus===1" (click)="onClickGenerarNotificacion()" >
-                      Notificar
+                    <button class="btnNotify w-full" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
+                        Notificar
                     </button>
 
-                </some-element>
-                
 
-            
-          
+                </some-element>
+
+
+
+                <some-element *ngSwitchCase="5">
+
+                    <div class="flex w-full" *ngIf="!iniciar" >
+                        <button
+                        class="btnGenerar green w-full "
+                        (click)="onClickOpenItem()"
+                        >
+                        Iniciar
+                        </button>
+
+
+                    </div>
+
+                    <button class="btnGenerar w-full"   *ngIf="iniciar"   (click)="onClickPrevisualizacion()" >
+                        Previsualizar
+                    </button>
+
+                      <!--
+                <div class="flex w-full justify-around ">
+                    <button class="btnAdd2 self-end" (click)="previsualizacion(ubicacion.registrosTitularidad[0])" *ngIf="ubicacion?.status===0">Previsualizacion </button>
+                </div>
+
+
+                    <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="iniciar && item.landStatus === 0"   (click)="onClickGenerarPredio()" >
+                      Generar predio
+                    </button>
+
+                    <button class="btnNotify w-full" *ngIf="iniciar && item.landStatus===1" (click)="onClickGenerarNotificacion()" >
+                      Notificar
+                    </button>
+                -->
+                </some-element>
+
+
+
+
+
             </container-element>
-          
-          
+
+
 
             </ng-container>
-        
-         
+
+            <ng-container *ngIf=" item.state===6 ">
+
+                <container-element [ngSwitch]="codTypeGap">
+
+                  <some-element *ngSwitchCase="2">
+
+                   <button class="btnNotify w-full" *ngIf="!this.registro?.predioPadron " (click)="onClickDescargarNotificacion()" >
+                        Descargar Notificacion
+                    </button>
+
+
+                  </some-element>
+
+
+
+                  <some-element *ngSwitchCase="4">
+
+                    <button class="btnNotify w-full" *ngIf="!this.registro?.predioPadron " (click)="onClickDescargarNotificacion()" >
+                        Descargar Notificacion
+                    </button>
+
+
+
+                  </some-element>
+
+
+
+                  <some-element *ngSwitchCase="5">
+                    <div class="flex w-full justify-around gap-2"  >
+                        <button class="btnNotify w-full" (click)="onClickDescargarNotificacion()" >
+                            Descargar Notificacion
+                        </button>
+
+                    </div>
+
+
+                  </some-element>
+
+
+
+
+
+              </container-element>
+
+
+
+            </ng-container>
         </div>
     </cdk-accordion-item>
 </cdk-accordion>

@@ -26,34 +26,49 @@
       (opened)="onClickOpenItem()"
     >
       <div class="example-accordion-item-header" [ngClass]="item.state===0 ? 'inactive': 'active'" (click)="accordionItem.toggle()">
-        Codigo de Suministro - {{item.codCase}}
+        Codigo de {{item?.tipoSumi}} - {{item.codCase}}
         <mat-icon svgIcon="{{ item.state === 0 ?  'iconsmind:manage': 'iconsmind:manageTrue'}}"></mat-icon>
       </div>
       <div
         [style.display]="accordionItem.expanded ? '' : 'none'"
         >
-        <div class="flex flex-col">
-            <div class="flex items-center justify-between widthnew pl-3" *ngIf="item.state===0">
+        <div class="flex flex-col" *ngIf="item.state===0" >
+            <div class="flex flex-col" >
+                <div> Busqueda por DNI de la base de contribuyentes</div>
+
                 <div [formGroup]="formFilters" class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-                    <input class="w-full" placeholder="Buscar por Nombres o Documento" autocomplete="off" formControlName="search" />
+
+                    <input class="w-full" placeholder="Buscar por dni " autocomplete="off" formControlName="search" />
                     <span class="flex">
-                        <mat-icon   mat-icon svgIcon="mat_outline:search"></mat-icon>
+                        <mat-icon   mat-icon svgIcon="mat_outline:search" (click)="onEventSearchContribuyente()"></mat-icon>
                     </span>
                 </div>
+                <div class="flex flex-col" *ngIf="landOwner && foundLandOwner"  >
+                    <div class="flex  flex-row"><strong><span>DNI: </span></strong> {{registro.suministro.contribuyente?.docIden}}</div>
+                    <div class="flex  flex-row"><strong><span>Nombre: </span></strong> {{registro.suministro?.contribuyente?.nombre}} {{registro.suministro?.contribuyente?.apPat}} {{registro.suministro?.contribuyente?.apMat}}</div>
 
-                <button class="btnAsignar" (click)="onEventSearchContribuyente()">Buscar</button>
+                </div>
+
+
+                <div class="flex flex-col " *ngIf="!foundLandOwner">
+                    <strong><span>No se encontro el contribuyente</span></strong>
+                </div>
+
+                <button class="btnNotify w-full"  (click)="onClickGenerarNotificacion()" >Notificar</button>
+                <!--<button class="btnAsignar" (click)="onEventSearchContribuyente()">Buscar</button>-->
                 <!--<button class="btnAsignar">Asignar</button>-->
             </div>
-            <div class="flex flex-col ml-4" *ngIf="landOwner && foundLandOwner">
-                <strong><span>DNI: {{landOwner?.dni}}</span></strong>
-                <strong><span>Nombre: {{landOwner?.name}} {{landOwner?.paternalSurname}} {{landOwner?.maternalSurname}}</span></strong>
+
+          </div >
+          <div class="flex flex-col"*ngIf="item.state!==0" >
+            <div class="flex flex-col ml-4" *ngIf="registro.suministro.contribuyente"  >
+
+                <div class="flex  flex-row"><strong><span>DNI: </span></strong> {{registro.suministro.contribuyente?.docIden}}</div>
+                <div class="flex  flex-row"><strong><span>Nombre: </span></strong> {{registro.suministro?.contribuyente?.nombre}} {{registro.suministro?.contribuyente?.apPat}} {{registro.suministro?.contribuyente?.apMat}}</div>
             </div>
-            
-           
-              <div class="flex flex-col ml-4" *ngIf="!foundLandOwner"> <strong><span>No se encontro el contribuyente</span></strong></div> 
-           
-            <button class="btnNotify" *ngIf="item.state===0" (click)="onClickGenerarNotificacion()" >Notificar</button>
+            <button class="btnDescargar w-full"  (click)="onClickDescargarNotificacion()" >Descargar</button>
           </div>
+
         </div>
 
     </cdk-accordion-item>

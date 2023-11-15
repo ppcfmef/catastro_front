@@ -28,7 +28,7 @@ export class TicketMapComponent implements OnInit, OnDestroy {
         {
             title: 'Manzana',
             id: 1,
-            layerId: 8,
+            layerId: 9,
             urlBase: `${
                 environment.apiUrlArcGisServer
             }/pruebas/CARTO_FISCAL/MapServer`,
@@ -54,8 +54,12 @@ export class TicketMapComponent implements OnInit, OnDestroy {
                     }
                 },
                 labelPlacement: 'above-center',
+/*
                 labelExpressionInfo: {
-                    expression: '$feature.COD_MZN'
+                    expression: '$feature.MZN_URB',
+                },*/
+                labelExpressionInfo: {
+                    expression: '$feature.MZN_URB'
                 }
             },
             renderer: null
@@ -125,7 +129,7 @@ export class TicketMapComponent implements OnInit, OnDestroy {
               },
               labelPlacement: 'above-center',
               labelExpressionInfo: {
-                  expression: '$feature.COD_LOTE',
+                  expression: '$feature.LOT_URB',
               },
             },
             tipo:1
@@ -222,8 +226,8 @@ export class TicketMapComponent implements OnInit, OnDestroy {
                 },
             },
         },
-        
-        /* 
+
+        /*
 
              {
             title: 'Manzanas con Punto Imagen',

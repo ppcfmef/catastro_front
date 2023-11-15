@@ -4,6 +4,7 @@ import { LandOwnerService } from 'app/modules/admin/lands/land-registry/services
 import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land-owner.interface';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ContribuyenteModel } from '../../models/contribuyente.model';
 
 @Component({
   selector: 'app-case-suministro',
@@ -15,6 +16,7 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
     @Input() registro: IRegistroTitularidad;
     @Output() eventGenerarNotificacion: EventEmitter<any> = new EventEmitter<any>();
     @Output() eventOpenItem: EventEmitter<any> = new EventEmitter<any>();
+    @Output() eventDescargarNotificacion: EventEmitter<any> = new EventEmitter<any>();
     /*@Input() set ticket(data: any) {
         this.tickets = data;
     }*/
@@ -25,7 +27,8 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
             firstname: 'Jhon',
             lastname:'Perez',
             dni:'44458926',
-            state:1
+            state:1,
+            tipoSumi: 'Suministro de Agua'
         };
         isOpen = false;
         landOwner: LandOwner;
@@ -46,15 +49,21 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
   getDataItem(): void{
     this.item.codCase = this.registro?.suministro?.numSumis;
     this.item.tipo = 2;
-    this.item.dni = this.registro?.predio?.contribuyente?.docIden;
-    this.item.firstname = this.registro?.predio?.contribuyente?.nombre;
-    this.item.lastname = `${this.registro?.predio?.contribuyente?.apPat} ${this.registro?.predio?.contribuyente?.apMat}`;
-    this.item.state = this.registro?.estado;
-    
+    this.item.tipoSumi = this.registro?.suministro?.tipoSumi;
+    this.item.codCase = this.registro?.suministro?.numSumis;
+    /*this.item.dni = this.registro?.predioInspeccion?.contribuyente?.docIden;
+    this.item.firstname = this.registro?.predioInspeccion?.contribuyente?.nombre;
+    this.item.lastname = `${this.registro?.predioInspeccion?.contribuyente?.apPat} ${this.registro?.predioInspeccion?.contribuyente?.apMat}`;*/
+    this.item.state = this.registro?.status;
+
   }
 
   onClickGenerarNotificacion(): void {
     this.eventGenerarNotificacion.emit(this.registro);
+  }
+
+  onClickDescargarNotificacion(): void {
+    this.eventDescargarNotificacion.emit(this.registro);
   }
 
   onClickOpenItem(): void{
@@ -70,16 +79,18 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
       .subscribe((response: IPagination<LandOwner>) => {
         if( response && response.results && response.results.length>0 ){
           this.landOwner = response.results[0];
-          this.registro.suministro.contribuyente.docIden = this.landOwner.dni;
-          this.registro.suministro.contribuyente.apMat = this.landOwner.maternalSurname;
-          this.registro.suministro.contribuyente.apMat = this.landOwner.paternalSurname;
-          this.registro.suministro.contribuyente.nombre = this.landOwner.name;
+          this.registro.suministro.contribuyente = new ContribuyenteModel();
+          this.registro.suministro.contribuyente.docIden = this.landOwner?.dni;
+          this.registro.suministro.contribuyente.apMat = this.landOwner?.maternalSurname;
+          this.registro.suministro.contribuyente.apPat = this.landOwner?.paternalSurname;
+          this.registro.suministro.contribuyente.nombre = this.landOwner?.name;
+          this.registro.suministro.codContr = this.landOwner?.id;
           this.foundLandOwner =true;
         }
         else{
           this.foundLandOwner =false;
         }
-  
+
       });
     }
 

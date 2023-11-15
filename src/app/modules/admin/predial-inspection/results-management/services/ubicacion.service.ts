@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from 'environments/environment';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
@@ -60,22 +60,46 @@ export class UbicacionService {
 
   }
 
+  get2(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/inspection/location/${id}`, );
+
+  }
+
+/*
   update(id,data): Observable<IUbicacion> {
-    //const res = ubicacionMocks[0];
 
     this.jsonUbicacionMocks =this.getData();
-    /*const ticket: ITicket = this.jsonTicketMocks.find(t=> t.id == id);
-    */
+
     const index=this.jsonUbicacionMocks.findIndex(t=> t.id == id);
     this.jsonUbicacionMocks[index]= data;
-    
+
     localStorage.setItem('ubicacionMocks',JSON.stringify(this.jsonUbicacionMocks) ) ;
     const res = this.jsonUbicacionMocks[index];
     return new Observable((observer) => {
       observer.next(res);
     });
-    //return this.http.patch<any>(`${this.apiUrl}/gap-analisys/land/${id}/`, data);
+
+  }*/
+
+  update(id,data): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/inspection/location/${id}/`, data);
+
   }
 
 
+  updateObs(id,data: any): Observable<any> {
+    console.log('dataOBS',data);
+    const formData= new FormData();
+    const headers = new HttpHeaders();
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    formData.append('status', data.status);
+    formData.append('obsUbicacion', data.obsUbicacion);
+    formData.append('fileObs', data.fileObs);
+
+
+    headers.append('Content-Type', 'multipart/form-data');
+    console.log('formData>>',formData);
+    return this.http.patch(`${this.apiUrl}/inspection/location/${id}/`, formData);
+    //return this.http.post<any>(`${this.apiUrl}/maintenance/application/upload-file/`, formData,{headers});
+  }
 }

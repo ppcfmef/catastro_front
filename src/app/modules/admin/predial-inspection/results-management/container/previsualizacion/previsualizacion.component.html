@@ -3,11 +3,11 @@
         <h1 class="text-lg font-bold">INFORMACIÓN DE GABINETE</h1>
 
         <div class="flex gap-3" >
-            <app-short-table *ngFor="let item of data" [dataTable] = item></app-short-table>
+            <app-short-table *ngFor="let item of dataCaracteristicas" [dataTable] = item></app-short-table>
         </div>
 
         <app-table
-            [dataSource]="dataSource"
+            [dataSource]="dataSourceCaracteristicas"
             [columns]="tableColumns"
         >
         </app-table>
@@ -27,11 +27,11 @@
         <h1 class="text-lg font-bold">INFORMACIÓN DE CAMPO</h1>
 
         <div class="flex gap-3" >
-            <app-short-table *ngFor="let item of data" [dataTable] = item></app-short-table>
+            <app-short-table *ngFor="let item of dataCaracteristicas" [dataTable] = item></app-short-table>
         </div>
 
         <app-table
-            [dataSource]="dataSource"
+            [dataSource]="dataSourceCaracteristicas"
             [columns]="tableColumns"
         >
         </app-table>
@@ -46,10 +46,11 @@
         </div>
 
     </div>
-    <app-list-images></app-list-images>
+    <app-list-images [fotos]="fotos"></app-list-images>
     <div  class="flex gap-4">
         <button class="blue btn"  (click)="onClickConfirmarPredio($event)" >Predio Conforme</button>
         <button class="red btn" (click)="onClickSubvaluarPredio($event)" >Predio Subvaluado</button>
+        <button class="red btn" (click)="onClickCerrar($event)" >Cerrar</button>
     </div>
 
 </div>

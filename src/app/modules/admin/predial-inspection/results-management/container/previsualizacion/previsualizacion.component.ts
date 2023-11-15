@@ -1,10 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import {IRegistroTitularidad} from '../../interfaces/registro-titularidad.interface';
+import { IFoto } from '../../interfaces/foto.interface';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 @Component({selector: 'app-previsualizacion', templateUrl: './previsualizacion.component.html', styleUrls: ['./previsualizacion.component.scss']})
 export class PrevisualizacionComponent implements OnInit {
 
-    data = [
+    dataCaracteristicas = [
         {
             title: 'Long. Frente',
             total: 6
@@ -21,7 +23,7 @@ export class PrevisualizacionComponent implements OnInit {
     ];
 
 
-    dataSource: any[] = [
+    dataSourceCaracteristicas: any[] = [
      /*   {
             nivel: 'Piso 1',
             materialpred: 'Madera',
@@ -156,30 +158,40 @@ export class PrevisualizacionComponent implements OnInit {
             matcelldef: 'dim'
         },
     ];
-    constructor(public dialogRef : MatDialogRef < PrevisualizacionComponent >, @Inject(MAT_DIALOG_DATA)public dataDialog : any,) {}
+
+
+    fotos: IFoto[]=[];
+    dataGabinete: IRegistroTitularidad;
+
+    constructor(
+        public dialogRef: MatDialogRef < PrevisualizacionComponent >,
+        @Inject(MAT_DIALOG_DATA)public dataDialog: any,
+        private _confirmationService: CustomConfirmationService,
+        ) {}
 
     ngOnInit(): void {
         console.log('dataDialog', this.dataDialog);
-        const dataGabinete: IRegistroTitularidad = this.dataDialog.gabinete;
-        this.data = [
+        this.dataGabinete = this.dataDialog.registrosTitularidad;
+        this.fotos = this.dataDialog.fotos?this.dataDialog.fotos:[];
+        this.dataCaracteristicas = [
             {
                 title: 'Long. Frente',
-                total: dataGabinete.caracteristicas[0] ?. longitudFrente
+                total: this.dataGabinete.caracteristicas?. longitudFrente
             }, {
                 title: 'Arancel',
-                total: dataGabinete.caracteristicas[0] ?. arancel
+                total: this.dataGabinete.caracteristicas?. arancel
             }, {
                 title: 'Area Terreno',
-                total: dataGabinete.caracteristicas[0] ?. areaTerreno
+                total: this.dataGabinete.caracteristicas?. areaTerreno
             }, {
                 title: 'Predio',
                 total: []
             },
         ];
 
-
-        this.dataSource = dataGabinete.caracteristicas.map(c => ({
-                nivel: 'Piso ' + c?.piso,
+        const c =this.dataGabinete.caracteristicas;
+        this.dataSourceCaracteristicas = [
+                {nivel: 'Piso ' + c?.piso,
                 materialpred: c?.materialPred,
                 estadoConserva: c?.estadoConserva,
                 claPred: c?.clasificacionPred,
@@ -192,36 +204,51 @@ export class PrevisualizacionComponent implements OnInit {
                 cBano: c?.catergoriaBano,
                 cElecttricidad: c?.categoriaElectrica,
                 aconstruida: c?.areaConstruida
-            }));
+    }];
 
-        this.dataSourceInst = dataGabinete.instalaciones.map(i => ({
+        this.dataSourceInst = this.dataGabinete.instalaciones.map(i => ({
             codInst: i.codInst,
             codTipoIns: i.codTipoInst,
             anoConst: i.anioConstruccion,
             estConserva: i.estadoConserva,
             dim: i.dimension
         }));
-/*    dataSourceInst = [
-        {
-            codInst: '1',
-            codTipoIns: '3',
-            anoConst: '2022',
-            estConserva: 'Bueno',
-            dim: '16'
-        }, {
-            codInst: '2',
-            codTipoIns: '3',
-            anoConst: '2023',
-            estConserva: 'Bueno',
-            dim: '16'
-        },
 
-    ];*/
     }
-    onClickConfirmarPredio(e : any): void {
-        this.dialogRef.close();
+
+    onClickConfirmarPredio(e: any): void {
+        const dialogRef = this._confirmationService.info(
+            'Confirmar',
+            'Esta seguro de confimar el predio?'
+        );
+
+        dialogRef
+            .afterClosed()
+            .toPromise()
+            .then((option) => {
+                this.dialogRef.close('confirmar');
+            });
+
+
     }
-    onClickSubvaluarPredio(e : any): void {
-        this.dialogRef.close();
+
+    onClickSubvaluarPredio(e: any): void {
+        const dialogRef = this._confirmationService.info(
+            'Subvaluar',
+            'Esta seguro de subavluar el predio?'
+        );
+
+        dialogRef
+            .afterClosed()
+            .toPromise()
+            .then((option) => {
+                this.dialogRef.close('subvaluar');
+            });
+        //this.dialogRef.close({option:'subvaluar'});
+    }
+
+    onClickCerrar(e: any): void {
+
+        this.dialogRef.close({option:'cerrar'});
     }
 }
