@@ -12,4 +12,5 @@ export enum Estado {
 
     NUEVO_PUNTO ='nuevo_punto',
 
+    CERRAR ='cerrar'
 };

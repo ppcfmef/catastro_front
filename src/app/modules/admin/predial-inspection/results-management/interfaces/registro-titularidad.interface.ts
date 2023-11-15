@@ -1,7 +1,7 @@
 import { ICaracteristica } from './caracteristica.interface';
 import { IFoto } from './foto.interface';
 import { IInstalacion } from './instalacion.interface';
-import { IPredio } from './predio.interface';
+import { IPredioInspeccion } from './predio-inspeccion.interface';
 import { ISuministro } from './suministro.interface';
 
 export interface IRegistroTitularidad{
@@ -9,10 +9,16 @@ export interface IRegistroTitularidad{
     codTit: string;
     codTipoTit: number;
     codUbicacion: string;
-    predio: IPredio;
+
+    //"tipoSumi": "Suministro de Agua",
+
+    predioInspeccion: IPredioInspeccion;
+    predioPadron: IPredioInspeccion;
     suministro: ISuministro;
-    estado: number;
-    fotos: IFoto[];
+    status: number;
+
     instalaciones: IInstalacion[];
-    caracteristicas: ICaracteristica[];
+    caracteristicas: ICaracteristica;
+    inicio: boolean;
+
 }

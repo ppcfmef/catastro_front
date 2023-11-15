@@ -24,9 +24,10 @@ export class ResultsManagementPage implements OnInit {
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((user: any) => {
+    .subscribe((user: User) => {
         this.user = user;
         const permissionsNavigation: any[]=this.user?.permissionsNavigation;
+        localStorage.setItem('user',JSON.stringify(this.user));
         console.log('this.user',this.user);
         this.ubigeo =
         this.user && this.user.ubigeo

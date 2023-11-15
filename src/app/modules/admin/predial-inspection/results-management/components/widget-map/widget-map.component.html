@@ -7,3 +7,17 @@
   rel="stylesheet"
   href="https://js.arcgis.com/4.17/esri/themes/light/main.css"
 />
+
+
+
+    <div #fotosElement id="fotosElement" [ngStyle]="{'background-color':'white' ,'min-width':'400px',padding:'5px'}"  >
+        <app-list-images  [fotos]="fotos"></app-list-images>
+
+            <!--<ng-container *ngFor="let img of fotos | slice:0:5">
+                <img class="object-contain h-30 rounded-md" src="{{img.foto}}" alt="">
+            </ng-container>-->
+
+
+        <!--<app-list-images  [fotos]="fotos"></app-list-images>-->
+    </div>
+

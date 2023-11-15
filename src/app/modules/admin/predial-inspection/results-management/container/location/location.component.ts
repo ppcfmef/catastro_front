@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { UbicacionService } from '../../services/ubicacion.service';
@@ -9,7 +9,7 @@ import { ResultsService } from '../../services/results.service';
 import { Estado } from 'app/shared/enums/estado-map.enum';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { CFPuntoImagenModel } from '../../models/cfpuntoimagen.model';
-import { IPredio } from '../../interfaces/predio.interface';
+import { IPredioInspeccion } from '../../interfaces/predio-inspeccion.interface';
 import { CFPuntoImagenService } from '../../services/cfpuntoimagen.service';
 import { Router } from '@angular/router';
 import { CFPredioService } from '../../services/cfpredio.service';
@@ -27,6 +27,14 @@ import { User } from 'app/core/user/user.types';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 import { PrevisualizacionComponent } from '../previsualizacion/previsualizacion.component';
 import { CommonService } from 'app/core/common/services/common.service';
+import { RegistroTitularidadService } from '../../services/registro-titularidad.service';
+import { PredioInpeccionService } from '../../services/predio-inspeccion.service';
+import { FormUtils } from 'app/shared/utils/form.utils';
+import { SuministroService } from '../../services/suministro.service';
+import { FormatUtils } from 'app/shared/utils/format.utils';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { CFLoteService } from '../../services/cflote.service';
+import { CFLoteModel } from '../../models/cflote.model';
 
 moment.locale('es');
 
@@ -35,11 +43,15 @@ moment.locale('es');
   templateUrl: './location.component.html',
   styleUrls: ['./location.component.scss']
 })
-export class LocationComponent implements OnInit {
+export class LocationComponent implements OnInit , OnChanges {
+  @Input() ubigeo: string;
   @Input() ticket: ITicket;
   @Input() user: User;
+
   /*@Output() eventResetMap: EventEmitter<any> = new EventEmitter();*/
-  ubicacion: IUbicacion;
+  @Input() ubicacion: IUbicacion;
+  @Output() eventUpdateLocation: EventEmitter<any> = new EventEmitter();
+  @Output() eventCloseLocation: EventEmitter<any> = new EventEmitter();
     items =[
         {
             tipo:0,
@@ -83,9 +95,10 @@ export class LocationComponent implements OnInit {
     /*typeGap= this.;*/
 
     dialogRef: any;
-    predio: IPredio;
+    predio: IPredioInspeccion;
+    codTipoTicket =0;
+    distrito: DistrictResource;
 
-   distrito : DistrictResource;
   constructor(
     private _messageProviderService: MessageProviderService,
     private _ubicacionService: UbicacionService,
@@ -93,45 +106,80 @@ export class LocationComponent implements OnInit {
     private _confirmationService: CustomConfirmationService,
     private _cfpuntoImagenService: CFPuntoImagenService,
     private _cfpredioService: CFPredioService,
+    private _cfloteService: CFLoteService,
     private _router: Router,
     private _ticketService: TicketService,
-    private _commonService: CommonService
+    private _commonService: CommonService,
+    private _registroTitularidadService: RegistroTitularidadService,
+    private _predioInspeccionService: PredioInpeccionService,
+    private _suministroService: SuministroService,
+
+
     ) { }
+    ngOnChanges(changes: SimpleChanges): void {
+        this.distrito=localStorage.getItem('distrito')?JSON.parse(localStorage.getItem('distrito')):{};
+        console.log('module location this.ticket >>',this.ticket);
+        if (this.ticket && this.ubicacion){
+            this.codTipoTicket=this.ticket.codTipoTicket?this.ticket.codTipoTicket:0;
+            /* this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
+
+                 this.ubicacion =data;
+                 this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+               });*/
+
+             /*
+             this._ubicacionService.get(parseInt(idUbicacion,10)).subscribe( (data: IUbicacion) =>{
+
+               this.ubicacion =data;
+               this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+             });
+             */
+
+             this._resultsService.getPoint().subscribe( (res: any)=>{
+                 this.dataPoint = res;
+                 if(this.dataPoint.type === TypePoint.PUNTO_IMAGEN){
+                     if (   [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket))
+                     {
+                       this.puntoImagenDisabled= false;
+                       this.predioButtonDisabled = true;
+                     }
+                    /* else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
+                     {
+                       this.puntoImagenDisabled= false;
+                       this.predioButtonDisabled = false;
+                     }*/
+
+                 }
+
+                 else if(this.dataPoint.type === TypePoint.NUEVO_PUNTO_CAMPO){
+                    this.predioButtonDisabled = false;
+                  }
+
+
+                 else if(this.dataPoint.type === TypePoint.LOTE){
+                   this.puntoImagenDisabled= true;
+                   this.predioButtonDisabled = false;
+                 }
+
+             });
+
+             this.getStatusButton();
+
+             if (this.ticket.codEstTrabajoTicket === TicketStatus.PENDIENTE_GESTION_RESULTADOS){
+                this.updateIicket(this.ticket);
+            }
+
+
+        }
+
+    }
+
+
 
   ngOnInit(): void {
+    /*const codUbicacion=localStorage.getItem('codUbicacion')?localStorage.getItem('codUbicacion'):'0';*/
 
-    const idUbicacion=localStorage.getItem('idUbicacion')?localStorage.getItem('idUbicacion'):'0';
-    //JSON.parse(data)
-    this.distrito=localStorage.getItem('distrito')?JSON.parse(localStorage.getItem('distrito')):{};
-    this._ubicacionService.get(parseInt(idUbicacion,10)).subscribe( (data: IUbicacion) =>{
-      /*this.predio=data.registroTitularidad[0].predio;*/
 
-      this.ubicacion =data;
-      this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
-    });
-
-    this._resultsService.getPoint().subscribe( (res: any)=>{
-        this.dataPoint = res;
-        if(this.dataPoint.type === TypePoint.PUNTO_IMAGEN){
-            if (   [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket))
-            {
-              this.puntoImagenDisabled= false;
-              this.predioButtonDisabled = true;
-            }
-           /* else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
-            {
-              this.puntoImagenDisabled= false;
-              this.predioButtonDisabled = false;
-            }*/
-
-        }
-
-        else if(this.dataPoint.type === TypePoint.LOTE){
-          this.puntoImagenDisabled= true;
-          this.predioButtonDisabled = false;
-        }
-
-    });
   }
 
   onClickAprTicket(): void {
@@ -144,18 +192,14 @@ export class LocationComponent implements OnInit {
       console.log(result);
       if(result && result==='confirmed'){
         //console.log(result.data);
-        this.ubicacion.estado = TicketStatus.RESUELTO_GESTION_RESULTADOS;
-        this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe(r=>{
-          this.ubicacion= r;
-          const index=this.ticket.ubicacion.findIndex(u=>u.id === this.ubicacion.id);
-          this.ticket.ubicacion[index] = this.ubicacion;
-          this.updateIicket(this.ticket);
-
-
+        this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+        this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(res=>{
+            this.updateLocation(this.ubicacion);
+            if(this.ticket.codTipoTicket ===TypeGap.MANZANA_SIN_LOTES){
+                this.eventCloseLocation.emit(this.ubicacion);
+            }
 
         });
-
-
       }
 
     });
@@ -164,56 +208,82 @@ export class LocationComponent implements OnInit {
 
 
   onClickObsTicket(): void {
-    this.dialogRef = this._messageProviderService.showModal(ModalComponent,{width:430} );
+    this.dialogRef = this._messageProviderService.showModal(ModalComponent,{width:600} );
     this.dialogRef.afterClosed().subscribe((result: any) => {
       console.log('result obs',result);
       if(result && result.option){
-        console.log(result.data);
+        //console.log(result.data);
         this.ubicacion.obsUbicacion= result.data;
-        this.ubicacion.estado = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+        /*this.ubicacion.status = TicketStatus.OBSERVADO_GESTION_RESULTADOS;*/
 
-        this.ubicacion.registroTitularidad.forEach((r: IRegistroTitularidad)=>{
-          r.estado = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+        this.ubicacion.status = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+        const data = CommonUtils.deleteKeysNullInObject( {
+            status:TicketStatus.OBSERVADO_GESTION_RESULTADOS,
+            obsUbicacion: result?.data,
+            fileObs:result?.file
         });
-        this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe(r=>{
-          this.ubicacion= r;
-          const index=this.ticket.ubicacion.findIndex(u=>u.id === this.ubicacion.id);
-          this.ticket.ubicacion[index] = this.ubicacion;
-          this.updateIicket(this.ticket);
-        });
+
+
+        this._ubicacionService.updateObs(this.ubicacion.codUbicacion,data).subscribe((res)=>{
+            if(this.ticket.codTipoTicket === TypeGap.MANZANA_SIN_LOTES  ){
+                this.updateLocation(this.ubicacion);
+                if(this.ticket.codTipoTicket ===TypeGap.MANZANA_SIN_LOTES){
+                    this.eventCloseLocation.emit(this.ubicacion);
+                }
+            }
+
+
+            else if(this.ticket.codTipoTicket === TypeGap.PUNTOS_LOTE_SIN_PREDIO ){
+                this._registroTitularidadService.update(this.ubicacion.registrosTitularidad[0].codTit,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe((r2)=>{
+                    this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe( (res: any) =>{
+                        this.updateLocation(this.ubicacion);
+                        this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                            this._router.navigate([
+                              './land-inspection/results-management',
+                              ]);
+                        });
+
+                    });
+
+                  });
+            }
+
+
+            else {
+
+            this._registroTitularidadService.update(this.ubicacion.registrosTitularidad[0].codTit,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe((r2)=>{
+
+
+                this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe( (res: any) =>{
+                    this.updateLocation(this.ubicacion);
+                    this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.OBSERVADO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                        this._router.navigate([
+                        './land-inspection/results-management',
+                        ]);
+                    });
+
+                });
+
+            });
+        }
+
+
+
+
+});
+
       }
 
     });
   }
 
 
-  updateIicket(ticket: ITicket): void{
-    const cantUbiAprob= this.ticket.ubicacion.filter(u=> u.estado ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
-    const cantUbiObs= this.ticket.ubicacion.filter(u=> u.estado ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
-    const totalUbicaciones =this.ticket.ubicacion.length;
-    console.log('totalUbicaciones',totalUbicaciones);
-    console.log('cantUbiObs',cantUbiObs);
-    console.log('cantUbiAprob',cantUbiAprob);
-    if(cantUbiObs === totalUbicaciones || cantUbiAprob === totalUbicaciones ){
-      if(cantUbiObs === totalUbicaciones){
-        this.ticket.codEstTrabajoTicket = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
-      }
-      else if(cantUbiAprob === totalUbicaciones){
-        this.ticket.codEstTrabajoTicket = TicketStatus.RESUELTO_GESTION_RESULTADOS;
-      }
-      this._ticketService.update(this.ticket.id,this.ticket).subscribe(r=>{
-        /*se resetea el mapa a nivel de ticket */
-        this._router.navigate([
-          './land-inspection/results-management',
-          ]);
-      });
 
-    }
-
-  }
 
   generarPuntoImagen(data: IRegistroTitularidad): void {
-    this.predio = data.predio;
+    this.predio = data.predioInspeccion;
     if (!this.dataPoint) {
         this._confirmationService.error(
             'Alerta',
@@ -248,25 +318,25 @@ export class LocationComponent implements OnInit {
                     puntoImagen.NOM_VIA = this.ubicacion.nomVia;
                     puntoImagen.COD_PRE = this.predio.codPre;
                     puntoImagen.PISO=this.predio.piso;
-                    puntoImagen.TIP_DOC=this.predio.contribuyente.tipDoc;
-                    puntoImagen.AP_MAT=this.predio.contribuyente.apMat;
-                    puntoImagen.AP_PAT=this.predio.contribuyente.apPat;
-                    puntoImagen.DOC_IDEN =this.predio.contribuyente.docIden;
-                    puntoImagen.DIR_FISCAL = this.predio.contribuyente.dirFiscal;
+                    puntoImagen.TIP_DOC=this.predio.predioContribuyente[0].contribuyente.tipDoc;
+                    puntoImagen.AP_MAT=this.predio.predioContribuyente[0].contribuyente.apMat;
+                    puntoImagen.AP_PAT=this.predio.predioContribuyente[0].contribuyente.apPat;
+                    puntoImagen.DOC_IDEN =this.predio.predioContribuyente[0].contribuyente.docIden;
+                    puntoImagen.DIR_FISCAL = this.predio.predioContribuyente[0].contribuyente.dirFiscal;
                     puntoImagen.INTERIOR = this.predio.interior;
                     puntoImagen.BLOCK = this.predio.block;
                     puntoImagen.PISO=this.predio.piso;
-                    puntoImagen.COD_PRE = this.predio.codPre;
+
                     puntoImagen.NOM_USER = '';
                     puntoImagen.NOM_PC = 'PLATAFORMA';
 
                     puntoImagen.REFERENCIA = this.ubicacion.nomRef;
 
 
-                    data.estado =1;
+                    data.status =1;
 
-                    const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
-                    this.ubicacion.registroTitularidad[0]= data;
+                    const index=this.ubicacion.registrosTitularidad.findIndex(r=>data.id===r.id);
+                    this.ubicacion.registrosTitularidad[0]= data;
                     this._cfpuntoImagenService.getMaxSecuen(this.ubicacion.ubigeo).then((res)=>{
 
                       const secuen=res+1;
@@ -303,9 +373,107 @@ export class LocationComponent implements OnInit {
     }
   }
 
+  reasignarPredio(data: IRegistroTitularidad): void {
+    this.predio = data.predioInspeccion;
+    if (!this.dataPoint) {
+        this._confirmationService.error(
+            'Alerta',
+            'Por favor seleccione un punto '
+        );
+    }  else if (
+        this.dataPoint
+    ) {
+        this.dialogRef = this._confirmationService.info(
+            'Guardar',
+            'Esta seguro de reasignar el predio?'
+        );
 
-  generarPredio(data: IRegistroTitularidad): void {
-    this.predio = data.predio;
+        this.dialogRef
+            .afterClosed()
+            .toPromise()
+            .then((option) => {
+                if (option === 'confirmed') {
+                    this._cfpredioService
+                        .generateMaxCPU(this.dataPoint.point)
+                        .then((res) => {
+                            const predio = new CFPredioModel();
+                            console.log(predio);
+                            console.log(this.dataPoint.point);
+                            predio.COORD_X=this.dataPoint.point['COORD_X'];
+                            predio.COORD_Y=this.dataPoint.point['COORD_Y'];
+                            if (res && res.COD_CPU) {
+                                predio.COD_CPU = res.COD_CPU;
+                                predio.NOM_PC = 'PLATAFORMA';
+                                data.predioInspeccion.codCpu=res.COD_CPU;
+
+
+                                this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r)=>{
+                                    const query={
+                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                        'COD_PRE':data.predioInspeccion.codPre,
+                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                        'UBIGEO':data.predioInspeccion.ubigeo
+                                    };
+                                    const params=CommonUtils.deleteKeysNullInObject(query);
+                                    this._cfpredioService.getPredios(params).then((responseJson)=>{
+                                        if (responseJson && responseJson.features) {
+                                            const features: any[] = responseJson.features;
+                                            predio.OBJECTID=features[0].OBJECTID;
+                                            this._cfpredioService
+                                            .updatePredio(predio)
+                                            .then((result) => {
+                                            if (result) {
+                                                this._confirmationService
+                                                .success(
+                                                    'Exito',
+                                                    'Punto Actualizado'
+                                                )
+                                                .afterClosed()
+                                                .toPromise()
+                                                .then((e) => {
+
+                                                this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
+                                                    this.updateLocation(this.ubicacion);
+                                                    /*if ([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket)){
+                                                        this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+                                                        this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                                                            this.updateLocation(this.ubicacion);
+                                                            this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                                                                this._router.navigate([
+                                                                './land-inspection/results-management',
+                                                                ]);
+                                                            });
+
+                                                        });
+                                                    }
+                                                    else{
+                                                        this.updateLocation(this.ubicacion);
+                                                    }*/
+                                                    this.getStatusButton();
+                                                    this._resultsService.setResetMap(2);
+                                                    this._resultsService.setEstado(Estado.LEER);
+
+                                                });
+
+                                                });
+                                            }
+                                            });
+
+                                        }
+                                    });
+
+
+                                });
+                            }
+                        });
+                }
+            });
+    }
+}
+
+generarPredio(data: IRegistroTitularidad): void {
+    this.predio = data.predioInspeccion;
     if (!this.dataPoint) {
         this._confirmationService.error(
             'Alerta',
@@ -332,57 +500,67 @@ export class LocationComponent implements OnInit {
                             );
 
                             if (res && res.COD_CPU) {
-                                predio.UBIGEO = this.ubicacion.ubigeo;
-                                predio.COD_PRE = this.predio.codPre;
+                                predio.ID_LOTE = this.dataPoint.point.ID_LOTE;
+                                predio.ID_LOTE_P = this.dataPoint.point.ID_LOTE_P;
+                                predio.UBIGEO = data.predioInspeccion.ubigeo;
+                                predio.COD_PRE =  data.predioPadron.codPre;
                                 predio.COD_CPU = res.COD_CPU;
-                                predio.NOM_USER = '';
+                                predio.NOM_USER = this.user.username;
                                 predio.NOM_PC = 'PLATAFORMA';
-                                                    //puntoImagen.NOM_USER = this.user.username;
-                                data.estado=1;
-                                /*this.predio.codCPU = res.COD_CPU;
-                                this.predio.longitude = predio.COORD_X;
-                                this.predio.latitude = predio.COORD_Y;
-                                this.land.statusGapAnalisys =
-                                    LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PREDIO;
-                                this.land.status =
-                                    LandStatus.CON_CARTOGRAFIA_LOTE;
-                                this.land =
-                                    FormUtils.deleteKeysNullInObject(
-                                        this.land
-                                    );*/
+                                predio.COD_CPU = res.COD_CPU;
+                                predio.ESTADO =1;
+                                predio.RAN_CPU=this.dataPoint.point.RAN_CPU;
+                                predio.COD_UI = res.COD_CPU ? parseInt(res.COD_CPU.split('-')[1], 10) : null;
+                                predio.COD_VER= res.COD_CPU ?  parseInt(res.COD_CPU.split('-')[2], 10) : null;
+                                this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r)=>{
+                                        this._cfpredioService
+                                        .crearPredio(predio)
+                                        .then((result) => {
+                                          if (result) {
+                                            this._confirmationService
+                                            .success(
+                                                'Exito',
+                                                'punto guardado'
+                                            )
+                                            .afterClosed()
+                                            .toPromise()
+                                            .then((e) => {
 
-                                    const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
-                                    this.ubicacion.registroTitularidad[index]= data;
-                                    this.ubicacion.registroTitularidad[index].predio.codCPU=res.COD_CPU;
-                                    this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
+                                              /*this._ubicacionService.get(this.ubicacion.id).subscribe((u)=>{
+                                                console.log('u>>',u);
+                                                this.ubicacion= { ...u};
+                                              });*/
 
-                                      this._cfpredioService
-                                      .crearPredio(predio)
-                                      .then((result) => {
-                                        if (result) {
-                                          this._confirmationService
-                                          .success(
-                                              'Exito',
-                                              'punto guardado'
-                                          )
-                                          .afterClosed()
-                                          .toPromise()
-                                          .then((e) => {
 
-                                            this._ubicacionService.get(this.ubicacion.id).subscribe((u)=>{
-                                              console.log('u>>',u);
-                                              this.ubicacion= { ...u};
+                                              this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
+
+                                                if ([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket)){
+                                                    this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+                                                    this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                                                        this.updateLocation(this.ubicacion);
+                                                        this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                                                            this._router.navigate([
+                                                              './land-inspection/results-management',
+                                                              ]);
+                                                          });
+                                                        //this.updateIicket(this.ticket);
+                                                    });
+                                                }
+                                                else{
+                                                    this.updateLocation(this.ubicacion);
+                                                }
+                                                this.getStatusButton();
+                                                this._resultsService.setResetMap(2);
+                                                this._resultsService.setEstado(Estado.LEER);
+
+                                              });
+
                                             });
-                                            this.getStatusButton();
-                                            this._resultsService.setResetMap(2);
-                                            this._resultsService.setEstado(Estado.LEER);
-
-                                          });
-                                      }
-                                    });
+                                        }
+                                      });
 
                                     });
-
                             }
                         });
                 }
@@ -391,8 +569,9 @@ export class LocationComponent implements OnInit {
 }
 
 
-generarNuevaDireccion(data: IRegistroTitularidad): void {
-  this.predio = data.predio;
+
+generarNuevaDireccionPuntoImagen(data: IRegistroTitularidad): void {
+  this.predio = data.predioInspeccion;
   /*this.predio = data;*/
 
   if (!this.dataPoint) {
@@ -427,35 +606,25 @@ generarNuevaDireccion(data: IRegistroTitularidad): void {
                   puntoImagen.KM = this.ubicacion.km;
                   puntoImagen.NOM_UU = this.ubicacion.nomUU;
                   puntoImagen.NOM_VIA = this.ubicacion.nomVia;
-                  puntoImagen.COD_PRE = this.predio.codPre;
-                  puntoImagen.PISO=this.predio.piso;
-                  puntoImagen.TIP_DOC=this.predio.contribuyente.tipDoc;
-                  puntoImagen.AP_MAT=this.predio.contribuyente.apMat;
-                  puntoImagen.AP_PAT=this.predio.contribuyente.apPat;
-                  puntoImagen.DOC_IDEN =this.predio.contribuyente.docIden;
-                  puntoImagen.DIR_FISCAL = this.predio.contribuyente.dirFiscal;
-                  puntoImagen.INTERIOR = this.predio.interior;
-                  puntoImagen.BLOCK = this.predio.block;
-                  puntoImagen.PISO=this.predio.piso;
-                  puntoImagen.COD_PRE = this.predio.codPre;
+                  puntoImagen.COD_PRE = data.predioPadron.codPre;
+                  puntoImagen.PISO=     data.predioPadron.piso;
+                  puntoImagen.INTERIOR = data.predioPadron.interior;
+                  puntoImagen.BLOCK = data.predioPadron.block;
+                  puntoImagen.TIP_DOC=this.predio.predioContribuyente[0].contribuyente.tipDoc;
+                  puntoImagen.AP_MAT=this.predio.predioContribuyente[0].contribuyente.apMat;
+                  puntoImagen.AP_PAT=this.predio.predioContribuyente[0].contribuyente.apPat;
+                  puntoImagen.DOC_IDEN =this.predio.predioContribuyente[0].contribuyente.docIden;
+                  puntoImagen.DIR_FISCAL = this.predio.predioContribuyente[0].contribuyente.dirFiscal;
+                  puntoImagen.ESTADO=3;
+                  puntoImagen.ESTADO_P=1;
                   puntoImagen.NOM_USER = '';
                   puntoImagen.NOM_PC = 'PLATAFORMA';
-
                   puntoImagen.REFERENCIA = this.ubicacion.nomRef;
-
-
-                  data.estado =1;
-
-                  const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
-                  this.ubicacion.registroTitularidad[0]= data;
                   this._cfpuntoImagenService.getMaxSecuen(this.ubicacion.ubigeo).then((res)=>{
-
                     const secuen=res+1;
                     const idImg=`i${this.utm}${this.ubicacion.ubigeo}${secuen}`;
                     puntoImagen.ID_IMG = idImg;
                     puntoImagen.SECUEN =secuen;
-
-
                     this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
                       this._cfpuntoImagenService
                       .crearPunto(puntoImagen)
@@ -470,7 +639,7 @@ generarNuevaDireccion(data: IRegistroTitularidad): void {
                             .toPromise()
                             .then((e) => {
                               this.ubicacion= r;
-                              this.getStatusButton();
+                              //this.getStatusButton();
                               this._resultsService.setResetMap(2);
                               this._resultsService.setEstado(Estado.LEER);
                             });
@@ -484,8 +653,9 @@ generarNuevaDireccion(data: IRegistroTitularidad): void {
   }
 }
 
- validarUbicacion(data: IRegistroTitularidad): void {
-  this.predio = data.predio;
+
+validarUbicacionPuntoImagen(data: IRegistroTitularidad): void {
+  this.predio = data.predioInspeccion;
   if (!this.dataPoint) {
       this._confirmationService.error(
           'Alerta',
@@ -500,22 +670,208 @@ generarNuevaDireccion(data: IRegistroTitularidad): void {
       );
 
       this.dialogRef
-          .afterClosed()
-          .toPromise()
-          .then(async (option) => {
-              if (option === 'confirmed') {
+      .afterClosed()
+      .toPromise()
+      .then((option) => {
+          if (option === 'confirmed') {
+            this._cfloteService.generateRANCPU(data.predioInspeccion.ubigeo).then((rancpu)=>{
+                const lote = new CFLoteModel(
+                    this.dataPoint.point
+                );
+
+                if(rancpu){
+                    lote.RAN_CPU = rancpu;
+                    lote.UBIGEO = data.predioInspeccion.ubigeo;
+                    this._cfloteService.crearLote(lote).then((resLote)=>{
+                        console.log('lote creado');
+                        this._cfpredioService
+                        .generateMaxCPU(lote)
+                        .then((res) => {
+                            const predio = new CFPredioModel(
+                                this.dataPoint.point
+                            );
+
+                            if (res && res.COD_CPU) {
+                                predio.ID_LOTE = lote.ID_LOTE;
+                                predio.ID_LOTE_P = lote.ID_LOTE_P;
+                                predio.UBIGEO = data.predioInspeccion.ubigeo;
+                                predio.COD_PRE =  data.predioPadron.codPre;
+                                predio.COD_CPU = res.COD_CPU;
+                                predio.NOM_USER = this.user.username;
+                                predio.NOM_PC = 'PLATAFORMA';
+                                predio.COD_CPU = res.COD_CPU;
+                                predio.ESTADO =1;
+                                predio.RAN_CPU=lote.RAN_CPU;
+                                predio.COD_UI = res.COD_CPU ? parseInt(res.COD_CPU.split('-')[1], 10) : null;
+                                predio.COD_VER= res.COD_CPU ?  parseInt(res.COD_CPU.split('-')[2], 10) : null;
+                                this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r)=>{
+                                        this._cfpredioService
+                                        .crearPredio(predio)
+                                        .then((result) => {
+                                          if (result) {
+                                            this._confirmationService
+                                            .success(
+                                                'Exito',
+                                                'punto guardado'
+                                            )
+                                            .afterClosed()
+                                            .toPromise()
+                                            .then((e) => {
+
+                                              this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
+
+                                                if ([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket)){
+                                                    this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+                                                    this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                                                        this.updateLocation(this.ubicacion);
+                                                        this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                                                            this._router.navigate([
+                                                              './land-inspection/results-management',
+                                                              ]);
+                                                          });
+
+                                                    });
+                                                }
+                                                else{
+                                                    this.updateLocation(this.ubicacion);
+                                                }
+                                                this.getStatusButton();
+                                                this._resultsService.setResetMap(2);
+                                                this._resultsService.setEstado(Estado.LEER);
+
+                                              });
+
+                                            });
+                                        }
+                                      });
+
+                                    });
+                            }
+                        });
+                    });
+                }
+
+            });
 
 
-
-
-              }
-          });
+          }
+      });
   }
 }
 
+
+generarNuevoLotePredio(data: IRegistroTitularidad): void {
+    this.predio = data.predioInspeccion;
+    if (!this.dataPoint) {
+        this._confirmationService.error(
+            'Alerta',
+            'Por favor seleccione un punto '
+        );
+    }  else if (
+        this.dataPoint
+    ) {
+        this.dialogRef = this._confirmationService.info(
+            'Guardar',
+            'Esta seguro de generar el Predio?'
+        );
+
+        this.dialogRef
+        .afterClosed()
+        .toPromise()
+        .then((option) => {
+            if (option === 'confirmed') {
+              this._cfloteService.generateRANCPU(data.predioInspeccion.ubigeo).then((rancpu)=>{
+                  const lote = new CFLoteModel(
+                      this.dataPoint.point
+                  );
+
+                  if(rancpu){
+                      lote.RAN_CPU = rancpu;
+                      lote.UBIGEO = data.predioInspeccion.ubigeo;
+                      this._cfloteService.crearLote(lote).then((resLote)=>{
+                          console.log('lote creado');
+                          this._cfpredioService
+                          .generateMaxCPU(lote)
+                          .then((res) => {
+                              const predio = new CFPredioModel(
+                                  this.dataPoint.point
+                              );
+
+                              if (res && res.COD_CPU) {
+                                  predio.ID_LOTE = lote.ID_LOTE;
+                                  predio.ID_LOTE_P = lote.ID_LOTE_P;
+                                  predio.UBIGEO = data.predioInspeccion.ubigeo;
+                                  predio.COD_PRE =  data.predioPadron.codPre;
+                                  predio.COD_CPU = res.COD_CPU;
+                                  predio.NOM_USER = this.user.username;
+                                  predio.NOM_PC = 'PLATAFORMA';
+                                  predio.COD_CPU = res.COD_CPU;
+                                  predio.ESTADO =1;
+                                  predio.RAN_CPU=lote.RAN_CPU;
+                                  predio.COD_UI = res.COD_CPU ? parseInt(res.COD_CPU.split('-')[1], 10) : null;
+                                  predio.COD_VER= res.COD_CPU ?  parseInt(res.COD_CPU.split('-')[2], 10) : null;
+                                  this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r)=>{
+                                          this._cfpredioService
+                                          .crearPredio(predio)
+                                          .then((result) => {
+                                            if (result) {
+                                              this._confirmationService
+                                              .success(
+                                                  'Exito',
+                                                  'punto guardado'
+                                              )
+                                              .afterClosed()
+                                              .toPromise()
+                                              .then((e) => {
+
+                                                this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
+
+                                                  if ([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket)){
+                                                      this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+                                                      this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                                                          this.updateLocation(this.ubicacion);
+                                                          this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                                                              this._router.navigate([
+                                                                './land-inspection/results-management',
+                                                                ]);
+                                                            });
+
+                                                      });
+                                                  }
+                                                  else{
+                                                      this.updateLocation(this.ubicacion);
+                                                  }
+                                                  this.getStatusButton();
+                                                  this._resultsService.setResetMap(2);
+                                                  this._resultsService.setEstado(Estado.LEER);
+
+                                                });
+
+                                              });
+                                          }
+                                        });
+
+                                      });
+                              }
+                          });
+                      });
+                  }
+
+              });
+
+
+            }
+        });
+    }
+  }
+
 getStatusButton(): void{
-  const cantResueltos=this.ubicacion.registroTitularidad.filter(r=> r.estado===1).length;
-  const total = this.ubicacion.registroTitularidad.length;
+  const cantResueltos=this.ubicacion.registrosTitularidad.filter(r=> r.status===6).length;
+  const total = this.ubicacion.registrosTitularidad.length;
+  console.log('cantResueltos',cantResueltos);
+  console.log('total',cantResueltos);
   if(total=== cantResueltos){
     this.appButtonDisabled= false;
   }
@@ -534,164 +890,456 @@ resetMap(type: number): void {
   this._resultsService.setResetMap(type);
 }
 
-eventOpenItem(registro: IRegistroTitularidad): void{
+eventIniciarItem(registro: IRegistroTitularidad): void{
+    this.ubicacion.registrosTitularidad.map(r=> {
+        r.inicio = false;
+        if (registro.codTit === r.codTit){
+            r.inicio = true;
+        }
 
-  if(this.ubicacion.estado=== 0 && registro.codTipoTit ===1 ){
+  });
+  console.log('this.ubicacion.status>>>',this.ubicacion.status);
+  console.log('registro.codTipoTit>>>',registro.codTipoTit);
+
+  console.log('this.ticket.codTipoTicket>>>',this.ticket.codTipoTicket);
+
+  if(this.ubicacion.status=== 0 && registro.codTipoTit ===1 &&  this.ticket.codTipoTicket !== TypeGap.MANZANA_SIN_LOTES){
+    this.resetMap(2);
     this._resultsService.setEstado(Estado.EDITAR);
-  }else{
+
+  }
+  else if(this.ubicacion.status=== 0 && registro.codTipoTit ===1 &&  this.ticket.codTipoTicket === TypeGap.MANZANA_SIN_LOTES){
+    console.log('this.ubicacion.status>>>',this.ubicacion.status);
+    console.log('registro.codTipoTit>>>',registro.codTipoTit);
+
+    console.log('this.ticket.codTipoTicket>>>',this.ticket.codTipoTicket);
+    this._resultsService.setEstado(Estado.INICIAR);
+  }
+  else{
+    this.resetMap(2);
     this._resultsService.setEstado(Estado.LEER);
   }
 
 
-  this.resetMap(2);
+
+}
+
+
+descargarNotificacion(data: IRegistroTitularidad): void{
+    this.generarPdf(data);
 }
 
 generarNotificacion(data: IRegistroTitularidad): void{
 
-  const doc = new jsPDF();
+  data.status=1;
+  const index=this.ubicacion.registrosTitularidad.findIndex(r=>data.id===r.id);
+  this.ubicacion.registrosTitularidad[index]= data;
 
-  autoTable(doc, {
-    theme: 'grid',
-    styles: {
-        overflow: 'linebreak',
-        lineWidth: 0,
-    },
-    body: [
-        [
+  this.dialogRef = this._confirmationService.info(
+        'Notificar',
+        'Esta seguro de generar la notificacion?'
+    );
+
+    this.dialogRef
+          .afterClosed()
+          .toPromise()
+          .then( (option) => {
+              if (option === 'confirmed') {
+                this.generarPdf(data);
+
+                this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
+                    const form = { codContr: data.suministro?.codContr};
+                    const dataForm = FormUtils.deleteKeysNullInObject(form);
+
+
+                    this._suministroService.update(data.suministro.codSuministro,dataForm).subscribe((s)=>{
+                        this.updateLocation(this.ubicacion);
+                        this.getStatusButton();
+                        this._resultsService.setResetMap(2);
+                        this._resultsService.setEstado(Estado.LEER);
+                    });
+                });
+              }
+          });
+
+}
+
+generarPdf(data: IRegistroTitularidad): void{
+
+    const persona=
+    (data.suministro?.contribuyente)? `SR(a). ${data.suministro?.contribuyente?.nombre} ${data.suministro?.contribuyente?.apPat} ${data.suministro?.contribuyente?.apMat}`:
+    (data.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `SR(a). ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
+    (data.predioPadron?.predioContribuyente[0]?.contribuyente)? `SR(a). ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
+    '';
+
+    const doc = new jsPDF();
+
+    autoTable(doc, {
+      theme: 'grid',
+      styles: {
+          overflow: 'linebreak',
+          lineWidth: 0,
+      },
+      body: [
+          [
+              {
+                  content: 'GERENCIA DE ADMINISTRACION TRIBUTARIA',
+                  styles: { halign: 'center' },
+              },
+          ],
+
+          [
+              {
+                  content: `CARTA DE INVITACION N${this.ticket.codTicket}-${data.id}-2023`,
+                  styles: { halign: 'center' },
+              },
+          ],
+
+          [
+
             {
-                content: 'GERENCIA DE ADMINISTRACION TRIBUTARIA',
-                styles: { halign: 'center' },
-            },
-        ],
+              content: `Mes ${moment().format('MMMM')} ${moment().format('YYYY')}`,
+              styles: { halign: 'right' },
+          },
 
-        [
+          ],
+
+          [
+
             {
-                content: `CARTA DE INVITACION N${this.ticket.codTicket}-${data.id}-2023`,
-                styles: { halign: 'center' },
-            },
-        ],
+              content:  'Estimado vecino(a)',
+              styles: { halign: 'left' },
+          },
 
-        [
+          ],
 
-          {
-            content: `Mes ${moment().format('MMMM')} ${moment().format('YYYY')}`,
-            styles: { halign: 'right' },
-        },
+          [
 
-        ],
+            {
+              content:  persona,
+              styles: { halign: 'left' },
+          },
 
-        [
+          ],
+          /*SR. BREINER A. CONDORI LIMA (Titular del predio)
+          AA.HH. ASOCIACION DE VIVIENDA “30 DE MARZO” DE ALTO CAYMA MZ. A LOTE 6 (dirección del Predio)
+          */
 
-          {
-            content:  'Estimado vecino(a)',
-            styles: { halign: 'right' },
-        },
+          [
 
-        ],
-        [
+            {
+              content: 'Presente.-',
+              styles: { halign: 'left' },
+          },
 
-          {
-            content:  `SR. ${data.suministro.contribuyente.nombre} ${data.suministro.contribuyente.apPat} ${data.suministro.contribuyente.apMat}`,
-            styles: { halign: 'right' },
-        },
+          ],
 
-        ],
-        /*SR. BREINER A. CONDORI LIMA (Titular del predio)
-        AA.HH. ASOCIACION DE VIVIENDA “30 DE MARZO” DE ALTO CAYMA MZ. A LOTE 6 (dirección del Predio)
-        */
+          [
 
-        [
+            {
+              content: 'De mi mayor consideración:',
+              styles: { halign: 'left' },
+          },
 
-          {
-            content: 'Presente.-',
-            styles: { halign: 'left' },
-        },
+          ],
 
-        ],
+          [
 
-        [
+            {
+              content: `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`,
+              styles: { halign: 'justify' },
+          },
 
-          {
-            content: 'De mi mayor consideración:',
-            styles: { halign: 'left' },
-        },
+          ],
 
-        ],
+          [
 
-        [
+            {
+              content: 'Tenga en cuenta que la no presentación de la declaración jurada del Impuesto Predial conlleva a ser calificado como evasor ha dicho impuesto por lo que correspondería la aplicación de una multa por infringir lo señalado en el Código Tributario.',
+              styles: { halign: 'justify' },
+          },
 
-          {
-            content: `La Municipalidad Distrital de ${this.distrito.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`,
-            styles: { halign: 'justify' },
-        },
-
-        ],
-
-        [
-
-          {
-            content: 'Tenga en cuenta que la no presentación de la declaración jurada del Impuesto Predial conlleva a ser calificado como evasor ha dicho impuesto por lo que correspondería la aplicación de una multa por infringir lo señalado en el Código Tributario.',
-            styles: { halign: 'justify' },
-        },
-
-        ],
+          ],
 
 
-        [
+          [
 
-          {
-            content: 'Estimado vecino, tributar es el camino al desarrollo de nuestro distrito, del mismo modo el pago de los arbitrios municipales (limpieza pública, parques y jardines y serenazgo) garantizamos la prestación eficiente y eficaz de estos servicios como también la seguridad ciudadana del distrito; mejorando así nuestra calidad de vida.',
-            styles: { halign: 'justify' },
-        },
+            {
+              content: 'Estimado vecino, tributar es el camino al desarrollo de nuestro distrito, del mismo modo el pago de los arbitrios municipales (limpieza pública, parques y jardines y serenazgo) garantizamos la prestación eficiente y eficaz de estos servicios como también la seguridad ciudadana del distrito; mejorando así nuestra calidad de vida.',
+              styles: { halign: 'justify' },
+          },
 
-        ],
+          ],
 
-        [
+          [
 
-          {
-            content: 'Atentamente',
-            styles: { halign: 'left' },
-        },
+            {
+              content: 'Atentamente',
+              styles: { halign: 'left' },
+          },
 
-        ],
+          ],
 
-    ],
-});
+      ],
+  });
 
-  doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
+    doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
+}
+updateIicket(ticket: ITicket): void{
+    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==TicketStatus.PENDIENTE_GESTION_RESULTADOS).length;
+    const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
+    const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
+    const totalUbicaciones =ticket.ubicaciones.length;
+    console.log('totalUbicaciones',totalUbicaciones);
+    console.log('cantUbiObs',cantUbiObs);
+    console.log('cantUbiAprob',cantUbiAprob);
+    if( cantTotalResueltos === totalUbicaciones ){
+      if(cantUbiObs> 0){
+        ticket.codEstTrabajoTicket = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+      }
+      else if(cantUbiAprob === totalUbicaciones){
+        ticket.codEstTrabajoTicket = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+      }
 
-  data.estado=1;
-  const index=this.ubicacion.registroTitularidad.findIndex(r=>data.id===r.id);
-  this.ubicacion.registroTitularidad[index]= data;
-
-  this._ubicacionService.update(this.ubicacion.id,this.ubicacion).subscribe( (r)=>{
-
-    this._confirmationService
-    .success(
-        'Notificacion',
-        'Notificacion generada.'
-    )
-    .afterClosed()
-    .toPromise()
-    .then((e) => {
-
-      this._ubicacionService.get(this.ubicacion.id).subscribe((u)=>{
-        console.log('u>>',u);
-        this.ubicacion= { ...u};
+      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
+        /*se resetea el mapa a nivel de ticket */
+        this._router.navigate([
+          './land-inspection/results-management',
+          ]);
       });
-      this.getStatusButton();
-      this._resultsService.setResetMap(2);
-      this._resultsService.setEstado(Estado.LEER);
+
+    }
+
+  }
+
+
+
+updateLocation(ubicacion: IUbicacion): void{
+    this.eventUpdateLocation.emit({codUbicacion:ubicacion.codUbicacion});
+}
+
+previsualizacion(registroTitularidad: IRegistroTitularidad): void {
+
+const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
+        {width:'100%', height:'100%',
+        data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
+    });
+
+dialogRef
+  .afterClosed()
+  .toPromise()
+  .then((option) => {
+    console.log('option',option);
+        if (option === 'confirmar') {
+
+            this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((r2)=>{
+
+
+                this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                    this.updateLocation(this.ubicacion);
+                    this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                        this._router.navigate([
+                          './land-inspection/results-management',
+                          ]);
+                    });
+
+                });
+
+              });
+
+            /*this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((res)=>{
+                this.updateLocation(this.ubicacion);
+                this.getStatusButton();
+                this._resultsService.setResetMap(2);
+                this._resultsService.setEstado(Estado.LEER);
+
+            });*/
+        }
+
+        else if (option === 'subvaluar'){
+            this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((res)=>{
+
+                this.generarNotificacionSubvaluado(registroTitularidad);
+            });
+        }
+
+        else{
+
+        }
+
 
     });
 
+}
 
 
+generarNotificacionSubvaluado(data: IRegistroTitularidad): void{
+  /*  data.status=1;
+    const index=this.ubicacion.registrosTitularidad.findIndex(r=>data.id===r.id);
+    this.ubicacion.registrosTitularidad[index]= data;*/
+
+/*    this.dialogRef = this._confirmationService.info(
+      'Notificar',
+      'Esta seguro de generar la notificacion?'
+  );*/
+
+
+  this.generarPdfPredioSubvaluado(data);
+  this.dialogRef = this._confirmationService.success(
+    'Notificar',
+    'Notificacion generada'
+    );
+
+    this.dialogRef
+    .afterClosed()
+    .toPromise()
+    .then( (option) => {
+        this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
+
+
+            this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                this.updateLocation(this.ubicacion);
+
+
+                this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+
+                    this._router.navigate([
+                      './land-inspection/results-management',
+                      ]);
+                  });
+
+            });
+
+          });
+
+    });
+}
+
+descargarNotificacionPredioSubvaluado(data: IRegistroTitularidad): void{
+    this.generarPdfPredioSubvaluado(data);
+}
+
+generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
+    const doc = new jsPDF();
+
+    autoTable(doc, {
+      theme: 'grid',
+      styles: {
+          overflow: 'linebreak',
+          lineWidth: 0,
+      },
+      body: [
+          [
+              {
+                  content: 'GERENCIA DE ADMINISTRACION TRIBUTARIA',
+                  styles: { halign: 'center' },
+              },
+          ],
+
+          [
+              {
+                  content: `CARTA DE ACTUALIZACION DE VALOR Nº${this.ticket.codTicket}-${data.id}-2023`,
+                  styles: { halign: 'center' },
+              },
+          ],
+
+          [
+
+            {
+              content: `Municipalidad ${this.distrito?.name}, Mes ${moment().format('MMMM')} ${moment().format('YYYY')}`,
+              styles: { halign: 'right' },
+          },
+
+          ],
+
+          [
+
+            {
+              content:  'Estimado vecino(a)',
+              styles: { halign: 'left' },
+          },
+
+          ],
+          [
+
+            {
+              content:  `SR. ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`,
+              styles: { halign: 'left' },
+          },
+
+          ],
+          /*SR. BREINER A. CONDORI LIMA (Titular del predio)
+          AA.HH. ASOCIACION DE VIVIENDA “30 DE MARZO” DE ALTO CAYMA MZ. A LOTE 6 (dirección del Predio)
+          */
+
+          [
+
+            {
+              content: 'Presente.-',
+              styles: { halign: 'left' },
+          },
+
+          ],
+
+          [
+
+            {
+              content: 'De mi mayor consideración:',
+              styles: { halign: 'left' },
+          },
+
+          ],
+
+          [
+
+            {
+              content: `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha realizado el levantamiento catastral de los predios del distrito, a fin de verificar la fehaciencia de la información brindada por los contribuyentes en su Declaración Jurada de Autoavaluo, es por ello que hacemos llegar a usted la Ficha de levantamiento de campo de(l/los) predio(s) a su nombre.`,
+              styles: { halign: 'justify' },
+          },
+
+          ],
+
+          [
+
+            {
+              content: 'Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y PU que serán proporcionados en las ventanillas Nro 7 a 9.',
+              styles: { halign: 'justify' },
+          },
+
+          ],
+
+
+          [
+
+            {
+              content: 'Tenga en cuenta que omitir información en la declaración jurada del Impuesto Predial constituye una infracción tipificada en el Código Tributario Art 176 Numeral 4 “Presentar otras declaraciones o comunicaciones en forma incompleta o no conformes con la realidad” siendo la sanción el pago del 30% de la UIT(S/.4950.00) que equivale a S/.1,485.00.',
+              styles: { halign: 'justify' },
+          },
+
+          ],
+          [
+
+            {
+              content: 'Estimado vecino, tributar es el camino al desarrollo de nuestro distrito, del mismo modo el pago de los arbitrios municipales (limpieza pública, parques y jardines y serenazgo) garantizamos la prestación eficiente y eficaz de estos servicios como también la seguridad ciudadana del distrito; mejorando así nuestra calidad de vida.',
+              styles: { halign: 'justify' },
+          },
+
+          ],
+          [
+
+            {
+              content: 'Atentamente',
+              styles: { halign: 'left' },
+          },
+
+          ],
+
+      ],
   });
 
+    doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
 }
 
-prev(): void {
-  this._messageProviderService.showModal(PrevisualizacionComponent,{width:1100, height:720, data: {gabinete: this.ubicacion.registroTitularidad[0]},} );
-}
+
 }

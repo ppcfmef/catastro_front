@@ -24,7 +24,7 @@
         <table  class="w-full">
           <tr>
             <td>{{ element.tipoBrecha }}</td>
-            <td>{{ element.fechaBrecha }}</td>
+            <td>{{ element.fechaBrecha | date:'dd/MM/yyyy' }}</td>
           </tr>
           <tr>
             <td colspan="2"> <div class="text-domicilio">
@@ -53,3 +53,10 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+  <mat-paginator  [length]="length"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPage($event)"
+  >
+  </mat-paginator>

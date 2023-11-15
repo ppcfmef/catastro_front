@@ -15,7 +15,7 @@ export const ticketMocks: ITicket []=[
         codTipoTicket: 1,
         tipoTicket: 'Predio sin geo',
         obsTicketGabinete: '',
-        ubicacion: [ubicacionMocks[0]],
+        ubicaciones: [ubicacionMocks[0]],
         estado:0
     },
 
@@ -31,7 +31,7 @@ export const ticketMocks: ITicket []=[
         codTipoTicket: 2,
         tipoTicket: 'Lote sin predio',
         obsTicketGabinete: '',
-        ubicacion:[ubicacionMocks[1]],
+        ubicaciones:[ubicacionMocks[1]],
         estado:0
     },
 
@@ -48,7 +48,7 @@ export const ticketMocks: ITicket []=[
         codTipoTicket: TypeGap.PUNTO_IMAGEN,
         tipoTicket: 'Punto imagen',
         obsTicketGabinete: '',
-        ubicacion:[ubicacionMocks[2]],
+        ubicaciones:[ubicacionMocks[2]],
         estado:0
     },
 
@@ -64,7 +64,7 @@ export const ticketMocks: ITicket []=[
         codTipoTicket: TypeGap.MANZANA_SIN_LOTES,
         tipoTicket: 'Manzana sin Lotes',
         obsTicketGabinete: '',
-        ubicacion:[ubicacionMocks[3],ubicacionMocks[4]],
+        ubicaciones:[ubicacionMocks[3],ubicacionMocks[4]],
         estado:0
     },
 
@@ -81,7 +81,7 @@ export const ticketMocks: ITicket []=[
         codTipoTicket: TypeGap.PREDIO_SUBVALUADO,
         tipoTicket: 'Predio Subvaluado',
         obsTicketGabinete: '',
-        ubicacion:[ubicacionMocks[5]],
+        ubicaciones:[ubicacionMocks[5]],
         estado:0
     },
 ];
@@ -100,6 +100,6 @@ export const ticketMock: ITicket =
         codTipoTicket: 2,
         tipoTicket: 'Predio sin georreferenciacion',
         obsTicketGabinete: '',
-        ubicacion:ubicacionMocks,
+        ubicaciones:ubicacionMocks,
            estado:0
     };

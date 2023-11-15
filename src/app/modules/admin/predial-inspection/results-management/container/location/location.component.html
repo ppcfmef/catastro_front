@@ -1,45 +1,46 @@
-<div class="flex flex-col flex-auto px-4 gap-4 ">
+<div class="flex flex-col flex-auto px-4 gap-4 " *ngIf="ticket && ubicacion">
 
 
-    <div class="p-4" *ngIf="ubicacion?.estado===98">
+    <div class="p-4" *ngIf="ubicacion?.status===98">
         <span>{{ubicacion?.obsUbicacion}}</span>
     </div>
 
+    <div class="p-4" *ngIf="ubicacion?.status===98">
+        <a class="btn btnObs w-full justify-around" href="{{ubicacion?.fileObs}}" target="_blank"> Archivo Adjunto</a>
+    </div>
     <div class="p-4">
         <app-dataland [ubicacion]="ubicacion" (clickPosition)="onClickPosition($event)"></app-dataland>
     </div>
 
-
-
-    <container-element [ngSwitch]="ticket?.codTipoTicket">
-        <some-element *ngSwitchCase="1">
-            <app-case 
-            [defaultExpanded]="true" 
-            [predioButtonDisabled]="predioButtonDisabled" 
-            [puntoImagenDisabled]="puntoImagenDisabled"  
+    <container-element   [ngSwitch]="ticket?.codTipoTicket">
+        <some-element *ngSwitchCase="'1'">
+            <app-case
+            [defaultExpanded]="true"
+            [predioButtonDisabled]="predioButtonDisabled"
+            [puntoImagenDisabled]="puntoImagenDisabled"
             (eventGenerarPuntoImagen)="generarPuntoImagen($event)"
             (eventGenerarPredio)="generarPredio($event)"
-            [disabled]="ubicacion?.estado===0? false: true"
-            [registro]="ubicacion.registroTitularidad[0]"
+            [disabled]="ubicacion?.status===0? false: true"
+            [registro]="ubicacion.registrosTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
+            (eventOpenItem)="eventIniciarItem($event)"
             ></app-case>
 
         </some-element>
+        <some-element *ngSwitchCase="'2'">
+            <div class="flex flex-col flex-auto  gap-4">
 
-        <some-element *ngSwitchCase="2">
-            <div class="flex flex-col flex-auto  gap-4">            
-                
-                <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+                <ng-container *ngFor="let item of ubicacion?.registrosTitularidad">
                 <ng-container *ngIf="item.codTipoTit ===1 ">
                     <div>
-                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"   
-                        [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)"  [disabled]="ubicacion?.estado===0? false: true" ></app-case>
+                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"
+                        [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)" (eventReasignarPredio)="reasignarPredio($event)" (eventOpenItem)="eventIniciarItem($event)"  [disabled]="ubicacion?.status===0? false: true" [iniciar]="item.inicio" (eventGenerarNotificacion)="generarNotificacion($event)" (eventDescargarNotificacion)="descargarNotificacion($event)" ></app-case>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.codTipoTit ===2 ">
                     <div>
-                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket" 
-                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventOpenItem($event)" [disabled]="ubicacion?.estado===0? false: true" ></app-case-suministro>
+                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket"
+                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventIniciarItem($event)" [disabled]="ubicacion?.status===0? false: true" (eventDescargarNotificacion)="descargarNotificacion($event)" ></app-case-suministro>
                     </div>
                 </ng-container>
             </ng-container>
@@ -49,35 +50,36 @@
 
         </some-element>
 
-        <some-element *ngSwitchCase="3">
+        <some-element *ngSwitchCase="'3'">
 
-            <app-case 
-            [defaultExpanded]="true" 
-            [predioButtonDisabled]="predioButtonDisabled" 
-            [puntoImagenDisabled]="puntoImagenDisabled"  
-            (eventNuevaDireccion)="generarNuevaDireccion($event)"
-            (eventValidarUbicacion)="validarUbicacion($event)"
-            [disabled]="ubicacion?.estado===0? false: true"
-            [registro]="ubicacion.registroTitularidad[0]"
+            <app-case
+            [defaultExpanded]="true"
+            [predioButtonDisabled]="predioButtonDisabled"
+            [puntoImagenDisabled]="puntoImagenDisabled"
+            (eventNuevaDireccion)="generarNuevaDireccionPuntoImagen($event)"
+            (eventValidarUbicacion)="validarUbicacionPuntoImagen($event)"
+            [disabled]="ubicacion?.status===0? false: true"
+            [registro]="ubicacion.registrosTitularidad[0]"
             [codTypeGap]="ticket?.codTipoTicket"
+            (eventOpenItem)="eventIniciarItem($event)"
             ></app-case>
         </some-element>
 
 
-        <some-element *ngSwitchCase="4">
-            <div class="flex flex-col flex-auto  gap-4">            
-                
-                <ng-container *ngFor="let item of ubicacion?.registroTitularidad">
+        <some-element *ngSwitchCase="'4'">
+            <div class="flex flex-col flex-auto  gap-4">
+
+                <ng-container *ngFor="let item of ubicacion?.registrosTitularidad">
                 <ng-container *ngIf="item.codTipoTit ===1 ">
                     <div>
-                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"   
-                        [codTypeGap]="ticket?.codTipoTicket" (eventGenerarPredio)="generarPredio($event)"  (eventOpenItem)="eventOpenItem($event)"  [disabled]="ubicacion?.estado===0? false: true" ></app-case>
+                        <app-case [registro] = 'item' [predioButtonDisabled]="predioButtonDisabled"
+                        [codTypeGap]="ticket?.codTipoTicket" (eventValidarUbicacion)="generarNuevoLotePredio($event)" (eventGenerarNotificacion)="generarNotificacion($event)" (eventDescargarNotificacion)="descargarNotificacion($event)" (eventOpenItem)="eventIniciarItem($event)"  [disabled]="ubicacion?.status===0? false: true" ></app-case>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.codTipoTit ===2 ">
                     <div>
-                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket" 
-                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventOpenItem($event)" [disabled]="ubicacion?.estado===0? false: true" ></app-case-suministro>
+                        <app-case-suministro [registro] = 'item'   [codTypeGap]="ticket?.codTipoTicket"
+                        (eventGenerarNotificacion)="generarNotificacion($event)"  (eventOpenItem)="eventIniciarItem($event)" [disabled]="ubicacion?.status===0? false: true" (eventDescargarNotificacion)="descargarNotificacion($event)" ></app-case-suministro>
                     </div>
                 </ng-container>
             </ng-container>
@@ -87,24 +89,31 @@
 
         </some-element>
 
-        <some-element *ngSwitchCase="5">
-            <div class="flex flex-col flex-auto  gap-4">            
-                <div class="flex w-full justify-around ">
-                    <button class="btnAdd2 self-end" (click)="prev()">Previsualizacion </button>
-                </div>
-              
+        <some-element *ngSwitchCase="'5'">
+            <div class="flex flex-col flex-auto  gap-4">
+
+                <app-case [defaultExpanded]="true" [registro] = 'ubicacion.registrosTitularidad[0]' [predioButtonDisabled]="predioButtonDisabled"
+                [codTypeGap]="ticket?.codTipoTicket"  (eventOpenItem)="eventIniciarItem($event)"  [disabled]="ubicacion?.status===0? false: true"
+                (eventDescargarNotificacion)="descargarNotificacionPredioSubvaluado($event)" (eventPrevisualizacion) ="previsualizacion($event)"
+                >
+                </app-case>
+
+
+
 
             </div>
 
         </some-element>
+        </container-element>
+    <div class="flex w-full justify-around gap-2" *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='2' || ticket?.codTipoTicket==='4'  )">
 
-    </container-element>
+        <button class=" btn btnAdd w-1/2 justify-around" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled" >Aprobar </button>
+        <button class="btn btnObs w-1/2 justify-around" (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
+    </div>
+
+    <div class="flex w-full justify-around " *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='1' || ticket?.codTipoTicket==='3' || ticket?.codTipoTicket==='5' )">
 
 
-
-    <div class="flex w-full justify-around " *ngIf="ubicacion.estado===0">
-
-        <button class=" btn btnAdd" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled"  >Aprobar </button>
-        <button class="btn btnObs" (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >observar </button>
+        <button class="btn btnObs w-full justify-around"  (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
     </div>
 </div>

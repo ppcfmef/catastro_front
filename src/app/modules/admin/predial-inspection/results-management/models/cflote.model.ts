@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ICFPredio } from '../interfaces/cfpredio.interface';
+import { ICFLote } from '../interfaces/cflote.interface';
 
-export class CFPredioModel implements ICFPredio{
-    COD_CPU: string;
+
+export class CFLoteModel implements ICFLote {
     COD_PRE: string;
     SEC_EJEC: number;
     ID_PRED: string;
@@ -44,9 +44,8 @@ export class CFPredioModel implements ICFPredio{
     NOM_PC: string;
     ID_LOTE_P: number;
     ID_MZN_C: number;
-    ESTADO: number;
-    constructor(l?: ICFPredio){
-        this.COD_CPU= l?.COD_CPU;
+
+    constructor(l?: ICFLote){
         this.COD_PRE= l?.COD_PRE;
         this.SEC_EJEC = l?.SEC_EJEC;
         this.ID_PRED= l?.ID_PRED;
@@ -87,8 +86,5 @@ export class CFPredioModel implements ICFPredio{
         this.NOM_USER = l?.NOM_USER;
         this.NOM_PC = l?.NOM_PC;
         this.ID_MZN_C = l?.ID_MZN_C;
-        this.ESTADO= l?.ESTADO;
     }
-
-
-}
+};

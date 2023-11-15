@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ModalComponent implements OnInit {
     //observacion;
     inputControl: FormControl = new FormControl('');
-
+    selectedFile: any = null;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,) { }
 
@@ -19,6 +19,11 @@ export class ModalComponent implements OnInit {
     this.dialogRef.close({option: false});
   }
   save(): void{
-    this.dialogRef.close({option: true,data: this.data});
+    this.dialogRef.close({option: true,data: this.data,file:this.selectedFile});
   }
+
+  onFileSelected(event: any): void {
+        this.selectedFile = event.target.files[0] ?? null;
+
+ }
 }

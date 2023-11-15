@@ -34,6 +34,8 @@ import { User } from 'app/core/user/user.types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ITicket } from '../../interfaces/ticket.interface';
+import { E } from '@angular/cdk/keycodes';
+import { IFoto } from '../../interfaces/foto.interface';
 
 @Component({
   selector: 'app-widget-map',
@@ -59,9 +61,9 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input() estado = Estado.LEER;
   @Input() resetMap =0;
   @Output() pointClickEvent = new EventEmitter();
-  
+
   @ViewChild('mapViewNode', {static: true})private mapViewEl: ElementRef;
-  
+  fotos: IFoto[]=[];
   ticket: ITicket;
   typeGap = TypeGap.PREDIO_SIN_GEORREFERENCIACION;
   pointIni: any;
@@ -78,6 +80,20 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
         width: 1.5,
     },
 };
+ textSymbol = {
+    type: 'text',  // autocasts as new TextSymbol()
+    color: 'blue',
+    haloColor: 'white',
+    haloSize: '2px',
+    text: 'Ubicacion de campo',
+    xoffset: 65,
+    yoffset: 15,
+    font: {  // autocasts as new Font()
+      size: 12,
+
+      weight: 'bold'
+    }
+  };
 
 puntoImagenSymbol = {
     type: 'simple-marker',
@@ -134,6 +150,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
   ngOnChanges(changes: SimpleChanges): void {
     console.log('changes>>',changes);
     if(changes.ubicacion && this.ubicacion && this.view){
+      this.fotos = this.ubicacion.fotos;
       this.onChangeUbicacion(this.ubicacion);
     }
     /*if(changes.ubicacion && this.ubicacion && this.view){
@@ -154,14 +171,18 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
           this.ticket = res.ticket;
           this.ubicacion = res.ubicacion;
           this.typeGap = this.ticket.codTipoTicket;
+          this.fotos = this.ubicacion.fotos;
           /*this.estado = Estado.LEER;*/
           /*console.log('this.ubicacion.estado',this.ubicacion.estado);
           console.log('this.typeGap',this.typeGap);*/
-          this.estado = (  this.ubicacion.estado===0  &&
+          /*this.estado = (  this.ubicacion.status===0  &&
             [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.typeGap))? Estado.EDITAR: Estado.LEER;
+
+*/
+
             /*console.log('this.estado>>',this.estado);*/
 
-
+            this.estado = Estado.LEER;
             const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
             const featureManzanaLayer=this.layersInfo.find(e=> e.id === this.idManzanaImagenLayer).featureLayer;
             const featureManzanaSinLoteLayer = this.layersInfo.find(e=> e.id === this.idManzanaSinLote).featureLayer;
@@ -183,7 +204,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
               featureManzanaLayer.visible=false;
               featureManzanaSinLoteLayer.visible= false;
             }
-            
+
           this.onChangeUbicacion(this.ubicacion);
       }
   });
@@ -192,6 +213,11 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
   this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
     if(res){
       this.estado = res;
+      console.log('this.estado>>>',this.estado);
+      if(this.estado === Estado.INICIAR){
+        this.addUbicacion(this.ubicacion);
+        this.estado = Estado.LEER;
+      }
     }
   });
 
@@ -378,7 +404,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             }
             else {
               l.featureLayer = new FeatureLayer(options);
-            
+
             }
             //console.log('l.definitionExpression>>', l.definitionExpression);
             this.map.add(l.featureLayer);
@@ -404,8 +430,8 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             });
         });
 
-   
-        
+
+
 
 
         const legend = new Legend({
@@ -414,7 +440,20 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             layout: 'stack'
           });
 
+
+          const fotosElement = document.getElementById('fotosElement');
+
+
+
+
           const layerListExpand = new Expand({view: this.view, content: layerList, id: 'maplayerListExpand', group: 'bottom-right'});
+          const fotosExpand = new Expand({
+            view: this.view,
+            content: fotosElement,
+            expandIconClass: 'esri-icon-media',
+            id: 'fotosElement',
+
+        });
 
           const baseMapGalleryExpand = new Expand({view: this.view, content: basemapGallery, id: 'mapGalleryBaseExpand', group: 'bottom-right'});
           const legendExpand = new Expand({view: this.view, content: legend, id: 'legendExpand', group: 'bottom-right'});
@@ -434,13 +473,16 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
 
         this.view.ui.add(legendExpand, 'bottom-right');
 
+        this.view.ui.add(fotosExpand, {
+            position: 'top-left',
+        });
         this.view.when(() => {
             this._fuseSplashScreenService.hide();
             console.log('ubigeo>>',this.ubigeo);
             if(this.ubicacion){
               this.onChangeUbicacion(this.ubicacion);
             }
-            
+
             else if (this.ubigeo) {
               this.filterUbigeo(this.ubigeo);
             }
@@ -481,8 +523,12 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
                   const pointGeometry = r.geometry;
                   const predio = r.attributes;
                   const graphic = new Graphic(pointGeometry, this.predioSymbol);
+
+                  //const graphic2 = new Graphic(pointGeometry, this.textSymbol);
+
                   r.attributes['COORD_X'] =pointGeometry.longitude;
                   r.attributes['COORD_Y'] =pointGeometry.latitude;
+
                   /*predio['NOM_USER'] = this.user.username;
                   predio['NOM_PC'] = 'PLATAFORMA';*/
                   if(!predio['ID_MZN_C']){
@@ -505,18 +551,18 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
                     this.pointClickEvent.emit({point:predio,type:TypePoint.LOTE});
                   }
 
+                  //this.view.graphics.add(graphic);
+                  //this.view.graphics.add(graphic2);
                   this.view.graphics.add(graphic);
                   this.graphics.push(graphic);
-
+                  //this.graphics.push(graphic2);
               }
 
               else{
                 const puntoImagen: any = {};
                 const pointGeometry =  event.mapPoint;
                 const graphic = new Graphic(pointGeometry, this.puntoImagenSymbol);
-
-                this.view.graphics.add(graphic);
-                this.graphics.push(graphic);
+                //const graphic2 = new Graphic(pointGeometry, this.textSymbol);
 
                 puntoImagen['COORD_X'] = pointGeometry.longitude;
                 puntoImagen['COORD_Y'] = pointGeometry.latitude;
@@ -527,15 +573,18 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
                   layerManzana,
                   pointGeometry,5,'meters'
                 );
-
-                intersectFeature.then((data: any) => {
+                this.pointClickEvent.emit({point:puntoImagen, type:TypePoint.PUNTO_IMAGEN});
+                /*intersectFeature.then((data: any) => {
 
                   if (data && data.attributes) {
                       puntoImagen['ID_MZN_C']=data['ID_MZN_C'];
                   }
                     this.pointClickEvent.emit({point:puntoImagen, type:TypePoint.PUNTO_IMAGEN});
-                });
-
+                });*/
+                this.view.graphics.add(graphic);
+                //this.view.graphics.add(graphic2);
+                this.graphics.push(graphic);
+                //this.graphics.push(graphic2);
               }
 
           }
@@ -550,6 +599,7 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
                 const pointGeometry = r.geometry;
                 const predio = r.attributes;
                 const graphic = new Graphic(pointGeometry, this.predioSymbol);
+                //const graphic2 = new Graphic(pointGeometry, this.textSymbol);
                 r.attributes['COORD_X'] =pointGeometry.longitude;
                 r.attributes['COORD_Y'] =pointGeometry.latitude;
 
@@ -574,7 +624,9 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
                 }
 
                 this.view.graphics.add(graphic);
+                //this.view.graphics.add(graphic2);
                 this.graphics.push(graphic);
+                //this.graphics.push(graphic2);
 
             }
           }
@@ -593,14 +645,16 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
               const pointGeometry = r.geometry;
               const predio = r.attributes;
               const graphic = new Graphic(pointGeometry, this.predioSymbol);
+              //const graphic2 = new Graphic(pointGeometry, this.textSymbol);
+
               r.attributes['COORD_X'] =pointGeometry.longitude;
               r.attributes['COORD_Y'] =pointGeometry.latitude;
               this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
-              
-              /*
-              
 
-              
+              /*
+
+
+
               if(!predio['ID_MZN_C']){
                   const intersectFeature =
                   MapUtils.queryIntersectFeaturelayer(
@@ -622,8 +676,9 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
               }*/
 
               this.view.graphics.add(graphic);
+              //this.view.graphics.add(graphic2);
               this.graphics.push(graphic);
-
+              //this.graphics.push(graphic2);
           }
 
           /*else if (results2 && results2.length > 0) {
@@ -643,9 +698,9 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
             const puntoImagen: any = {};
             const pointGeometry =  event.mapPoint;
             const graphic = new Graphic(pointGeometry, this.puntoImagenSymbol);
-
-            this.view.graphics.add(graphic);
-            this.graphics.push(graphic);
+            //const graphic2 = new Graphic(pointGeometry, this.textSymbol);
+            /*this.view.graphics.add(graphic);
+            this.graphics.push(graphic);*/
 
             puntoImagen['COORD_X'] = pointGeometry.longitude;
             puntoImagen['COORD_Y'] = pointGeometry.latitude;
@@ -665,7 +720,11 @@ _unsubscribeAll: Subject<any> = new Subject<any>();
               }
                 this.pointClickEvent.emit({point:puntoImagen, type:TypePoint.PUNTO_IMAGEN});
             });
-
+            this.view.graphics.add(graphic);
+            this.graphics.push(graphic);
+            /*this.view.graphics.add(graphic2);
+            this.graphics.push(graphic);
+            this.graphics.push(graphic2);*/
           }
 
 
@@ -739,6 +798,13 @@ if(this.view){
       /*symbol: this.simpleMarkerSymbolUndefined*/
   });
 
+  const graphic2 = new Graphic(
+    {
+        geometry: point,
+        symbol: this.textSymbol,
+        /*symbol: this.simpleMarkerSymbolUndefined*/
+    }
+   );
 
   this.view.graphics.removeAll();
   /*
@@ -746,11 +812,50 @@ if(this.view){
     this.view.graphics.remove(this.ubicacionGraphic);
   }*/
   this.view?.graphics?.add(this.ubicacionGraphic);
+  this.view?.graphics?.add(graphic2);
 
+
+}
 }
 
 
-}
+
+async addUbicacion(ubicacion: IUbicacion):  Promise <void>{
+    const [// eslint-disable-next-line @typescript-eslint/naming-convention
+
+    Graphic,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+
+  ] = await loadModules([
+
+    'esri/Graphic',
+
+  ]);
+
+  if(this.view){
+      this.view.center=[ubicacion.x,ubicacion.y];
+      this.view.zoom = 20;
+      const point = {
+        type: 'point',
+        longitude: ubicacion.x,
+        latitude: ubicacion.y,
+        };
+        const ubicacionGraphic = new Graphic({
+            geometry: point,
+            symbol: this.predioSymbol,
+
+        });
+        const puntoNuevo: any = {};
+
+        puntoNuevo['COORD_X'] = ubicacion.x;
+        puntoNuevo['COORD_Y'] = ubicacion.y;
+        this.pointClickEvent.emit({point:puntoNuevo, type:TypePoint.NUEVO_PUNTO_CAMPO});
+
+
+        this.view?.graphics?.add(ubicacionGraphic);
+        this.graphics.push(ubicacionGraphic);
+  }
+  }
 
 onResetMap(tipo: number): void {
   if(this.view){

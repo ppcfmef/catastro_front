@@ -1,3 +1,4 @@
+import { IFoto } from './foto.interface';
 import { IRegistroTitularidad } from './registro-titularidad.interface';
 
 export interface IUbicacion{
@@ -22,9 +23,9 @@ export interface IUbicacion{
     codUbicacion: string;
     nomVia: string;
     mznUrb: string;
-    estado: number;
-    registroTitularidad: IRegistroTitularidad[];
+    status: number;
+    registrosTitularidad: IRegistroTitularidad[];
     ubigeo: string;
+    fotos: IFoto[];
 
 }
-

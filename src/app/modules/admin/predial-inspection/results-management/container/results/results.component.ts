@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
@@ -6,7 +7,9 @@ import { ITicket } from '../../interfaces/ticket.interface';
 import { type } from 'os';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { MatPaginator } from '@angular/material/paginator';
+import { User } from 'app/core/user/user.types';
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
@@ -14,7 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ResultsComponent implements OnInit {
   displayedColumns: string[] = ['nro', 'codTicket', 'tipoBrecha', 'fecha', 'actions'];
-
+  user: User;
   dataSource = [
     {
       nro: 1,
@@ -61,8 +64,12 @@ export class ResultsComponent implements OnInit {
   dataSourcePendiente=[];
   dataSourceObservado=[];
   dataSourceAceptado=[];
+  tablePendienteLength=0;
+  tableObservadoLength=0;
+  tableAceptadoLength=0;
   form: FormGroup;
   queryParams: any;
+  ubigeo: string;
   constructor(
     private _route: Router,
     private _activeRouter: ActivatedRoute,
@@ -72,12 +79,21 @@ export class ResultsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.queryParams={};
+    this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):'040703';
+    /*console.log('ubigeo',this.ubigeo);*/
+    this.queryParams.codTicket = this.ubigeo;
+    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+
     this.getTicketsPendientes();
     this.getTicketsAceptados();
     this.getTicketsObservados();
     this._resultService.setResetMap(1);
     this.initForm();
+    this.queryParams.codTicket = this.ubigeo;
   }
+
+
 
   initForm(): void {
 
@@ -88,7 +104,8 @@ export class ResultsComponent implements OnInit {
 
   onSearch(e: any): void {
     const search = this.form.get('search').value;
-    this.queryParams={codTicket:search};
+    this.queryParams.search=search;
+    /*this.queryParams={ search:search,cod_ticket__contains: this.ubigeo};*/
     this.getTicketsPendientes();
     this.getTicketsAceptados();
     this.getTicketsObservados();
@@ -96,7 +113,7 @@ export class ResultsComponent implements OnInit {
   }
 
   onCleanSearch(e: any): void {
-    this.queryParams={};
+    this.queryParams.search=null;
     this.form.get('search').setValue(null);
     this.getTicketsPendientes();
     this.getTicketsAceptados();
@@ -105,8 +122,15 @@ export class ResultsComponent implements OnInit {
   }
 
   getTicketsPendientes(): void{
-    const params= {codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,...this.queryParams };
-    this._tickerService.getList(params).subscribe( (res: any)=>{
+    /*const params= {codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,search: this.ubigeo, ...this.queryParams };*/
+    const filterRawValue = {
+        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS, ...this.queryParams
+    };
+    console.log('filterRawValue',filterRawValue);
+    /*this.getData(filterRawValue,this.dataSourcePendiente,this.tablePendienteLength);*/
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
 
       this.dataSourcePendiente =res.results.map((r: ITicket)=>({
           id:r.id,
@@ -115,10 +139,31 @@ export class ResultsComponent implements OnInit {
           fechaBrecha: r.fecAsignacion,
           direccion: '',
           fecha: r.fecUltimaActualizacion}));
+        this.tablePendienteLength= res?.count;
     });
   }
   getTicketsObservados(): void {
-    const params= {codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS,...this.queryParams};
+    const filterRawValue = {
+        codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS, ...this.queryParams
+    };
+
+   /* this.getData(filterRawValue,this.dataSourceObservado,this.tableObservadoLength);*/
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+      this.dataSourceObservado =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+
+          this.tableObservadoLength = res.count;
+    });
+
+    /*const params= {codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS,...this.queryParams};
     this._tickerService.getList( params).subscribe( (res: any)=>{
 
       this.dataSourceObservado =res.results.map((r: ITicket)=>({
@@ -128,13 +173,113 @@ export class ResultsComponent implements OnInit {
           fechaBrecha: r.fecAsignacion,
           direccion: '',
           fecha: r.fecUltimaActualizacion}));
-    });
+    });*/
   }
 
+
   getTicketsAceptados(): void{
-    const params= {codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS,...this.queryParams};
-    this._tickerService.getList( params).subscribe( (res: any)=>{
-      console.log('res>>',res);
+    const filterRawValue = {
+        codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS, ...this.queryParams
+    };
+
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+        this.dataSourceAceptado =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+        this.tableAceptadoLength = res.count;
+    });
+    /*this.getData(filterRawValue,this.dataSourceAceptado,this.tableAceptadoLength);*/
+
+
+  }
+
+   getData(filterRawValue: any,dataTable?: any,tableLength?: number): void {
+
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+    /*const res=await this._tickerService.getList2(queryParams).toPromise();*/
+    /*dataTable =res.results.map((r: ITicket)=>({
+        id:r.id,
+        codTicket: r.codTicket,
+        tipoBrecha: r.tipoTicket,
+        fechaBrecha: r.fecAsignacion,
+        direccion: '',
+        fecha: r.fecUltimaActualizacion}));
+
+        tableLength = res.count;
+
+    return {dataTable,tableLength};*/
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+        dataTable =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+
+          tableLength = res.count;
+    });
+
+
+}
+
+
+onChangePagePendiente(
+    paginator: MatPaginator | { pageSize: number; pageIndex: number }
+): void {
+    console.log('paginator', paginator);
+    const limit = paginator.pageSize;
+    const offset = limit * paginator.pageIndex;
+    const filterRawValue = {
+        limit,
+        offset,
+        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        ...this.queryParams
+    };
+
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+      this.dataSourcePendiente =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+
+          this.tablePendienteLength = res.count;
+    });
+
+    /*this.getData(filterRawValue,this.dataSourcePendiente,this.tablePendienteLength);*/
+ }
+
+ onChangePageAceptado(
+    paginator: MatPaginator | { pageSize: number; pageIndex: number }
+): void {
+    console.log('paginator', paginator);
+    const limit = paginator.pageSize;
+    const offset = limit * paginator.pageIndex;
+    const filterRawValue = {
+        limit,
+        offset,
+        codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS,
+        ...this.queryParams
+    };
+
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
       this.dataSourceAceptado =res.results.map((r: ITicket)=>({
           id:r.id,
           codTicket: r.codTicket,
@@ -142,12 +287,44 @@ export class ResultsComponent implements OnInit {
           fechaBrecha: r.fecAsignacion,
           direccion: '',
           fecha: r.fecUltimaActualizacion}));
+
+          this.tableAceptadoLength = res.count;
+    });
+;
+ }
+
+ onChangePageObservado(
+    paginator: MatPaginator | { pageSize: number; pageIndex: number }
+): void {
+    console.log('paginator', paginator);
+    const limit = paginator.pageSize;
+    const offset = limit * paginator.pageIndex;
+    const filterRawValue = {
+        limit,
+        offset,
+        codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS,
+        ...this.queryParams
+    };
+
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+      this.dataSourceObservado =res.results.map((r: ITicket)=>({
+          id:r.id,
+          codTicket: r.codTicket,
+          tipoBrecha: r.tipoTicket,
+          fechaBrecha: r.fecAsignacion,
+          direccion: '',
+          fecha: r.fecUltimaActualizacion}));
+
+          this.tableObservadoLength = res.count;
     });
 
-  }
+ }
 
   onZoom(row: any): void {
-    this._route.navigate([`ticket/${row.id}`], {relativeTo: this._activeRouter});
+    this._route.navigate([`ticket/${row.codTicket}`], {relativeTo: this._activeRouter});
     console.log('onZoom', row);
   }
 

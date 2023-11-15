@@ -42,7 +42,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     view: any = null;
     map: any;
     points: any[];
-    
+
     /*groupLayers = [
         {
             id: 0,
@@ -548,7 +548,9 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
 
 
                 this.view.on('click', (event) => {
-                    console.log('this.estado>>', this.estado);
+
+                    console.log('event.mapPoint',event.mapPoint);
+
                     if (this.estado === ActionsGapAnalisys.LEER) {
                         this.view.hitTest(event).then((response) => {});
                     }

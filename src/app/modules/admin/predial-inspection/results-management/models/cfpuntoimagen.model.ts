@@ -48,6 +48,7 @@ export class CFPuntoImagenModel implements ICFPuntoImagen{
     NOM_USER: string;
     NOM_PC: string;
     ID_MZN_U: number;
+    ESTADO_P: number;
     constructor(l?: ICFPuntoImagen){
         this.COD_CPU= l?.COD_CPU;
         this.COD_PRE= l?.COD_PRE;
@@ -86,5 +87,7 @@ export class CFPuntoImagenModel implements ICFPuntoImagen{
         this.NOM_USER = l?.NOM_USER;
         this.NOM_PC = l?.NOM_PC;
         this.ID_MZN_U = l?.ID_MZN_U;
+        this.ESTADO_P =l?.ESTADO_P;
     }
+
 }

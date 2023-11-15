@@ -18,7 +18,7 @@ export class TicketService {
   constructor(
     private http: HttpClient
   ) {
-    
+
 
    }
 
@@ -31,6 +31,16 @@ export class TicketService {
     }
     return jsonTicketMocks;
    }
+
+   getList2(queryParams?: any): Observable<IPagination<any>> {
+    return this.http.get<IPagination<any>>(`${this.apiUrl}/inspection/ticket/`, {params: queryParams});
+   }
+
+   get2(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/inspection/ticket/${id}`, );
+   }
+
+
 
   getList(queryParams?: any): Observable<IPagination<any>> {
     /*localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));*/
@@ -67,18 +77,18 @@ export class TicketService {
 
   }
 
-  update(id,data: ITicket): Observable<any> {
-    this.jsonTicketMocks =this.getData();
-    /*const ticket: ITicket = this.jsonTicketMocks.find(t=> t.id == id);
-    */
+  update(id,data: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/inspection/ticket/${id}/`, data);
+    /*this.jsonTicketMocks =this.getData();
+
     const index=this.jsonTicketMocks.findIndex(t=> t.id == id);
     this.jsonTicketMocks[index]= data;
     localStorage.setItem('ticketMocks',JSON.stringify(this.jsonTicketMocks) ) ;
     const res = data;
     return new Observable((observer) => {
       observer.next(res);
-    });
-    //return this.http.patch<any>(`${this.apiUrl}/gap-analisys/land/${id}/`, data);
+    });*/
+
   }
 
 

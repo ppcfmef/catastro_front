@@ -10,12 +10,12 @@
             <span >{{totalUbicaciones}}  {{ totalUbicaciones>1?  "LOTES": "LOTE" }}  </span>
         </div>
     </div>
-    
-    <div>
-        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" [openLocation]="openLocation" (eventOpenLocation)="eventOpenLocation($event)" ></app-select-tickets>
+
+    <div *ngIf="ticket">
+        <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" [openLocation]="openLocation" (eventOpenLocation)="eventOpenLocation($event)"  ></app-select-tickets>
     </div>
     <div class="content" *ngIf="openLocation">
-        <app-location [ticket]="ticket"   ></app-location>
+        <app-location [ticket]="ticket" [ubicacion]="ubicacion" (eventUpdateLocation)="eventUpdateLocation($event)" [user]="user" [ubigeo]="ubigeo" (eventCloseLocation)="eventCloseLocation($event)" ></app-location>
     </div>
    </div>
 

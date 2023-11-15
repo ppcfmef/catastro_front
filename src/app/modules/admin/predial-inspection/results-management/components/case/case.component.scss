@@ -60,7 +60,10 @@
 .green {
     background-color: #52B46C;
 }
+.obs{
+    background-color: #ff6f00;
 
+}
 .btnAdd {
     background-color: #0090F8;
   }
@@ -74,4 +77,12 @@ button[disabled]{
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
+}
+.btnNotify {
+    background-color: #DE3F43;
+    color: white;
+    height: 33px;
+    /*width: 98%;*/
+    border-radius: 8px;
+    /*margin: 12px;*/
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -9,6 +9,9 @@ import { IUbicacion } from '../../interfaces/ubicacion.interface';
 import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.interface';
 import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { ResultsService } from '../../services/results.service';
+import { UbicacionService } from '../../services/ubicacion.service';
+import { User } from 'app/core/user/user.types';
+import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 
 @Component({
   selector: 'app-ticket',
@@ -16,7 +19,8 @@ import { ResultsService } from '../../services/results.service';
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements OnInit, OnDestroy {
-
+    @Input() ubigeo: string;
+    user: User;
   _unsubscribeAll: Subject<any> = new Subject<any>();
   ticket: ITicket;
   //typeGap=TypeGap;
@@ -25,11 +29,13 @@ export class TicketComponent implements OnInit, OnDestroy {
   totalUbicaciones: number;
   ubicaciones: any[];
   openLocation: boolean = true;
+  ubicacion: IUbicacion;
 constructor(
   private _router: Router,
   private _activatedRoute: ActivatedRoute,
   private _ticketService: TicketService,
-  private _resultsService: ResultsService
+  private _resultsService: ResultsService,
+  private _ubicacionService: UbicacionService,
 ) {
 }
 
@@ -41,37 +47,48 @@ ngOnInit(): void {
       .subscribe((params) => {
           this.getDataTicket(params.id);
       });
-
+      this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):null;
+      this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
 }
 
-getDataTicket(idTicket: number): void{
-  this._ticketService.get(idTicket).subscribe( (res: ITicket) =>{
+getDataTicket(idTicket: string): void{
+  this._ticketService.get2(idTicket).subscribe( (res: ITicket) =>{
       this.ticket=res;
-      this.totalUbicaciones =res.ubicacion.length;
-      this.ubicaciones = res.ubicacion.map((data: IUbicacion)=> {
-          const registroTitularidad: IRegistroTitularidad[] =data.registroTitularidad;
+      console.log('module ticket this.ticket>>>', this.ticket);
+      this.totalUbicaciones =res.ubicaciones.length;
+      this.ubicaciones = res.ubicaciones.map((data: IUbicacion,index: number)=> {
+          const registroTitularidad: IRegistroTitularidad[] =data.registrosTitularidad;
           let totalCase = 0;
           registroTitularidad.map((registro)=>{
-              totalCase = totalCase + ((registro.predio)?1:0);
+              totalCase = totalCase + ((registro.predioInspeccion)?1:0);
               totalCase = totalCase + ((registro.suministro)?1:0);
               });
           const r: any={
-              id:data.id,
+              id: (index+1),
               codUbicacion : data.codUbicacion,
               totalCase: totalCase,
-              state: data.estado,
+              state: data.status,
           };
           return r;
       });
+
+      if([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket) ) {
+
+        this.openLocation= true;
+        console.log('this.openLocation>>>', this.openLocation);
+
+       /* if(res.ubicaciones && res.ubicaciones.length>0)
+            {this.ubicacion = res.ubicaciones[0];}*/
+
+        }
+
+        else {
+            this.openLocation= false;
+        }
   });
 
 
-  if([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket) ) {
 
-    this.openLocation= true;
-  }else {
-      this.openLocation= false;
-  }
 
 }
 
@@ -87,7 +104,90 @@ navegateTo(): void {
 
 
 eventOpenLocation(event: any): void {
-  this.openLocation = event;
+  this.openLocation = event.openLocation;
+  const codUbicacion = event.codUbicacion;
+    console.log('codUbicacion>>>',codUbicacion);
+    console.log('this.openLocation>>>',this.openLocation);
+    if(codUbicacion){
+        this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
+
+            this.ubicacion =data;
+            this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+          });
+    }
+
 };
+
+updateIicket(ticket: ITicket): void{
+    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==TicketStatus.PENDIENTE_GESTION_RESULTADOS).length;
+    const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
+    const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
+    const totalUbicaciones =ticket.ubicaciones.length;
+    console.log('totalUbicaciones',totalUbicaciones);
+    console.log('cantUbiObs',cantUbiObs);
+    console.log('cantUbiAprob',cantUbiAprob);
+    if( cantTotalResueltos === totalUbicaciones ){
+      if(cantUbiObs> 0){
+        ticket.codEstTrabajoTicket = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+      }
+      else if(cantUbiAprob === totalUbicaciones){
+        ticket.codEstTrabajoTicket = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+      }
+
+      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
+        /*se resetea el mapa a nivel de ticket */
+        this._router.navigate([
+          './land-inspection/results-management',
+          ]);
+      });
+
+    }
+
+  }
+
+eventUpdateLocation(event: any): void {
+    const codUbicacion = event.codUbicacion;
+      if(codUbicacion){
+          this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
+
+              this.ubicacion =data;
+
+
+              this._ticketService.get2(this.ticket.codTicket).subscribe((ticket)=>{
+                this.ticket = ticket;
+                if (this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS){
+                    this.updateIicket(this.ticket);
+                }
+                console.log('refresh ticket',this.ticket);
+
+
+                this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+                /*if (
+                    this.ticket.codTipoTicket ===TypeGap.PUNTOS_LOTE_SIN_PREDIO
+                    && this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS
+
+                    ){
+
+                    this.updateIicket(this.ticket);
+                 }
+                 else if (
+                    this.ticket.codTipoTicket ===TypeGap.MANZANA_SIN_LOTES && this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS){
+                    this.updateIicket(this.ticket);
+                 }
+                 else{
+                    this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+                 }*/
+
+              });
+
+            });
+      }
+
+  };
+
+  eventCloseLocation(event: any): void{
+    this.openLocation = false;
+    this.getDataTicket(this.ticket.codTicket);
+  }
 }
 

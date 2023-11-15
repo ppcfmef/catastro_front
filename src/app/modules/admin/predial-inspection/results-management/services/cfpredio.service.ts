@@ -48,6 +48,55 @@ export class CFPredioService {
 
     }
 
+    async updatePredio(data: PredioUI): Promise < any > {
+        const wkid = 4326;
+        const _predio = data;
+
+        this.apiUrl = `${
+            this.apiUrlPredio.replace('MapServer', 'FeatureServer')
+        }/updateFeatures`;
+
+        const jsonData = await MapUtils.createArcgisJSON([_predio], wkid);
+        const formData = new FormData();
+        formData.append('features', JSON.stringify(jsonData));
+        formData.append('F', 'json');
+
+        const response = await fetch(`${
+            this.apiUrl
+        }`, {
+            method: 'POST',
+            body: formData
+        });
+        const responseJson: any = await response.json();
+        return responseJson;
+
+    }
+
+    async getPredios(parametros: any): Promise <any>{
+        let where = '';
+        where =  parametros?.UBIGEO? `UBIGEO='${parametros?.UBIGEO}'`:where;
+        where =  parametros?.COD_PRE? where.length>0? `${where} AND COD_PRE='${parametros?.COD_PRE}'`:`COD_PRE='${parametros?.COD_PRE}'`: where;
+
+        const params = new URLSearchParams({
+            where: where, // A valid SQL where clause
+            outFields: '*', // Fields you want to retrieve, "*" for all fields
+            f: 'json', // Response format
+        });
+
+
+        this.apiUrl = `${this.apiUrlPredio}/query?${params.toString()}`;
+
+        const response = await fetch(`${this.apiUrl}`, {
+            method: 'GET',
+        });
+
+        const responseJson: any = await response.json();
+
+        return responseJson;
+
+    }
+
+
     async generateMaxCPU(value: any): Promise < any > {
         const res: any = {};
         const [FeatureLayer,] = await loadModules(['esri/layers/FeatureLayer']);
