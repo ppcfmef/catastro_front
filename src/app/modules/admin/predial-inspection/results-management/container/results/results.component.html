@@ -23,13 +23,13 @@
 
 
 
-        <button mat-button>
+        <button mat-button (click)="exportDataToExcel()">
             <mat-icon class="text-white height mr-2" svgIcon="mat_solid:download"></mat-icon>
             Descargar Excel
         </button>
     </div>
     <div class="w-full">
-        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+        <mat-tab-group [selectedIndex]="getSelectedIndex()" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
             <mat-tab label="Pendiente">
                 <app-table-manageresult
                     [dataTable]="dataSourcePendiente"

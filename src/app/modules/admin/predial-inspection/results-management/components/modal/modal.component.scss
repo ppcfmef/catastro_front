@@ -8,11 +8,17 @@
 }
 .btn2{
     height: 38px;
-    //width: 80px;
+    width: 100px;
     border-radius: 15px;
     text-align: center;
     font-size: 12px;
     padding: 0 6px;
+    vertical-align: middle;
+    color:white;
+}
+
+.file-name{
+    text-align: center;
 }
 .red {
     background-color: #E54646;

@@ -92,9 +92,9 @@ export class UbicacionService {
     const formData= new FormData();
     const headers = new HttpHeaders();
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    formData.append('status', data.status);
-    formData.append('obsUbicacion', data.obsUbicacion);
-    formData.append('fileObs', data.fileObs);
+    data.status?formData.append('status', data.status):
+    data.obsUbicacion?formData.append('obsUbicacion', data.obsUbicacion):
+    data.fileObs?formData.append('fileObs', data.fileObs):null;
 
 
     headers.append('Content-Type', 'multipart/form-data');

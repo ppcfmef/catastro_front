@@ -5,7 +5,7 @@ import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 export const ticketMocks: ITicket []=[
     {   id: 101,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codEstTrabajoTicket: '',
         codUsuario: 63,
         fecInicioTrabajo: '12/10/2023',
         fecAsignacion: '12/10/2023',
@@ -21,7 +21,7 @@ export const ticketMocks: ITicket []=[
 
     {   id: 102,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codEstTrabajoTicket: '',
         codUsuario: 63,
         fecInicioTrabajo: '12/10/2023',
         fecAsignacion: '12/10/2023',
@@ -38,7 +38,7 @@ export const ticketMocks: ITicket []=[
 
     {   id: 103,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codEstTrabajoTicket: '',
         codUsuario: 63,
         fecInicioTrabajo: '12/10/2023',
         fecAsignacion: '12/10/2023',
@@ -54,7 +54,7 @@ export const ticketMocks: ITicket []=[
 
     {   id: 104,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codEstTrabajoTicket:'',
         codUsuario: 63,
         fecInicioTrabajo: '12/10/2023',
         fecAsignacion: '12/10/2023',
@@ -71,7 +71,7 @@ export const ticketMocks: ITicket []=[
 
     {   id: 105,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
+        codEstTrabajoTicket: '',
         codUsuario: 63,
         fecInicioTrabajo: '12/10/2023',
         fecAsignacion: '12/10/2023',
@@ -90,7 +90,7 @@ export const ticketMocks: ITicket []=[
 export const ticketMock: ITicket =
     {    id: 1,
         obsTicketUsuario: '',
-        codEstTrabajoTicket: 4,
+        codEstTrabajoTicket: '4',
         codUsuario: 63,
         fecInicioTrabajo: '0709230100',
         fecAsignacion: '0709230100',

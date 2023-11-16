@@ -12,6 +12,7 @@ import { ResultsService } from '../../services/results.service';
 import { UbicacionService } from '../../services/ubicacion.service';
 import { User } from 'app/core/user/user.types';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
+import { CFTicketService } from '../../services/cfticket.service';
 
 @Component({
   selector: 'app-ticket',
@@ -36,6 +37,7 @@ constructor(
   private _ticketService: TicketService,
   private _resultsService: ResultsService,
   private _ubicacionService: UbicacionService,
+  private _cfTicketService: CFTicketService
 ) {
 }
 
@@ -118,8 +120,26 @@ eventOpenLocation(event: any): void {
 
 };
 
+
+actualizarCFTicket(codTicket: string, estado: any): void{
+    this._cfTicketService.getTicket({'COD_TICKET':codTicket, 'ESTADO_V':1}).then((responseJson)=>{
+
+        if (responseJson && responseJson.features) {
+            const features: any[] = responseJson.features;
+            const id=features[0].OBJECTID;
+            this._cfTicketService.updateTicket({'OBJECTID':id, 'ESTADO':estado}).then((response)=>{
+                console.log('return actualizar CF Ticket',response);
+            });
+        }
+
+    });
+
+}
+
+
+/*
 updateIicket(ticket: ITicket): void{
-    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==TicketStatus.PENDIENTE_GESTION_RESULTADOS).length;
+    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !== TicketStatus.PENDIENTE_GESTION_RESULTADOS).length;
     const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
     const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
     const totalUbicaciones =ticket.ubicaciones.length;
@@ -128,14 +148,15 @@ updateIicket(ticket: ITicket): void{
     console.log('cantUbiAprob',cantUbiAprob);
     if( cantTotalResueltos === totalUbicaciones ){
       if(cantUbiObs> 0){
-        ticket.codEstTrabajoTicket = TicketStatus.OBSERVADO_GESTION_RESULTADOS;
+        ticket.codEstTrabajoTicket = String(TicketStatus.OBSERVADO_GESTION_RESULTADOS);
       }
       else if(cantUbiAprob === totalUbicaciones){
-        ticket.codEstTrabajoTicket = TicketStatus.RESUELTO_GESTION_RESULTADOS;
+        ticket.codEstTrabajoTicket = String(TicketStatus.RESUELTO_GESTION_RESULTADOS);
       }
 
       this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
-        /*se resetea el mapa a nivel de ticket */
+
+        this.actualizarCFTicket(this.ticket.codTicket,TicketStatus.OBSERVADO_GESTION_RESULTADOS);
         this._router.navigate([
           './land-inspection/results-management',
           ]);
@@ -144,8 +165,47 @@ updateIicket(ticket: ITicket): void{
     }
 
   }
+*/
+
+
+
+updateIicket(ticket: ITicket): void{
+
+    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==0).length;
+    const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
+    const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
+    const totalUbicaciones =ticket.ubicaciones.length;
+
+    console.log('cantUbiObs>>>',cantUbiObs);
+    console.log('cantUbiAprob>>>',cantUbiAprob);
+    console.log('cantTotalResueltos>>>',cantTotalResueltos);
+    console.log('totalUbicaciones>>>',cantTotalResueltos);
+    if( cantTotalResueltos === totalUbicaciones && cantTotalResueltos>0 ){
+      if(cantUbiObs> 0){
+        ticket.codEstTrabajoTicket = String(TicketStatus.OBSERVADO_GESTION_RESULTADOS);
+      }
+      else if(cantUbiAprob === totalUbicaciones){
+        ticket.codEstTrabajoTicket = String(TicketStatus.RESUELTO_GESTION_RESULTADOS);
+      }
+
+      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
+        /*se resetea el mapa a nivel de ticket */
+        this.actualizarCFTicket(this.ticket.codTicket,ticket.codEstTrabajoTicket);
+        this._router.navigate([
+          './land-inspection/results-management',
+          ]);
+      });
+
+    }
+
+    else{
+        this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+    }
+
+  }
 
 eventUpdateLocation(event: any): void {
+    console.log('eventUpdateLocation>>>',event);
     const codUbicacion = event.codUbicacion;
       if(codUbicacion){
           this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
@@ -155,13 +215,18 @@ eventUpdateLocation(event: any): void {
 
               this._ticketService.get2(this.ticket.codTicket).subscribe((ticket)=>{
                 this.ticket = ticket;
-                if (this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS){
+                //this.updateIicket(this.ticket);
+                if (this.ticket.codEstTrabajoTicket===String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
                     this.updateIicket(this.ticket);
                 }
-                console.log('refresh ticket',this.ticket);
+                /*console.log('refresh ticket',this.ticket);*/
+                /*if (this.ticket.codEstTrabajoTicket === String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
+                    this.updateIicket(this.ticket);
+                }
+                else{
+                    this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
+                }*/
 
-
-                this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
                 /*if (
                     this.ticket.codTipoTicket ===TypeGap.PUNTOS_LOTE_SIN_PREDIO
                     && this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS

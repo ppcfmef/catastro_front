@@ -17,7 +17,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
-
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -44,6 +44,7 @@ const MY_DATE_FORMAT = {
 
     ],
     imports     : [
+
         BrowserModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes, routerConfig),
@@ -61,7 +62,8 @@ const MY_DATE_FORMAT = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        MatCarouselModule.forRoot(),
     ],
     bootstrap   : [
         AppComponent

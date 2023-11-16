@@ -19,6 +19,7 @@ import { SharedModule } from './shared/shared.module';
     PredialInspectionRoutingModule,
     MatIconModule,
     SharedModule,
+
   ]
 })
 export class PredialInspectionModule { }
