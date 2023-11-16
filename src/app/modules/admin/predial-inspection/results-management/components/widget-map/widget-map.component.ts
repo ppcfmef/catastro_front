@@ -12,6 +12,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
 
 import {ActionsGapAnalisys} from 'app/shared/enums/actions-gap-analisys.enum';
 
@@ -133,6 +134,7 @@ graphics: any[]=[];
 
 ubicacionGraphic: any ;
 _unsubscribeAll: Subject<any> = new Subject<any>();
+currentIndex = 0;
   constructor(
     private _fuseSplashScreenService: FuseSplashScreenService,
     private  _authService: AuthService,
@@ -878,4 +880,12 @@ onResetMap(tipo: number): void {
 
 }
 
+
+showNextImage(): void  {
+  this.currentIndex = (this.currentIndex + 1) % this.fotos.length;
+}
+
+showPrevImage(): void  {
+  this.currentIndex = (this.currentIndex - 1 + this.fotos.length) % this.fotos.length;
+}
 }

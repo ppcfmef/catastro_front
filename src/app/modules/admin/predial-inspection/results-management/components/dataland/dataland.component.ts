@@ -9,7 +9,7 @@ import { ResultsService } from '../../services/results.service';
 })
 export class DatalandComponent implements OnInit {
     @Input() ubicacion: IUbicacion;
-
+    @Input() ubigeo: string;
 
     @Output() clickPosition: EventEmitter<any> = new EventEmitter();
     datosPredio = {
@@ -26,7 +26,7 @@ export class DatalandComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log('this.ubicacion>>',this.ubicacion);
-    this.datosPredio.ubigeo = this.ubicacion.ubigeo;
+    this.datosPredio.ubigeo = this.ubigeo;
     this.datosPredio.hab = this.ubicacion.nomUU;
     this.datosPredio.mz = this.ubicacion.mznUrb;
     this.datosPredio.lote = this.ubicacion.lotUrb;

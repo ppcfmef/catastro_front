@@ -10,12 +10,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { MatPaginator } from '@angular/material/paginator';
 import { User } from 'app/core/user/user.types';
+import { ExportUtils } from 'app/shared/utils/export.util';
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
+    tabIndex=0;
   displayedColumns: string[] = ['nro', 'codTicket', 'tipoBrecha', 'fecha', 'actions'];
   user: User;
   dataSource = [
@@ -296,7 +298,7 @@ onChangePagePendiente(
  onChangePageObservado(
     paginator: MatPaginator | { pageSize: number; pageIndex: number }
 ): void {
-    console.log('paginator', paginator);
+
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     const filterRawValue = {
@@ -337,4 +339,36 @@ onChangePagePendiente(
     this._route.navigate([`ticket-done/${row.id}`], {relativeTo: this._activeRouter});
     console.log('onZoomTerminado', row);
   }
+
+  getSelectedIndex(): any  {
+    this.tabIndex=parseInt(localStorage.getItem('tabIndex'),10);
+    return this.tabIndex;
+  }
+
+  onTabChange(event: any): any {
+
+    this.tabIndex = event.index;
+    localStorage.setItem('tabIndex',String(this.tabIndex));
+
+  }
+
+  exportDataToExcel(): void {
+    const filterRawValue = {
+
+        ...this.queryParams
+    };
+    const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
+    this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
+
+        const dataExcel =res.results.map((r: ITicket)=>({
+            'Codigo de Ticket': r.codTicket,
+            'Tipo de brecha': r.tipoTicket,
+            'Fecha de Atencion': r.fecUltimaActualizacion,
+            'Estado de Trabajo': r.estTrabajoTicket,
+        }));
+        ExportUtils.exportToExcel(dataExcel, 'Tickets.xlsx');
+
+      });
+
+}
 }

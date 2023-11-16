@@ -9,15 +9,15 @@
 />
 
 
-
-    <div #fotosElement id="fotosElement" [ngStyle]="{'background-color':'white' ,'min-width':'400px',padding:'5px'}"  >
-        <app-list-images  [fotos]="fotos"></app-list-images>
-
-            <!--<ng-container *ngFor="let img of fotos | slice:0:5">
-                <img class="object-contain h-30 rounded-md" src="{{img.foto}}" alt="">
-            </ng-container>-->
+    <div #fotosElement id="fotosElement"  [ngStyle]="{'min-width':'450px',padding:'5px',  'background-color':'white' }"  >
 
 
-        <!--<app-list-images  [fotos]="fotos"></app-list-images>-->
+        <div class="flex flex-col gap-4" >
+
+            <ng-container *ngFor="let img of fotos | slice:0:5">
+                <img class="object-contain h-50 rounded-md" src="{{img.foto}}" alt="">
+            </ng-container>
+        </div>
+
+
     </div>
-
