@@ -10,3 +10,14 @@ export interface IntegrateBusiness {
   document: string;
   businessName: string;
 }
+
+
+export interface IntegrateNsrtmLandOwner {
+  documentType: number;
+  documentTypeDescription: string;
+  document: string;
+  nane: string;
+  paternalSurname: string;
+  maternalSurname: string;
+  businessName: string;
+}
