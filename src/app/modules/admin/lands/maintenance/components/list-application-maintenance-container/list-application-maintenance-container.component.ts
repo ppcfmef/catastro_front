@@ -35,6 +35,9 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
                 {
                     id:4 , text :'Inactivar'
                     },
+                    {
+                        id:5 , text :'Independización'
+                        },
 
     ];
 
