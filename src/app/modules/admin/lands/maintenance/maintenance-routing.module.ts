@@ -7,6 +7,7 @@ import { ListLandMaintenancePage } from './pages/list-land-maintenance/list-land
 import { MaintenanceAccumulationPage } from './pages/maintenance-accumulation/maintenance-accumulation.page';
 import { MaintenanceReassignmentPage } from './pages/maintenance-reassignment/maintenance-reassignment.page';
 import { MaintenanceSplitPage } from './pages/maintenance-split/maintenance-split.page';
+import { MaintenanceIndependencePage } from './pages/maintenance-independence/maintenance-independence.page';
 
 
 const routes: Routes = [
@@ -49,6 +50,17 @@ const routes: Routes = [
         data: { id: 'gprmain', permissionType: 'read' },
 
     },
+
+
+
+    {
+        path: 'independence/:idLand',
+        component: MaintenanceIndependencePage,
+        canActivate: [NavigationAuthorizationGuard],
+        data: { id: 'gprmain', permissionType: 'read' },
+
+    },
+
 ];
 
 @NgModule({

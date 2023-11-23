@@ -40,6 +40,8 @@ import { ListApplicationMaintenanceContainerComponent } from './components/list-
 
 import { ListApplicationMaintenancePage } from './pages/list-application-maintenance/list-application-maintenance.page';
 import { LandMaintenanceDesactivateComponent } from './components/land-maintenance-desactivate/land-maintenance-desactivate.component';
+import { MaintenanceIndependencePage } from './pages/maintenance-independence/maintenance-independence.page';
+import { MaintenanceIndependenceContainerComponent } from './components/maintenance-independence-container/maintenance-independence-container.component';
 
 
 @NgModule({
@@ -66,6 +68,8 @@ import { LandMaintenanceDesactivateComponent } from './components/land-maintenan
     ListApplicationMaintenanceContainerComponent,
       ListApplicationMaintenancePage,
       LandMaintenanceDesactivateComponent,
+      MaintenanceIndependencePage,
+      MaintenanceIndependenceContainerComponent,
   ],
   imports: [
     CommonModule,
