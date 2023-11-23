@@ -23,7 +23,7 @@ export class IntegrationService {
     return this.http.get<IntegratePerson>(`${this.apiUrl}/integrations/person/${document}/`);
   }
 
-  getNsrtmLandOwner(ubigeo: string, landOwnerCode: string): Observable<IntegrateNsrtmLandOwner> {
-    return this.http.get<IntegrateNsrtmLandOwner>(`${this.apiUrl}/integrations/nsrtm/${ubigeo}/${landOwnerCode}/`);
+  getLandOwner(ubigeo: string, landOwnerCode: string): Observable<IntegrateNsrtmLandOwner> {
+    return this.http.get<IntegrateNsrtmLandOwner>(`${this.apiUrl}/integrations/land-owner/${ubigeo}/${landOwnerCode}/`);
   }
 }
