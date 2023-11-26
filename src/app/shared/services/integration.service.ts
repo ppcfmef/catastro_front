@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { IntegrateBusiness, IntegratePerson} from '../interfaces/integrations.inteface';
+import { IntegrateBusiness, IntegratePerson, IntegrateNsrtmLandOwner} from '../interfaces/integrations.inteface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +21,9 @@ export class IntegrationService {
 
   getPerson(document): Observable<IntegratePerson> {
     return this.http.get<IntegratePerson>(`${this.apiUrl}/integrations/person/${document}/`);
+  }
+
+  getNsrtmLandOwner(ubigeo: string, landOwnerCode: string): Observable<IntegrateNsrtmLandOwner> {
+    return this.http.get<IntegrateNsrtmLandOwner>(`${this.apiUrl}/integrations/nsrtm/${ubigeo}/${landOwnerCode}/`);
   }
 }

@@ -162,6 +162,25 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
     }
   }
 
+  getIntegrationNsrtmLandOwner(): void {
+    const landOwnerCode = this.formEdit.get('code').value;
+    const ubigeo = this.formEdit.get('ubigeo').value;
+    this.integrationService.getNsrtmLandOwner(ubigeo, landOwnerCode)
+      .toPromise().then(
+        (result) => {
+          this.formEdit.get('dni').setValue(result.document);
+          if (result.documentType === 2) {
+            this.formEdit.get('documentType').setValue('06');
+            this.formEdit.get('descriptionOwner').setValue(result.businessName);
+          }else {
+            this.formEdit.get('name').setValue(result.nane);
+            this.formEdit.get('maternalSurname').setValue(result.maternalSurname);
+            this.formEdit.get('paternalSurname').setValue(result.paternalSurname);
+          }
+        }
+      );
+  }
+
   get typeDocSelectValue(): string {
     return this.formEdit.get('documentType').value;
   }

@@ -13,6 +13,11 @@
         </mat-form-field>
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
             <mat-label>Código de contribuyente</mat-label>
+            <mat-icon
+            class="icon-size-5 touched"
+            (click)="getIntegrationNsrtmLandOwner()"
+            [svgIcon]="'heroicons_solid:search'"
+            matSuffix></mat-icon>
             <input matInput type="text" formControlName="code">
         </mat-form-field>
     </div>
