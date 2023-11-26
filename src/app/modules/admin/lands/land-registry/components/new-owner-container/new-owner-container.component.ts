@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -14,13 +15,18 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
 export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() ownerId: number;
   showFormEdit: boolean | null;
+  params: any ={};
   search: FormControl = new FormControl();
   landOwner: LandOwner;
+  idView = 'gprpregist';
+  hideSelectUbigeo = true;
+  ubigeo: string;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
+    private navigationAuthorizationService: NavigationAuthorizationService,
   ) {
     this.search = new FormControl('');
   }
@@ -30,6 +36,21 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       this.landOwner = result;
+    });
+
+    this.navigationAuthorizationService.userScopePermission(this.idView)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((data: any) => {
+      if(!data?.limitScope){
+        this.ubigeo = null;
+        this.hideSelectUbigeo = false;
+      }
+      else {
+        this.hideSelectUbigeo = true;
+        this.ubigeo = data?.ubigeo;
+      }
+
+      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     });
   }
 
@@ -57,12 +78,31 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   searchOwner(): void {
     const searchText = this.search.value;
-    this.landRegistryService.searchOwnerbyDocument(searchText)
+    const params ={ ubigeo: this.ubigeo, search:searchText,limit:1};
+    this.landRegistryService.searchOwnerbyDocument(params)
     .toPromise()
     .then(
-      (result) => {
-        this.receivedShowFormEdit(false);
-        this.landRegistryService.setLandOwner(result);
+      (result: any) => {
+        if (result && result.length>0){
+            this.receivedShowFormEdit(false);
+            this.landRegistryService.setLandOwner(result[0]);
+        }
+
+        else{
+            const dialogRef = this.confirmationService.error(
+                'Contribuyente no encontrado',
+                `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
+              );
+
+              dialogRef.afterClosed().subscribe((option) => {
+                if (option === 'confirmed') {
+                  this.receivedShowFormEdit(true);
+                  console.log('pasar documento al formulario', searchText);
+                }
+                this.search.reset();
+              });
+        }
+
       },
       (error) => {
         const dialogRef = this.confirmationService.error(

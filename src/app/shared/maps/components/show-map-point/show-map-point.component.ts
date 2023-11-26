@@ -45,12 +45,16 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     _unsubscribeAll: Subject<any> = new Subject<any>();
     simpleMarkerSymbol = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location2.png',
-        width: '20px',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
+        width: '30px',
         height: '30px',
+        yoffset: '15px',
+        /*url: '/assets/images/map/location2.png',
+        width: '20px',
+        height: '30px',*/
     };
 
-    layersInfo = [
+    layersInfo: any[] = [
       /*  {
             idServer: 0,
             title: 'Zona 17',
@@ -109,7 +113,131 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     featureTable: null,
     popupTemplate: null,
     legend: null,
-    sublayers: 'all',
+    sublayers: [
+        {id:10,
+            visible:true,
+            title:'CF_SECTOR'
+        },
+        {id:9,
+            visible:true,
+            title:'CF_MANZANA_URB',
+            labelingInfo: {
+              symbol: {
+                  type: 'text', // autocasts as new TextSymbol()
+                  color: 'blue',
+                  haloColor: 'white',
+                  haloSize: 1,
+                  font: {
+                      // autocast as new Font()
+                      family: 'arial',
+                      size: 10,
+                      weight: 'bold',
+
+                  },
+              },
+              labelPlacement: 'above-center',
+              labelExpressionInfo: {
+                  expression: '$feature.MZN_URB',
+              },
+            }
+
+        },
+        {id:8,
+            visible:false,
+            title:'CF_MANZANA'
+
+          },
+
+
+          {id:7,
+              visible:true,
+              title:'CF_PARQUES'
+
+          },
+          {id:6,
+            visible:true,
+            title:'CF_UNIDADES_URBANAS'
+          },
+          {id:5,
+            visible:true,
+            title:'CF_LOTES',
+            labelingInfo: {
+              symbol: {
+              type: 'text',
+              color: 'black',
+              font: {
+
+                  family: 'arial',
+                  size: 10,
+                  weight: 'bold',
+
+              },
+          },
+          labelPlacement: 'above-center',
+          labelExpressionInfo: {
+              expression: '$feature.LOT_URB',
+          },
+      }
+
+        },
+          {id:4,
+            visible:true,
+            title:'CF_ARANCEL'
+          },
+          {id:3,
+            visible:true,
+            title:'CF_NUMERACION'
+
+        },
+
+          {id:2,
+            visible:true,
+            title:'CF_EJE_VIAL',
+            labelingInfo: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 8,
+                        //weight: 'bold'
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+                },
+            }
+
+          },
+          {id:1,
+            visible:true,
+            title:'CF_LOTES_PUN'
+
+        },
+
+          {id:0,
+            visible:true,
+            title:'CF_PREDIO',
+            labelingInfo: {
+              symbol: {
+                  type: 'text', // autocasts as new TextSymbol()
+                  color: 'black',
+                  font: {
+                      // autocast as new Font()
+                      family: 'arial',
+                      size: 10,
+                      //weight: 'bold'
+                  },
+              },
+              labelPlacement: 'above-center',
+              labelExpressionInfo: {
+                  expression: '$feature.COD_CPU',
+              },
+          }
+          },
+    ],
 },
 
         {
@@ -246,7 +374,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
             const mapViewProperties = {
                 container: this.mapViewEl.nativeElement,
-                zoom: 18,
+                zoom: 19,
 
                 map: this.map,
             };
@@ -416,15 +544,17 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                 ],
 
                 [
-                    { content: `Fecha ${moment().format('DD/MM/YYYY')}` },
-                    { content: `Usuario ${this.user?.name}` },
+                    { content: `Fecha: ${moment().format('DD/MM/YYYY')}` },
+                    { content: `Usuario: ${this.user?.name}` },
                 ],
 
                 [
                     {
                         content: `Código Predial Único: ${this.landRecord.cup?this.landRecord.cup:''}`,
-                        colSpan: 2,
+
                     },
+
+                    { content: `Puesto Laboral: ${this.user?.name}` },
                 ],
                 [
                     {
@@ -434,7 +564,13 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                 ],
                 [
                     {
-                        content: `Identificador geográfico: ${this.landRecord.municipalNumber?this.landRecord.municipalNumber:''}`,
+                        content: `Latitud: ${this.landRecord.latitude?this.landRecord.latitude:''}`,
+                        colSpan: 2,
+                    },
+                ],
+                [
+                    {
+                        content: `Longitud: ${this.landRecord.longitude?this.landRecord.longitude:''}`,
                         colSpan: 2,
                     },
                 ],

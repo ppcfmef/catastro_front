@@ -113,20 +113,36 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
     ];
     landRegistryMapModel: LandRegistryMapModel;
     simpleMarkerSymbol = {
-        type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location2.png',
-        width: '20px',
+        /*type: 'web-style',
+        name: 'tear-pin-1',
+        styleName: 'Esri2DPointSymbolsStyle',
+        width: '20px'*/
+        type: 'picture-marker',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
+        //url: '/assets/images/map/location2.png',
+        width: '30px',
         height: '30px',
         yoffset: '15px',
     };
 
     simpleMarkerSymbolUndefined = {
-        type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location_out2.png',
-        width: '20px',
+
+
+        type: 'picture-marker',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png',
+        width: '30px',
         height: '30px',
         yoffset: '15px',
     };
+
+
+    /*simpleMarkerSymbolUndefined = {
+        type: 'web-style',
+        name: 'tear-pin-2',
+        styleName: 'Esri2DPointSymbolsStyle',
+        width: '20px'
+
+    };*/
 
     layersInfo = [
        /* {
@@ -1103,10 +1119,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
-                                    width: '20px',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
+                                    width: '30px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
                               },
 
@@ -1120,10 +1140,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                     width: '20px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
                             },
                             {
@@ -1136,10 +1160,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                     width: '20px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
                             },
 
@@ -1154,10 +1182,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                     width: '20px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
 
                             },
@@ -1171,10 +1203,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                     width: '20px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
 
                             },
@@ -1188,10 +1224,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 filter:searchFilter,
                                 resultSymbol:{
                                     type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                    url: '/assets/images/map/location2.png',
+                                    url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                     width: '20px',
                                     height: '30px',
                                     yoffset: '15px',
+                                    /*url: '/assets/images/map/location2.png',
+                                    width: '20px',
+                                    height: '30px',
+                                    yoffset: '15px',*/
                                 }
                             },
                         ];
@@ -1236,10 +1276,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             url: 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
 
                           },
@@ -1253,10 +1297,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             name: 'DIRECCION INEI',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
                         },
                         {
@@ -1268,10 +1316,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             name: 'DISTRITOS',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
                         },
 
@@ -1285,10 +1337,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             name: 'DIRECCION MUNICIPAL',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
 
                         },
@@ -1301,10 +1357,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             name: 'CODIGO DE PREDIO',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
 
                         },
@@ -1317,10 +1377,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             name: 'CODIGO CPU',
                             resultSymbol:{
                                 type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-                                url: '/assets/images/map/location2.png',
+                                url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
                                 width: '20px',
                                 height: '30px',
                                 yoffset: '15px',
+                                /*url: '/assets/images/map/location2.png',
+                                width: '20px',
+                                height: '30px',
+                                yoffset: '15px',*/
                             }
                         },
                     ];

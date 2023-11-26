@@ -51,9 +51,15 @@ export class LandRegistryService {
     return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/${ownerId}/`);
   }
 
+  searchOwnerbyDocument(queryParams: any): Observable<LandOwner> {
+    return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners-search/`, {params: queryParams});
+    /*return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);*/
+  }
+
+  /*
   searchOwnerbyDocument(document: string): Observable<LandOwner> {
     return this.http.get<LandOwner>(`${this.apiUrl}/lands/owners/search/${document}/`);
-  }
+  }*/
 
   saveOwner(data: LandOwner): Observable<LandOwner> {
     if (data.id) {

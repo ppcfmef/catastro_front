@@ -125,10 +125,14 @@ OnChanges { // @Input() view: any = null;
 
     simpleMarkerSymbolUndefined = {
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-        url: '/assets/images/map/location_out2.png',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
         width: '20px',
         height: '30px',
-        yoffset: '15px'
+        yoffset: '15px',
+        /*url: '/assets/images/map/location_out2.png',
+        width: '20px',
+        height: '30px',
+        yoffset: '15px'*/
     };
     // private _rowZoom: any;
     // eslint-disable-next-line max-len
