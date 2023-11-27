@@ -152,6 +152,9 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
     this._fuseSplashScreenService.show(0);
     const documentType = this.formEdit.get('documentType').value;
     const document = this.formEdit.get('dni').value;
+
+    this.cleanBeforeSearch();
+
     if (documentType === '01') {
       this.integrationService.getPerson(document)
       .toPromise().then(
@@ -179,10 +182,11 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
     }
   }
 
-  getIntegrationNsrtmLandOwner(): void {
+  getIntegrationLandOwner(): void {
     const landOwnerCode = this.formEdit.get('code').value;
     const ubigeo = this.formEdit.get('ubigeo').value;
 
+    this.cleanBeforeSearch();
     if(ubigeo==='220901'){
         this.integrationService.getSatLandOwner(ubigeo, landOwnerCode)
         .toPromise().then(
@@ -198,25 +202,25 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
             }
 
-          }
-        );
-    }
+    });
+}
     else{
 
-        this.integrationService.getNsrtmLandOwner(ubigeo, landOwnerCode)
-        .toPromise().then(
-          (result) => {
-            this.formEdit.get('dni').setValue(result.document);
-            if (result.documentType === 2) {
-              this.formEdit.get('documentType').setValue('06');
-              this.formEdit.get('descriptionOwner').setValue(result.businessName);
-            }else {
-              this.formEdit.get('name').setValue(result.nane);
-              this.formEdit.get('maternalSurname').setValue(result.maternalSurname);
-              this.formEdit.get('paternalSurname').setValue(result.paternalSurname);
-            }
+        this.integrationService.getLandOwner(ubigeo, landOwnerCode)
+      .toPromise().then(
+        (result) => {
+          this.formEdit.get('dni').setValue(result.document);
+          if (result.documentType === '06') {
+            this.formEdit.get('documentType').setValue(result.documentType);
+            this.formEdit.get('descriptionOwner').setValue(result.businessName);
+          }else {
+            this.formEdit.get('name').setValue(result.nane);
+            this.formEdit.get('documentType').setValue('01');
+            this.formEdit.get('maternalSurname').setValue(result.maternalSurname);
+            this.formEdit.get('paternalSurname').setValue(result.paternalSurname);
+
           }
-        );
+    });
     }
 
   }
@@ -239,5 +243,14 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   ngOnDestroy(): void {
     this.formEdit?.reset();
+  }
+
+  private cleanBeforeSearch(): void {
+    this.formEdit.get('documentType').setValue('01');
+    this.formEdit.get('dni').setValue('');
+    this.formEdit.get('name').setValue('');
+    this.formEdit.get('maternalSurname').setValue('');
+    this.formEdit.get('paternalSurname').setValue('');
+    this.formEdit.get('descriptionOwner').setValue('');
   }
 }
