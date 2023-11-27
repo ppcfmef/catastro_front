@@ -1,13 +1,13 @@
 <section class="container">
     <article class="flex">
         <section class="input-btn-icon mr-6">
-            <input type="search" placeholder="Nro. Documento" [formControl]="search">
-            <button (click)="searchOwner()">Buscar 
-                <mat-icon svgIcon="heroicons_outline:search">                    
+            <input type="search" placeholder="Codigo de contribuyente" [formControl]="search">
+            <button (click)="searchOwner()">Buscar
+                <mat-icon svgIcon="heroicons_outline:search">
                 </mat-icon>
             </button>
         </section>
-        
+
         <button class="btn-success box-shadow-z1"
         (click)="newOwner()"> Nuevo contribuyente
             <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
@@ -30,5 +30,5 @@
             <app-search-placeholder texto="Ingrese un documento para buscar el propietario"></app-search-placeholder>
         </ng-container>
     </ng-container>
-    
+
 </section>

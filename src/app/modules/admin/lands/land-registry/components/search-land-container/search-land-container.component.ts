@@ -12,6 +12,7 @@ import { LandOwnerService } from '../../services/land-owner.service';
 import { LandRecordService } from '../../services/land-record.service';
 import { takeUntil } from 'rxjs/operators';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 
 
 @Component({
@@ -116,11 +117,14 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   onClickSearch(): void {
     const queryParams = this.makeQueryParams();
     this.getLandRecords(queryParams);
+    this.showOwnerTable = false;
+    this.showLandsMap = false;
   }
 
   onCleanSearch(): void {
     this.formFilters.get('search').setValue(null);
     this.getDefaultData();
+
   }
 
   onChangeView(): void {
@@ -135,6 +139,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onFilterStatus(): void {
     const status = this.formFilters.get('status').value;
+    this.showOwnerTable = false;
+    this.showLandsMap = false;
     if (status !== undefined) {
       this.onClickSearch(); // Todo: se debe unificar en un solo metodo
     }else {
@@ -161,7 +167,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     const search = rawValue?.search || null;
     const status = rawValue?.status;
     const ubigeo = this.ubigeo;
-    if (search !== null) {
+    queryParams['search'] = search;
+    queryParams['status'] = status;
+    queryParams['ubigeo'] = ubigeo;
+    /*if (search !== null) {
       queryParams['search'] = search;
     }
 
@@ -171,8 +180,9 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
     if (ubigeo !== null && ubigeo !== undefined) {
       queryParams['ubigeo'] = ubigeo;
-    }
-    return queryParams;
+    }*/
+
+    return CommonUtils.deleteKeysNullInObject( queryParams);
   }
 
   private createFormFilters(): void {
@@ -184,7 +194,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private getDefaultData(): void {
-    this.getLandRecords({limit: 10});
+    this.showOwnerTable = false;
+    this.showLandsMap = false;
+    const queryParams = this.makeQueryParams();
+    this.getLandRecords({limit: 10,... queryParams});
   }
 
   private getLandRecords(queryParams): void {

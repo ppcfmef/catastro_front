@@ -20,3 +20,10 @@ export interface IntegrateNsrtmLandOwner {
   maternalSurname: string;
   businessName: string;
 }
+
+export interface SatLandOwner {
+    nrodocumento: string;
+    nombre: string;
+    appaterno: string;
+    apmaterno: string;
+  }

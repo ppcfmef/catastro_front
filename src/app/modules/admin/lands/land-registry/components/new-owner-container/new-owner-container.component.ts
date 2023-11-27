@@ -5,6 +5,8 @@ import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
+import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -13,24 +15,47 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
 })
 export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() ownerId: number;
+  @Input() ubigeo: string;
   showFormEdit: boolean | null;
+  params: any ={};
   search: FormControl = new FormControl();
   landOwner: LandOwner;
+  idView = 'gprpregist';
+  hideSelectUbigeo = true;
+
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
+    private navigationAuthorizationService: NavigationAuthorizationService,
+    private _fuseSplashScreenService: FuseSplashScreenService,
   ) {
     this.search = new FormControl('');
   }
 
   ngOnInit(): void {
+
     this.landRegistryService.getLandOwner()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       this.landOwner = result;
     });
+
+    /*this.navigationAuthorizationService.userScopePermission(this.idView)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((data: any) => {
+      if(!data?.limitScope){
+        this.ubigeo = null;
+        this.hideSelectUbigeo = false;
+      }
+      else {
+        this.hideSelectUbigeo = true;
+        this.ubigeo = data?.ubigeo;
+      }
+
+      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+    });*/
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,14 +82,38 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   searchOwner(): void {
     const searchText = this.search.value;
-    this.landRegistryService.searchOwnerbyDocument(searchText)
+    const params ={ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5};
+    this._fuseSplashScreenService.show(0);
+    this.landRegistryService.searchOwnerbyDocument(params)
     .toPromise()
     .then(
-      (result) => {
-        this.receivedShowFormEdit(false);
-        this.landRegistryService.setLandOwner(result);
+      (result: any) => {
+        this._fuseSplashScreenService.hide();
+        if (result && result.length>0){
+            this.receivedShowFormEdit(false);
+            this.landRegistryService.setLandOwner(result[0]);
+
+        }
+
+        else{
+
+            const dialogRef = this.confirmationService.error(
+                'Contribuyente no encontrado',
+                `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
+              );
+
+              dialogRef.afterClosed().subscribe((option) => {
+                if (option === 'confirmed') {
+                  this.receivedShowFormEdit(true);
+                  console.log('pasar documento al formulario', searchText);
+                }
+                this.search.reset();
+              });
+        }
+
       },
       (error) => {
+        this._fuseSplashScreenService.hide();
         const dialogRef = this.confirmationService.error(
           'Contribuyente no encontrado',
           `¿Desea crear un nuevo contribuyente con documento ${searchText}?`

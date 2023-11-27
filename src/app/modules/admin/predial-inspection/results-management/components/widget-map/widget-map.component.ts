@@ -124,7 +124,8 @@ puntoImagenSymbol2 = {
 
 ubicacionSymbol ={
   type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
-  url: '/assets/images/map/location2.png',
+  url:'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
+  //url: '/assets/images/map/location2.png',
   width: '20px',
   height: '30px',
   yoffset: '15px',

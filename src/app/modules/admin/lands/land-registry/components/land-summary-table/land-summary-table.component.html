@@ -1,18 +1,18 @@
 <ng-container>
   <table mat-table [dataSource]="dataSource" class="table-base table-line-divider">
-  
+
     <ng-container matColumnDef="nro">
       <th mat-header-cell *matHeaderCellDef> Nro.</th>
         <td mat-cell *matCellDef="let element; let i = index">
             {{ (pageIndex * pageSize) + i + 1 }}
         </td>
     </ng-container>
-  
+
     <ng-container matColumnDef="cup">
       <th mat-header-cell *matHeaderCellDef> Cod. único predio </th>
       <td mat-cell *matCellDef="let element"  class="text-center"> {{element.cup}} </td>
     </ng-container>
-  
+
     <ng-container matColumnDef="cpm">
       <th mat-header-cell *matHeaderCellDef> Cod. predio municipal </th>
       <td mat-cell *matCellDef="let element"  class="text-center"> {{element.cpm}} </td>
@@ -25,8 +25,8 @@
           mat-icon-button
           (click)="onDownloadDeclaration(element)">
           <mat-icon class="text-green-600" svgIcon="feather:printer"></mat-icon>
-        </button> 
-        
+        </button>
+
       </td>
     </ng-container>
 
@@ -58,18 +58,19 @@
                     <div>{{element.streetName}}</div> <!-- direccion -->
                 </section>
                 <section>
-                    <button class="container-triangle">
+                    <button class="container-triangle"    (click)="landSelection(element)">
+
                         <span class="triangle"></span>
                     </button>
                 </section>
             </article>
-            
+
         </td>
       </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        (click)="landSelection(row)"
+
         [class.predioSelected]="landSelected.has(row)"></tr>
   </table>
   <mat-paginator [length]="length"

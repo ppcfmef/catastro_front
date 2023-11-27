@@ -42,9 +42,9 @@
     <select-ubigeo *ngIf="!hideSelectUbigeo"
     (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
   </div>
-  
+
   <!-- fin select ubigeo -->
-  <div style=" padding-top: 20px;">
+  <!--<div style=" padding-top: 20px;">
     <button mat-flat-button [color]="'primary'" style="float: right;"
     (click)="onDownloadReport()"
     >
@@ -52,10 +52,10 @@
       Descargar reporte
     </button>
   </div>
-  
+-->
 </div>
 
-<app-search-land-table  
+<app-search-land-table
 [dataSource]="dataSourceLands"
 [length]="lengthLandsOwner"
 (changePage)="onChangePage($event)"
@@ -68,15 +68,15 @@
 
 
 
-<div class="container-panel flex w-full" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
-  <div class="map-container" *ngIf="showLandsMap">
-    <app-show-map-point [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner"  ></app-show-map-point>
+<div class="container-panel flex w-full"  *ngIf="showLandsMap" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+  <div class="map-container" >
+    <app-show-map-point *ngIf="showLandsMap" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner"  ></app-show-map-point>
   </div>
 
   <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
     <button mat-flat-button [color]="'primary'"
-    (click)="onDowloandCroquis()" > 
+    (click)="onDowloandCroquis()" >
       <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
       CROQUIS
     </button>

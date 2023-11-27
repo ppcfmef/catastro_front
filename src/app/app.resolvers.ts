@@ -39,8 +39,8 @@ export class InitialDataResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));
-        localStorage.setItem('ubicacionMocks', JSON.stringify(ubicacionMocks));
+        //localStorage.setItem('ticketMocks', JSON.stringify(ticketMocks));
+        //localStorage.setItem('ubicacionMocks', JSON.stringify(ubicacionMocks));
         //ticketsMock
 
         // Fork join multiple API endpoint calls to wait all of them to finish
