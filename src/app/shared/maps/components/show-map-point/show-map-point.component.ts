@@ -554,7 +554,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
                     },
 
-                    { content: `Puesto Laboral: ${this.user?.name}` },
+                    { content: `Puesto Laboral: ${this.user?.role?.name}` },
                 ],
                 [
                     {
