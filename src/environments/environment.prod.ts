@@ -12,4 +12,5 @@ export const environment = {
     defaultUbigeo: '150101',
     apiKeyArcgis:'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9',
     apiUrlArcGisServer: 'https://ws.mineco.gob.pe/serverdf/rest/services',
+    apiSatUrl:'https://app.sat-t.gob.pe/api'
 };

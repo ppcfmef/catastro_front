@@ -14,6 +14,7 @@ import { LandOwnerService } from '../../services/land-owner.service';
 import { LandRecordService } from '../../services/land-record.service';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { takeUntil } from 'rxjs/operators';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 
 
 @Component({
@@ -107,14 +108,16 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     const queryParams = {};
     const search = rawValue?.search || null;
     const ubigeo = this.ubigeo;
-    if (search !== null) {
+    queryParams['search'] = search;
+    queryParams['ubigeo'] = ubigeo;
+    /*if (search !== null) {
       queryParams['search'] = search;
     }
 
     if (ubigeo !== null && ubigeo !== undefined) {
       queryParams['ubigeo'] = ubigeo;
-    }
-    return queryParams;
+    }*/
+    return CommonUtils.deleteKeysNullInObject( queryParams);
   }
 
   onClickSearch(): void {
@@ -129,12 +132,13 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onChangePage(data: {paginator: any; sort: Sort}): void {
+    const filterQueryParams = this.makeQueryParams();
     const rawValue = this.formFilters.getRawValue();
     const search = rawValue?.search || '';
     const limit = data.paginator.pageSize;
     const offset = limit * data.paginator.pageIndex;
     const ordering = this.orderingFormater(data.sort);
-    const queryParams = { limit, offset, search, ordering };
+    const queryParams = { limit, offset, search, ordering ,... filterQueryParams };
 
     this._landOwnerService.getList(queryParams).toPromise().then(
       (response: IPagination<LandOwner>) => {
@@ -144,10 +148,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onShowLandsTable(landOwner: LandOwner): void {
+    //const filterQueryParams = this.makeQueryParams();
     this.showLandsTable = true;
     this.showLandsMap = false;
     this.landOwner = landOwner;
-    const queryParams = { limit: 10, owner: this.landOwner.id };
+    const queryParams = { limit: 10, owner: this.landOwner.id , };
     this.landRecordService.getList(queryParams).subscribe(
       (response) => {
         this.dataSourceLands = response.results;
@@ -157,11 +162,12 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onChangePageLand(data: {paginator: any; sort: Sort}): void {
+    //const filterQueryParams = this.makeQueryParams();
     const owner = this.landOwner.id;
     const limit = data?.paginator.pageSize;
     const offset = limit * data?.paginator.pageIndex;
     const ordering = this.orderingFormater(data.sort);
-    const queryParams = { limit, offset, owner, ordering };
+    const queryParams = { limit, offset, owner, ordering,  };
 
     this.landRecordService.getList(queryParams).subscribe(
       (response) => {
@@ -182,8 +188,12 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onCleanSearch(): void {
+
     this.formFilters.get('search').setValue(null);
-    this._landOwnerService.getList({ limit: 10 })
+    const filterQueryParams = this.makeQueryParams();
+    this.showLandsTable = false;
+    this.showLandsMap = false;
+    this._landOwnerService.getList({ limit: 10 ,... filterQueryParams})
     .subscribe((response: IPagination<LandOwner>) => {
       this.dataSource = response.results;
       this.lengthOwner = response.count;

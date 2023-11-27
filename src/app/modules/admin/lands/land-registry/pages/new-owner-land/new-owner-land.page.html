@@ -1,13 +1,13 @@
 <div class="flex w-full container-block">
   <div class="flex-auto" [ngClass]="{block:expandMap, hidden:!expandMap}" *ngIf="initialPage">
-    <app-new-owner-container [ownerId]="ownerId"></app-new-owner-container>
-    <app-list-land-container [landId]="landId"></app-list-land-container>
+    <app-new-owner-container [ownerId]="ownerId" [ubigeo]="ubigeo"></app-new-owner-container>
+    <app-list-land-container [landId]="landId" [ubigeo]="ubigeo" ></app-list-land-container>
   </div>
   <div class="flex-auto block relative " [ngClass]="{expanded:!expandMap}">
     <div class="button-max" (click)="expandMap = !expandMap">
       <mat-icon [svgIcon]="expandMap ? 'feather:chevrons-left':'feather:chevrons-right'"></mat-icon>
     </div>
-    
+
     <app-new-land-container></app-new-land-container>
   </div>
 </div>
