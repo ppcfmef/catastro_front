@@ -15,6 +15,7 @@ import { LandRecordService } from '../../services/land-record.service';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { takeUntil } from 'rxjs/operators';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   showLandsMap = false;
 
   dataSource: LandOwner[] = [];
-  dataSourceLands: LandRecord[] = [];
+  dataSourceLands: any[] = [];
   lengthOwner: number = 0;
   lengthLandsOwner: number = 0;
   landOwner: LandOwner;
@@ -50,6 +51,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     private cdRef: ChangeDetectorRef,
     private _landOwnerService: LandOwnerService,
     private landRecordService: LandRecordService,
+    private landRegistryService: LandRegistryService,
     private navigationAuthorizationService: NavigationAuthorizationService,
   ) {
     this.createFormFilters();
@@ -123,7 +125,9 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onClickSearch(): void {
     const rawValue = this.formFilters.getRawValue();
     const search = rawValue?.search || '';
-    const queryParams = { search };
+    const filterQueryParams = this.makeQueryParams();
+    const queryParams = { search , ...filterQueryParams  };
+
     this._landOwnerService.getList(queryParams)
     .subscribe((response: IPagination<LandOwner>) => {
       this.dataSource = response.results;
@@ -148,17 +152,37 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onShowLandsTable(landOwner: LandOwner): void {
-    //const filterQueryParams = this.makeQueryParams();
+    const filterQueryParams = this.makeQueryParams();
+    console.log('onShowLandsTable landOwner>>',landOwner);
     this.showLandsTable = true;
     this.showLandsMap = false;
     this.landOwner = landOwner;
-    const queryParams = { limit: 10, owner: this.landOwner.id , };
-    this.landRecordService.getList(queryParams).subscribe(
+    const queryParams = { limit: 10 ,...filterQueryParams };
+    this.landRegistryService
+    .getLandbyOwner(this.landOwner.id, queryParams)
+    .toPromise()
+    .then(
+      (landResult) => {
+
+        this.dataSourceLands = landResult.results;
+        this.lengthLandsOwner = landResult.count;
+        this.landRecord =this.dataSourceLands[0];
+        this.showLandsMap= true;
+        /*this.landRecords = landResult.results;
+        this.tableLength = landResult.count;
+        if (this.landId && this.tableLength > 0) {
+          setTimeout(() => { // ToDo: Coordinar con frank porque demora tanto su mapa
+            this.seledRecord(this.landRecords[0]);
+          }, 6000);
+        }*/
+      }
+    );
+    /*this.landRecordService.getList(queryParams).subscribe(
       (response) => {
         this.dataSourceLands = response.results;
         this.lengthLandsOwner = response.count;
       }
-    );
+    );*/
   }
 
   onChangePageLand(data: {paginator: any; sort: Sort}): void {

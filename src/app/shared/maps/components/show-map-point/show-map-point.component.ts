@@ -554,7 +554,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
                     },
 
-                    { content: `Puesto Laboral: ${this.user?.role?.name}` },
+                    { content: `Puesto Laboral: ${this.user?.jobTitle?this.user?.jobTitle:'-' }` },
                 ],
                 [
                     {
@@ -580,14 +580,14 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                         colSpan: 2,
                     },
                 ],
-                [{ content: `RUC / DNI: ${this.landOwner?.dni}`, colSpan: 2 }],
+                [{ content: `RUC / DNI: ${this.landOwner?.dni }`, colSpan: 2 }],
                 [
                     {
-                        content: `Área terreno: ${this.landRecord?.landArea} mt2  `,
+                        content: `Área terreno: ${this.landRecord?.landArea?this.landRecord?.landArea +'mt2':'-' }   `,
                         colSpan: 2,
                     },
                 ],
-                [{ content: 'Área Construida:  mt2', colSpan: 2 }],
+                [{ content:  `Área terreno: ${this.landRecord?.landArea?this.landRecord?.landArea +'mt2':'-' }   `, colSpan: 2 }],
             ],
         });
 

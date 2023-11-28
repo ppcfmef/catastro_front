@@ -16,11 +16,12 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   @Input() length: number = 0;
   @Output() changePage: EventEmitter<any> = new EventEmitter();
   @Output() showLandsTable: EventEmitter<LandOwner> = new EventEmitter();
+  @Output() showLandOwner: EventEmitter<LandOwner> = new EventEmitter();
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatSort) tableSort = new MatSort();
   dataTable = new MatTableDataSource<LandOwner>();
 
-  displayedColumns = ['nro', 'documentType', 'dni', 'name', 'descriptionOwner', 'creationDate', 'lands'];
+  displayedColumns = ['nro','ubigeo', 'documentType', 'dni','code', 'name', 'descriptionOwner', 'creationDate', 'lands'];
   pageIndex = 0;
   pageSize = 10;
   tableFilters: {paginator: any; sort: Sort};
@@ -69,7 +70,10 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   onShowLandsTable(landOwner: LandOwner): void {
+    console.log('dataSource>>',this.dataSource);
+    console.log('landOwner>>>',landOwner);
     this.showLandsTable.emit(landOwner);
+    this.showLandOwner.emit(landOwner);
   }
 
 }
