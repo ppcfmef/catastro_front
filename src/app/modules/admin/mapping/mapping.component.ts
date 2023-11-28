@@ -36,7 +36,9 @@ export class MappingComponent implements OnInit {
 
 */
     title = 'Geovisor';
-    urlString='https://ws.mineco.gob.pe/portaldfvisor/geovisor/';
+    urlString='https://ws.mineco.gob.pe/portaldf/apps/webappviewer/index.html?id=c12acab8ebcf4949979b8f6d7717ce7e';
+    //urlString='https://ws.mineco.gob.pe/portaldfvisor/geovisor/';
+    //urlString='https://ws.mineco.gob.pe/portaldfvisor/geovisor/';
     constructor(  private _userService: UserService,
         private _commonService: CommonService,
         public sanitizer: DomSanitizer) {

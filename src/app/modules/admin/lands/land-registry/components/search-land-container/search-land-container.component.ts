@@ -91,6 +91,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
+    console.log('onShowLandsMap landRecord>>',landRecord);
     this._landOwnerService.getLandDetail(landRecord.id)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
@@ -161,6 +162,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     this.getLandRecords(queryParams);
   }
 
+  onShowLandOwner(landOwner: LandOwner): void{
+    this.landOwner = landOwner;
+  }
+
   private makeQueryParams(): {[key: string]: string | number} {
     const rawValue = this.formFilters.getRawValue();
     const queryParams = {};
@@ -214,4 +219,5 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     const orderingActive = sort?.active;
     return (sort?.direction === 'desc') ? '-'+orderingActive : orderingActive;
   }
+
 }
