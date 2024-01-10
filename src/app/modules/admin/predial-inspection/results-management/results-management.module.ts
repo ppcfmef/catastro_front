@@ -35,7 +35,7 @@ import { ShortTableComponent } from './components/short-table/short-table.compon
 import { ListImagesComponent } from './container/list-images/list-images.component';
 import { TicketPredioSubvaluadoComponent } from './container/ticket-predio-subvaluado/ticket-predio-subvaluado.component';
 import { MatInputModule } from '@angular/material/input';
-
+import { SharedModule as CustomSharedModule } from 'app/shared/shared.module';
 
 import { TicketMapComponent } from './container/ticket-map/ticket-map.component';
 import { WidgetMapComponent } from './components/widget-map/widget-map.component';
@@ -66,6 +66,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 
   ],
   imports: [
+    CustomSharedModule,
     CommonModule,
     ResultsManagementRoutingModule,
     MatIconModule,

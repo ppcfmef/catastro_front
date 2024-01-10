@@ -49,7 +49,7 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input()y: number = -13.53063;
   @Input() layersInfo=[];
   @Input() listSourceSearchConfig=[];
-  @Input() ubigeo: string;
+  @Input() ubigeo: string='040702';
   @Input() user: User;
   @Input() idManzanaLayer =3;
   @Input() idLoteLayer =1;
@@ -126,7 +126,7 @@ ubicacionSymbol ={
   type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
   url:'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
   //url: '/assets/images/map/location2.png',
-  width: '20px',
+  width: '30px',
   height: '30px',
   yoffset: '15px',
 };
@@ -136,6 +136,7 @@ graphics: any[]=[];
 ubicacionGraphic: any ;
 _unsubscribeAll: Subject<any> = new Subject<any>();
 currentIndex = 0;
+hideSelectUbigeo = false;
   constructor(
     private _fuseSplashScreenService: FuseSplashScreenService,
     private  _authService: AuthService,
@@ -152,6 +153,7 @@ currentIndex = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('changes>>',changes);
+
     if(changes.ubicacion && this.ubicacion && this.view){
       this.fotos = this.ubicacion.fotos;
       this.onChangeUbicacion(this.ubicacion);
@@ -167,6 +169,14 @@ currentIndex = 0;
   }
 
   ngOnInit(): void {
+    this.ubigeo ='040703';
+    console.log('this.ubigeo>>',this.ubigeo);
+    this._resultsService.getUbigeo().subscribe( (ubigeo: string)=>{
+        if(ubigeo){
+            this.ubigeo = ubigeo;
+            this.filterUbigeo(ubigeo);
+        }
+    });
 
     this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
       if (res) {
@@ -446,7 +456,7 @@ currentIndex = 0;
 
           const fotosElement = document.getElementById('fotosElement');
 
-
+          const selectElement = document.getElementById('selectElement');
 
 
           const layerListExpand = new Expand({view: this.view, content: layerList, id: 'maplayerListExpand', group: 'bottom-right'});
@@ -455,6 +465,17 @@ currentIndex = 0;
             content: fotosElement,
             expandIconClass: 'esri-icon-media',
             id: 'fotosElement',
+            group: 'top-right'
+
+        });
+
+
+        const selectUbigeoExpand = new Expand({
+            view: this.view,
+            content: selectElement,
+            //expandIconClass: 'esri-icon-',
+            id: 'selectElement',
+            group: 'top-right'
 
         });
 
@@ -476,7 +497,7 @@ currentIndex = 0;
 
         this.view.ui.add(legendExpand, 'bottom-right');
 
-        this.view.ui.add(fotosExpand, {
+        this.view.ui.add([fotosExpand,selectUbigeoExpand], {
             position: 'top-left',
         });
         this.view.when(() => {
@@ -543,7 +564,7 @@ currentIndex = 0;
 
                       intersectFeature.then((data: any) => {
                           if (data && data.attributes) {
-                              predio['ID_MZN_C']=data['ID_MZN_C'];
+                              predio['ID_MZN_C']=data.attributes['ID_MZN_C'];
                           }
 
                           this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
@@ -615,7 +636,7 @@ currentIndex = 0;
 
                     intersectFeature.then((data: any) => {
                         if (data && data.attributes) {
-                            predio['ID_MZN_C']=data['ID_MZN_C'];
+                            predio['ID_MZN_C']=data.attributes['ID_MZN_C'];
                         }
 
                         this.pointClickEvent.emit({point:predio, type:TypePoint.LOTE});
@@ -719,7 +740,7 @@ currentIndex = 0;
             intersectFeature.then((data: any) => {
 
               if (data && data.attributes) {
-                  puntoImagen['ID_MZN_C']=data['ID_MZN_C'];
+                  puntoImagen['ID_MZN_C']=data.attributes['ID_MZN_C'];
               }
                 this.pointClickEvent.emit({point:puntoImagen, type:TypePoint.PUNTO_IMAGEN});
             });
@@ -747,7 +768,24 @@ currentIndex = 0;
 filterUbigeo(ubigeo: string): void {
   const where = `UBIGEO='${ubigeo}'`;
 
-  this.zoomToUbigeo(where);
+  this.layersInfo.map((l) => {
+
+        if (l.definitionExpressionBase && l.definitionExpressionBase !== '') {
+            l.definitionExpression = `${
+                l.definitionExpressionBase
+            } AND UBIGEO ='${
+                ubigeo
+            }'`;
+
+        } else {
+            l.definitionExpression = ` UBIGEO ='${
+            ubigeo
+            }'`;
+        }
+
+    });
+
+   this.zoomToUbigeo(where);
 }
 
 
@@ -888,5 +926,14 @@ showNextImage(): void  {
 
 showPrevImage(): void  {
   this.currentIndex = (this.currentIndex - 1 + this.fotos.length) % this.fotos.length;
+}
+
+onSelectUbigeo(ubigeo: any): void {
+    this.ubigeo = ubigeo;
+    console.log('this.ubigeo >>>', this.ubigeo);
+    this._resultsService.setUbigeo(this.ubigeo);
+    /*this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
+    this.formEdit.get('ubigeo').setValue(this.ubigeo);
+    console.log('create user >>>', this.formEdit.value);*/
 }
 }

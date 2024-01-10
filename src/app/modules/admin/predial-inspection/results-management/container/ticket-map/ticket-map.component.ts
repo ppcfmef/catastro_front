@@ -65,7 +65,7 @@ export class TicketMapComponent implements OnInit, OnDestroy {
             renderer: null
 
         }, {
-            title: 'Via Zona',
+            title: 'Ejes Viales',
             id: 2,
             layerId: 2,
             urlBase: `${

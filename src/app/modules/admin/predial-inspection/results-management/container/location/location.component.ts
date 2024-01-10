@@ -226,7 +226,7 @@ export class LocationComponent implements OnInit , OnChanges {
             fileObs:result?.file
         });
 
-
+        console.log('data obs>>>',data);
         this._ubicacionService.updateObs(this.ubicacion.codUbicacion,data).subscribe((res)=>{
             if(this.ticket.codTipoTicket === TypeGap.MANZANA_SIN_LOTES  ){
                 const requestArray =this.ubicacion.registrosTitularidad.map((r)=> this._registroTitularidadService.update(r.codTit,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}));
@@ -246,8 +246,12 @@ export class LocationComponent implements OnInit , OnChanges {
                 const requestArray =this.ubicacion.registrosTitularidad.map((r)=> this._registroTitularidadService.update(r.codTit,{status:TicketStatus.OBSERVADO_GESTION_RESULTADOS}));
                 /*this._registroTitularidadService.update();*/
                 forkJoin(requestArray).subscribe((results) => {
-
+                    //this.actualizarCFTicket(this.ticket.codTicket,TicketStatus.OBSERVADO_GESTION_RESULTADOS);
                     this.updateLocation(this.ubicacion);
+                    /*this._router.navigate([
+                        './land-inspection/results-management',
+                        ]);*/
+
 
                   });
 
@@ -302,11 +306,14 @@ export class LocationComponent implements OnInit , OnChanges {
 
 
 actualizarCFTicket(codTicket: string, estado: any): void{
+    console.log('actualizarCFTicket...');
     this._cfTicketService.getTicket({'COD_TICKET':codTicket, 'ESTADO_V':1}).then((responseJson)=>{
-
+        console.log('responseJson>>',responseJson);
         if (responseJson && responseJson.features) {
             const features: any[] = responseJson.features;
+
             const id=features[0].attributes['OBJECTID'];
+
             this._cfTicketService.updateTicket({'OBJECTID':id, 'ESTADO':estado}).then((response)=>{
                 console.log('return actualizar CF Ticket',response);
             });

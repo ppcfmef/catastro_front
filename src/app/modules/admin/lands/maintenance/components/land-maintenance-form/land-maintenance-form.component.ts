@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
@@ -11,6 +11,8 @@ import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictService } from '../../services/district.service';
 import { District } from 'app/core/common/interfaces/common.interface';
 import { keys } from 'lodash';
+
+let _this: any;
 @Component({
   selector: 'app-land-maintenance-form',
   templateUrl: './land-maintenance-form.component.html',
@@ -24,6 +26,8 @@ export class LandMaintenanceFormComponent implements OnInit {
     readOnly= false;
     action: string;
     districts: District[];
+    codigoPredio: string='';
+    _this = this;
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -44,6 +48,8 @@ export class LandMaintenanceFormComponent implements OnInit {
         console.log('Actions>>',Actions.CREAR);
 
         if(data){
+            this.codigoPredio = data.land.cpm;
+            console.log('data.land.cpm>>',data.land.cpm);
             if(this.action!==Actions.CREAR){
                 this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
             }
@@ -100,8 +106,9 @@ export class LandMaintenanceFormComponent implements OnInit {
 
       initForm(): void{
         this.formLand = this.fb.group({
+            cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
             ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
-            cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required]],
+            cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required,this.cpmValidator]],
             resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
             resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
             uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
@@ -120,6 +127,32 @@ export class LandMaintenanceFormComponent implements OnInit {
             apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
           });
       }
+
+      cpmValidator(control: AbstractControl): {[s: string ]: boolean} {
+
+        const group = control.parent;
+        /*if (!group.controls['cpm'].value) {
+            return null;
+        }*/
+
+        if (!group  ) {
+
+            return null;
+
+          /*console.log(group.controls['cpm'].value);
+          console.log('cpm2>>',group.controls['cpm2'].value);*/
+        }
+
+        else{
+            console.log(group.controls['cpm']);
+        }
+
+        if(group.controls['cpm'].value===group.controls['cpm2'].value)
+            {return {'cpm': true}; }
+        else
+            {return null;}
+      }
+
       ngOnInit(): void {
         this.init();
 

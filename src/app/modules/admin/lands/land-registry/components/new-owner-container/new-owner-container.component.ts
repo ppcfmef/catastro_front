@@ -7,6 +7,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -82,52 +83,56 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   searchOwner(): void {
     const searchText = this.search.value;
-    const params ={ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5};
-    this._fuseSplashScreenService.show(0);
-    this.landRegistryService.searchOwnerbyDocument(params)
-    .toPromise()
-    .then(
-      (result: any) => {
-        this._fuseSplashScreenService.hide();
-        if (result && result.length>0){
-            this.receivedShowFormEdit(false);
-            this.landRegistryService.setLandOwner(result[0]);
+    if(searchText!==''){
+        const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
 
-        }
+        this._fuseSplashScreenService.show(0);
+        this.landRegistryService.searchOwnerbyDocument(params)
+        .toPromise()
+        .then(
+          (result: any) => {
+            this._fuseSplashScreenService.hide();
+            if (result && result.length>0){
+                this.receivedShowFormEdit(false);
+                this.landRegistryService.setLandOwner(result[0]);
 
-        else{
+            }
 
+            else{
+
+                const dialogRef = this.confirmationService.error(
+                    'Contribuyente no encontrado',
+                    `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
+                  );
+
+                  dialogRef.afterClosed().subscribe((option) => {
+                    if (option === 'confirmed') {
+                      this.receivedShowFormEdit(true);
+                      console.log('pasar documento al formulario', searchText);
+                    }
+                    this.search.reset();
+                  });
+            }
+
+          },
+          (error) => {
+            this._fuseSplashScreenService.hide();
             const dialogRef = this.confirmationService.error(
-                'Contribuyente no encontrado',
-                `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
-              );
+              'Contribuyente no encontrado',
+              `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
+            );
 
-              dialogRef.afterClosed().subscribe((option) => {
-                if (option === 'confirmed') {
-                  this.receivedShowFormEdit(true);
-                  console.log('pasar documento al formulario', searchText);
-                }
-                this.search.reset();
-              });
-        }
-
-      },
-      (error) => {
-        this._fuseSplashScreenService.hide();
-        const dialogRef = this.confirmationService.error(
-          'Contribuyente no encontrado',
-          `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
-        );
-
-        dialogRef.afterClosed().subscribe((option) => {
-          if (option === 'confirmed') {
-            this.receivedShowFormEdit(true);
-            console.log('pasar documento al formulario', searchText);
+            dialogRef.afterClosed().subscribe((option) => {
+              if (option === 'confirmed') {
+                this.receivedShowFormEdit(true);
+                console.log('pasar documento al formulario', searchText);
+              }
+              this.search.reset();
+            });
           }
-          this.search.reset();
-        });
-      }
-    );
+        );
+    }
+
   }
 
   ngOnDestroy(): void{

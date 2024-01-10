@@ -122,11 +122,14 @@ eventOpenLocation(event: any): void {
 
 
 actualizarCFTicket(codTicket: string, estado: any): void{
+    console.log('actualizarCFTicket...');
     this._cfTicketService.getTicket({'COD_TICKET':codTicket, 'ESTADO_V':1}).then((responseJson)=>{
-
+        console.log('responseJson>>',responseJson);
         if (responseJson && responseJson.features) {
             const features: any[] = responseJson.features;
-            const id=features[0].OBJECTID;
+
+            const id=features[0].attributes['OBJECTID'];
+
             this._cfTicketService.updateTicket({'OBJECTID':id, 'ESTADO':estado}).then((response)=>{
                 console.log('return actualizar CF Ticket',response);
             });

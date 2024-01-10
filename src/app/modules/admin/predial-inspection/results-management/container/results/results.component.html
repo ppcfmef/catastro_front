@@ -37,6 +37,7 @@
                     (action)="onZoom($event)"
                     [length]="tablePendienteLength"
                     (changePage)="onChangePagePendiente($event)"
+                    [pageSize]="pageSize"
                     >
                 </app-table-manageresult>
             </mat-tab>
@@ -47,6 +48,7 @@
                     (action)="onZoom($event)"
                     [length]="tableObservadoLength"
                     (changePage)="onChangePageObservado($event)"
+                    [pageSize]="pageSize"
                     >
                 </app-table-manageresult>
             </mat-tab>
@@ -57,6 +59,7 @@
                 (action)="onZoom($event)"
                 [length]="tableAceptadoLength"
                 (changePage)="onChangePageAceptado($event)"
+                [pageSize]="pageSize"
                 >
             </app-table-manageresult>
             </mat-tab>

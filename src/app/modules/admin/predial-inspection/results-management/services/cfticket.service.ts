@@ -48,6 +48,7 @@ export class CFTicketService {
 
 
     async updateTicket(data: any): Promise < any > {
+        console.log('data updateTicket:',data);
         const wkid = 4326;
         const _predio = data;
 
