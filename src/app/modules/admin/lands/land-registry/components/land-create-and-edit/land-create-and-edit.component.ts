@@ -1,13 +1,14 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 export enum LandStatus {
   withOutMapping = 0,
@@ -44,6 +45,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
+    private _fuseSplashScreenService: FuseSplashScreenService,
   ) { }
 
   ngOnInit(): void {
@@ -69,7 +71,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       inactiveReason: [{ value: this.landMergeRecord?.inactiveReason, disabled}],
       statusImg: [{ value: this.landMergeRecord?.statusImg, disabled}],
       cup: [{ value: this.landMergeRecord?.cup, disabled}],
-      cpm: [{ value: this.landMergeRecord?.cpm, disabled}],
+      cpm: [{ value: this.landMergeRecord?.cpm, disabled},Validators.required],
       ubigeo: [{ value: this.landMergeRecord?.ubigeo, disabled}],
       uuType: [{ value: this.landMergeRecord?.uuType, disabled}],
       codUu: [{ value: this.landMergeRecord?.codUu, disabled}],
@@ -120,9 +122,11 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       data.status = this.toggleToStatus(data.status);
       // ToDo: debe ser en el container
       if (data.idPlot && !data.cup) {
+        this._fuseSplashScreenService.show(0);
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
       }else {
+        this._fuseSplashScreenService.show(0);
         this.saveLandApi(data);
       }
 
@@ -191,15 +195,18 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     this.landRegistryService.saveLand(data).toPromise()
       .then(
         (result) => {
+            this._fuseSplashScreenService.hide();
           this.confirmationService.success(
             'Registro de predio',
             'Se registro el predio correctamente'
           );
+
           this.resetForm();
           this.registerLand.emit(result);
           setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
         },
         (error) => {
+            this._fuseSplashScreenService.hide();
           this.confirmationService.error(
             'Registro de predio',
             'Error al registrar el predio, intente nuevamente'

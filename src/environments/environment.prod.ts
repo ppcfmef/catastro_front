@@ -1,4 +1,4 @@
-const host = 'https://catastromef.apistoring.com/catastroback/';
+const host = 'https://vmd120205.contaboserver.net/';
 
 export const environment = {
     production: true,

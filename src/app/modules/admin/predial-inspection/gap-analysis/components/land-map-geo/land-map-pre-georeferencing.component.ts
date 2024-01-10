@@ -178,7 +178,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     renderer:null
 
 },
-/*
+
 {
     title: 'Via Zona',
     id: 2,
@@ -193,8 +193,23 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
     projection: null,
     visible: true,
     selected: false,
-    renderer:null
-},*/
+    renderer:null,
+    labelClass: {
+        symbol: {
+        type: 'text', // autocasts as new TextSymbol()
+        color: 'black',
+        font: {
+            // autocast as new Font()
+            family: 'arial',
+            size: 8,
+            //weight: 'bold'
+        },
+    },
+    labelPlacement: 'above-center',
+    labelExpressionInfo: {
+        expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+    },}
+},
 
 {
     title: 'Lotes Poligono Zona',
@@ -262,6 +277,15 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
             exactMatch: false,
             outFields: ['COD_PRE'],
             name: 'CODIGO DE PREDIO',
+        },
+
+        {
+            url: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer/2`,
+            searchFields: ['NOM_VIA'],
+            displayField: 'NOM_VIA',
+            exactMatch: false,
+            outFields: ['NOM_VIA'],
+            name: 'CODIGO DE VIA',
         },
     ];
 
@@ -616,7 +640,7 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                         intersectFeature.then((data: any) => {
 
                                             if (data && data.attributes) {
-                                                lote['ID_MZN_C']=data['ID_MZN_C'];
+                                                lote['ID_MZN_C']=data.attributes['ID_MZN_C'];
                                             }
 
                                                 this.setPoint(
@@ -658,12 +682,12 @@ export class LandMapPreGeoreferencingComponent implements OnInit, OnChanges {
                                     const pointData: any = {};
                                     pointData['COORD_X'] = longitude;
                                     pointData['COORD_Y'] = latitude;
-
+                                    console.log('data>>>',data);
                                     if (data && data.attributes) {
                                         pointData['ID_MZN_C'] =
-                                            data['ID_MZN_C'];
+                                            data.attributes['ID_MZN_C'];
                                         pointData['UBIGEO'] =
-                                            data['UBIGEO'];
+                                            data.attributes['UBIGEO'];
                                     }
                                     else{
                                         pointData['ID_MZN_C'] =9999;

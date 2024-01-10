@@ -24,12 +24,22 @@
         </mat-form-field>
 
 
+            <input matInput type="text" formControlName="cpm2"  hidden="true">
+
+
+
+
+
         <mat-form-field
         class="w-full pr-2 pb-2">
             <mat-label>Codigo de Predio Municipal(*) </mat-label>
             <input matInput type="text" formControlName="cpm">
             <mat-error *ngIf="formLand.get('cpm').hasError('required')">
                 El campo es obligatorio.
+            </mat-error>
+
+            <mat-error *ngIf="formLand.get('cpm').hasError('cpm')">
+                El codigo de predio debe ser diferente al original.
             </mat-error>
 
            <!-- <mat-error>El campo es obligatorio.</mat-error>-->

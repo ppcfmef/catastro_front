@@ -72,6 +72,8 @@ export class ResultsComponent implements OnInit {
   form: FormGroup;
   queryParams: any;
   ubigeo: string;
+  pageSize = 5;
+
   constructor(
     private _route: Router,
     private _activeRouter: ActivatedRoute,
@@ -81,18 +83,28 @@ export class ResultsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.queryParams={};
-    this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):'040703';
-    /*console.log('ubigeo',this.ubigeo);*/
-    this.queryParams.codTicket = this.ubigeo;
-    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+    this.initForm();
+    this.queryParams={limit: this.pageSize};
 
     this.getTicketsPendientes();
     this.getTicketsAceptados();
     this.getTicketsObservados();
-    this._resultService.setResetMap(1);
-    this.initForm();
-    this.queryParams.codTicket = this.ubigeo;
+
+    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+    this._resultService.getUbigeo().subscribe((ubigeo)=>{
+        if (ubigeo){
+            /*this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):'040703';*/
+            /*console.log('ubigeo',this.ubigeo);*/
+            this.ubigeo= ubigeo;
+            this.queryParams.codTicket = this.ubigeo;
+        }
+        this.getTicketsPendientes();
+        this.getTicketsAceptados();
+        this.getTicketsObservados();
+        this._resultService.setResetMap(1);
+
+    });
+
   }
 
 
@@ -116,6 +128,7 @@ export class ResultsComponent implements OnInit {
 
   onCleanSearch(e: any): void {
     this.queryParams.search=null;
+
     this.form.get('search').setValue(null);
     this.getTicketsPendientes();
     this.getTicketsAceptados();
@@ -141,7 +154,7 @@ export class ResultsComponent implements OnInit {
           fechaBrecha: r.fecAsignacion,
           direccion: '',
           fecha: r.fecUltimaActualizacion}));
-        this.tablePendienteLength= res?.count;
+        this.tablePendienteLength= res.count;
     });
   }
   getTicketsObservados(): void {
@@ -180,6 +193,7 @@ export class ResultsComponent implements OnInit {
 
 
   getTicketsAceptados(): void{
+
     const filterRawValue = {
         codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS, ...this.queryParams
     };
@@ -237,7 +251,7 @@ export class ResultsComponent implements OnInit {
 onChangePagePendiente(
     paginator: MatPaginator | { pageSize: number; pageIndex: number }
 ): void {
-    console.log('paginator', paginator);
+    //console.log('paginator', paginator);
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     const filterRawValue = {

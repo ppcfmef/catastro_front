@@ -1,13 +1,8 @@
 
 <div #mapViewNode  >
-
-</div>
-
-<link
-  rel="stylesheet"
-  href="https://js.arcgis.com/4.17/esri/themes/light/main.css"
-/>
-
+    <div #selectElement id="selectElement" >
+        <select-ubigeo   (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
+    </div>
 
     <div #fotosElement id="fotosElement"  [ngStyle]="{'min-width':'450px',padding:'5px',  'background-color':'white' }"  >
 
@@ -21,3 +16,12 @@
 
 
     </div>
+</div>
+
+<link
+  rel="stylesheet"
+  href="https://js.arcgis.com/4.17/esri/themes/light/main.css"
+/>
+
+
+

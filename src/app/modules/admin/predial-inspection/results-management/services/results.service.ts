@@ -14,9 +14,17 @@ export class ResultsService {
     public estadoSubject: Subject<any> = new Subject();
     public pointSubject: Subject<any> = new Subject();
     public resetMapSubject: Subject<any> = new Subject();
+    public ubigeoSubject: Subject<any> = new Subject();
+
     constructor() { }
 
+    setUbigeo(data: string): void{
+        this.ubigeoSubject.next(data);
+    }
 
+    getUbigeo(): Observable<string> {
+        return this.ubigeoSubject.asObservable();
+    }
        setTicketData(data: ITicket): void {
         this.ticketSubject.next(data);
     }

@@ -5,6 +5,7 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ResultsService } from '../../services/results.service';
 
 @Component({
   templateUrl: './results-management.page.html',
@@ -18,7 +19,10 @@ export class ResultsManagementPage implements OnInit {
   _emailUserAdmin='jcramireztello@gmail.com';
   _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(  private _userService: UserService,private _commonService: CommonService,) { }
+  constructor(  private _userService: UserService,
+    private _commonService: CommonService,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    private _resultsService: ResultsService) { }
 
   ngOnInit(): void {
 
@@ -32,15 +36,19 @@ export class ResultsManagementPage implements OnInit {
         this.ubigeo =
         this.user && this.user.ubigeo
             ? this.user.ubigeo
-            : this.ubigeo;
+            : null;
 
-        localStorage.setItem('ubigeo',this.ubigeo);
+        /*localStorage.setItem('ubigeo',this.ubigeo);*/
+        if(this.ubigeo){
+            this._resultsService.setUbigeo(this.ubigeo);
+            this._commonService
+            .getDistrictResource(this.ubigeo)
+            .subscribe((data: DistrictResource) => {
+              localStorage.setItem('distrito',JSON.stringify(data));
+            });
 
-        this._commonService
-        .getDistrictResource(this.ubigeo)
-        .subscribe((data: DistrictResource) => {
-          localStorage.setItem('distrito',JSON.stringify(data));
-        });
+        }
+
         /*const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
         console.log('readAll>>',readAll);
 

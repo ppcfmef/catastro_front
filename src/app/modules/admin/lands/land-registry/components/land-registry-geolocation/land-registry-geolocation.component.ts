@@ -40,6 +40,7 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
 import { LandOwner } from '../../interfaces/land-owner.interface';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { Lote } from '../../interfaces/lote.interface';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -461,7 +462,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         private _landRegistryMapService: LandRegistryMapService,
         protected _messageProviderService: MessageProviderService,
         private _landRegistryService: LandRegistryService,
-        private confirmationService: CustomConfirmationService
+        private confirmationService: CustomConfirmationService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
     ) {}
 
     ngOnDestroy(): void {
@@ -1962,10 +1964,10 @@ async saveNewPointGestionPredio(): Promise<void>{
     const utm=this.district.resources[0].utm;
 
 
- const urlBase = `${this.urlGestionPredios}/0`;
- const feature = new FeatureLayer(urlBase);
- const secuen=await this.generateMaxSecuen(feature,this.landRegistryMapModel)+1;
- const idImg=`i${utm}${this.landRegistryMapModel.ubigeo}${secuen}`;
+    const urlBase = `${this.urlGestionPredios}/0`;
+    const feature = new FeatureLayer(urlBase);
+    const secuen=await this.generateMaxSecuen(feature,this.landRegistryMapModel)+1;
+    const idImg=`i${utm}${this.landRegistryMapModel.ubigeo}${secuen}`;
 
     this.landRegistryMapModel.idCartographicImg= idImg;
     this.landRegistryMapModel.secuen = secuen;
@@ -1979,9 +1981,6 @@ async saveNewPointGestionPredio(): Promise<void>{
     this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
 
-      //  }
-   //   });
-
 }
 
 
@@ -1991,22 +1990,11 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         ): Promise<LandRegistryMapModel> {
 
+        //this._fuseSplashScreenService.show(0);
         this.district =await this._commonService.getDistrictResource(data.ubigeo).toPromise();
         const utm=this.district.resources[0].utm;
-
-                /*.subscribe((data: DistrictResource) => {
-                    this.proj4Wkid = parseInt('327' + data.resources[0].utm, 10);
-                });*/
-/*
-        const _layer = this.layersInfo.find(
-                    e =>  e.utm === utm
-                );
-*/
         const _urlBase = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
 
-
-
-        //const wkid = parseInt('327' + utm, 10);
         const wkid = 4326;
 
         if (data.idPlot) {
@@ -2080,6 +2068,8 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         }
 
+       // this._fuseSplashScreenService.hide();
+
         return data;
     }
 
@@ -2091,7 +2081,7 @@ async saveNewPointGestionPredio(): Promise<void>{
 
         ): Promise<void> {
 
-
+            //this._fuseSplashScreenService.show(0);
             const _gestionPredio=  FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
             _gestionPredio.NOM_USER = this.user.username;
             _gestionPredio.NOM_PC = 'PLATAFORMA';
@@ -2111,8 +2101,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             });
             const responseJson = await response.json();
             console.log('responseJson>>',responseJson);
-
-
+            //this._fuseSplashScreenService.hide();
 
     }
     /*/FeatureServer/0*/
