@@ -153,11 +153,13 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   onShowLandsTable(landOwner: LandOwner): void {
     const filterQueryParams = this.makeQueryParams();
-    console.log('onShowLandsTable landOwner>>',landOwner);
+    delete filterQueryParams['search'];
+
     this.showLandsTable = true;
     this.showLandsMap = false;
     this.landOwner = landOwner;
     const queryParams = { limit: 10 ,...filterQueryParams };
+
     this.landRegistryService
     .getLandbyOwner(this.landOwner.id, queryParams)
     .toPromise()
@@ -166,7 +168,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
         this.dataSourceLands = landResult.results;
         this.lengthLandsOwner = landResult.count;
-        this.landRecord =this.dataSourceLands[0];
+
+        this.landRecord = landResult.results && landResult.results.length>0? this.dataSourceLands[0]:null;
         this.showLandsMap= true;
         /*this.landRecords = landResult.results;
         this.tableLength = landResult.count;

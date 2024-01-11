@@ -48,7 +48,7 @@
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2.5">
             <mat-label>Cod. predio municipal</mat-label>
             <input matInput type="text" formControlName="cpm">
-            <mat-error *ngIf="formLand.get('cpm').hasError('required')">
+            <mat-error *ngIf="formEdit.get('cpm').hasError('required')">
                 El campo es obligatorio.
             </mat-error>
         </mat-form-field>
