@@ -42,7 +42,7 @@
 
 <div class="container-panel flex w-full"  *ngIf="showLandsMap"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
   <div class="map-container">
-    <app-show-map-point  *ngIf="showLandsMap" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
+    <app-show-map-point  *ngIf="showLandsMap" [points]="[{ latitude: landRecord?.latitude, longitude: landRecord?.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
   </div>
   <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
