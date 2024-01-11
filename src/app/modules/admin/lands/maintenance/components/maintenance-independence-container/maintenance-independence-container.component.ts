@@ -113,7 +113,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
   onGenerateSplit(): void {
     const application = new ApplicationModel();
     application.idStatus=1;
-    application.idType=3;
+    application.idType=5;
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
     const body = {
