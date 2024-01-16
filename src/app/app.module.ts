@@ -17,7 +17,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
-import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,

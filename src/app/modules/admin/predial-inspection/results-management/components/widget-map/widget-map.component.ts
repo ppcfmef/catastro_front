@@ -12,7 +12,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
+import { MatCarousel, MatCarouselComponent } from '@ngbmodule/material-carousel';
 
 import {ActionsGapAnalisys} from 'app/shared/enums/actions-gap-analisys.enum';
 
