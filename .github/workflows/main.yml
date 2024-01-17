@@ -1,4 +1,5 @@
 name: Angular CI
+run-name: Deploy Front
 on:
   workflow_dispatch:
 jobs:
