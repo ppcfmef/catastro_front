@@ -32,13 +32,16 @@ jobs:
           npm i
           npm run build
 
-      - name: Upload S3    
-        uses: shallwefootball/s3-upload-action@master
-        id: S3
+      - name: S3 Upload
+        uses: keithweaver/aws-s3-github-action@v1.0.0
         with:
-          aws_key_id: ${{secrets.AWS_KEY_ID}}
-          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws_bucket: piloto-catastro-mef
-          source_dir: dist/fuse
+          command: cp
+          source: ./dist/fuse
+          destination:  s3://catastro-mef/
+          aws_access_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-2
+          flags: --recursive
+
       - name: Front URL
         run: echo "https://s3.amazonaws.com/bucketName/${{steps.S3.outputs.object_key}}/index.html"
