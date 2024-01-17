@@ -49,7 +49,7 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input()y: number = -13.53063;
   @Input() layersInfo=[];
   @Input() listSourceSearchConfig=[];
-  @Input() ubigeo: string='040702';
+  @Input() ubigeo: string;
   @Input() user: User;
   @Input() idManzanaLayer =3;
   @Input() idLoteLayer =1;
@@ -137,6 +137,7 @@ ubicacionGraphic: any ;
 _unsubscribeAll: Subject<any> = new Subject<any>();
 currentIndex = 0;
 hideSelectUbigeo = false;
+isAdmin =false;
   constructor(
     private _fuseSplashScreenService: FuseSplashScreenService,
     private  _authService: AuthService,
@@ -146,6 +147,7 @@ hideSelectUbigeo = false;
 
 
     ngOnDestroy(): void {
+      this.isAdmin=localStorage.getItem('isAdmin') ==='true'?true:false;
       this._unsubscribeAll.next();
       this._unsubscribeAll.complete();
     }
@@ -169,15 +171,15 @@ hideSelectUbigeo = false;
   }
 
   ngOnInit(): void {
-    this.ubigeo ='040703';
-    console.log('this.ubigeo>>',this.ubigeo);
-    this._resultsService.getUbigeo().subscribe( (ubigeo: string)=>{
+    /*this.ubigeo ='040703';
+    console.log('this.ubigeo>>',this.ubigeo);*/
+    /*this._resultsService.getUbigeo().subscribe( (ubigeo: string)=>{
         if(ubigeo){
             this.ubigeo = ubigeo;
             this.filterUbigeo(ubigeo);
         }
-    });
-
+    });*/
+    console.log('this.ubigeo>>>',this.ubigeo );
     this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
       if (res) {
 
@@ -496,10 +498,17 @@ hideSelectUbigeo = false;
         ], {position: 'top-right'});
 
         this.view.ui.add(legendExpand, 'bottom-right');
+        if(this.isAdmin){
+            this.view.ui.add([fotosExpand,selectUbigeoExpand], {
+                position: 'top-left',
+            });
+        }
+        else {
+            this.view.ui.add([fotosExpand], {
+                position: 'top-left',
+            });
+        }
 
-        this.view.ui.add([fotosExpand,selectUbigeoExpand], {
-            position: 'top-left',
-        });
         this.view.when(() => {
             this._fuseSplashScreenService.hide();
             console.log('ubigeo>>',this.ubigeo);

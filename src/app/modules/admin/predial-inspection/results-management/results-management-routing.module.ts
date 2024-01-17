@@ -14,7 +14,7 @@ const routes: Routes = [
         path: '',
         component: ResultsManagementPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'resmanagip', permissionType: 'read' },
+        data: { id: 'resmanagi', permissionType: 'read' },
         children:[
             {path: '',component: ResultsComponent},
 
