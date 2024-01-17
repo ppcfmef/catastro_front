@@ -1,6 +1,6 @@
-name: Angular CI
+name: Deploy Front a S3
 
-run-name: Deploy Front
+run-name: Build & Deploy Front
 
 env:
   NODE_OPTIONS: --openssl-legacy-provider
