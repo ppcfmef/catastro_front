@@ -25,8 +25,20 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
           path: |
-            ~/build
+            ~/node_modules
+            ~/dist
       - name: npm install and npm run CI commands
         run: |
           npm i
           npm run build
+
+      - name: Upload S3    
+        uses: shallwefootball/s3-upload-action@master
+        id: S3
+        with:
+          aws_key_id: ${{secrets.AWS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: piloto-catastro-mef
+          source_dir: dist/fuse
+      - name: Front URL
+        run: echo "https://s3.amazonaws.com/bucketName/${{steps.S3.outputs.object_key}}/index.html"
