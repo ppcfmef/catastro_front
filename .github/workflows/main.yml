@@ -1,4 +1,4 @@
-name: Deploy Front a S3
+name: Deploy
 
 run-name: Build & Deploy Front
 
