@@ -118,17 +118,31 @@ export class GapListComponent implements OnInit , OnDestroy{
 
             this.isAdmin = false;
             }
- 
+
             const ubigeo = localStorage.getItem('ubigeoBrechas');
-            if (ubigeo){
-                this.ubigeo = ubigeo;
-            }else{
-                this.ubigeo =
-                this.user && this.user.ubigeo
-                    ? this.user.ubigeo
-                    : this.ubigeo;
+
+            if (this.isAdmin){
+                if (ubigeo){
+                    this.ubigeo = ubigeo;
+                }else{
+                    this.ubigeo =
+                    this.user && this.user.ubigeo
+                        ? this.user.ubigeo
+                        : this.ubigeo;
+                        localStorage.setItem('ubigeoBrechas',this.ubigeo);
+                }
+
+            }
+
+            else
+                {
+                    this.ubigeo =
+                    this.user && this.user.ubigeo
+                        ? this.user.ubigeo
+                        : this.ubigeo;
                     localStorage.setItem('ubigeoBrechas',this.ubigeo);
             }
+
 
             this.updateUbigeoCards(this.ubigeo);
         });
@@ -137,7 +151,7 @@ export class GapListComponent implements OnInit , OnDestroy{
 
 
 
-    
+
     searchDistrict(event: any): void {
         const search = event.target.value;
         if (search && search !== '' && search.length > 3) {

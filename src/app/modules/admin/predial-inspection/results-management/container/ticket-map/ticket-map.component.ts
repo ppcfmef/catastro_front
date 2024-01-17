@@ -11,7 +11,7 @@ import { User } from 'app/core/user/user.types';
 
 @Component({selector: 'app-ticket-map', templateUrl: './ticket-map.component.html', styleUrls: ['./ticket-map.component.scss']})
 export class TicketMapComponent implements OnInit, OnDestroy {
-    @Input() ubigeo: string = '040703';
+    @Input() ubigeo: string ;
     @Input() user: User;
     ubicacion: IUbicacion;
 
