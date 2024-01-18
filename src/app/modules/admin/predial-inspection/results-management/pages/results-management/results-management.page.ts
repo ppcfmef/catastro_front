@@ -33,7 +33,7 @@ export class ResultsManagementPage implements OnInit {
         this.user = user;
         const permissionsNavigation: any[]=this.user?.permissionsNavigation;
         const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
-        if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+        if(!(readAll.length>0 || this.user.isSuperuser === true)){
 
             this.isAdmin = false;
         }
@@ -52,7 +52,7 @@ export class ResultsManagementPage implements OnInit {
             const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
             console.log('readAll>>',readAll);
 
-            if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+            if(!(readAll.length>0 || this.user.isSuperuser === true)){
 
             this.isAdmin = false;
             }
@@ -105,7 +105,7 @@ export class ResultsManagementPage implements OnInit {
         /*const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
         console.log('readAll>>',readAll);
 
-        if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+        if(!(readAll.length>0 || this.user.isSuperuser === true)){
             this.isAdmin = false;
         }*/
 

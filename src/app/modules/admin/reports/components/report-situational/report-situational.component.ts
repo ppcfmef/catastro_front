@@ -61,7 +61,7 @@ export class ReportSituationalComponent implements OnInit {
         const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
         this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
 
-          if(readAll.length>0 || this.user.email === this._emailUserAdmin){
+          if(readAll.length>0 || this.user.isSuperuser === true){
             this.initUbigeoParams(data.code);
             this.hideSelectUbigeo = false;
            }

@@ -83,7 +83,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
         const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
         console.log('readAll>>',readAll);
 
-        if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+        if(!(readAll.length>0 || this.user.isSuperuser === true)){
 
           this.isAdmin = false;
           this.ubigeo =
