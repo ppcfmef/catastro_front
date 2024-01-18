@@ -11,7 +11,7 @@ const routes: Routes = [
         path: '',
         component: PredialPage,
         canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'inspre', permissionType: 'read' },
+        //data: { id: 'inspre', permissionType: 'read' },
         children: [
             {
                 path: '',

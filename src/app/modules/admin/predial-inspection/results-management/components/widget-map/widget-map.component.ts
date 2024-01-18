@@ -143,11 +143,14 @@ isAdmin =false;
     private  _authService: AuthService,
     private _resultsService: ResultsService,
     private _confirmationService: CustomConfirmationService,
-    ) { }
+    ) {
+
+      this.isAdmin=(localStorage.getItem('isAdmin') ==='true')?true:false;
+    }
 
 
     ngOnDestroy(): void {
-      this.isAdmin=localStorage.getItem('isAdmin') ==='true'?true:false;
+
       this._unsubscribeAll.next();
       this._unsubscribeAll.complete();
     }
@@ -171,14 +174,7 @@ isAdmin =false;
   }
 
   ngOnInit(): void {
-    /*this.ubigeo ='040703';
-    console.log('this.ubigeo>>',this.ubigeo);*/
-    /*this._resultsService.getUbigeo().subscribe( (ubigeo: string)=>{
-        if(ubigeo){
-            this.ubigeo = ubigeo;
-            this.filterUbigeo(ubigeo);
-        }
-    });*/
+
     console.log('this.ubigeo>>>',this.ubigeo );
     this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
       if (res) {
@@ -187,15 +183,6 @@ isAdmin =false;
           this.ubicacion = res.ubicacion;
           this.typeGap = this.ticket.codTipoTicket;
           this.fotos = this.ubicacion.fotos;
-          /*this.estado = Estado.LEER;*/
-          /*console.log('this.ubicacion.estado',this.ubicacion.estado);
-          console.log('this.typeGap',this.typeGap);*/
-          /*this.estado = (  this.ubicacion.status===0  &&
-            [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.typeGap))? Estado.EDITAR: Estado.LEER;
-
-*/
-
-            /*console.log('this.estado>>',this.estado);*/
 
             this.estado = Estado.LEER;
             const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
@@ -222,19 +209,19 @@ isAdmin =false;
 
           this.onChangeUbicacion(this.ubicacion);
       }
-  });
+    });
 
 
-  this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
-    if(res){
-      this.estado = res;
-      console.log('this.estado>>>',this.estado);
-      if(this.estado === Estado.INICIAR){
-        this.addUbicacion(this.ubicacion);
-        this.estado = Estado.LEER;
-      }
-    }
-  });
+    this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
+        if(res){
+        this.estado = res;
+        console.log('this.estado>>>',this.estado);
+        if(this.estado === Estado.INICIAR){
+            this.addUbicacion(this.ubicacion);
+            this.estado = Estado.LEER;
+        }
+        }
+    });
 
   this._resultsService.getResetMap().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any )=>{
       console.log('resetEvent',res);
@@ -249,13 +236,20 @@ isAdmin =false;
     this._fuseSplashScreenService.show(0);
 
 
-    this.pointIni = [{
+    this.pointIni = {
             latitude: this.y,
             longitude: this.x
-        }];
+        };
     setTimeout(() => {
         this.initializeMap(this.pointIni, this.ubigeo);
     }, 1000);
+
+    this._resultsService.getUbigeo().pipe(takeUntil(this._unsubscribeAll)).subscribe((ubigeo: any )=>{
+        this.ubigeo = ubigeo;
+        if(ubigeo){
+            this.filterUbigeo(this.ubigeo);
+        }
+    });
 
     /*
     this._resultsService.getUbicacionData().subscribe((res: IUbicacion) => {
@@ -344,11 +338,6 @@ isAdmin =false;
 
         const x = inputPoint?. longitude;
         const y = inputPoint?. latitude;
-        const point = { // Create a point
-            type: 'point',
-            longitude: x,
-            latitude: y
-        };
 
 
         this.view.center = [x, y];

@@ -82,21 +82,23 @@ export class ResultsComponent implements OnInit {
     private _fb: FormBuilder
     ) {
 
+        const isAdmin =localStorage.getItem('isAdmin') ==='true'? true: false;
+        if (isAdmin){
+            this._resultService.getUbigeo().subscribe((ubigeo)=>{
+                console.log('results ubigeo>>>',ubigeo);
+                if (ubigeo){
 
+                    this.ubigeo= ubigeo;
+                    this.queryParams.codTicket = this.ubigeo;
+                }
+                this.getTicketsPendientes();
+                this.getTicketsAceptados();
+                this.getTicketsObservados();
+                this._resultService.setResetMap(1);
 
-        /*this._resultService.getUbigeo().subscribe((ubigeo)=>{
-            console.log('results ubigeo>>>',ubigeo);
-            if (ubigeo){
+            });
+        }
 
-                this.ubigeo= ubigeo;
-                this.queryParams.codTicket = this.ubigeo;
-            }
-            this.getTicketsPendientes();
-            this.getTicketsAceptados();
-            this.getTicketsObservados();
-            this._resultService.setResetMap(1);
-
-        });*/
 
     }
 
