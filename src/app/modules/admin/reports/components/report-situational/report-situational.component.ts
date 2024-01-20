@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
@@ -17,7 +17,7 @@ export class ReportSituationalComponent implements OnInit {
 
   portalUrl = environment.portalUrl;
   reportUrl?: any;
-  formEdit: FormGroup;
+  formEdit: UntypedFormGroup;
   idView='repocarto';
   user: User;
   paramsUbigeo: any= {
@@ -45,7 +45,7 @@ export class ReportSituationalComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private _commonService: CommonService,
     private _userService: UserService,
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
   ) { }
 
   ngOnInit(): void {

@@ -1,7 +1,7 @@
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export class UserValidator {
-  static passwordRequired(form: FormGroup): {[key: string]: boolean} | null {
+  static passwordRequired(form: UntypedFormGroup): {[key: string]: boolean} | null {
     const password = form.get('password').value;
     const id = form.get('id').value;
 

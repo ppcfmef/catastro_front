@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { Subject } from 'rxjs';
 import { TableService } from '../../services/table.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { debounceTime, map, takeUntil, catchError } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormUtils } from 'app/shared/utils/form.utils';
@@ -21,7 +21,7 @@ import { OperatorService } from '../../services/operator.service';
 })
 export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    formFilters: FormGroup;
+    formFilters: UntypedFormGroup;
     filters;
     states: string[] = [
         'Codigo',
@@ -71,10 +71,10 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     createFormFilters(): void {
-        this.formFilters = new FormGroup({
-            option: new FormControl(),
-            search: new FormControl({ value: null, disabled: true }),
-            cod: new FormControl(),
+        this.formFilters = new UntypedFormGroup({
+            option: new UntypedFormControl(),
+            search: new UntypedFormControl({ value: null, disabled: true }),
+            cod: new UntypedFormControl(),
         });
     }
 

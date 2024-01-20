@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
@@ -30,7 +30,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   @Output() showFormEdit = new EventEmitter<boolean>();
   @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
-  formEdit: FormGroup;
+  formEdit: UntypedFormGroup;
   title: any;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
@@ -41,7 +41,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,

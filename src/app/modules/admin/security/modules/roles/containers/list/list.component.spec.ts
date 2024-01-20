@@ -7,7 +7,7 @@ import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('ListComponent', () => {
   let component: ListComponent;
@@ -17,7 +17,7 @@ describe('ListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, MatDialogModule, RouterModule.forRoot([])],
       declarations: [ ListComponent ],
-      providers: [FormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService]
+      providers: [UntypedFormBuilder, FuseMediaWatcherService, FuseTailwindService, FuseConfirmationService]
     })
     .compileComponents();
   });

@@ -2,7 +2,7 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,7 +29,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   ownerLandSubscription: Subscription;
 
-  formFilters: FormGroup;
+  formFilters: UntypedFormGroup;
 
   showLandsTable = false;
 
@@ -238,9 +238,9 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   private createFormFilters(): void {
-    this.formFilters = new FormGroup({
-      search: new FormControl(),
-      view: new FormControl('Contribuyente')
+    this.formFilters = new UntypedFormGroup({
+      search: new UntypedFormControl(),
+      view: new UntypedFormControl('Contribuyente')
     });
   }
 

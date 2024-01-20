@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
-import { FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, MaxLengthValidator, Validators } from '@angular/forms';
 import { Subscription, Subject, Observable } from 'rxjs';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
@@ -51,7 +51,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             text: 'TICKETS ATENDIDOS'
         }
     ];
-    form: FormGroup;
+    form: UntypedFormGroup;
     params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
 
@@ -67,11 +67,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private _messageProviderService: MessageProviderService,
         private _ngxSpinner: NgxSpinnerService,
     ) {
-        this.form = new FormGroup({
-            loadName: new FormControl(''),
-            description: new FormControl(''),
-            dni: new FormControl(''),
-            fEntrega: new FormControl(''),
+        this.form = new UntypedFormGroup({
+            loadName: new UntypedFormControl(''),
+            description: new UntypedFormControl(''),
+            dni: new UntypedFormControl(''),
+            fEntrega: new UntypedFormControl(''),
         });
 
     }

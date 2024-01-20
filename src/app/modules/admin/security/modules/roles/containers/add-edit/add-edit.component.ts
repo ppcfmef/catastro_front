@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {UserService} from '../../../../../../../core/user/user.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 import {OverlayRef} from '@angular/cdk/overlay';
 import {Observable, Subject} from 'rxjs';
@@ -23,7 +23,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     id: number;
 
-    roleForm: FormGroup;
+    roleForm: UntypedFormGroup;
 
     permissions$: Observable<Permission[]>;
 
@@ -36,7 +36,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         private _userService: UserService,
         private _permissionService: PermissionService,
         private _listComponent: ListComponent,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {
         this._activatedRoute

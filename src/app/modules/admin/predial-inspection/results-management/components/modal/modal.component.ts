@@ -1,5 +1,5 @@
 import { Component, Inject, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-modal',
@@ -8,7 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ModalComponent implements OnInit, OnDestroy,OnChanges {
     //observacion;
-    inputControl: FormControl = new FormControl('');
+    inputControl: UntypedFormControl = new UntypedFormControl('');
     selectedFile: any = null;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,) { }

@@ -1,5 +1,5 @@
 import {CommonUtils} from "./common.utils";
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 describe('UtilsClass', () => {
     it('should create', () => {
@@ -8,7 +8,7 @@ describe('UtilsClass', () => {
             null: null,
             'boolean': true
         };
-        const form = new FormGroup({});
+        const form = new UntypedFormGroup({});
         expect(CommonUtils.generateRandomPassword()).toBeTruthy();
         expect(CommonUtils.deleteKeysNullInObject(obj)).toBeTruthy();
         expect(CommonUtils.setFormValues(form, obj)).toBeUndefined();

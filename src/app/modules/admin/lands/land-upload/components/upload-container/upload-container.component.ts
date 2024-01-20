@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {FormUtils} from '../../../../../../shared/utils/form.utils';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
@@ -17,13 +17,13 @@ import { Observable } from 'rxjs';
 export class UploadContainerComponent implements OnInit {
   @ViewChild('uploadfile') uploadfileElement: ElementRef;
   uploadId: number;
-  uploadForm = new FormGroup({
-    fileUpload: new FormControl(null, [Validators.required]),
+  uploadForm = new UntypedFormGroup({
+    fileUpload: new UntypedFormControl(null, [Validators.required]),
   });
 
-  selectForm = new FormGroup({
-    selectType: new FormControl(null, [Validators.required]),
-    checkFormatList: new FormControl(null)
+  selectForm = new UntypedFormGroup({
+    selectType: new UntypedFormControl(null, [Validators.required]),
+    checkFormatList: new UntypedFormControl(null)
   });
 
   typesUpload = [
@@ -90,8 +90,8 @@ export class UploadContainerComponent implements OnInit {
 
 
 
-  get fileUpload(): FormControl {
-      return this.uploadForm.get('fileUpload') as FormControl;
+  get fileUpload(): UntypedFormControl {
+      return this.uploadForm.get('fileUpload') as UntypedFormControl;
   }
 
   async parseFormFile(): Promise<void> {

@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -37,7 +37,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
     id: number;
     user: User;
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
     departments$: Observable<Department[]>;
     provinces$: Observable<Province[]>;
     districts$: Observable<District[]>;
@@ -58,7 +58,7 @@ export class AddEditComponent implements OnInit, AfterViewInit, OnDestroy {
         private _commonService: CommonService,
         private _userService: UserService,
         private _listComponent: ListComponent,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
         private confirmationService: CustomConfirmationService,
         private domSanitizer: DomSanitizer,

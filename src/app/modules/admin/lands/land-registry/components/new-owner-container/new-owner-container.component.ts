@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, OnChanges, OnDestroy, Input, SimpleChanges } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
@@ -19,7 +19,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   @Input() ubigeo: string;
   showFormEdit: boolean | null;
   params: any ={};
-  search: FormControl = new FormControl();
+  search: UntypedFormControl = new UntypedFormControl();
   landOwner: LandOwner;
   idView = 'gprpregist';
   hideSelectUbigeo = true;
@@ -32,7 +32,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
     private navigationAuthorizationService: NavigationAuthorizationService,
     private _fuseSplashScreenService: FuseSplashScreenService,
   ) {
-    this.search = new FormControl('');
+    this.search = new UntypedFormControl('');
   }
 
   ngOnInit(): void {

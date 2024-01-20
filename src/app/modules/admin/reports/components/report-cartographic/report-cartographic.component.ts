@@ -6,7 +6,7 @@ import { User } from 'app/core/user/user.types';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { Department, District, Province } from 'app/core/common/interfaces/common.interface';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { environment } from 'environments/environment';
 @Component({
   selector: 'app-report-cartographic',
@@ -24,7 +24,7 @@ export class ReportCartographicComponent implements OnInit {
   provinces$: Observable<Province[]>;
   districts$: Observable<District[]>;
   _unsubscribeAll: Subject<any> = new Subject<any>();
-  formEdit: FormGroup;
+  formEdit: UntypedFormGroup;
   paramsUbigeo: any= {
     dpto: null,
     prov: null,
@@ -45,7 +45,7 @@ export class ReportCartographicComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private _userService: UserService,
     private _commonService: CommonService,
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
   ) { }
 
   ngOnInit(): void {
