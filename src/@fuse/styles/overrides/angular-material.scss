@@ -765,10 +765,6 @@
             font-weight: 500;
             line-height: 1;
 
-            > div {
-                display: contents; /* Remove the div from flow to stop the subscript animation */
-            }
-
             .mat-error,
             .mat-hint {
                 display: block;
@@ -1060,6 +1056,15 @@
 /*  @ Datepicker
 /* ----------------------------------------------------------------------------------------------------- */
 /* Hover and active cell content background opacity */
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover,
+.cdk-keyboard-focused .mat-calendar-body-active,
+.cdk-program-focused .mat-calendar-body-active {
+    & > .mat-calendar-body-cell-content {
+        &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+            @apply bg-primary bg-opacity-30 #{'!important'};
+        }
+    }
+}
 
 /* ----------------------------------------------------------------------------------------------------- */
 /*  @ Icon

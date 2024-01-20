@@ -14,7 +14,6 @@ import { CFPuntoImagenService } from '../../services/cfpuntoimagen.service';
 import { Router } from '@angular/router';
 import { CFPredioService } from '../../services/cfpredio.service';
 import { CFPredioModel } from '../../models/cfpredio.model';
-import { TypeModifier } from '@angular/compiler/src/output/output_ast';
 import { TypePoint } from 'app/shared/enums/type-point.enum';
 import { ITicket } from '../../interfaces/ticket.interface';
 import { TypeGap } from 'app/shared/enums/type-gap.enum';

@@ -13,7 +13,6 @@ import { TableService } from '../../services/table.service';
 import { OperatorService } from '../../services/operator.service';
 import { WidgetService } from '../../services/widget.service';
 import { user } from '../../../../../../mock-api/common/user/data';
-import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 @Component({
     selector: 'app-load-attend',

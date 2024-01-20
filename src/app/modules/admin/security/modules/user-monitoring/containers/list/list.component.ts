@@ -97,9 +97,9 @@ export class ListComponent implements OnInit {
   }
 
   private _filter(value: string): any[] {
-    if(typeof value === 'object'){
-      value = value['name'];
-    }
+    // if(typeof value === 'object'){
+    //   value = value['name'];
+    // }
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));

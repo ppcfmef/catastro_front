@@ -89,7 +89,7 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'gesvalo',
-                // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+               
                 loadChildren: () => import('app/modules/admin/valuation/valuation.module').then(m => m.ValuationModule)
             },
             {
