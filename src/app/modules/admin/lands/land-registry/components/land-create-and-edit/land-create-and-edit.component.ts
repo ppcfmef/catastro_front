@@ -122,11 +122,11 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       data.status = this.toggleToStatus(data.status);
       // ToDo: debe ser en el container
       if (data.idPlot && !data.cup) {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
       }else {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.saveLandApi(data);
       }
 
@@ -158,7 +158,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 

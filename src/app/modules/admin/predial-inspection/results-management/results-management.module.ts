@@ -41,9 +41,6 @@ import { TicketMapComponent } from './container/ticket-map/ticket-map.component'
 import { WidgetMapComponent } from './components/widget-map/widget-map.component';
 import { LocationComponent } from './container/location/location.component';
 
-import { MatCarouselModule } from '@ngbmodule/material-carousel';
-
-const carouselModuleConfig = MatCarouselModule.forRoot();
 
 @NgModule({
   declarations: [
@@ -87,8 +84,6 @@ const carouselModuleConfig = MatCarouselModule.forRoot();
     MatDialogModule,
     FormsModule,
     MatInputModule,
-    MatCarouselModule.forRoot(),
-
   ]
 })
 export class ResultsManagementModule { }

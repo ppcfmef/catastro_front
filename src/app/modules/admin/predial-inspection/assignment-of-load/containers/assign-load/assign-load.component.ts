@@ -6,7 +6,6 @@ import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
 import { FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
 import { Subscription, Subject, Observable } from 'rxjs';
-import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
@@ -18,9 +17,6 @@ import { OperatorService } from '../../services/operator.service';
 import { IOperator } from '../../interfaces/operator.interface';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { FormUtils } from 'app/shared/utils/form.utils';
-import { kMaxLength } from 'buffer';
-import { labels } from '../../../../../../mock-api/apps/mailbox/data';
 import { environment } from 'environments/environment';
 
 
@@ -223,7 +219,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
                 'esri/geometry/Polygon'
                 // 'esri/config',
             ]);
-            this._fuseSplashScreenService.show(0);
+            this._fuseSplashScreenService.show();
 
 
             let xmin = Infinity;

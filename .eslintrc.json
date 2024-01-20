@@ -42,12 +42,7 @@
                         "style": "camelCase"
                     }
                 ],
-                "@angular-eslint/component-class-suffix": [
-                    "warn",
-                    {
-                        "suffixes": ["Component", "Page"]
-                    }
-                ],
+            
                 "@typescript-eslint/dot-notation": "off",
                 "@typescript-eslint/explicit-function-return-type": "error",
                 "@typescript-eslint/explicit-member-accessibility": [

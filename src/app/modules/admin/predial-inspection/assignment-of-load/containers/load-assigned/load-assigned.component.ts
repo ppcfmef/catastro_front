@@ -179,7 +179,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -207,7 +207,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             if (confirm) {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 try {
                     if (hasAttendedTickets) {
                         await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo)
@@ -289,7 +289,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async assigment(): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
             this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');

@@ -434,7 +434,7 @@
 
             /* Border color */
             .mat-form-field-flex {
-                @apply border-warn #{'!important'};
+                @apply border-warn dark:border-warn #{'!important'};
             }
         }
     }
@@ -446,7 +446,7 @@
 
             /* Background color */
             .mat-form-field-flex {
-                @apply bg-card #{'!important'};
+                @apply bg-card dark:bg-card #{'!important'};
             }
         }
     }
@@ -458,7 +458,7 @@
 
             /* Border color */
             .mat-form-field-flex {
-                @apply border-primary #{'!important'};
+                @apply border-primary dark:border-primary #{'!important'};
             }
         }
     }
@@ -1060,15 +1060,6 @@
 /*  @ Datepicker
 /* ----------------------------------------------------------------------------------------------------- */
 /* Hover and active cell content background opacity */
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover,
-.cdk-keyboard-focused .mat-calendar-body-active,
-.cdk-program-focused .mat-calendar-body-active {
-    & > .mat-calendar-body-cell-content {
-        &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-            @apply bg-primary bg-opacity-30 #{'!important'};
-        }
-    }
-}
 
 /* ----------------------------------------------------------------------------------------------------- */
 /*  @ Icon

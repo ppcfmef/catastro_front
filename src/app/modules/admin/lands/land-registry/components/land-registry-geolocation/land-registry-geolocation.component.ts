@@ -468,7 +468,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
     ngOnDestroy(): void {
        this._messageProviderService=null;
-       this._unsubscribeAll.next();
+       this._unsubscribeAll.next(null);
        this._unsubscribeAll.complete();
 
     }

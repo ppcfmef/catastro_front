@@ -100,7 +100,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   saveForm(): void{
     if (this.formEdit.valid){
-      this._fuseSplashScreenService.show(0);
+      this._fuseSplashScreenService.show();
       this.landOwner.setValue(this.formEdit.value);
       this.landRegistryService.saveOwner(this.landOwner.toJson())
       .toPromise()
@@ -149,7 +149,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   }
 
   getIntegrationData(): void {
-    this._fuseSplashScreenService.show(0);
+    this._fuseSplashScreenService.show();
     const documentType = this.formEdit.get('documentType').value;
     const document = this.formEdit.get('dni').value;
 

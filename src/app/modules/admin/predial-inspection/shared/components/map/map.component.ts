@@ -90,7 +90,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngAfterViewInit(): void {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         setTimeout(() => {
             this.initializeMapAOL();
         }, 1000);
@@ -148,7 +148,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         localStorage.setItem('ubigeo', this._currentUserUbigeo);
         this._operatorService.updateUbigeo();
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         setTimeout(async () => {
             try {
                 const [query] = await loadModules([
@@ -385,7 +385,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
 
             const createPointGraphics = (evt): Promise<IdataLoad[]> => {
-                self._fuseSplashScreenService.show(0);
+                self._fuseSplashScreenService.show();
                 // view.graphics.removeAll();
                 const coordinates = evt.vertices.slice(-1)[0];
                 const pointG = new Point({

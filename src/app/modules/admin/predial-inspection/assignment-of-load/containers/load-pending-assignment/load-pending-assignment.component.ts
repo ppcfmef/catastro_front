@@ -118,7 +118,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -174,7 +174,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     async assigment(): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
             this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');

@@ -86,7 +86,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
     if(searchText!==''){
         const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
 
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.landRegistryService.searchOwnerbyDocument(params)
         .toPromise()
         .then(
@@ -137,7 +137,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   ngOnDestroy(): void{
     this.landRegistryService.setLandOwner(null);
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 }

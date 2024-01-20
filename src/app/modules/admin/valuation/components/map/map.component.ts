@@ -10,7 +10,6 @@ import { User } from 'app/core/user/user.types';
 import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
@@ -229,7 +228,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         setTimeout(() => {
             this.initializeMap();
         }, 1000);
@@ -507,7 +506,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 e => e.title === 'Distritos'
             ).featureLayer;
 
-            this._fuseSplashScreenService.show(0);
+            this._fuseSplashScreenService.show();
             MapUtils.zoomToFeature(this.view, layerDistrito, where);
 
             this._fuseSplashScreenService.hide();
@@ -725,7 +724,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         this.proj4DestWkid = params.projection;
         const reader = new FileReader();
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         reader.onloadend = (e): void => {
             //console.log(reader.result);
             this.shapeToGeoJson(reader.result);

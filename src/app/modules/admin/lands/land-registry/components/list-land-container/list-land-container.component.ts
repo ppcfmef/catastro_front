@@ -128,7 +128,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 

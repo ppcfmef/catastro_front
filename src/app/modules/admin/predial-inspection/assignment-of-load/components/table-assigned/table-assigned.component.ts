@@ -77,7 +77,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -128,7 +128,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
             }
 
             if (confirm) {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 try {
                     if (hasAttendedTickets) {
                         await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo)

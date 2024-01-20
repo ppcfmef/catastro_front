@@ -77,7 +77,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 
