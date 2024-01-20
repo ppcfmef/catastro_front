@@ -13,7 +13,7 @@ import {BehaviorSubject, merge, of, Subject} from 'rxjs';
 import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 import {NavigationService} from '../../../../../../../core/navigation/navigation.service';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';

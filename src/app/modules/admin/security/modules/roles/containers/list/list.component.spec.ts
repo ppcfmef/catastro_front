@@ -5,7 +5,7 @@ import {ListComponent} from '../list/list.component';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher/media-watcher.service';
 import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 

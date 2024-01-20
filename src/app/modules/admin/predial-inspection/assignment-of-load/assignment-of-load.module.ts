@@ -5,11 +5,11 @@ import { AssignmentOfLoadRoutingModule } from './assignment-of-load-routing.modu
 import { IndicatorWidgetComponent } from './components/indicator-widget/indicator-widget.component';
 import { MapComponent } from '../shared/components/map/map.component';
 
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import {MatTabsModule} from '@angular/material/tabs';
-import { MatTableModule } from '@angular/material/table';
+import {MatLegacyTabsModule as MatTabsModule} from '@angular/material/legacy-tabs';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { LoadPendingAssignmentComponent } from './containers/load-pending-assignment/load-pending-assignment.component';
 import { LoadAssignedComponent } from './containers/load-assigned/load-assigned.component';
 import { LoadAttendComponent } from './containers/load-attend/load-attend.component';
@@ -18,13 +18,13 @@ import { LoadListComponent } from './containers/load-list/load-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { SharedModule as Shared } from 'app/shared/shared.module';
 
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
+import {MatLegacyDialogModule as MatDialogModule} from '@angular/material/legacy-dialog';
 import { MatDialogDeletedComponent } from './components/alert-confirm/mat-dialog-deleted.component';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatLegacyCheckboxModule as MatCheckboxModule} from '@angular/material/legacy-checkbox';
 import { TableAssignedComponent } from './components/table-assigned/table-assigned.component';
 import { NewLoadComponent } from './components/new-load/new-load.component';
 import { DetailOperadorComponent } from './components/detail-operador/detail-operador.component';
@@ -32,7 +32,7 @@ import { DetailOperadorComponent } from './components/detail-operador/detail-ope
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablePendingComponent } from './components/table-pending/table-pending.component';
 import { TableAttendedComponent } from './components/table-attended/table-attended.component';
-import {MatSelectModule} from '@angular/material/select';
+import {MatLegacySelectModule as MatSelectModule} from '@angular/material/legacy-select';
 
 
 

@@ -10,7 +10,7 @@ import {
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BehaviorSubject, merge, Subject} from 'rxjs';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';

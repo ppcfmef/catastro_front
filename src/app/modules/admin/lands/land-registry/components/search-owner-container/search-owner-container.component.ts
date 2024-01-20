@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { Sort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { LandOwner } from '../../interfaces/land-owner.interface';

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 
 import { TutorialCatalogContainerComponent } from './tutorial-catalog-container.component';
 import { TutorialService } from '../../services/tutorial.service';

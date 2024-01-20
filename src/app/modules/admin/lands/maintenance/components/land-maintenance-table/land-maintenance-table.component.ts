@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, Output, SimpleChanges ,EventEmitter} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Actions } from 'app/shared/enums/actions.enum';
 
 import { LandUI } from '../../interfaces/land.interface';

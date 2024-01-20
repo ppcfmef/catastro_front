@@ -2,7 +2,7 @@ import { Component, ViewChild , OnInit } from '@angular/core';
 import {UntypedFormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { UserMonitoringServiceService } from '../../services/user-monitoring-service.service';
 import {UserService} from '../../../../../../../core/user/user.service';
 

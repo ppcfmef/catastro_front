@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';
 import { LandGapAnalisysService } from '../../services/land-gap-analisys.service';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { Card } from '../../../shared/interfaces/card.interface';
 import { ExportUtils } from 'app/shared/utils/export.util';

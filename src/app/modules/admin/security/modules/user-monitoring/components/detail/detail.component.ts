@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import {User} from 'app/core/user/user.types';
 import {HistoricalRecordDetailComponent} from '../detail/historical-record-detail/historical-record-detail.component';
 import { UserMonitoringServiceService } from '../../services/user-monitoring-service.service';

@@ -1,6 +1,6 @@
 import {map} from 'rxjs/operators';
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MatLegacyTable as MatTable, MatLegacyTableDataSource as MatTableDataSource} from '@angular/material/legacy-table';
 import {PermissionService} from 'app/shared/services/permission.service';
 import {TypePermission} from 'app/shared/models/permission.interface';
 

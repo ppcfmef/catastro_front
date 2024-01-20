@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatSelectModule} from '@angular/material/select';
+import {MatLegacySelectModule as MatSelectModule} from '@angular/material/legacy-select';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
 import { ReportsRoutingModule } from './reports-routing.module';
 import { ReportPage } from './pages/report/report.page';
 import { ReportCartographicComponent } from './components/report-cartographic/report-cartographic.component';
