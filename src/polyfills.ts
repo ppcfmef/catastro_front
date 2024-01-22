@@ -54,7 +54,7 @@ import 'zone.js';  // Included with Angular CLI.
 // (window as any).process = {
 //     browser: true
 // };
-// (window as any).global = window;
+(window as any).global = window;
 // global.Buffer = global.Buffer || require('buffer').Buffer;
 //global.Buffer = global.Buffer || require('buffer').Buffer;
 //global.process = require('process');
