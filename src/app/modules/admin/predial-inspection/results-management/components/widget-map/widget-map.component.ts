@@ -48,7 +48,7 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input()y: number = -13.53063;
   @Input() layersInfo=[];
   @Input() listSourceSearchConfig=[];
-  @Input() ubigeo: string='040702';
+  @Input() ubigeo: string;
   @Input() user: User;
   @Input() idManzanaLayer =3;
   @Input() idLoteLayer =1;
@@ -136,17 +136,22 @@ ubicacionGraphic: any ;
 _unsubscribeAll: Subject<any> = new Subject<any>();
 currentIndex = 0;
 hideSelectUbigeo = false;
+isAdmin =false;
   constructor(
     private _fuseSplashScreenService: FuseSplashScreenService,
     private  _authService: AuthService,
     private _resultsService: ResultsService,
     private _confirmationService: CustomConfirmationService,
-    ) { }
+    ) {
+
+      this.isAdmin=(localStorage.getItem('isAdmin') ==='true')?true:false;
+    }
 
 
     ngOnDestroy(): void {
-      this._unsubscribeAll.next(null);
+
       this._unsubscribeAll.complete();
+      this._unsubscribeAll.next();
     }
 
 
@@ -168,15 +173,8 @@ hideSelectUbigeo = false;
   }
 
   ngOnInit(): void {
-    this.ubigeo ='040703';
-    console.log('this.ubigeo>>',this.ubigeo);
-    this._resultsService.getUbigeo().subscribe( (ubigeo: string)=>{
-        if(ubigeo){
-            this.ubigeo = ubigeo;
-            this.filterUbigeo(ubigeo);
-        }
-    });
 
+    console.log('this.ubigeo>>>',this.ubigeo );
     this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
       if (res) {
 
@@ -184,15 +182,6 @@ hideSelectUbigeo = false;
           this.ubicacion = res.ubicacion;
           this.typeGap = this.ticket.codTipoTicket;
           this.fotos = this.ubicacion.fotos;
-          /*this.estado = Estado.LEER;*/
-          /*console.log('this.ubicacion.estado',this.ubicacion.estado);
-          console.log('this.typeGap',this.typeGap);*/
-          /*this.estado = (  this.ubicacion.status===0  &&
-            [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.typeGap))? Estado.EDITAR: Estado.LEER;
-
-*/
-
-            /*console.log('this.estado>>',this.estado);*/
 
             this.estado = Estado.LEER;
             const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
@@ -219,19 +208,19 @@ hideSelectUbigeo = false;
 
           this.onChangeUbicacion(this.ubicacion);
       }
-  });
+    });
 
 
-  this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
-    if(res){
-      this.estado = res;
-      console.log('this.estado>>>',this.estado);
-      if(this.estado === Estado.INICIAR){
-        this.addUbicacion(this.ubicacion);
-        this.estado = Estado.LEER;
-      }
-    }
-  });
+    this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
+        if(res){
+        this.estado = res;
+        console.log('this.estado>>>',this.estado);
+        if(this.estado === Estado.INICIAR){
+            this.addUbicacion(this.ubicacion);
+            this.estado = Estado.LEER;
+        }
+        }
+    });
 
   this._resultsService.getResetMap().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any )=>{
       console.log('resetEvent',res);
@@ -246,13 +235,20 @@ hideSelectUbigeo = false;
     this._fuseSplashScreenService.show();
 
 
-    this.pointIni = [{
+    this.pointIni = {
             latitude: this.y,
             longitude: this.x
-        }];
+        };
     setTimeout(() => {
         this.initializeMap(this.pointIni, this.ubigeo);
     }, 1000);
+
+    this._resultsService.getUbigeo().pipe(takeUntil(this._unsubscribeAll)).subscribe((ubigeo: any )=>{
+        this.ubigeo = ubigeo;
+        if(ubigeo){
+            this.filterUbigeo(this.ubigeo);
+        }
+    });
 
     /*
     this._resultsService.getUbicacionData().subscribe((res: IUbicacion) => {
@@ -341,11 +337,6 @@ hideSelectUbigeo = false;
 
         const x = inputPoint?. longitude;
         const y = inputPoint?. latitude;
-        const point = { // Create a point
-            type: 'point',
-            longitude: x,
-            latitude: y
-        };
 
 
         this.view.center = [x, y];
@@ -495,10 +486,17 @@ hideSelectUbigeo = false;
         ], {position: 'top-right'});
 
         this.view.ui.add(legendExpand, 'bottom-right');
+        if(this.isAdmin){
+            this.view.ui.add([fotosExpand,selectUbigeoExpand], {
+                position: 'top-left',
+            });
+        }
+        else {
+            this.view.ui.add([fotosExpand], {
+                position: 'top-left',
+            });
+        }
 
-        this.view.ui.add([fotosExpand,selectUbigeoExpand], {
-            position: 'top-left',
-        });
         this.view.when(() => {
             this._fuseSplashScreenService.hide();
             console.log('ubigeo>>',this.ubigeo);

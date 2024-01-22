@@ -1,6 +1,6 @@
 
 <div #mapViewNode  >
-    <div #selectElement id="selectElement" >
+    <div #selectElement id="selectElement" *ngIf="this.isAdmin" >
         <select-ubigeo   (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
     </div>
 

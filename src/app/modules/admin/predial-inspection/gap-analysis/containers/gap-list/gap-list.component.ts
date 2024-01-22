@@ -111,24 +111,40 @@ export class GapListComponent implements OnInit , OnDestroy{
 
 
             const permissionsNavigation: any[]=this.user?.permissionsNavigation;
+            console.log('permissionsNavigation>>',permissionsNavigation);
             const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
             console.log('readAll>>',readAll);
-
-            if(!(readAll.length>0 || this.user.email === this._emailUserAdmin)){
+            console.log('this._emailUserAdmin>>',this._emailUserAdmin);
+            console.log('this.user.email>>',this.user);
+            if(!(readAll.length>0 || this.user.isSuperuser === true)){
 
             this.isAdmin = false;
             }
- 
+
             const ubigeo = localStorage.getItem('ubigeoBrechas');
-            if (ubigeo){
-                this.ubigeo = ubigeo;
-            }else{
-                this.ubigeo =
-                this.user && this.user.ubigeo
-                    ? this.user.ubigeo
-                    : this.ubigeo;
+
+            if (this.isAdmin){
+                if (ubigeo){
+                    this.ubigeo = ubigeo;
+                }else{
+                    this.ubigeo =
+                    this.user && this.user.ubigeo
+                        ? this.user.ubigeo
+                        : this.ubigeo;
+                        localStorage.setItem('ubigeoBrechas',this.ubigeo);
+                }
+
+            }
+
+            else
+                {
+                    this.ubigeo =
+                    this.user && this.user.ubigeo
+                        ? this.user.ubigeo
+                        : this.ubigeo;
                     localStorage.setItem('ubigeoBrechas',this.ubigeo);
             }
+
 
             this.updateUbigeoCards(this.ubigeo);
         });
@@ -137,7 +153,7 @@ export class GapListComponent implements OnInit , OnDestroy{
 
 
 
-    
+
     searchDistrict(event: any): void {
         const search = event.target.value;
         if (search && search !== '' && search.length > 3) {

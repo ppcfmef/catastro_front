@@ -72,7 +72,7 @@
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-3/12 pr-2.5">
             <mat-label>Tipo de Habilitación</mat-label>
-            <input matInput type="text" formControlName="uuType">
+            <input matInput type="text"  readonly [value]="formEdit.value?.uuType">
             <mat-select formControlName="uuType">
                 <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
             </mat-select>

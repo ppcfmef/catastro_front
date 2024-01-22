@@ -79,23 +79,46 @@ export class ResultsComponent implements OnInit {
     private _activeRouter: ActivatedRoute,
     private _tickerService: TicketService,
     private _resultService: ResultsService,
-    private _fb: UntypedFormBuilder
-    ) { }
+
+    private _fb: FormBuilder
+    ) {
+
+        const isAdmin =localStorage.getItem('isAdmin') ==='true'? true: false;
+        if (isAdmin){
+            this._resultService.getUbigeo().subscribe((ubigeo)=>{
+                console.log('results ubigeo>>>',ubigeo);
+                if (ubigeo){
+
+                    this.ubigeo= ubigeo;
+                    this.queryParams.codTicket = this.ubigeo;
+                }
+                this.getTicketsPendientes();
+                this.getTicketsAceptados();
+                this.getTicketsObservados();
+                this._resultService.setResetMap(1);
+
+            });
+        }
+
+
+    }
+
 
   ngOnInit(): void {
     this.initForm();
+
     this.queryParams={limit: this.pageSize};
-
-    this.getTicketsPendientes();
-    this.getTicketsAceptados();
-    this.getTicketsObservados();
-
     this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
-    this._resultService.getUbigeo().subscribe((ubigeo)=>{
-        if (ubigeo){
-            /*this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):'040703';*/
-            /*console.log('ubigeo',this.ubigeo);*/
-            this.ubigeo= ubigeo;
+
+    /*localStorage.setItem('user',JSON.stringify(this.user));*/
+
+    this.ubigeo =
+    this.user && this.user.ubigeo
+        ? this.user.ubigeo
+        : null;
+
+        if (this.ubigeo){
+
             this.queryParams.codTicket = this.ubigeo;
         }
         this.getTicketsPendientes();
@@ -103,7 +126,15 @@ export class ResultsComponent implements OnInit {
         this.getTicketsObservados();
         this._resultService.setResetMap(1);
 
-    });
+
+    /*this.queryParams={limit: this.pageSize};
+
+    this.getTicketsPendientes();
+    this.getTicketsAceptados();
+    this.getTicketsObservados();
+
+    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;*/
+
 
   }
 
