@@ -1,20 +1,20 @@
 import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandCreateAndEditComponent } from './land-create-and-edit.component';
 import { masterDomainMock } from '../../tests/mocks/master-domain.mock';
 import { landRecordMock } from '../../tests/mocks/land-record.mock';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { CoreModule } from 'app/core/core.module';
@@ -51,7 +51,7 @@ describe('LandCreateAndEditComponent', () => {
       ],
       declarations: [ LandCreateAndEditComponent ],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         { provide: CustomConfirmationService, useValue: fakeCustomConfirmationService },
         { provide: LandRegistryService, useValue: fakeLandRegistryService },
         { provide: LandRegistryMapService, useValue: fakeLandRegistryMapService },

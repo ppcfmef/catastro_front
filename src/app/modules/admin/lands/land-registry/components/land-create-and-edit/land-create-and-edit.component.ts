@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -30,7 +30,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   @Output() showFormEdit = new EventEmitter<boolean>();
   @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
-  formEdit: FormGroup;
+  formEdit: UntypedFormGroup;
   title: any;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
@@ -41,7 +41,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
@@ -122,11 +122,11 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       data.status = this.toggleToStatus(data.status);
       // ToDo: debe ser en el container
       if (data.idPlot && !data.cup) {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
       }else {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.saveLandApi(data);
       }
 
@@ -158,7 +158,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 

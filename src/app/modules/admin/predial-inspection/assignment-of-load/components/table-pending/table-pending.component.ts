@@ -2,7 +2,7 @@ import { environment } from './../../../../../../../environments/environment';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableActions } from '../../../shared/interfaces/table-actions.interface';
 import { TableAction } from '../../../shared/enum/table-action.enum';
@@ -17,7 +17,7 @@ import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from 'app/core/user/user.types';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { OperatorService } from '../../services/operator.service';
 
 @Component({
@@ -71,7 +71,7 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -109,7 +109,7 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
         this._messageProvider.showConfirm('Esta seguro de eliminar el codigo de carga: ' + cod)
             .afterClosed()
             .subscribe(async (confirm) => {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 if (confirm) {
                     await this._tableService.deleteRow(row, this._currentUserUbigeo)
                         .then((data) => {
@@ -127,7 +127,7 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async loadTable(): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         const queryData = 'ESTADO = "1"';
         const fieldsDataLoad = ['OBJECTID', 'ID_CARGA', 'COD_CARGA', 'FEC_ENTREGA'];
 

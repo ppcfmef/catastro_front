@@ -1,8 +1,8 @@
 import { ExportReportService } from "./export-report.service";
 import { MessageProviderService } from "./message-provider.service";
-import { MatDialogModule } from "@angular/material/dialog";
+import { MatLegacyDialogModule as MatDialogModule } from "@angular/material/legacy-dialog";
 import { TestBed } from "@angular/core/testing";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatLegacySnackBarModule as MatSnackBarModule } from "@angular/material/legacy-snack-bar";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Component } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";

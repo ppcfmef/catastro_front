@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { Router } from '@angular/router';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { ApplicationUI } from '../../interfaces/application';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
 import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';
@@ -21,7 +21,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
     tableLength: number;
     search={};
     filters={};
-    formFilters: FormGroup;
+    formFilters: UntypedFormGroup;
     typesMaintenance =[
         {
         id:1 , text :'Reasignar ubicación'
@@ -67,7 +67,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
   constructor(
     private _applicationMaintenanceService: ApplicationMaintenanceService,
     private _router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private _userService: UserService,
     ) {
 
@@ -109,11 +109,11 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
    createFormFilters(): void {
 
-    this.formFilters =  new FormGroup({
+    this.formFilters =  new UntypedFormGroup({
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        id_status:new FormControl(),
+        id_status:new UntypedFormControl(),
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        id_type:new FormControl(),
+        id_type:new UntypedFormControl(),
     });
 
   }

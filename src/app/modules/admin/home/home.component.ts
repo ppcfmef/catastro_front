@@ -8,11 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {MatDrawer} from '@angular/material/sidenav';
-import {Navigation} from '../../../core/navigation/navigation.types';
-import {FuseNavigationService} from '../../../../@fuse/components/navigation';
-import {takeUntil} from 'rxjs/operators';
 import {NavigationService} from '../../../core/navigation/navigation.service';
-import {Subject} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -36,7 +32,6 @@ export class HomeComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _fuseNavigationService: FuseNavigationService,
         private _navigationService: NavigationService,
     ) {
     }

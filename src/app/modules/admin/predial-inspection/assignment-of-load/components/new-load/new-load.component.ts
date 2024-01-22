@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnIn
 import { Subject } from 'rxjs';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { TableActions } from '../../../shared/interfaces/table-actions.interface';
 import { TableAction } from '../../../shared/enum/table-action.enum';
@@ -64,7 +64,7 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

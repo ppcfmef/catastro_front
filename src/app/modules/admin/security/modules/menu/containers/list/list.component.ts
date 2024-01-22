@@ -13,10 +13,10 @@ import {BehaviorSubject, merge, of, Subject} from 'rxjs';
 import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 import {NavigationService} from '../../../../../../../core/navigation/navigation.service';
 import {UserService} from '../../../../../../../core/user/user.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 
@@ -41,7 +41,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     dataSource = [];
     count = 0;
 
-    filters: FormGroup;
+    filters: UntypedFormGroup;
 
     changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -54,7 +54,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userService: UserService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {
@@ -107,7 +107,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

@@ -1,6 +1,6 @@
 import { merge } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { IncomesDataService } from '../../services/incomes-data.service';
 import { startWith, switchMap } from 'rxjs/operators';
 import { IPagination } from 'app/core/common/interfaces/common.interface';

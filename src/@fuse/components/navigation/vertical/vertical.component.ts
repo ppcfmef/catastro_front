@@ -1,9 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
+import { DOCUMENT } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { merge, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { delay, filter, takeUntil } from 'rxjs/operators';
+import { delay, filter, merge, ReplaySubject, Subject, Subscription, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationItem, FuseVerticalNavigationAppearance, FuseVerticalNavigationMode, FuseVerticalNavigationPosition } from '@fuse/components/navigation/navigation.types';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -52,6 +52,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     private readonly _handleAsideOverlayClick: any;
     private readonly _handleOverlayClick: any;
     private _hovered: boolean = false;
+    private _mutationObserver: MutationObserver;
     private _overlay: HTMLElement;
     private _player: AnimationPlayer;
     private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
@@ -65,6 +66,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     constructor(
         private _animationBuilder: AnimationBuilder,
         private _changeDetectorRef: ChangeDetectorRef,
+        @Inject(DOCUMENT) private _document: Document,
         private _elementRef: ElementRef,
         private _renderer2: Renderer2,
         private _router: Router,
@@ -90,6 +92,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-vertical-navigation-animations-enabled'             : this._animationsEnabled,
             [`fuse-vertical-navigation-appearance-${this.appearance}`]: true,
@@ -101,6 +104,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             'fuse-vertical-navigation-position-left'                  : this.position === 'left',
             'fuse-vertical-navigation-position-right'                 : this.position === 'right'
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     /**
@@ -329,6 +333,34 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     ngAfterViewInit(): void
     {
+        // Fix for Firefox.
+        //
+        // Because 'position: sticky' doesn't work correctly inside a 'position: fixed' parent,
+        // adding the '.cdk-global-scrollblock' to the html element breaks the navigation's position.
+        // This fixes the problem by reading the 'top' value from the html element and adding it as a
+        // 'marginTop' to the navigation itself.
+        this._mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                const mutationTarget = mutation.target as HTMLElement;
+                if ( mutation.attributeName === 'class' )
+                {
+                    if ( mutationTarget.classList.contains('cdk-global-scrollblock') )
+                    {
+                        const top = parseInt(mutationTarget.style.top, 10);
+                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', `${Math.abs(top)}px`);
+                    }
+                    else
+                    {
+                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', null);
+                    }
+                }
+            });
+        });
+        this._mutationObserver.observe(this._document.documentElement, {
+            attributes     : true,
+            attributeFilter: ['class']
+        });
+
         setTimeout(() => {
 
             // Return if 'navigation content' element does not exist
@@ -374,6 +406,9 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     ngOnDestroy(): void
     {
+        // Disconnect the mutation observer
+        this._mutationObserver.disconnect();
+
         // Forcefully close the navigation and aside in case they are opened
         this.close();
         this.closeAside();
@@ -382,7 +417,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         this._fuseNavigationService.deregisterComponent(this.name);
 
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

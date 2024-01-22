@@ -3,7 +3,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { ChangeDetectorRef, Component, OnInit,ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {PermissionService} from 'app/shared/services/permission.service';
@@ -21,12 +21,12 @@ export class AssignmentsComponent implements OnInit {
     @ViewChild(PermissionListComponent) permissionListComponent: PermissionListComponent;
     title = 'Gestion de Roles y Permisos';
     id: number;
-    editForm: FormGroup;
+    editForm: UntypedFormGroup;
     permissionsNavigation: NavigationView[] = [];
 
     constructor(
         private _permissionService: PermissionService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,

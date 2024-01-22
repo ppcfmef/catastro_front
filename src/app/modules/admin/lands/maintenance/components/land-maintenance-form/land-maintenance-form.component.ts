@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA} from '@angular/material/legacy-dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
 import { LandRegistryService } from '../../../land-registry/services/land-registry.service';
@@ -20,7 +20,7 @@ let _this: any;
 })
 export class LandMaintenanceFormComponent implements OnInit {
     ubigeo: string;
-    formLand: FormGroup;
+    formLand: UntypedFormGroup;
     landModel = new LandModel();
     masterDomain: MasterDomain;
     readOnly= false;
@@ -34,7 +34,7 @@ export class LandMaintenanceFormComponent implements OnInit {
         private landRegistryService: LandRegistryService,
 
         //public dialogRef: MatDialogRef<HistoricalRecordDetailComponent>,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private _districtService: DistrictService,
         //private _commonService: CommonService,
         public dialogRef: MatDialogRef<LandMaintenanceFormComponent>,

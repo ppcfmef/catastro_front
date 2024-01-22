@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonService} from '../../../../../../../core/common/services/common.service';
 import {UserService} from '../../../../../../../core/user/user.service';
@@ -20,7 +20,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     id: number;
 
-    menuForm: FormGroup;
+    menuForm: UntypedFormGroup;
 
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -31,7 +31,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         private _commonService: CommonService,
         private _userService: UserService,
         private _listComponent: ListComponent,
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {
     }
@@ -48,7 +48,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
         this.closeDrawer();
 

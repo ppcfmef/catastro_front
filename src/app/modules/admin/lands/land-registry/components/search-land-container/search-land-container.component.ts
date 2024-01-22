@@ -1,9 +1,9 @@
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import {FormControl, FormGroup } from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { ExportReportService } from 'app/shared/services/export-report.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
@@ -26,7 +26,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   ownerLandSubscription: Subscription;
 
-  formFilters: FormGroup;
+  formFilters: UntypedFormGroup;
 
   showOwnerTable = false;
 
@@ -77,7 +77,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll.next();
+    this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   }
 
@@ -191,10 +191,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private createFormFilters(): void {
-    this.formFilters = new FormGroup({
-      search: new FormControl(),
-      view: new FormControl('predio'),
-      status: new FormControl(),
+    this.formFilters = new UntypedFormGroup({
+      search: new UntypedFormControl(),
+      view: new UntypedFormControl('predio'),
+      status: new UntypedFormControl(),
     });
   }
 

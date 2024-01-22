@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {MatLegacyDialog as MatDialog, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef, MatLegacyDialogModule as MatDialogModule} from '@angular/material/legacy-dialog';
 import {IRegistroTitularidad} from '../../interfaces/registro-titularidad.interface';
 import { IFoto } from '../../interfaces/foto.interface';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';

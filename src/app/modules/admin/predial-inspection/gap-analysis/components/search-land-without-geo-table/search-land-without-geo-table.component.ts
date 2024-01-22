@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { LandUI } from 'app/modules/admin/lands/maintenance/interfaces/land.interface';
 import { LandMaintenanceService } from 'app/modules/admin/lands/maintenance/services/land-maintenance.service';
 
@@ -10,13 +10,13 @@ import { LandMaintenanceService } from 'app/modules/admin/lands/maintenance/serv
 })
 export class SearchLandWithoutGeoTableComponent implements OnInit {
     cleanSearch: any;
-    search: FormGroup;
+    search: UntypedFormGroup;
     landRecords: LandUI[];
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() searchEvent: EventEmitter<any> = new EventEmitter();
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() cleanSearchEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private _fb: FormBuilder) { }
+  constructor(private _fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.search = this._fb.group({

@@ -1,6 +1,6 @@
 import { Component, Inject, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormControl } from '@angular/forms';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
@@ -8,7 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ModalComponent implements OnInit, OnDestroy,OnChanges {
     //observacion;
-    inputControl: FormControl = new FormControl('');
+    inputControl: UntypedFormControl = new UntypedFormControl('');
     selectedFile: any = null;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,) { }

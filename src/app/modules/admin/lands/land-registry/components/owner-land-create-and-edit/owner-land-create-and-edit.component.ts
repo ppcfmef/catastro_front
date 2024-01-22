@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Component, EventEmitter, OnInit, OnChanges, Output, OnDestroy, Input, SimpleChanges } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
@@ -22,7 +22,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   @Input() landOwnerIn: LandOwner;
   @Output() showFormEdit = new EventEmitter<boolean>();
   landOwner = new LandOwnerModel();
-  formEdit: FormGroup;
+  formEdit: UntypedFormGroup;
   typeDocs = [
     {val: '01', name:'DNI'},
     {val: '06', name:'RUC'},
@@ -36,7 +36,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   idView = 'regnrewcon';
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
     private integrationService: IntegrationService,
@@ -100,7 +100,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   saveForm(): void{
     if (this.formEdit.valid){
-      this._fuseSplashScreenService.show(0);
+      this._fuseSplashScreenService.show();
       this.landOwner.setValue(this.formEdit.value);
       this.landRegistryService.saveOwner(this.landOwner.toJson())
       .toPromise()
@@ -149,7 +149,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   }
 
   getIntegrationData(): void {
-    this._fuseSplashScreenService.show(0);
+    this._fuseSplashScreenService.show();
     const documentType = this.formEdit.get('documentType').value;
     const document = this.formEdit.get('dni').value;
 

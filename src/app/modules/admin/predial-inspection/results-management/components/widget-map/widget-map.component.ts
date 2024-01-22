@@ -12,7 +12,6 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatCarousel, MatCarouselComponent } from '@ngmodule/material-carousel';
 
 import {ActionsGapAnalisys} from 'app/shared/enums/actions-gap-analisys.enum';
 
@@ -151,8 +150,8 @@ isAdmin =false;
 
     ngOnDestroy(): void {
 
-      this._unsubscribeAll.next();
       this._unsubscribeAll.complete();
+      this._unsubscribeAll.next();
     }
 
 
@@ -233,7 +232,7 @@ isAdmin =false;
 
 
 
-    this._fuseSplashScreenService.show(0);
+    this._fuseSplashScreenService.show();
 
 
     this.pointIni = {
@@ -793,7 +792,7 @@ async zoomToUbigeo(where: string): Promise < any > {
 
 
       if (this.view) {
-          this._fuseSplashScreenService.show(0);
+          this._fuseSplashScreenService.show();
           MapUtils.zoomToFeature(this.view, layerManzana, where).then(() => {
               this.view.zoom = 16;
               this._fuseSplashScreenService.hide();

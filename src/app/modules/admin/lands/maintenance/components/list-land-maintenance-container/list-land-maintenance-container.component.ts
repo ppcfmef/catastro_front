@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LandUI } from '../../interfaces/land.interface';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { LandModel } from '../../models/land.model';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { Actions } from 'app/shared/enums/actions.enum';
 @Component({

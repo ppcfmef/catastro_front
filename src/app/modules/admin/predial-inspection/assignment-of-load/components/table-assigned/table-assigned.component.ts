@@ -5,11 +5,11 @@ import { TableActions } from '../../../shared/interfaces/table-actions.interface
 import { TableAction } from '../../../shared/enum/table-action.enum';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Subject } from 'rxjs';
 import { IdataLoad } from '../../interfaces/dataload.interface';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';
@@ -77,7 +77,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -128,7 +128,7 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
             }
 
             if (confirm) {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 try {
                     if (hasAttendedTickets) {
                         await this._tableService.deletePendingTickets(cod, this._currentUserUbigeo)

@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 import { TicketService } from '../../services/ticket.service';
 import { ITicket } from '../../interfaces/ticket.interface';
-import { type } from 'os';
+//import { type } from 'os';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { User } from 'app/core/user/user.types';
 import { ExportUtils } from 'app/shared/utils/export.util';
 @Component({
@@ -69,7 +69,7 @@ export class ResultsComponent implements OnInit {
   tablePendienteLength=0;
   tableObservadoLength=0;
   tableAceptadoLength=0;
-  form: FormGroup;
+  form: UntypedFormGroup;
   queryParams: any;
   ubigeo: string;
   pageSize = 5;
@@ -79,6 +79,7 @@ export class ResultsComponent implements OnInit {
     private _activeRouter: ActivatedRoute,
     private _tickerService: TicketService,
     private _resultService: ResultsService,
+
     private _fb: FormBuilder
     ) {
 
@@ -101,6 +102,7 @@ export class ResultsComponent implements OnInit {
 
 
     }
+
 
   ngOnInit(): void {
     this.initForm();

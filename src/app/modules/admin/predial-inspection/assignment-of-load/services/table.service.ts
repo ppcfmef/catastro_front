@@ -467,7 +467,7 @@ export class TableService {
         console.log(unitData.row.TIPO.toLowerCase(), 'unidsfd');
         return new Promise(async (resolve, reject) => {
             try {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 const [newQuery] = await loadModules(['esri/rest/support/Query',]);
 
                 const queryUnitData = new newQuery();
@@ -664,7 +664,7 @@ export class TableService {
     }
 
     async assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         try {
             const workLoadStatus = operator ? '2' : '1';
             const ticketStatus = operator ? '3' : '2';

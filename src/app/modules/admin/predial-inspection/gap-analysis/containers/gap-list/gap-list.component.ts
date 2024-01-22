@@ -98,7 +98,7 @@ export class GapListComponent implements OnInit , OnDestroy{
     ) {}
     ngOnDestroy(): void {
         console.log('destroy');
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -172,7 +172,7 @@ export class GapListComponent implements OnInit , OnDestroy{
         this._districtService.getList(params).subscribe(async (res)=>{
             /*console.log(res);*/
             this.districts = res.results;
-            this._fuseSplashScreenService.show(0);
+            this._fuseSplashScreenService.show();
             if (this.districts && this.districts.length > 0) {
                 this.district = this.districts[0];
 

@@ -10,13 +10,13 @@ import {
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BehaviorSubject, merge, Subject} from 'rxjs';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 @Component({
     selector: 'app-list',
@@ -34,7 +34,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     title = 'Gestion de roles y permisos';
 
-    filters: FormGroup;
+    filters: UntypedFormGroup;
 
     displayedColumns = ['nro', 'name', 'description', 'status', 'actions'];
 
@@ -52,7 +52,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userService: UserService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {

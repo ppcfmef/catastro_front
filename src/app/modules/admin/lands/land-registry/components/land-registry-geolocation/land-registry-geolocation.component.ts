@@ -34,7 +34,7 @@ import { FormatUtils } from 'app/shared/utils/format.utils';
 import { Estado } from 'app/shared/enums/estado-map.enum';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerModel } from '../../models/land-owner.model';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+//import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import moment from 'moment';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';
@@ -468,7 +468,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
     ngOnDestroy(): void {
        this._messageProviderService=null;
-       this._unsubscribeAll.next();
+       this._unsubscribeAll.next(null);
        this._unsubscribeAll.complete();
 
     }

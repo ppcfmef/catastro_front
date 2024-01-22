@@ -8,7 +8,7 @@ import {
     SimpleChanges,
 } from '@angular/core';
 import { LandAnalisysUI } from '../../interfaces/land.interface';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormUtils } from 'app/shared/utils/form.utils';
 import { PredioService } from '../../services/predio.service';
 import { PredioModel } from '../../models/predio.model';
@@ -33,13 +33,13 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     @Output() asigLandEvent: EventEmitter<any> = new EventEmitter<any>();
 
     showAddres = true;
-    formEdit: FormGroup;
+    formEdit: UntypedFormGroup;
     point: any;
     type: string;
     dialogRef = null;
     disabled: boolean = false;
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private _predioService: PredioService,
         private _puntoCampoService: PuntoCampoService,
         private _landService: LandGapAnalisysService,

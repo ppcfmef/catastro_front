@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ProfileComponent } from './profile.component';
@@ -12,7 +12,7 @@ describe('ProfileComponent', () => {
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule],
             declarations: [ProfileComponent],
-            providers: [FormBuilder]
+            providers: [UntypedFormBuilder]
         })
             .compileComponents();
     });

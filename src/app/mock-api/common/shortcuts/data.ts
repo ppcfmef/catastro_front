@@ -33,14 +33,6 @@ export const shortcuts = [
         useRouter  : true
     },
     {
-        id         : '34fb28db-4ec8-4570-8584-2414d6de796b',
-        label      : 'Calendar',
-        description: 'Latest appointments',
-        icon       : 'heroicons_outline:calendar',
-        link       : '/apps/calendar',
-        useRouter  : true
-    },
-    {
         id         : '2daac375-a2f7-4393-b4d7-ce6061628b66',
         label      : 'Mailbox',
         description: '5 new e-mails',

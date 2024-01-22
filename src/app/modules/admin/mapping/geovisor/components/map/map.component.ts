@@ -120,7 +120,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     }
     ngAfterViewInit(): void {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         setTimeout(() => {
             this.initializeMap();
         }, 1000);
@@ -365,7 +365,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             const featureZonaUrbana = new FeatureLayer(this.urlSearchZonaUrbana);
 
 
-            this._fuseSplashScreenService.show(0);
+            this._fuseSplashScreenService.show();
             const res=await MapUtils.zoomToFeature(this.view, featureZonaUrbana, where);
             //console.log('res>>',res);
             this._fuseSplashScreenService.hide();
@@ -472,7 +472,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       /* const url= _imageLayer.url.replace('MapServer','FeatureServer') + '/' + _layer.id+' /addFeatures';*/
 
         const reader = new FileReader();
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         reader.onloadend = (e): void => {
             this.shapeToGeoJson(reader.result,url);
         };
