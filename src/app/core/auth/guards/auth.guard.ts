@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import { CanMatch, Route, Router, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
-
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
+export class AuthGuard implements CanMatch
 {
     /**
      * Constructor
@@ -24,38 +23,14 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Can activate
-     *
-     * @param route
-     * @param state
-     */
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean
-    {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl);
-    }
-
-    /**
-     * Can activate child
-     *
-     * @param childRoute
-     * @param state
-     */
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
-    {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
-        return this._check(redirectUrl);
-    }
-
-    /**
-     * Can load
+     * Can match
      *
      * @param route
      * @param segments
      */
-    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean
+    canMatch(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
     {
-        return this._check('/');
+        return this._check(segments);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -65,29 +40,28 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
     /**
      * Check the authenticated status
      *
-     * @param redirectURL
+     * @param segments
      * @private
      */
-    private _check(redirectURL: string): Observable<boolean>
+    private _check(segments: UrlSegment[]): Observable<boolean | UrlTree>
     {
         // Check the authentication status
-        return this._authService.check()
-                   .pipe(
-                       switchMap((authenticated) => {
+        return this._authService.check().pipe(
+            switchMap((authenticated) => {
 
-                           // If the user is not authenticated...
-                           if ( !authenticated )
-                           {
-                               // Redirect to the sign-in page
-                               this._router.navigate(['sign-in'], {queryParams: {redirectURL}});
+                // If the user is not authenticated...
+                if ( !authenticated )
+                {
+                    // Redirect to the sign-in page with a redirectUrl param
+                    const redirectURL = `/${segments.join('/')}`;
+                    const urlTree = this._router.parseUrl(`sign-in?redirectURL=${redirectURL}`);
 
-                               // Prevent the access
-                               return of(false);
-                           }
+                    return of(urlTree);
+                }
 
-                           // Allow the access
-                           return of(true);
-                       })
-                   );
+                // Allow the access
+                return of(true);
+            })
+        );
     }
 }

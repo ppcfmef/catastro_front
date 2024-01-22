@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResultsService } from '../../services/results.service';
 import { TicketService } from '../../services/ticket.service';
 import { ITicket } from '../../interfaces/ticket.interface';
-import { type } from 'os';
+//import { type } from 'os';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
