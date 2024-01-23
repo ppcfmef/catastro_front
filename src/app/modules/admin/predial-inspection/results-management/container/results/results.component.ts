@@ -6,7 +6,7 @@ import { TicketService } from '../../services/ticket.service';
 import { ITicket } from '../../interfaces/ticket.interface';
 //import { type } from 'os';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { User } from 'app/core/user/user.types';
