@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorR
 import {UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { ExportReportService } from 'app/shared/services/export-report.service';
 import { LandOwner } from '../../interfaces/land-owner.interface';

@@ -9,8 +9,8 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import {MatLegacyTable as MatTable, MatLegacyTableDataSource as MatTableDataSource} from '@angular/material/legacy-table';
-import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-upload-table-files',

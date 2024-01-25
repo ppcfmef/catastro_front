@@ -5,8 +5,8 @@ import { GapAnalysisRoutingModule } from './gap-analysis-routing.module';
 import { GapAnalysisPage } from './pages/gap-analysis/gap-analysis.page';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 
 import { GapListComponent } from './containers/gap-list/gap-list.component';
 import { GeoreferencingComponent } from './containers/georeferencing/georeferencing.component';
@@ -20,15 +20,15 @@ import { SubLandComponent } from './containers/sub-land/sub-land.component';
 import { PointsWithoutLandComponent } from './containers/points-without-land/points-without-land.component';
 import { SearchLandWithoutGeoTableComponent } from './components/search-land-without-geo-table/search-land-without-geo-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
 import { LandWithoutGeoTableComponent } from './components/land-without-geo-table/land-without-geo-table.component';
-import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { LandMapPreGeoreferencingComponent } from './components/land-map-geo/land-map-pre-georeferencing.component';
 import { LandDetailPreGeoreferencingComponent } from './components/land-detail-geo/land-detail-pre-georeferencing.component';
 import { GapAnalysisMapComponent } from './components/gap-analysis-map/gap-analysis-map.component';
 import { GapAnalysisBlockListComponent } from './components/gap-analysis-block-list/gap-analysis-block-list.component';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GrowingBlockComponent } from './containers/growing-block/growing-block.component';
 
 @NgModule({

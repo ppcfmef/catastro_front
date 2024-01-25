@@ -6,7 +6,7 @@ import {
     Output
 } from '@angular/core';
 import {TableActions} from '../../../shared/interfaces/table-actions.interface';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({selector: 'app-table-manageresult', templateUrl: './table.component.html', styleUrls: ['./table.component.scss']})
 export class TableComponent implements OnInit {

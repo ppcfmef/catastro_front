@@ -5,11 +5,11 @@ import { TableActions } from '../../../shared/interfaces/table-actions.interface
 import { TableAction } from '../../../shared/enum/table-action.enum';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { Subject } from 'rxjs';
 import { IdataLoad } from '../../interfaces/dataload.interface';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { UserService } from 'app/core/user/user.service';
 import { takeUntil } from 'rxjs/operators';

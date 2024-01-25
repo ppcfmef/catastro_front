@@ -1,5 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseConfirmationConfig } from '@fuse/services/confirmation/confirmation.types';
 
 @Component({
@@ -7,16 +7,16 @@ import { FuseConfirmationConfig } from '@fuse/services/confirmation/confirmation
     templateUrl  : './dialog.component.html',
     styles       : [
         `
-            .fuse-confirmation-dialog-panel {
-                @screen md {
-                    @apply w-128;
-                }
-
-                .mat-dialog-container {
-                    padding: 0 !important;
-                }
-            }
-        `
+                     .fuse-confirmation-dialog-panel {
+                         @screen md {
+                             @apply w-128;
+                         }
+         
+                         .mat-mdc-dialog-container {
+                             padding: 0 !important;
+                         }
+                     }
+                 `
     ],
     encapsulation: ViewEncapsulation.None
 })

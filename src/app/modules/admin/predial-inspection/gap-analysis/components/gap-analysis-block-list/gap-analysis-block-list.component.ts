@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { TableColumn } from '../../../shared/interfaces/table-columns.interface';
 import { TableConifg } from '../../../shared/interfaces/table-config.interface';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-gap-analysis-block-list',

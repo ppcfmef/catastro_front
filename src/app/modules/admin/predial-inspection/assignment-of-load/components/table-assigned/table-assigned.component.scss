@@ -1,20 +1,20 @@
 
 :host app-table ::ng-deep {
 
-    thead .mat-header-cell {
+    thead .mat-mdc-header-cell {
         text-align: left;
     }
-    .mat-row {
+    .mat-mdc-row {
         text-align: left;
     }
 
-    td.mat-cell{
+    td.mat-mdc-cell{
         font-size: 12px;
     }
 
 }
 
 
-:host ::ng-deep .mat-paginator .mat-paginator-container {
+:host ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-container {
     padding: 0 !important;
 }

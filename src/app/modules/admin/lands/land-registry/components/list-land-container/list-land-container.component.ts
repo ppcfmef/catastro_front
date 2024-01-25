@@ -1,6 +1,6 @@
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';

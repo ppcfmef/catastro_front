@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MatSortModule } from '@angular/material/sort';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { SearchLandTableComponent } from './search-land-table.component';
 
 describe('SearchLandTableComponent', () => {

@@ -2,3 +2,9 @@
 
 @include btn-styles;
 @include mat-toggle-styles;
+
+.mat-mdc-icon-button.btnClose {
+    position: absolute !important;
+    top: 12px;
+    right: 12px;
+}

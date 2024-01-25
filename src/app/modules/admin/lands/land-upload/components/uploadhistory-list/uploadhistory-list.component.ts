@@ -3,7 +3,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
 import { IPagination } from 'app/core/common/interfaces/common.interface';
 import { UploadHistory } from '../../interfaces/upload-history.interface';

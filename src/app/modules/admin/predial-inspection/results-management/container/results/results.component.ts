@@ -8,7 +8,7 @@ import { ITicket } from '../../interfaces/ticket.interface';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import { FormBuilder, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { User } from 'app/core/user/user.types';
 import { ExportUtils } from 'app/shared/utils/export.util';
 @Component({

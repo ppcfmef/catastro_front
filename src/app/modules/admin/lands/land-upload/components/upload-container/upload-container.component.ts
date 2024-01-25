@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {FormUtils} from '../../../../../../shared/utils/form.utils';
-import { UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
@@ -17,13 +17,13 @@ import { Observable } from 'rxjs';
 export class UploadContainerComponent implements OnInit {
   @ViewChild('uploadfile') uploadfileElement: ElementRef;
   uploadId: number;
-  uploadForm = new UntypedFormGroup({
-    fileUpload: new UntypedFormControl(null, [Validators.required]),
+  uploadForm = new FormGroup({
+    fileUpload: new FormControl(null, [Validators.required]),
   });
 
-  selectForm = new UntypedFormGroup({
-    selectType: new UntypedFormControl(null, [Validators.required]),
-    checkFormatList: new UntypedFormControl(null)
+  selectForm = new FormGroup({
+    selectType: new FormControl(null, [Validators.required]),
+    checkFormatList: new FormControl(null)
   });
 
   typesUpload = [
