@@ -1,8 +1,7 @@
 :host ::ng-deep table{
 
     border-radius: 7px;
-
-    th.mat-header-cell{
+    th.mat-mdc-header-cell{
         color:white;
         background-color: #4f49ae;
         &:first-child{
@@ -17,7 +16,7 @@
         border-radius: 7px 0 7px 0;
         
     }
-    tbody tr td.mat-cell{
+    tbody tr td.mat-mdc-cell{
         border: none;
     }
     tbody tr:nth-child(2n+1){
@@ -32,14 +31,27 @@
         }
     }
     &.green{
-        thead th.mat-header-cell{
-            background-color: #10B981;
+        thead th.mat-mdc-header-cell{
+            background-color: #10B981 !important;
         }
     }
 
     &.red{
-        thead th.mat-header-cell{
-            background-color: #EF4444;
+        thead th.mat-mdc-header-cell{
+            background-color: #EF4444 !important;
         }
     }
+}
+
+.b-blue{
+    background: #4f46e5;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    padding: 6px 19px;
+    border-radius: 15px;
+}
+
+.mat-icon {
+    color: white !important;
 }

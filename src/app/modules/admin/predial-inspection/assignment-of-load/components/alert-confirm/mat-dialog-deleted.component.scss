@@ -1,21 +1,21 @@
 
-:host .mat-dialog-actions ::ng-deep {
+:host .mat-mdc-dialog-actions ::ng-deep {
     justify-content: center;
     gap: 20px;
 
-    .mat-button:first-child {
+    .mat-mdc-button:first-child {
         background-color: #DE3F43;
         color: white;
     }
 
-    .mat-button:last-child {
+    .mat-mdc-button:last-child {
         background-color: #0090F8;
         color: white;
     }
 
 }
 
-:host ::ng-deep .mat-dialog-container {
+:host ::ng-deep .mat-mdc-dialog-container {
     padding: 0;
 }
 

@@ -2,9 +2,8 @@
 
 @include button-style-icons-2();
 
-.mat-header-cell {
-  background: #e55e47;
-  color: white !important;
+.mat-mdc-header-cell {
+  background: #e55e47 !important;
 }
 
 .active-tr{
@@ -12,7 +11,6 @@
     background-color: #bbc6eb5e;
   }
 }
-
 
 ::ng-deep .no-hide-arrow .mat-sort-header-arrow {
   color: #fff !important;

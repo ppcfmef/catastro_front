@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { TypeGap } from 'app/shared/enums/type-gap.enum';
 import { ManzanaPrediosSubvaluadosService } from '../../services/manzana-sub-valuado.service';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { UserService } from 'app/core/user/user.service';
 import { Subject } from 'rxjs';

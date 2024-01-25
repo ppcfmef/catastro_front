@@ -1,4 +1,5 @@
-<div class="w-full flex flex-auto flex-col p-4">
+<div class="flex flex-col flex-auto py-3">
+<div class="w-full flex flex-col py-1 px-4">
     <div class="flex justify-between">
         <span class="title-primary">Asignacion de carga</span>
         <!-- esto va cambiar con material  -->
@@ -10,7 +11,7 @@
     <div [formGroup]="formFilters">
         <span class="text-black mt-3 text-base">Buscar por:</span>
         <div class="flex items-center pr-2 border rounded-lg my-2 border-gray-200  dark:bg-gray-800 dark:border-gray-700">
-            <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-4/12">
+            <div class="h-10 w-4/12">
                 <mat-select placeholder="Buscar por"
                     (selectionChange)="optionSelected($event)"
                     formControlName="option">
@@ -20,7 +21,7 @@
                         >{{ option.description }}
                     </mat-option>
                 </mat-select>
-            </mat-form-field>
+            </div>
             <ng-container *ngIf="optionSelect">
                 <div [ngSwitch]="optionSelect">
                     <ng-container *ngSwitchCase ="'code'">
@@ -38,7 +39,7 @@
                     </ng-container>
                     <ng-container *ngSwitchCase ="'urban'">
                         <div class="w-full">
-                            <mat-select class="pl-2 w-full"
+                            <mat-select class="pl-2 w-full selectUb"
                                 placeholder="Seleccionar unidad urbana"
                                 formControlName="cod">
                                 <mat-option [value]="">-----</mat-option>
@@ -55,18 +56,19 @@
             </ng-container>
         </div>
     </div>
+</div>
 
-    <div class="w-full">
-        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-            <mat-tab label="Por asignar">
-                <app-table-pending></app-table-pending>
-            </mat-tab>
-            <mat-tab label="Asignado">
-                <app-table-assigned></app-table-assigned>
-            </mat-tab>
-            <mat-tab label="Atendido">
-                <app-table-attended></app-table-attended>
-            </mat-tab>
-        </mat-tab-group>
-    </div>
+<div class="w-full p-0 m-0">
+    <mat-tab-group class="p-0" mat-stretch-tabs="false" mat-align-tabs="start">
+        <mat-tab label="Por asignar">
+            <app-table-pending></app-table-pending>
+        </mat-tab>
+        <mat-tab label="Asignado">
+            <app-table-assigned></app-table-assigned>
+        </mat-tab>
+        <mat-tab label="Atendido">
+            <app-table-attended></app-table-attended>
+        </mat-tab>
+    </mat-tab-group>
+</div>
 </div>

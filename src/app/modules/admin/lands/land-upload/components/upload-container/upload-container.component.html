@@ -28,7 +28,8 @@
 <ng-container *ngIf="!recordSumary || recordSumary.status === 'INITIAL'">
 <div class="flex-row w-auto">
     <mat-form-field [formGroup]="selectForm" class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-60 pr-2.5">
-        <mat-label>Tipo de carga <span class="text-red-600">(*)</span></mat-label>
+        <mat-label>Tipo de carga <strong class="text-red-600">(*)</strong></mat-label>
+     
         <mat-select formControlName="selectType" placeholder="Seleccione tipo de carga">
             <mat-option [value]="typeUpload.code" *ngFor="let typeUpload of typesUpload">{{ typeUpload.text }}</mat-option>
         </mat-select>
@@ -79,7 +80,7 @@
                     <ng-container *ngIf="isUpload || recordSumary?.status === 'INITIAL'">
                         <ng-container *ngIf="selectForm.get('selectType').value === 99; else buttonNormal">
                             <button *ngIf="fileUpload?.value && selectForm.get('checkFormatList').value"
-                            class="mat-focus-indicator mat-flat-button bg-color-blue-button mat-button-base bg-sky-500 mr-10 text-white mt-6"
+                            class="mat-focus-indicator mat-flat-button  button.btn-blue mat-button-base bg-sky-500 mr-10 text-white mt-6"
                             [disabled]="uploadForm.invalid"
                             (click)="parseMultipleFile()">
                                 <mat-icon class="text-white" svgIcon="mat_outline:plagiarism"></mat-icon>

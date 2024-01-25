@@ -134,7 +134,7 @@
 
     .active_block{
 
-        .mat-tooltip-trigger{
+        .mat-mdc-tooltip-trigger{
             color:#8B8B8B;
         }
         mat-icon{
@@ -144,6 +144,10 @@
 
     .bg-color-blue-button{
         background-color: #219EF9 !important;
+        padding: 8px 16px;
+        display: flex;
+        border-radius: 36px;
+        align-items: center;
     }
 
     button.btn-green{
@@ -238,7 +242,7 @@
             }
         }
         &.b-green{
-            background-color: #66BB6A;
+            background-color: #66BB6A !important;
             h3,h4{
                 color:rgb(1, 56, 1);
             }
@@ -258,31 +262,44 @@
 
     .radio-button-container{
         display: grid;
-        grid-template-columns: minmax(0, 220px) minmax(0, 220px);
-        grid-gap: 16px;
+        grid-template-columns: minmax(0, 280px) minmax(0, 290px);
+        grid-gap: 12px;
     }
+
+    
     .radio-button{
-        padding: 8px 12px;
+        padding: 2px 12px;
         background-color: #fbfbfb;
         border-radius: 8px;
         box-shadow: 0 0 5px #999;
         min-width: 197px;
-        color:#666;
+        
         ::ng-deep{
-            .mat-radio-outer-circle{
+            /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
+            .mdc-radio{
                 border-color: #219EF9 !important;
             }
 
         }
     }
-
-    mat-radio-button.mat-radio-checked  {
-        background-color: #219EF9;
+    /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
+    mat-mdc-radio{
+        .mat-mdc-radio-outer-circle{
+            border-color: #219EF9 !important;
+        }
+        background-color: #219EF9 !important;
+        color: white;
+    }
+    mat-mdc-radio-button.mat-radio-checked  {
+        background-color: #219EF9 !important;
         color: white;
         ::ng-deep{
+            /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
             .mat-radio-outer-circle{
                 border-color: white !important;
             }
+            /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
             .mat-radio-inner-circle{
                 background-color: white;
             }

@@ -7,7 +7,7 @@
 
   <section [hidden]="showDetail">
       <form class="example-form">
-          <mat-form-field class="w-80 mb-7" appearance="fill">
+          <mat-form-field class="w-120 mb-7" appearance="fill">
             <mat-label>Buscar por institución </mat-label>
             <input type="text"
                   placeholder="Ingrese nombre de institución"
@@ -19,8 +19,8 @@
             <mat-icon matSuffix>search</mat-icon>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event.option.value)" [displayWith]="displayTextAutocompleteFn.bind(this)">
               <mat-option class="option-multiple-lines" *ngFor="let option of filteredOptions | async" [value]="option">
-                <div class="mat-body-1 mb-0">{{option.name}}</div>
-                <div class="mat-body-1">{{option.ubigeoScope || ''}}</div>
+                <div class="mat-body-2 mb-0">{{option.name}}</div>
+                <div class="mat-body-2">{{option.ubigeoScope || ''}}</div>
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
@@ -28,7 +28,7 @@
   </section>
 
   <section [hidden]="showDetail">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full max-w-3xl">
+    <table mat-table [dataSource]="dataSource" class="w-full max-w-3xl w-min">
 
       <ng-container matColumnDef="nro">
         <th mat-header-cell *matHeaderCellDef>Nro.</th>

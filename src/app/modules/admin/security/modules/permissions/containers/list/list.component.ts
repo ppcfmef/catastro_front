@@ -8,7 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {BehaviorSubject, merge, Subject} from 'rxjs';
-import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';

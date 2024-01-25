@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FaqService } from '../../services/faq.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
+import {MatPaginator} from '@angular/material/paginator';
 
 import { FaqContainerComponent } from './faq-container.component';
 

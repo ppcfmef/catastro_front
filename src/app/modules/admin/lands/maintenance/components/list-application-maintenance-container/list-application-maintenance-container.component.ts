@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { ApplicationUI } from '../../interfaces/application';

@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CardMenuItemComponent } from './components/card-menu-item/card-menu-item.component';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FuseConfirmationModule } from '@fuse/services/confirmation/confirmation.module';
 
@@ -15,16 +15,16 @@ import { AlertMessageComponent } from './components/modals/alert-message/alert-m
 import { AlertSnackComponent } from './components/modals/alert-snack/alert-snack.component';
 import { AlertSnackErrorComponent } from './components/modals/alert-snack-error/alert-snack-error.component';
 import { AlertSnackInfoComponent } from './components/modals/alert-snack-info/alert-snack-info.component';
-import {MatLegacyDialogModule as MatDialogModule} from '@angular/material/legacy-dialog';
-import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { GeoLocationComponent } from './components/geo-location/geo-location.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.component';
 import { SelectUbigeoComponent } from './components/select-ubigeo/select-ubigeo.component';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({

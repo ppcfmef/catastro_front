@@ -8,7 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {BehaviorSubject, merge, Observable, Subject} from 'rxjs';
-import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {MatDrawer} from '@angular/material/sidenav';

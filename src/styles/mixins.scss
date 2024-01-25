@@ -10,20 +10,24 @@
 }
 
 @mixin mat-toggle-styles(){
-  
-  mat-slide-toggle.mat-toggle-green.mat-slide-toggle.mat-checked{
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  mat-slide-toggle.mat-toggle-green.mat-mdc-slide-toggle.mat-checked{
+    /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
     .mat-slide-toggle-bar{ 
       background-color: #66bb6a87 !important;
     }
+   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
    .mat-slide-toggle-thumb{
       background-color: var(--mef-c-success) !important;
     }
   }
-
-  mat-slide-toggle.mat-toggle-confirm.mat-slide-toggle.mat-checked{
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  mat-slide-toggle.mat-toggle-confirm.mat-mdc-slide-toggle.mat-checked{
+    /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
     .mat-slide-toggle-bar{ 
       background-color: #45b2ff7a !important;
     }
+   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
    .mat-slide-toggle-thumb{
       background-color: var(--mef-c-confirm) !important;
     }
@@ -45,6 +49,7 @@
 @mixin table-border-radius(){
     table{
         border-radius:8px 8px 0 0;
+        
     }
     table thead tr{
         th:nth-child(1){
@@ -63,27 +68,20 @@
             border-radius:0 0  8px 0;
         }
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
     mat-paginator{
+      .mat-mdc-paginator-container{
         border-radius: 0 0 8px 8px;
-    }
-}
-
-@mixin table-padding-4(){
-    table tbody tr td, table thead tr th {
-        padding:4px;
-    }
-}
-
-
-@mixin table-hover(){
-    table tbody tr:hover td{
-        background-color: #6666991a;
+        border-color: 2px solid #666699 !important;
+      }
+ 
     }
 }
 
 
 @mixin tavStyleActive(){
-    nav .mat-tab-list .mat-tab-links a.mat-tab-label-active{
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    nav .mat-tab-list .mat-mdc-tab-links a.mat-tab-label-active{
         opacity: 1;
         color: #666699;
         font-size: 16px;
@@ -267,7 +265,10 @@
 /* Reducir alto de inputs y aplicar focus */
 @mixin mat-form-field-style(){
   mat-form-field.mat-form-field-style{
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-wrapper {
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
       .mat-form-field-flex{
         min-height: 36px !important;
         padding: 0 10px !important;
@@ -290,6 +291,21 @@
 
 
 /* ***  TABLES *** */
+
+@mixin table-padding-4(){
+  table tbody tr td, table thead tr th {
+      padding:4px;
+  }
+}
+
+
+
+@mixin table-hover(){
+  table tbody tr:hover td{
+      background-color: #6666991a;
+  }
+}
+
 
 @mixin table-base(){
   table.table-base{
@@ -322,9 +338,9 @@
     tbody tr td{
       border-top: solid 6px #F0F0F0;
     }
-    tbody tr:last-child td{
-      border-top: none;
-    }
+    // tbody tr:last-child td{
+    //   border-top: none;
+    // }
   }
 }
 

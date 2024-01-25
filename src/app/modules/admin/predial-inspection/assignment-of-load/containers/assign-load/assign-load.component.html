@@ -33,7 +33,7 @@
             </div>
             <div class="mt-2 w-min">
                 <span class="text-base font-medium">Fecha de entrega:</span>
-                <mat-form-field class="h-9">
+                <mat-form-field>
                     <input matInput [matDatepicker]="date" autocomplete="off" type="text" placeholder="Fecha" disabled
                             formControlName="fEntrega" (click)="date.open()">
                     <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
