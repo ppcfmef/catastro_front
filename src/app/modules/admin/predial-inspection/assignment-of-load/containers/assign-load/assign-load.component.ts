@@ -4,10 +4,10 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewLoadService } from '../../services/new-load.service';
 import { UserService } from 'app/core/user/user.service';
-import { UntypedFormControl, UntypedFormGroup, MaxLengthValidator, Validators } from '@angular/forms';
-import { Subscription, Subject, Observable } from 'rxjs';
+import { UntypedFormControl, UntypedFormGroup, MaxLengthValidator, Validators, FormGroup, FormControl } from '@angular/forms';
+import { Subscription, Subject, Observable, of } from 'rxjs';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
-import { debounceTime, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { loadModules } from 'esri-loader';
 import { IdataLoad } from '../../interfaces/dataload.interface';
 import { WidgetService } from '../../services/widget.service';
@@ -18,7 +18,7 @@ import { IOperator } from '../../interfaces/operator.interface';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'environments/environment';
-
+import { Icard } from '../../interfaces/card.interface';
 
 
 
@@ -41,19 +41,14 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     webMapSubscription: Subscription;
     graphicsIdSubscription: Subscription;
     user: boolean = false;
-    cards = [
-        {
-            num: 0,
-            text: 'TICKETS PENDIENTES'
-        },
-        {
-            num: 0,
-            text: 'TICKETS ATENDIDOS'
-        }
-    ];
-    form: UntypedFormGroup;
+    cards: Icard[] = [];
+    form: FormGroup;
     params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
+
+    dataPicker:boolean = true;
+    options: Observable<string[]> ;
+  
 
     constructor(
         private _router: Router,
@@ -67,11 +62,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         private _messageProviderService: MessageProviderService,
         private _ngxSpinner: NgxSpinnerService,
     ) {
-        this.form = new UntypedFormGroup({
-            loadName: new UntypedFormControl(''),
-            description: new UntypedFormControl(''),
-            dni: new UntypedFormControl(''),
-            fEntrega: new UntypedFormControl(''),
+        this.form = new FormGroup({
+            loadName: new FormControl(''),
+            description: new FormControl(''),
+            dni: new FormControl(''),
+            fEntrega: new FormControl(''),
         });
 
     }
@@ -83,6 +78,11 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             this.params['district'] = this._currentUserUbigeo;
         });
 
+        // this.filteredOptions = this.form.controls['dni'].valueChanges.pipe(
+        //     startWith(''),
+        //     map(value => this._filter(value || '')),
+        //   );
+      
 
         // Suscríbete al BehaviorSubject para datos de la tabla
         this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
@@ -100,9 +100,24 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     }
 
+    // private _filter(value: string): string[] {
+    //     const filterValue = value.toLowerCase();
+    
+    //     return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    //   }
     ngAfterViewInit(): void {
 
-        this.emitFilter();
+        //this.emitFilter();
+        this.form.controls['dni'].valueChanges.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap(value => this.getOptions(value))
+          ).subscribe(response => {
+            this.options= of([]);
+            const opt = response['results'].map(item => item['dni'])
+            this.options = of(opt);
+        });
+
     }
 
     redirecto(): void {
@@ -116,6 +131,13 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         this._widgetService.listWidget(this._currentUserUbigeo);
     }
 
+    getOptions(value): Observable<string[]> {
+        this.params['search'] = value;
+        return this._operatorsService.getOperador(this.params).pipe(
+          map(response => response || [])
+        );
+      }
+    
 
     async getOperator(): Promise<any> {
         await this._operatorsService.getOperador(this.params).subscribe(async (data) => {
@@ -123,37 +145,55 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             this.operator = data.results[0];
             if (this.operator) {
                 await this._widgetService.widgetUser(this._currentUserUbigeo, this.operator.id).then(({ attended, pending }) => {
-                    this.cards[0].num = pending;
-                    this.cards[1].num = attended;
+                    this.cards.push({ num: pending, text: 'TICKETS PENDIENTES' });
+                    this.cards.push({ num: attended, text: 'TICKETS ATENDIDOS' });
                 });
                 this._fuseSplashScreenService.hide();
             }
             else {
                 this._messageProviderService.showSnackInfo('No existe Operador');
                 this._fuseSplashScreenService.hide();
+                this.user = false;
+                console.log(this.user, 'user false')
             }
         });
 
     }
 
-    emitFilter(): void {
-        this.form.controls['dni'].valueChanges
-            .pipe(
-                debounceTime(600),
-            ).subscribe((dni) => {
-                console.log(dni, 'dni');
-                if (!dni) {
-                    this.operator = null;
-                    this.form.controls['fEntrega'].disable();
-                    return;
-                }
-                this.params['search'] = dni;
-                this.form.controls['fEntrega'].enable();
-                this.user = true;
-                this.getOperator();
-            });
+    selected(value){
+        if(value.length===0){
+            this.dataPicker= true;
+            this.operator = null;
+            this.cards = [];
+        }else {
+            this.params['search'] = value;
+            this.params['limit']=10;
+            this.dataPicker= false;
+            this.user = true;
+            this.cards = [];
+            this.getOperator();
+        }
+        
     }
-
+    // emitFilter(): void {
+    //     this.form.controls['dni'].valueChanges
+    //         .pipe(
+    //             debounceTime(600),
+    //         ).subscribe((dni) => {
+    //             console.log(dni, 'dni');
+    //             if (!dni) {
+    //                 this.operator = null;
+    //                 this.user = false;
+    //                 this.form.controls['fEntrega'].disable();
+    //                 return;
+    //             }
+    //             this.params['search'] = dni;
+    //             this.form.controls['fEntrega'].enable();
+    //             this.user = true;
+    //             this.cards = [];
+    //             this.getOperator();
+    //         });
+    // }
 
     async createWorkLoad() {
         if (this.tableData.length === 0) {
