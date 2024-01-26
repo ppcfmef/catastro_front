@@ -46,7 +46,7 @@ export class TableAttendedComponent implements OnInit, AfterViewInit, OnDestroy 
             this._currentUserUbigeo = data;
             setTimeout(() => {
                 this.loadTable();
-            }, 1000);
+            }, 2000);
         });
         this._tableService.reloadTableAttended.subscribe(() => this.loadTable());
     }

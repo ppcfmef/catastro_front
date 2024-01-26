@@ -46,9 +46,9 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
 
-    dataPicker:boolean = true;
-    options: Observable<string[]> ;
-  
+    dataPicker: boolean = true;
+    options: Observable<string[]>;
+
 
     constructor(
         private _router: Router,
@@ -82,7 +82,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
         //     startWith(''),
         //     map(value => this._filter(value || '')),
         //   );
-      
+
 
         // Suscríbete al BehaviorSubject para datos de la tabla
         this.tableDataSubscription = this._newLoadService.getTableData().subscribe((data: IdataLoad[]) => {
@@ -102,7 +102,7 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     // private _filter(value: string): string[] {
     //     const filterValue = value.toLowerCase();
-    
+
     //     return this.options.filter(option => option.toLowerCase().includes(filterValue));
     //   }
     ngAfterViewInit(): void {
@@ -112,9 +112,9 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
             debounceTime(300),
             distinctUntilChanged(),
             switchMap(value => this.getOptions(value))
-          ).subscribe(response => {
-            this.options= of([]);
-            const opt = response['results'].map(item => item['dni'])
+        ).subscribe(response => {
+            this.options = of([]);
+            const opt = response['results'].map(item => item['dni'] + ' - ' + item['firstName'] + ' ' + item['lastName'])
             this.options = of(opt);
         });
 
@@ -134,10 +134,10 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
     getOptions(value): Observable<string[]> {
         this.params['search'] = value;
         return this._operatorsService.getOperador(this.params).pipe(
-          map(response => response || [])
+            map(response => response || [])
         );
-      }
-    
+    }
+
 
     async getOperator(): Promise<any> {
         await this._operatorsService.getOperador(this.params).subscribe(async (data) => {
@@ -160,20 +160,21 @@ export class AssignLoadComponent implements OnInit, AfterViewInit {
 
     }
 
-    selected(value){
-        if(value.length===0){
-            this.dataPicker= true;
+    selected(value) {
+        if (value.length === 0) {
+            this.dataPicker = true;
             this.operator = null;
             this.cards = [];
-        }else {
-            this.params['search'] = value;
-            this.params['limit']=10;
-            this.dataPicker= false;
+        } else {
+            const dni = value.split(' - ')[0];
+            this.params['search'] = dni;
+            this.params['limit'] = 10;
+            this.dataPicker = false;
             this.user = true;
             this.cards = [];
             this.getOperator();
         }
-        
+
     }
     // emitFilter(): void {
     //     this.form.controls['dni'].valueChanges

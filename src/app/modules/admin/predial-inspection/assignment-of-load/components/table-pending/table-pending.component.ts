@@ -58,7 +58,7 @@ export class TablePendingComponent implements OnInit, AfterViewInit, OnDestroy {
             this._currentUserUbigeo = data;
             setTimeout(() => {
                 this.loadTable();
-            }, 1000);
+            }, 2000);
         });
 
     }
