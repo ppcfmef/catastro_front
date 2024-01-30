@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class OperatorService {
     idWorkLoadLayer = 'carto_asignacion_carga_8124';
@@ -18,13 +18,13 @@ export class OperatorService {
     _webMapData;
     private _currentUserUbigeo = new BehaviorSubject<string>('');
     constructor(
-    private _httpClient: HttpClient,
-    private _userService: UserService,
+        private _httpClient: HttpClient,
+        private _userService: UserService,
     ) {
         //this.setUbigeo();
     }
 
-    getUbigeo(): Observable<string>{
+    getUbigeo(): Observable<string> {
         return this._currentUserUbigeo.asObservable();
     }
 
@@ -36,7 +36,7 @@ export class OperatorService {
 
 
     getOperador(params): Observable<any> {
-        return this._httpClient.get<any>(`${environment.apiUrl}/gap-analisys/user/`, {params});
+        return this._httpClient.get<any>(`${environment.apiUrl}/gap-analisys/user/`, { params });
     }
 
     getOperatorById(id: string): Observable<IOperator> {

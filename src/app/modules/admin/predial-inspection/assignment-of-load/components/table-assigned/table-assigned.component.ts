@@ -55,14 +55,14 @@ export class TableAssignedComponent implements OnInit, AfterViewInit, OnDestroy 
             this._currentUserUbigeo = data;
             setTimeout(() => {
                 this.loadTable();
-            }, 1000);
+            }, 2000);
         });
     }
 
     ngAfterViewInit(): void {
         setTimeout(() => {
             this.loadTable();
-        }, 1000);
+        }, 2000);
         this._tableService.searchBy.subscribe((res) => {
             this.bySearch = res;
             this.loadTable();

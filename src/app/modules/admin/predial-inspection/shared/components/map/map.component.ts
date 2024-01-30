@@ -93,7 +93,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this._fuseSplashScreenService.show();
         setTimeout(() => {
             this.initializeMapAOL();
-        }, 1000);
+        }, 2000);
 
     }
 

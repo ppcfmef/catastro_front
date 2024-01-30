@@ -33,7 +33,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablePendingComponent } from './components/table-pending/table-pending.component';
 import { TableAttendedComponent } from './components/table-attended/table-attended.component';
 import {MatSelectModule} from '@angular/material/select';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 
 
@@ -73,6 +74,8 @@ imports: [
     ReactiveFormsModule,
     MatSelectModule,
     Shared,
+    MatAutocompleteModule,
+    FuseScrollbarModule
 ]
 })
 export class AssignmentOfLoadModule { }
