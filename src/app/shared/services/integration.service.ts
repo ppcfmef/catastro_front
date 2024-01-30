@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { IntegrateBusiness, IntegratePerson, IntegrateNsrtmLandOwner, SatLandOwner} from '../interfaces/integrations.inteface';
+import { IntegrateBusiness, IntegratePerson, IntegrateNsrtmLandOwner, SatLandOwner } from '../interfaces/integrations.inteface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,11 @@ export class IntegrationService {
     return this.http.get<IntegrateNsrtmLandOwner>(`${this.apiUrl}/integrations/land-owner/${ubigeo}/${landOwnerCode}/`);
   }
 
-  getSatLandOwner(ubigeo: string, landOwnerCode: string): Observable<{data: SatLandOwner[]}> {
-    return this.http.get<{data: SatLandOwner[]}>(`${this.apiSatUrl}/buscar/contribuyente-catastro/${ubigeo}/${landOwnerCode}`);
+  getSatLandOwner(ubigeo: string, landOwnerCode: string): Observable<{ data: SatLandOwner[] }> {
+    return this.http.get<{ data: SatLandOwner[] }>(`${this.apiSatUrl}/buscar/contribuyente-catastro/${ubigeo}/${landOwnerCode}`, {
+      headers: {
+        'Skip-Auth': 'true',
+      }
+    });
   }
 }
