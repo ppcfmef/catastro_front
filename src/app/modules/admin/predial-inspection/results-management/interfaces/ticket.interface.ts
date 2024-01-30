@@ -16,4 +16,5 @@ export interface ITicket{
     ubicaciones: IUbicacion[];
     estado: number;
     estTrabajoTicket?: string;
+    nroNotificacion?: number;
 }

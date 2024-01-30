@@ -164,8 +164,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
-
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
 
     },
 
@@ -179,7 +179,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:3,
         codTit: '04070314-19-0003',
@@ -191,7 +192,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:4,
         codTit: '04070314-19-0004',
@@ -203,7 +205,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:5,
         codTit: '04070314-19-0005',
@@ -215,7 +218,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:6,
         codTit: '04070314-19-0006',
@@ -227,7 +231,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:7,
         codTit: '04070314-19-0007',
@@ -239,7 +244,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     }
     ,
     {   id:8,
@@ -252,7 +258,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     },
     {   id:9,
         codTit: '04070314-19-0009',
@@ -264,7 +271,8 @@ export const registrosMock: IRegistroTitularidad[]=[
         status: 0,
 
         instalaciones:instalaciones,
-        caracteristicas:caracteristica,inicio:false
+        caracteristicas:caracteristica,inicio:false,
+        fileNotificacion:null
     }
 ];
 

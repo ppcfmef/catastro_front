@@ -43,7 +43,7 @@ import { IFoto } from '../../interfaces/foto.interface';
   templateUrl: './widget-map.component.html',
   styleUrls: ['./widget-map.component.scss']
 })
-export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
+export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy, AfterViewInit {
 
   @Input()x: number = -71.955921;
   @Input()y: number = -13.53063;
@@ -61,6 +61,7 @@ export class WidgetMapComponent implements OnInit ,OnChanges, OnDestroy{
   @Input() ubicacion: IUbicacion;
   @Input() estado = Estado.LEER;
   @Input() resetMap =0;
+  @Input()isAdmin =false;
   @Output() pointClickEvent = new EventEmitter();
 
   @ViewChild('mapViewNode', {static: true})private mapViewEl: ElementRef;
@@ -137,7 +138,7 @@ ubicacionGraphic: any ;
 _unsubscribeAll: Subject<any> = new Subject<any>();
 currentIndex = 0;
 hideSelectUbigeo = false;
-isAdmin =false;
+
   constructor(
     private _fuseSplashScreenService: FuseSplashScreenService,
     private  _authService: AuthService,
@@ -146,6 +147,85 @@ isAdmin =false;
     ) {
 
       this.isAdmin=(localStorage.getItem('isAdmin') ==='true')?true:false;
+    }
+
+    ngAfterViewInit(): void {
+        console.log('this.ubigeo>>>',this.ubigeo );
+        this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
+          if (res) {
+
+              this.ticket = res.ticket;
+              this.ubicacion = res.ubicacion;
+              this.typeGap = this.ticket.codTipoTicket;
+              this.fotos = this.ubicacion.fotos;
+
+                this.estado = Estado.LEER;
+                const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
+                const featureManzanaLayer=this.layersInfo.find(e=> e.id === this.idManzanaImagenLayer).featureLayer;
+                const featureManzanaSinLoteLayer = this.layersInfo.find(e=> e.id === this.idManzanaSinLote).featureLayer;
+
+                if(this.typeGap === TypeGap.PUNTO_IMAGEN)
+                {
+                  featureLayer.visible=true;
+                  featureManzanaLayer.visible=true;
+                }
+
+                else if(this.typeGap === TypeGap.MANZANA_SIN_LOTES)
+                {
+                  featureManzanaSinLoteLayer.visible=true;
+                }
+
+                else
+                {
+                  featureLayer.visible=false;
+                  featureManzanaLayer.visible=false;
+                  featureManzanaSinLoteLayer.visible= false;
+                }
+
+              this.onChangeUbicacion(this.ubicacion);
+          }
+        });
+
+
+        this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
+            if(res){
+            this.estado = res;
+            console.log('this.estado>>>',this.estado);
+            if(this.estado === Estado.INICIAR){
+                this.addUbicacion(this.ubicacion);
+                this.estado = Estado.LEER;
+            }
+            }
+        });
+
+      this._resultsService.getResetMap().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any )=>{
+          console.log('resetEvent',res);
+          if(res){
+              this.resetMap=res;
+              this.onResetMap(res);
+          }
+      });
+
+
+
+        this._fuseSplashScreenService.show(0);
+
+
+        this.pointIni = {
+                latitude: this.y,
+                longitude: this.x
+            };
+        setTimeout(() => {
+            this.initializeMap(this.pointIni, this.ubigeo);
+        }, 1000);
+
+        this._resultsService.getUbigeo().pipe(takeUntil(this._unsubscribeAll)).subscribe((ubigeo: any )=>{
+            this.ubigeo = ubigeo;
+            if(ubigeo){
+                this.filterUbigeo(this.ubigeo);
+            }
+        });
+
     }
 
 
@@ -175,91 +255,8 @@ isAdmin =false;
 
   ngOnInit(): void {
 
-    console.log('this.ubigeo>>>',this.ubigeo );
-    this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
-      if (res) {
-
-          this.ticket = res.ticket;
-          this.ubicacion = res.ubicacion;
-          this.typeGap = this.ticket.codTipoTicket;
-          this.fotos = this.ubicacion.fotos;
-
-            this.estado = Estado.LEER;
-            const featureLayer=this.layersInfo.find(e=> e.id === this.idPuntoImagenLayer).featureLayer;
-            const featureManzanaLayer=this.layersInfo.find(e=> e.id === this.idManzanaImagenLayer).featureLayer;
-            const featureManzanaSinLoteLayer = this.layersInfo.find(e=> e.id === this.idManzanaSinLote).featureLayer;
-
-            if(this.typeGap === TypeGap.PUNTO_IMAGEN)
-            {
-              featureLayer.visible=true;
-              featureManzanaLayer.visible=true;
-            }
-
-            else if(this.typeGap === TypeGap.MANZANA_SIN_LOTES)
-            {
-              featureManzanaSinLoteLayer.visible=true;
-            }
-
-            else
-            {
-              featureLayer.visible=false;
-              featureManzanaLayer.visible=false;
-              featureManzanaSinLoteLayer.visible= false;
-            }
-
-          this.onChangeUbicacion(this.ubicacion);
-      }
-    });
 
 
-    this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
-        if(res){
-        this.estado = res;
-        console.log('this.estado>>>',this.estado);
-        if(this.estado === Estado.INICIAR){
-            this.addUbicacion(this.ubicacion);
-            this.estado = Estado.LEER;
-        }
-        }
-    });
-
-  this._resultsService.getResetMap().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any )=>{
-      console.log('resetEvent',res);
-      if(res){
-          this.resetMap=res;
-          this.onResetMap(res);
-      }
-  });
-
-
-
-    this._fuseSplashScreenService.show(0);
-
-
-    this.pointIni = {
-            latitude: this.y,
-            longitude: this.x
-        };
-    setTimeout(() => {
-        this.initializeMap(this.pointIni, this.ubigeo);
-    }, 1000);
-
-    this._resultsService.getUbigeo().pipe(takeUntil(this._unsubscribeAll)).subscribe((ubigeo: any )=>{
-        this.ubigeo = ubigeo;
-        if(ubigeo){
-            this.filterUbigeo(this.ubigeo);
-        }
-    });
-
-    /*
-    this._resultsService.getUbicacionData().subscribe((res: IUbicacion) => {
-
-      if(this.ubicacion && this.view){
-        this.onUbicacion(this.ubicacion);
-      }
-
-    });
-*/
   }
 
   async initializeMap(inputPoint: any, ubigeo?: string): Promise < void > {

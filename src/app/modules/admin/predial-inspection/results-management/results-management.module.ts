@@ -42,6 +42,7 @@ import { WidgetMapComponent } from './components/widget-map/widget-map.component
 import { LocationComponent } from './container/location/location.component';
 
 import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { NotificacionModalComponent } from './components/notificacion-modal/notificacion-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
     TicketMapComponent,
     WidgetMapComponent,
     LocationComponent,
+    NotificacionModalComponent,
 
   ],
   imports: [

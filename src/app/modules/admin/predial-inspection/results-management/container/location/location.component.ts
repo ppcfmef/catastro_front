@@ -38,7 +38,8 @@ import { CFLoteModel } from '../../models/cflote.model';
 import { CFTicketService } from '../../services/cfticket.service';
 import { forkJoin } from 'rxjs';
 import { PredioPadronService } from '../../services/predio-padron.service';
-
+import { NotificacionModalComponent } from '../../components/notificacion-modal/notificacion-modal.component';
+import { saveAs } from 'file-saver';
 moment.locale('es');
 
 @Component({
@@ -168,9 +169,9 @@ export class LocationComponent implements OnInit , OnChanges {
 
              this.getStatusButton();
 
-             if (this.ticket.codEstTrabajoTicket === String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
+            /* if (this.ticket.codEstTrabajoTicket === String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
                 this.updateIicket(this.ticket);
-            }
+            }*/
 
 
         }
@@ -197,7 +198,7 @@ export class LocationComponent implements OnInit , OnChanges {
         //console.log(result.data);
         this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
         this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(res=>{
-            this.updateLocation(this.ubicacion);
+            this.updateLocation(this.ubicacion,this.ticket.nroNotificacion);
             if(this.ticket.codTipoTicket ===TypeGap.MANZANA_SIN_LOTES){
                 this.eventCloseLocation.emit(this.ubicacion);
             }
@@ -498,8 +499,9 @@ resolverPredio(): void{
                                         if (responseJson && responseJson.features) {
                                             const features: any[] = responseJson.features;
                                             predio.OBJECTID=features[0].OBJECTID;
+                                            predio.ESTADO = 5;
                                             this._cfpredioService
-                                            .updatePredio(predio)
+                                            .crearPredio(predio)
                                             .then((result) => {
                                             if (result) {
                                                 this._confirmationService
@@ -511,29 +513,11 @@ resolverPredio(): void{
                                                 .toPromise()
                                                 .then((e) => {
 
-                                                this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
-                                                    //this.updateLocation(this.ubicacion);
-                                                    /*if ([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN].includes(this.ticket.codTipoTicket)){
-                                                        this.ubicacion.status = TicketStatus.RESUELTO_GESTION_RESULTADOS;
-                                                        this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
-                                                            this.updateLocation(this.ubicacion);
-                                                            this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
-
-                                                                this._router.navigate([
-                                                                './land-inspection/results-management',
-                                                                ]);
-                                                            });
-
-                                                        });
-                                                    }
-                                                    else{
-                                                        this.updateLocation(this.ubicacion);
-                                                    }*/
-
                                                     if(data.predioInspeccion.id && data.predioPadron.id){
                                                         const requestArray =
-                                                        [this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}),
-                                                         this._predioPadronService.updateLand(data.predioPadron.id,{cup:predio.COD_CPU,longitude:predio.COORD_X,latitude: predio.COORD_Y,ubigeo:data.predioPadron.ubigeo})
+                                                        [
+                                                        this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}),
+                                                         //this._predioPadronService.updateLand(data.predioPadron.id,{cup:predio.COD_CPU,longitude:predio.COORD_X,latitude: predio.COORD_Y,ubigeo:data.predioPadron.ubigeo})
                                                         ];
 
                                                         forkJoin(requestArray).subscribe((results) => {
@@ -545,9 +529,14 @@ resolverPredio(): void{
                                                           });
                                                     }
 
+                                                /*this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}).subscribe((r2)=>{
 
 
-                                                });
+
+
+
+
+                                                });*/
 
                                                 });
                                             }
@@ -601,7 +590,7 @@ generarPredio(data: IRegistroTitularidad): void {
                                 predio.NOM_USER = this.user.username;
                                 predio.NOM_PC = 'PLATAFORMA';
                                 predio.COD_CPU = res.COD_CPU;
-                                predio.ESTADO =1;
+                                predio.ESTADO =5;
                                 predio.RAN_CPU=this.dataPoint.point.RAN_CPU;
                                 predio.COD_UI = res.COD_CPU ? parseInt(res.COD_CPU.split('-')[1], 10) : null;
                                 predio.COD_VER= res.COD_CPU ?  parseInt(res.COD_CPU.split('-')[2], 10) : null;
@@ -621,8 +610,12 @@ generarPredio(data: IRegistroTitularidad): void {
 
                                                 if(data.predioPadron.id && data.predioInspeccion.id){
                                                     const requestArray =
-                                                    [this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}),
-                                                     this._predioPadronService.updateLand(data.predioPadron.id,{cup:predio.COD_CPU,longitude:predio.COORD_X,latitude: predio.COORD_Y,status:1,ubigeo:data.predioPadron.ubigeo})
+                                                    [
+
+                                                        this._predioInspeccionService.update(data.predioInspeccion.id,{codCPU:res.COD_CPU}),
+
+                                                    //this._predioPadronService.updateLand(data.predioPadron.id,{status:1,ubigeo:data.predioPadron.ubigeo})
+                                                     //this._predioPadronService.updateLand(data.predioPadron.id,{cup:predio.COD_CPU,longitude:predio.COORD_X,latitude: predio.COORD_Y,status:1,ubigeo:data.predioPadron.ubigeo})
                                                     ];
 
                                                     forkJoin(requestArray).subscribe((results) => {
@@ -799,7 +792,7 @@ validarUbicacionPuntoImagen(data: IRegistroTitularidad): void {
                                 predio.NOM_USER = this.user.username;
                                 predio.NOM_PC = 'PLATAFORMA';
                                 predio.COD_CPU = res.COD_CPU;
-                                predio.ESTADO =1;
+                                predio.ESTADO =5;
                                 predio.RAN_CPU=lote.RAN_CPU;
                                 predio.COD_UI = res.COD_CPU ? parseInt(res.COD_CPU.split('-')[1], 10) : null;
                                 predio.COD_VER= res.COD_CPU ?  parseInt(res.COD_CPU.split('-')[2], 10) : null;
@@ -1219,6 +1212,8 @@ generarPdf(data: IRegistroTitularidad): void{
     doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
 }
 
+
+/*
 updateIicket(ticket: ITicket): void{
 
     const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==0).length;
@@ -1239,7 +1234,7 @@ updateIicket(ticket: ITicket): void{
       }
 
       this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
-        /*se resetea el mapa a nivel de ticket */
+
         this._router.navigate([
           './land-inspection/results-management',
           ]);
@@ -1248,11 +1243,11 @@ updateIicket(ticket: ITicket): void{
     }
 
   }
+*/
 
 
-
-updateLocation(ubicacion: IUbicacion): void{
-    this.eventUpdateLocation.emit({codUbicacion:ubicacion.codUbicacion});
+updateLocation(ubicacion: IUbicacion, nroNoticacion: number=null): void{
+    this.eventUpdateLocation.emit({codUbicacion:ubicacion.codUbicacion,nroNoticacion:nroNoticacion});
 }
 
 previsualizacion(registroTitularidad: IRegistroTitularidad): void {
@@ -1296,10 +1291,19 @@ dialogRef
         }
 
         else if (option === 'subvaluar'){
-            this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((res)=>{
-
-                this.generarNotificacionSubvaluado(registroTitularidad);
+            const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
+                {width:'650px',
+                data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
             });
+
+            /*const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
+                {width:'100%', height:'100%',
+                data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
+            });*/
+            dialogRef2
+            .afterClosed()
+            .toPromise()
+                .then((text) => {this.generarNotificacionSubvaluado(registroTitularidad, text);});
         }
 
         else{
@@ -1312,40 +1316,67 @@ dialogRef
 }
 
 
-generarNotificacionSubvaluado(data: IRegistroTitularidad): void{
+generarNotificacionSubvaluado(data: IRegistroTitularidad,text): void{
 
-  this.generarPdfPredioSubvaluado(data);
-  this.dialogRef = this._confirmationService.success(
-    'Notificar',
-    'Notificacion generada'
-    );
+    //const notificacionBlob = this.generarPdfPredioSubvaluado(data,text);
+    const payload = {
+        "codTicket":this.ticket.codTicket,
+        'contribuyente':`${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`,
+        'codTit' :data.codTit,
+        'texto':text
+    }
 
-    this.dialogRef
-    .afterClosed()
-    .toPromise()
-    .then( (option) => {
-        this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
-            this._confirmationService.success(
-                'Notificar',
-                'Notificacion generada'
-            ).afterClosed().toPromise().then(()=>{
+    this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
+
+        const blob = new Blob([response], { type: 'application/pdf' });
+        saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');
+
+        this._confirmationService.success(
+            'Notificar',
+            'Notificacion generada'
+        ).afterClosed().toPromise().then((res)=>{
+
+            this._registroTitularidadService.update(data.codTit,{'status':6,'fileNotificacion':blob}).subscribe((res)=>{
                 this.resolverPredio();
                 this.getStatusButton();
                 this._resultsService.setResetMap(2);
                 this._resultsService.setEstado(Estado.LEER);
             });
 
-
-          });
-
+        });
     });
+
+
+
 }
+
+
+
 
 descargarNotificacionPredioSubvaluado(data: IRegistroTitularidad): void{
-    this.generarPdfPredioSubvaluado(data);
+    //const blob = new Blob([data.fileNotificacion]);
+    //const url = window.URL.createObjectURL(data.fileNotificacion);
+
+    /*const link = document.createElement('a');
+    link.href = data.fileNotificacion;
+    link.download = 'CARTA DE INVITACION INSCRIPCION.pdf';
+    link.click();
+    window.URL.revokeObjectURL(data.fileNotificacion);
+    link.remove();*/
+    window.open(data.fileNotificacion);
+    /*this._registroTitularidadService.get(data.codTit).subscribe((res : )=>{
+        const blob = new Blob([data]);
+            const url = window.URL.createObjectURL(blob);
+            window.open(url);
+
+    });*/
+
 }
 
-generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
+
+
+
+generarPdfPredioSubvaluadoOld(data: IRegistroTitularidad,text): any{
     const doc = new jsPDF();
 
     autoTable(doc, {
@@ -1364,7 +1395,7 @@ generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
 
           [
               {
-                  content: `CARTA DE ACTUALIZACION DE VALOR Nº${this.ticket.codTicket}-${data.id}-2023`,
+                  content: `CARTA DE ACTUALIZACION DE VALOR Nº${this.ticket.codTicket}-${this.ticket.nroNotificacion?this.ticket.nroNotificacion+1:1 }-2023`,
                   styles: { halign: 'center' },
               },
           ],
@@ -1419,7 +1450,7 @@ generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
           [
 
             {
-              content: `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha realizado el levantamiento catastral de los predios del distrito, a fin de verificar la fehaciencia de la información brindada por los contribuyentes en su Declaración Jurada de Autoavaluo, es por ello que hacemos llegar a usted la Ficha de levantamiento de campo de(l/los) predio(s) a su nombre.`,
+              content: `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha realizado un proceso de inspección de los predios del distrito, a fin de verificar la fehaciencia de la información brindada por los contribuyentes en su Declaración Jurada de Autoavaluo, es por ello que hacemos llegar a usted la Ficha de levantamiento de campo de(l/los) predio(s) a su nombre y detallamos a continuación:`,
               styles: { halign: 'justify' },
           },
 
@@ -1428,7 +1459,7 @@ generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
           [
 
             {
-              content: 'Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y PU que serán proporcionados en las ventanillas Nro 7 a 9.',
+              content: `Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y PU que serán proporcionados en ${text}`,
               styles: { halign: 'justify' },
           },
 
@@ -1461,9 +1492,90 @@ generarPdfPredioSubvaluado(data: IRegistroTitularidad): void{
           ],
 
       ],
-  });
+    });
 
+
+    autoTable(doc, {
+        theme: 'grid',
+        styles: {
+            overflow: 'linebreak',
+            lineWidth: 1,
+        },
+        body: [
+
+            [
+
+              {
+                content: 'INFORMACIÓN RESULTANTE DE LA INSPECCION PREDIAL',
+                styles: { halign: 'justify', },
+                colSpan: 8
+            },
+
+            ],
+/*
+
+      {
+                title: 'Long. Frente',
+                total: this.dataGabinete.caracteristicas?. longitudFrente
+            }, {
+                title: 'Arancel',
+                total: this.dataGabinete.caracteristicas?. arancel
+            }, {
+                title: 'Area Terreno',
+                total: this.dataGabinete.caracteristicas?. areaTerreno
+            }, {
+                title: 'Predio',
+                total: []
+            },
+*/
+
+            [
+              {
+                content: 'Long. Frente',
+
+            },
+            {
+                content: data.caracteristicas?. longitudFrente,
+            },
+            {
+                content: 'Arancel',
+
+            },
+            {
+                content: data.caracteristicas?.arancel,
+
+            },
+            {
+                content: 'Area de terreno',
+            },
+
+            {
+                content: data.caracteristicas?.areaTerreno,
+            },
+            {
+                content: 'Predio',
+            },
+            {
+                content: '',
+            },
+            ],
+            [
+
+              {
+                content: 'Atentamente',
+                styles: { halign: 'left' },
+            },
+
+            ],
+
+        ],
+      });
+
+
+    this.ticket.nroNotificacion = this.ticket.nroNotificacion? this.ticket.nroNotificacion+1 : 1;
     doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
+    return  doc.output('blob');
+
 }
 
 

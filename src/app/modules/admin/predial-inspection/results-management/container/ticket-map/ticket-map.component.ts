@@ -13,6 +13,7 @@ import { User } from 'app/core/user/user.types';
 export class TicketMapComponent implements OnInit, OnDestroy {
     @Input() ubigeo: string ;
     @Input() user: User;
+    @Input()isAdmin =false;
     ubicacion: IUbicacion;
 
     idManzanaLayer = 1;

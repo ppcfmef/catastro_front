@@ -1,0 +1,38 @@
+.btn {
+    height: 38px;
+    width: 80px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+
+}
+
+
+.file-name{
+    text-align: center;
+}
+.red {
+    background-color: #E54646;
+    color: white;
+}
+
+.blue {
+    color: #0090F8;
+    border: 1px solid #0090F8;
+}
+
+textarea {
+    border: 1px solid #D2D2D2;
+    padding: 12px;
+}
+
+
+:host ::ng-deep .mat-dialog-title {
+    font-size: 14px;
+}
+
+
+.mat-dialog-title {
+    margin: 0 0 10px;
+    display: block;
+}
