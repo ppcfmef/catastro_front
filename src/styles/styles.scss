@@ -10,52 +10,54 @@
     --mef-c-confirm: #45B1FF;
     --mef-c-success: #66bb6a;
     --mef-c-danger: #ad4c4c;
-  }
+}
 
-.bg-mef{
+.bg-mef {
     background-color: var(--mef-c-red) !important;
 }
 
-.bg-success{
+.bg-success {
     background-color: #66bb6a !important;
 }
 
-.bg-danger{
+.bg-danger {
     background-color: #ad4c4c !important;
 }
 
-.bg-warning{
+.bg-warning {
     background-color: #ad8b4c !important;
 }
-.bg-confirm{
+
+.bg-confirm {
     background-color: #4a68b3 !important;
 }
 
-.c-purple-mef{
-    color: var(--mef-c-purple) !important ;
+.c-purple-mef {
+    color: var(--mef-c-purple) !important;
 }
-.c-grey-mef{
+
+.c-grey-mef {
     color: var(--mef-c-grey) !important;
 }
 
-.c-grey-red{
+.c-grey-red {
     color: var(--mef-c-red) !important;
 }
 
-.c-success{
+.c-success {
     color: #66bb6a !important;
 }
 
-.c-danger{
+.c-danger {
     color: #ad4c4c !important;
 }
 
-.c-confirm{
+.c-confirm {
     color: #45B1FF !important;
 }
 
-.c-white{
-    color:white;
+.c-white {
+    color: white;
 }
 
 
@@ -75,51 +77,67 @@ Personalizacion
 
 *******************/
 
-button.mat-flat-button.mat-primary{
-    //background-color: var(--mef-c-purple) !important;
-}
-
-.separador-footer{
+.separador-footer {
     height: 88px;
     display: block;
     width: 100%;
 }
-.footer-fixed{
+
+.footer-fixed {
     position: fixed;
     width: 280px;
     bottom: 0;
     background-color: #000000;
 }
 
-.mat-header-cell {
-    background: var(--mef-c-purple);
+.mat-mdc-header-cell {
+    background: var(--mef-c-purple) !important;
     color: white !important;
+    font-size: 12px !important;
+    padding: 0px !important;
+}
+
+.mdc-data-table__cell {
+    padding: 0 !important;
+}
+
+.mat-mdc-header-cell:first-child {
+    padding-left: 16px !important;
 }
 
 
+.mdc-data-table__cell:nth-child(1) {
+    padding-left: 16px !important;
+}
+
 .snack-success {
-    background-color: #4CAF50!important;
-    color: white!important;
+    background-color: #4CAF50 !important;
+    color: white !important;
 
     mat-icon {
-        color: white!important;
+        color: white !important;
     }
 
 }
 
 .snack-error {
-    background-color: rgb(182, 92, 92)!important;
-    color: white!important;
+    background-color: rgb(182, 92, 92) !important;
+    color: white !important;
+
     mat-icon {
-        color: white!important;
+        color: white !important;
     }
 }
 
-mat-option.option-multiple-lines{
+/* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
+/* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
+mat-option.option-multiple-lines {
     height: auto;
     line-height: normal;
-    padding: 10px;
-    &:hover:not(.mat-option-disabled){
+    padding: 15px;
+
+    /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
+    &:hover:not(.mat-option-disabled) {
         background: rgb(192 231 255 / 46%) !important;
     }
-  }
+}

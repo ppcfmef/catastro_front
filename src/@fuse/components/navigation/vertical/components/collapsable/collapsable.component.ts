@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseVerticalNavigationComponent } from '@fuse/components/navigation/vertical/vertical.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -11,7 +10,6 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
 @Component({
     selector       : 'fuse-vertical-navigation-collapsable-item',
     templateUrl    : './collapsable.component.html',
-    styles         : [],
     animations     : fuseAnimations,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -50,10 +48,12 @@ export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, O
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-vertical-navigation-item-collapsed': this.isCollapsed,
             'fuse-vertical-navigation-item-expanded' : this.isExpanded
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, O
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

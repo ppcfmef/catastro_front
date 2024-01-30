@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { LandUI } from '../../interfaces/land.interface';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
@@ -10,13 +10,13 @@ import { CommonUtils } from 'app/core/common/utils/common.utils';
   styleUrls: ['./search-land.component.scss']
 })
 export class SearchLandComponent implements OnInit {
-    search: FormGroup;
+    search: UntypedFormGroup;
     landRecords: LandUI[]=[];
     cupSelect: string;
     ubigeo='';
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() agregarPredioEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private _fb: FormBuilder,private _landMaintenanceService: LandMaintenanceService) {
+  constructor(private _fb: UntypedFormBuilder,private _landMaintenanceService: LandMaintenanceService) {
 
   }
 

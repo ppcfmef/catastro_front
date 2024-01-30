@@ -1,19 +1,16 @@
-<div class="flex flex-col px-4 pt-6 flex-auto gap-y-3">
-    <span class="title-primary">Gestion de resultados</span>
-    <div class="flex items-center justify-between">
-        <div class="flex border p-2 rounded-lg my-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700" [formGroup]="form">
-            <input class="w-full" placeholder="Ticket"  formControlName="search"  (keyup.enter)="onSearch($event)" />
-           <span class="flex">
+<div class="flex flex-col pt-6 flex-auto gap-y-3">
+    <span class="title-primary px-4">Gestion de resultados</span>
+    <div class="flex items-center justify-between px-4 gap-2">
+        <div class="flex border p-2 rounded-lg border-gray-300 dark:bg-gray-800 dark:border-gray-700"
+            [formGroup]="form">
+            <input class="w-full" placeholder="Ticket" formControlName="search" (keyup.enter)="onSearch($event)" />
+            <span class="flex">
 
-            <mat-icon
+                <mat-icon class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:x'"
+                    (click)="onCleanSearch($event)"
+                    [style.visibility]=" !form.get('search').value || form.get('search').value===''?'hidden':'visible' "></mat-icon>
 
-            class="hidden sm:flex icon-size-5"
-            [svgIcon]="'heroicons_solid:x'"
-            (click)="onCleanSearch($event)"
-            [style.visibility]=" !form.get('search').value || form.get('search').value===''?'hidden':'visible' "
-          ></mat-icon>
-
-                <mat-icon   mat-icon svgIcon="mat_outline:search" (click)="onSearch($event)"></mat-icon>
+                <mat-icon mat-icon svgIcon="mat_outline:search" (click)="onSearch($event)"></mat-icon>
             </span>
 
 
@@ -29,41 +26,27 @@
         </button>
     </div>
     <div class="w-full">
-        <mat-tab-group [selectedIndex]="getSelectedIndex()" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
+        <mat-tab-group [selectedIndex]="getSelectedIndex()" mat-stretch-tabs="false" mat-align-tabs="start"
+            (selectedTabChange)="onTabChange($event)">
             <mat-tab label="Pendiente">
-                <app-table-manageresult
-                    [dataTable]="dataSourcePendiente"
-                    [colums]="displayedColumns"
-                    (action)="onZoom($event)"
-                    [length]="tablePendienteLength"
-                    (changePage)="onChangePagePendiente($event)"
-                    [pageSize]="pageSize"
-                    >
+                <app-table-manageresult [dataTable]="dataSourcePendiente" [colums]="displayedColumns"
+                    (action)="onZoom($event)" [length]="tablePendienteLength"
+                    (changePage)="onChangePagePendiente($event)" [pageSize]="pageSize">
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Observado">
-                <app-table-manageresult
-                    [dataTable]="dataSourceObservado"
-                    [colums]="displayedColumns"
-                    (action)="onZoom($event)"
-                    [length]="tableObservadoLength"
-                    (changePage)="onChangePageObservado($event)"
-                    [pageSize]="pageSize"
-                    >
+                <app-table-manageresult [dataTable]="dataSourceObservado" [colums]="displayedColumns"
+                    (action)="onZoom($event)" [length]="tableObservadoLength"
+                    (changePage)="onChangePageObservado($event)" [pageSize]="pageSize">
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Terminado">
-                <app-table-manageresult
-                [dataTable]="dataSourceAceptado"
-                [colums]="displayedColumns"
-                (action)="onZoom($event)"
-                [length]="tableAceptadoLength"
-                (changePage)="onChangePageAceptado($event)"
-                [pageSize]="pageSize"
-                >
-            </app-table-manageresult>
+                <app-table-manageresult [dataTable]="dataSourceAceptado" [colums]="displayedColumns"
+                    (action)="onZoom($event)" [length]="tableAceptadoLength" (changePage)="onChangePageAceptado($event)"
+                    [pageSize]="pageSize">
+                </app-table-manageresult>
             </mat-tab>
         </mat-tab-group>
     </div>
 
-    </div>
+</div>

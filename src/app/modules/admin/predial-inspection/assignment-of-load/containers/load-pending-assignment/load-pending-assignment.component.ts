@@ -12,7 +12,7 @@ import { User } from 'app/core/user/user.types';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
 import { OperatorService } from '../../services/operator.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { IOperator, IResult } from '../../interfaces/operator.interface';
 import { WidgetService } from '../../services/widget.service';
 import moment from 'moment';
@@ -40,7 +40,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     user: boolean = false;
     params = { is_active: true, isMobileStaff: true };
     operator: IOperator;
-    form: FormGroup;
+    form: UntypedFormGroup;
     oparator = null;
     cards = [
         {
@@ -118,7 +118,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -148,9 +148,9 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     createFormActions(): void {
-        this.form = new FormGroup({
-            fEntrega: new FormControl('', [Validators.required]),
-            operador: new FormControl('', [Validators.required]),
+        this.form = new UntypedFormGroup({
+            fEntrega: new UntypedFormControl('', [Validators.required]),
+            operador: new UntypedFormControl('', [Validators.required]),
         });
     };
 
@@ -174,7 +174,7 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     async assigment(): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
             this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');

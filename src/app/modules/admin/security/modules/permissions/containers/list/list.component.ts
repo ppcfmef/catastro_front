@@ -12,7 +12,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
 import {PermissionService} from '../../../../../../../shared/services/permission.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -47,7 +47,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {

@@ -462,7 +462,7 @@ resetMap: number=0;
     constructor(private _resultsService: ResultsService) {}
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

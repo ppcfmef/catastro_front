@@ -40,7 +40,7 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	getTextSearch(data: string): void {
 		this.textSearch = data;
-		this.changes.next();
+		this.changes.next(this.textSearch);
 	}
 
 	initPagination(): void {
@@ -79,7 +79,7 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.unsubscribe$.next();
+		this.unsubscribe$.next(null);
 		this.unsubscribe$.complete();
 	}
 }

@@ -17,7 +17,7 @@ const routes: Routes = [
         path: '',
         pathMatch: 'full',
         redirectTo: 'search-owner',
-        canActivate: [NavigationAuthorizationGuard],
+        //canActivate: [NavigationAuthorizationGuard],
         data: { id: 'gprpregist', permissionType: 'read' },
       },
       {

@@ -3,7 +3,7 @@ import { IRegistroTitularidad } from '../../interfaces/registro-titularidad.inte
 import { LandOwnerService } from 'app/modules/admin/lands/land-registry/services/land-owner.service';
 import { LandOwner } from 'app/modules/admin/lands/land-registry/interfaces/land-owner.interface';
 import { IPagination } from 'app/core/common/interfaces/common.interface';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ContribuyenteModel } from '../../models/contribuyente.model';
 
 @Component({
@@ -32,7 +32,7 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
         };
         isOpen = false;
         landOwner: LandOwner;
-        formFilters: FormGroup;
+        formFilters: UntypedFormGroup;
         foundLandOwner = true;
 
   constructor(  private _landOwnerService: LandOwnerService,) { }
@@ -96,8 +96,8 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
 
   }
   private createFormFilters(): void {
-    this.formFilters = new FormGroup({
-      search: new FormControl(),
+    this.formFilters = new UntypedFormGroup({
+      search: new UntypedFormControl(),
     });
   }
 

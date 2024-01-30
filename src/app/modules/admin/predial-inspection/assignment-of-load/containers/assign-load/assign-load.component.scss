@@ -14,13 +14,12 @@
 
 }
 
-:host .mat-button{
+:host .mat-mdc-button{
     background-color: #219EF9;
     color: #FFFFFF;
     border-radius: 7px !important;
-    position: absolute;
-    bottom: 16px;
-    width: 375px;
-
+    width: 100%;
+    margin-top: auto;
 }
+
 

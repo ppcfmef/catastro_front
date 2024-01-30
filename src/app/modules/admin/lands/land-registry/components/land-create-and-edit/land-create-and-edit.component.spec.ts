@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
@@ -51,7 +51,7 @@ describe('LandCreateAndEditComponent', () => {
       ],
       declarations: [ LandCreateAndEditComponent ],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         { provide: CustomConfirmationService, useValue: fakeCustomConfirmationService },
         { provide: LandRegistryService, useValue: fakeLandRegistryService },
         { provide: LandRegistryMapService, useValue: fakeLandRegistryMapService },

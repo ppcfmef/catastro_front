@@ -1,6 +1,6 @@
 <div [style]="'background-color:' + bgColor" class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl" (click)="eventPageRedirect.emit()">
-    <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer">
-        <div class="aspect-w-9 aspect-h-6">
+    <a class="z-10 absolute inset-0 flex  flex-col p-4 cursor-pointer justify-center gap-4">
+        <div class="">
             <div class="flex items-center justify-center">
                 <!-- Icon -->
                 <mat-icon
@@ -8,7 +8,7 @@
                     [svgIcon]="item?.icon"></mat-icon>
             </div>
         </div>
-        <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium text-white">
+        <div class="flex flex-col  justify-center text-center text-sm font-medium text-white">
             <div [matTooltip]="item?.title">
                 {{item?.title}}</div>
             <ng-container *ngIf="item?.subtitle">

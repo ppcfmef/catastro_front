@@ -1,24 +1,23 @@
 
 .table-list ::ng-deep{
     margin-bottom: 0px;
-    thead .mat-header-cell{
+    thead .mat-mdc-header-cell{
         color: white;
-        background-color: #219EF9;
-        padding-left: 5px;
-        padding-right: 2px;
-        text-align: center;
+        background-color: #219EF9 !important;
+        text-align: left;
+        border-radius: 0 !important;
 
     }
 
-    tbody .mat-cell {
+    tbody .mat-mdc-cell {
         padding-left: 5px;
-        padding-right: 2px;
+        text-align: left;
     }
-    .mat-header-row {
+    .mat-mdc-header-row {
         height: 48px;
 
     }
-    .mat-row {
+    .mat-mdc-row {
         height: 27px;
         text-align: center;
     }

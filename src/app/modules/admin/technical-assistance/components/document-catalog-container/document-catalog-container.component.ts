@@ -39,7 +39,7 @@ export class DocumentCatalogContainerComponent implements OnInit, AfterViewInit,
 
 	getTextSearch(data: string): void {
 		this.textSearch = data;
-		this.changes.next();
+		this.changes.next(this.textSearch);
 	}
 
 	initPagination(): void {
@@ -67,7 +67,7 @@ export class DocumentCatalogContainerComponent implements OnInit, AfterViewInit,
 	}
 
 	ngOnDestroy(): void {
-		this.unsubscribe$.next();
+		this.unsubscribe$.next(null);
 		this.unsubscribe$.complete();
 	}
 }

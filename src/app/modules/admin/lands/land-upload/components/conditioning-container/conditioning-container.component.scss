@@ -1,4 +1,4 @@
-@import '~styles/mixins';
+@import 'styles/mixins';
 
  @include block-icon();
 
@@ -130,7 +130,7 @@
 
      .active_block{
 
-         .mat-tooltip-trigger{
+         .mat-mdc-tooltip-trigger{
              color:#8B8B8B;
          }
          mat-icon{
@@ -275,22 +275,24 @@
          color:#666;
 
          ::ng-deep{
-
-
+             /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
              .mat-radio-outer-circle{
                  border-color: #219EF9 !important;
              }
 
          }
      }
-
+     /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
+     /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
      mat-radio-button.mat-radio-checked  {
          background-color: #219EF9;
          color: white;
          ::ng-deep{
+             /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
              .mat-radio-outer-circle{
                  border-color: white !important;
              }
+             /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
              .mat-radio-inner-circle{
                  background-color: white;
              }
@@ -302,11 +304,13 @@
          background-color: #16a34a;
          color:white;
          pointer-events: none;
+         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
          ::ng-deep .mat-radio-container{
 
              display: none;
 
          }
+         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
          ::ng-deep .mat-radio-label-content{
              width: 100%;
              display: flex;

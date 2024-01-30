@@ -1,8 +1,4 @@
-@import 'styles/appearances/default';
-@import 'styles/appearances/compact';
-@import 'styles/appearances/dense';
-@import 'styles/appearances/thin';
-
-.fuse-vertical-navigation-content{
-    background-color: #000000;
-}
+@use 'styles/appearances/default';
+@use 'styles/appearances/compact';
+@use 'styles/appearances/dense';
+@use 'styles/appearances/thin';

@@ -10,7 +10,7 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { TableService } from '../../services/table.service';
 import { OperatorService } from '../../services/operator.service';
 import { WidgetService } from '../../services/widget.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import moment from 'moment';
 import { IOperator, IResult } from '../../interfaces/operator.interface';
@@ -29,7 +29,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     newCod;
     codOperator;
     operator: IOperator;
-    form: FormGroup;
+    form: UntypedFormGroup;
     showsearch: boolean = false;
 
     // Properties table
@@ -66,9 +66,9 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         private _widgetService: WidgetService,
         protected _messageProviderService: MessageProviderService,
     ) {
-        this.form = new FormGroup({
-            fEntrega: new FormControl(),
-            codUser: new FormControl(''),
+        this.form = new UntypedFormGroup({
+            fEntrega: new UntypedFormControl(),
+            codUser: new UntypedFormControl(''),
         });
     }
 
@@ -179,7 +179,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
@@ -207,7 +207,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             if (confirm) {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 try {
                     if (hasAttendedTickets) {
                         await this._tableService.deletePendingTickets(workload, this._currentUserUbigeo)
@@ -289,7 +289,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async assigment(): Promise<void> {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
             this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');

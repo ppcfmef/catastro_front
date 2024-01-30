@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { LandUI } from '../../interfaces/land.interface';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
@@ -10,13 +10,13 @@ import { LandMaintenanceService } from '../../services/land-maintenance.service'
   styleUrls: ['./search-land-table.component.scss']
 })
 export class SearchLandTableComponent implements OnInit {
-    search: FormGroup;
+    search: UntypedFormGroup;
     landRecords: LandUI[];
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() searchEvent: EventEmitter<any> = new EventEmitter();
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Output() cleanSearchEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private _fb: FormBuilder,private _landMaintenanceService: LandMaintenanceService) { }
+  constructor(private _fb: UntypedFormBuilder,private _landMaintenanceService: LandMaintenanceService) { }
 
   ngOnInit(): void {
     this.search = this._fb.group({

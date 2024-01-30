@@ -5,6 +5,7 @@ import {map, tap} from 'rxjs/operators';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import {environment} from '../../../environments/environment';
 import {FuseNavigationItem} from '../../../@fuse/components/navigation';
+import 'tslib';
 
 @Injectable({
     providedIn: 'root'
@@ -48,5 +49,7 @@ export class NavigationService
                 return {default: navigation};
             })
         );
+
+       
     }
 }

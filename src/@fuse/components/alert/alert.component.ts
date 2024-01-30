@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertAppearance, FuseAlertType } from '@fuse/components/alert/alert.types';
@@ -54,6 +53,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-alert-appearance-border' : this.appearance === 'border',
             'fuse-alert-appearance-fill'   : this.appearance === 'fill',
@@ -71,6 +71,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
             'fuse-alert-type-warning'      : this.type === 'warning',
             'fuse-alert-type-error'        : this.type === 'error'
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -145,7 +146,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

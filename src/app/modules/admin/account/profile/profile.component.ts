@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../../core/user/user.service';
 import {switchMap, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -13,14 +13,14 @@ export class ProfileComponent implements OnInit {
 
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
 
-    accountForm: FormGroup;
+    accountForm: UntypedFormGroup;
 
     unsubscribe = new Subject();
 
     typeInputPassword = 'password';
 
     constructor(
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _userService: UserService,
     ) {
     }

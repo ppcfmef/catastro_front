@@ -142,7 +142,7 @@ OnChanges { // @Input() view: any = null;
         ) {}
 
     ngOnInit(): void {
-        this._fuseSplashScreenService.show(0);
+        this._fuseSplashScreenService.show();
         this.points = [{
                 latitude: -13.53063,
                 longitude: -71.955921
@@ -744,7 +744,7 @@ esriConfig
             /*console.log('where>>>', where);
             console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);*/
             if (this.view) {
-                this._fuseSplashScreenService.show(0);
+                this._fuseSplashScreenService.show();
                 MapUtils.zoomToFeature(this.view, layerManzana, where).then(() => {
                     this.view.zoom = 16;
                     this._fuseSplashScreenService.hide();

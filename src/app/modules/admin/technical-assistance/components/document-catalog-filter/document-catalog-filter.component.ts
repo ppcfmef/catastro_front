@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class DocumentCatalogFilterComponent implements OnInit, OnDestroy {
 	@Output() searchValue: EventEmitter<any> = new EventEmitter<any>();
-	searchControl = new FormControl();
+	searchControl = new UntypedFormControl();
 	unsubscribe$ = new Subject();
 
 	constructor() {
@@ -23,7 +23,7 @@ export class DocumentCatalogFilterComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.unsubscribe$.next();
+		this.unsubscribe$.next(null);
 		this.unsubscribe$.complete();
 	}
 

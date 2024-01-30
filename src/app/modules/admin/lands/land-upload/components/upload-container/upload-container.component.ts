@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {FormUtils} from '../../../../../../shared/utils/form.utils';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import {MessageProviderService} from '../../../../../../shared/services/message-provider.service';
@@ -90,8 +90,8 @@ export class UploadContainerComponent implements OnInit {
 
 
 
-  get fileUpload(): FormControl {
-      return this.uploadForm.get('fileUpload') as FormControl;
+  get fileUpload(): UntypedFormControl {
+      return this.uploadForm.get('fileUpload') as UntypedFormControl;
   }
 
   async parseFormFile(): Promise<void> {

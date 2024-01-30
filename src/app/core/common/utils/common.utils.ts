@@ -1,11 +1,11 @@
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 export class CommonUtils {
     static generateRandomPassword(): string {
         return Math.random().toString(36).slice(-12);
     }
 
-    static setFormValues(form: FormGroup, values: any, keyExcludedEmitEvent?: string, emitEvent = false): void {
+    static setFormValues(form: UntypedFormGroup, values: any, keyExcludedEmitEvent?: string, emitEvent = false): void {
         const rawValue = form.getRawValue();
         Object.keys(rawValue).forEach((key) => {
             if (values && values[key] || typeof values[key] === 'boolean') {

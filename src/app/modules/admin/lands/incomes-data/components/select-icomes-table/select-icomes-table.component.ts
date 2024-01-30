@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-select-icomes-table',
@@ -9,7 +9,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class SelectIcomesTableComponent implements OnInit {
   @Input() selectedTable: string;
-  formFilters: FormGroup;
+  formFilters: UntypedFormGroup;
 
   listFormatMultiple = [
     { code: 'RT_CONTRIBUYENTE', text: 'Tabla RT_Contribuyente', path: '/rtcontribuyente' },
@@ -32,8 +32,8 @@ export class SelectIcomesTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.formFilters = new FormGroup({
-      incomePage: new FormControl('')
+    this.formFilters = new UntypedFormGroup({
+      incomePage: new UntypedFormControl('')
     });
 
     const selectedTablePath = this.listFormatMultiple.filter((item) => item.code === this.selectedTable) || this.listFormatMultiple[0];

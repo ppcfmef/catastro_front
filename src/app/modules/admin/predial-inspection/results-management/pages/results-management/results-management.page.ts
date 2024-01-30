@@ -6,7 +6,7 @@ import { User } from 'app/core/user/user.types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ResultsService } from '../../services/results.service';
-import { parseString } from 'rrule/dist/esm/src/parsestring';
+//import { parseString } from 'rrule/dist/esm/src/parsestring';
 
 @Component({
   templateUrl: './results-management.page.html',

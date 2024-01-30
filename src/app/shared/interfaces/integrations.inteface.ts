@@ -22,8 +22,8 @@ export interface IntegrateNsrtmLandOwner {
 }
 
 export interface SatLandOwner {
-    nrodocumento: string;
-    nombre: string;
-    appaterno: string;
-    apmaterno: string;
-  }
+  nrodocumento: string;
+  nombre: string;
+  appaterno: string;
+  apmaterno: string;
+}

@@ -69,20 +69,9 @@ const themes = {
  * based on the current environment of the application (prod, dev etc.)
  */
 const config = {
-    experimental: {},
-    future      : {},
+    content    : ['./src/**/*.{html,scss,ts}'],
     darkMode    : 'class',
     important   : true,
-    purge       : {
-        enabled: process.env.TAILWIND_MODE === 'build',
-        content: ['./src/**/*.{html,scss,ts}'],
-        options: {
-            safelist: {
-                standard: ['dark'],
-                deep    : [/^theme/, /^mat/]
-            }
-        }
-    },
     theme       : {
         colors  : {
             transparent: 'transparent',
@@ -427,7 +416,6 @@ const config = {
     },
     corePlugins : {
         appearance        : false,
-        gradientColorStops: false,
         container         : false,
         float             : false,
         clear             : false,
@@ -438,14 +426,14 @@ const config = {
     plugins     : [
 
         // Fuse - Tailwind plugins
-        require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/extract-config'))),
+        //require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/extract-config'))),
         require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/utilities'))),
         require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/icon-size'))),
         require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/theming')))({themes}),
 
         // Other third party and/or custom plugins
         require('@tailwindcss/typography')({modifiers: ['sm', 'lg']}),
-        require('@tailwindcss/aspect-ratio'),
+        //require('@tailwindcss/aspect-ratio'),
         require('@tailwindcss/line-clamp')
     ]
 };

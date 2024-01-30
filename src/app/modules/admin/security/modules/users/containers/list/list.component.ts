@@ -15,7 +15,7 @@ import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
 import {Role} from '../../../../../../../core/user/user.types';
 import * as moment from 'moment';
@@ -38,8 +38,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'rol', 'status', 'creationDate', 'actions'];
 
-    filters: FormGroup;
-    search: FormGroup;
+    filters: UntypedFormGroup;
+    search: UntypedFormGroup;
 
     roles$: Observable<Role[]>;
 
@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userService: UserService,
-        private _fb: FormBuilder,
+        private _fb: UntypedFormBuilder,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) {
@@ -132,7 +132,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
+        this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 

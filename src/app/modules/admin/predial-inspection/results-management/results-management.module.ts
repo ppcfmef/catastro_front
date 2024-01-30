@@ -41,7 +41,6 @@ import { TicketMapComponent } from './container/ticket-map/ticket-map.component'
 import { WidgetMapComponent } from './components/widget-map/widget-map.component';
 import { LocationComponent } from './container/location/location.component';
 
-import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { NotificacionModalComponent } from './components/notificacion-modal/notificacion-modal.component';
 
 @NgModule({
@@ -87,7 +86,6 @@ import { NotificacionModalComponent } from './components/notificacion-modal/noti
     MatDialogModule,
     FormsModule,
     MatInputModule,
-    MatCarouselModule.forRoot(),
   ]
 })
 export class ResultsManagementModule { }
