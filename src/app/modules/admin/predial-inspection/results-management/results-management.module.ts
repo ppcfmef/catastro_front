@@ -41,6 +41,7 @@ import { TicketMapComponent } from './container/ticket-map/ticket-map.component'
 import { WidgetMapComponent } from './components/widget-map/widget-map.component';
 import { LocationComponent } from './container/location/location.component';
 
+import { NotificacionModalComponent } from './components/notificacion-modal/notificacion-modal.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { LocationComponent } from './container/location/location.component';
     TicketMapComponent,
     WidgetMapComponent,
     LocationComponent,
+    NotificacionModalComponent,
 
   ],
   imports: [

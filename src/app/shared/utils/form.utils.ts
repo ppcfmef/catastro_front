@@ -1,7 +1,7 @@
 import {HttpParams} from '@angular/common/http';
 
 export class FormUtils {
-    static parseToFormData(rawValue): FormData {
+    static parseToFormData(rawValue,extension: any= null): FormData {
         const formData = new FormData();
         for (const k in rawValue) {
             if (k) {
@@ -9,8 +9,8 @@ export class FormUtils {
                     formData.append(k, `${(+rawValue[k])}`);
                 } else if (rawValue[k] === 0) {
                     formData.append(k, `${(rawValue[k])}`);
-                } else if (k === 'archivo' || k === 'file' || k === 'fileUpload') {
-                    formData.append(k, rawValue[k], rawValue[k]?.name);
+                } else if (k === 'archivo' || k === 'file' || k === 'fileUpload' || k==='fileNotificacion') {
+                    formData.append(k, rawValue[k], (extension && extension==='pdf') ? `${rawValue[k]?.name}.pdf`:rawValue[k]?.name );
                 } else if (rawValue[k] !== '' && !!rawValue[k]) {
                     formData.append(k, rawValue[k]);
                 }

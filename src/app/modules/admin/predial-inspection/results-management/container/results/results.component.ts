@@ -84,7 +84,7 @@ export class ResultsComponent implements OnInit {
     ) {
 
         const isAdmin =localStorage.getItem('isAdmin') ==='true'? true: false;
-        if (isAdmin){
+
             this._resultService.getUbigeo().subscribe((ubigeo)=>{
                 console.log('results ubigeo>>>',ubigeo);
                 if (ubigeo){
@@ -98,7 +98,7 @@ export class ResultsComponent implements OnInit {
                 this._resultService.setResetMap(1);
 
             });
-        }
+
 
 
     }

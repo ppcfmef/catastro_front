@@ -21,5 +21,6 @@ export interface IRegistroTitularidad{
     instalaciones: IInstalacion[];
     caracteristicas: ICaracteristica;
     inicio: boolean;
+    fileNotificacion: string;
 
 }

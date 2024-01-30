@@ -45,9 +45,22 @@
                 </div>
 
 
-                <div class="flex w-90 py-2 justify-between">
+                <div class="flex w-90 py-2 justify-between" *ngIf="this.registro?.predioPadron else predioInspeccion " >
 
 
+                    <div class="flex flex-col">
+                        <strong><span>Nombres y apellidos</span></strong>
+                        <span
+                            >{{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat }} {{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat }}
+                            {{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre }}</span
+                        >
+                    </div>
+                    <div class="flex flex-col">
+                        <strong><span>DNI</span></strong>
+                        <span>{{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.docIden }}</span>
+                    </div>
+                </div>
+                <ng-template #predioInspeccion>
                     <div class="flex flex-col">
                         <strong><span>Nombres y apellidos</span></strong>
                         <span
@@ -59,8 +72,7 @@
                         <strong><span>DNI</span></strong>
                         <span>{{ item.dni }}</span>
                     </div>
-                </div>
-
+                </ng-template>
 
                 <div class="flex w-90  justify-between" *ngIf="item.codCPU && item.codCPU !=='' && item.landStatus===1">
 

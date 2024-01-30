@@ -226,7 +226,10 @@ export class PrevisualizacionComponent implements OnInit {
             .afterClosed()
             .toPromise()
             .then((option) => {
-                this.dialogRef.close('confirmar');
+                if (option === 'confirmed') {
+                    this.dialogRef.close('confirmar');
+                }
+
             });
 
 
@@ -235,20 +238,23 @@ export class PrevisualizacionComponent implements OnInit {
     onClickSubvaluarPredio(e: any): void {
         const dialogRef = this._confirmationService.info(
             'Subvaluar',
-            'Esta seguro de subavluar el predio?'
+            'Esta seguro de subvaluar el predio?'
         );
 
         dialogRef
             .afterClosed()
             .toPromise()
             .then((option) => {
-                this.dialogRef.close('subvaluar');
+                if (option === 'confirmed') {
+                    this.dialogRef.close('subvaluar');
+            }
+
             });
-        //this.dialogRef.close({option:'subvaluar'});
+
     }
 
     onClickCerrar(e: any): void {
 
-        this.dialogRef.close({option:'cerrar'});
+        this.dialogRef.close('cerrar');
     }
 }

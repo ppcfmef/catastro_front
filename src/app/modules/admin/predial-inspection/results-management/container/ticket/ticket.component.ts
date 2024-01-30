@@ -49,6 +49,7 @@ ngOnInit(): void {
       .subscribe((params) => {
           this.getDataTicket(params.id);
       });
+
       this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):null;
       this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
 }
@@ -56,11 +57,13 @@ ngOnInit(): void {
 getDataTicket(idTicket: string): void{
   this._ticketService.get2(idTicket).subscribe( (res: ITicket) =>{
       this.ticket=res;
+      this.ubigeo=this.ticket.codTicket.substring(1,7);
       console.log('module ticket this.ticket>>>', this.ticket);
       this.totalUbicaciones =res.ubicaciones.length;
       this.ubicaciones = res.ubicaciones.map((data: IUbicacion,index: number)=> {
           const registroTitularidad: IRegistroTitularidad[] =data.registrosTitularidad;
           let totalCase = 0;
+
           registroTitularidad.map((registro)=>{
               totalCase = totalCase + ((registro.predioInspeccion)?1:0);
               totalCase = totalCase + ((registro.suministro)?1:0);
@@ -172,7 +175,7 @@ updateIicket(ticket: ITicket): void{
 
 
 
-updateIicket(ticket: ITicket): void{
+updateTicket(ticket: ITicket): void{
 
     const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==0).length;
     const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
@@ -191,7 +194,7 @@ updateIicket(ticket: ITicket): void{
         ticket.codEstTrabajoTicket = String(TicketStatus.RESUELTO_GESTION_RESULTADOS);
       }
 
-      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
+      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket, nroNotificacion: this.ticket.nroNotificacion }).subscribe(r=>{
         /*se resetea el mapa a nivel de ticket */
         this.actualizarCFTicket(this.ticket.codTicket,ticket.codEstTrabajoTicket);
         this._router.navigate([
@@ -208,43 +211,16 @@ updateIicket(ticket: ITicket): void{
   }
 
 eventUpdateLocation(event: any): void {
-    console.log('eventUpdateLocation>>>',event);
+    //console.log('eventUpdateLocation>>>',event);
     const codUbicacion = event.codUbicacion;
       if(codUbicacion){
           this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
-
               this.ubicacion =data;
-
-
               this._ticketService.get2(this.ticket.codTicket).subscribe((ticket)=>{
                 this.ticket = ticket;
-                //this.updateIicket(this.ticket);
                 if (this.ticket.codEstTrabajoTicket===String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
-                    this.updateIicket(this.ticket);
+                    this.updateTicket(this.ticket);
                 }
-                /*console.log('refresh ticket',this.ticket);*/
-                /*if (this.ticket.codEstTrabajoTicket === String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
-                    this.updateIicket(this.ticket);
-                }
-                else{
-                    this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
-                }*/
-
-                /*if (
-                    this.ticket.codTipoTicket ===TypeGap.PUNTOS_LOTE_SIN_PREDIO
-                    && this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS
-
-                    ){
-
-                    this.updateIicket(this.ticket);
-                 }
-                 else if (
-                    this.ticket.codTipoTicket ===TypeGap.MANZANA_SIN_LOTES && this.ticket.codEstTrabajoTicket===TicketStatus.PENDIENTE_GESTION_RESULTADOS){
-                    this.updateIicket(this.ticket);
-                 }
-                 else{
-                    this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
-                 }*/
 
               });
 
