@@ -45,6 +45,11 @@ export class RegistroTitularidadService {
   generarNotificacion(data): Observable<any>{
     const headers = new HttpHeaders();
     headers.set('Accept', 'application/pdf');
+    return this.http.post<any>(`${this.apiUrl}/inspection/export-pdf/generar_notificacion/`, data,{responseType: 'blob' as 'json' });
+  }
+  generarNotificacionSubvaluado(data): Observable<any>{
+    const headers = new HttpHeaders();
+    headers.set('Accept', 'application/pdf');
     return this.http.post<any>(`${this.apiUrl}/inspection/export-pdf/generar_notificacion_subvaluado/`, data,{responseType: 'blob' as 'json' });
   }
   updateNotificacion(id,data): Observable<any> {

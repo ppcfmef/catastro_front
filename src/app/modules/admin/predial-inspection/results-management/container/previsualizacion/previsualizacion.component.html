@@ -3,11 +3,11 @@
         <h1 class="text-lg font-bold">INFORMACIÓN DE GABINETE</h1>
 
         <div class="flex gap-3" >
-            <app-short-table *ngFor="let item of dataCaracteristicas" [dataTable] = item></app-short-table>
+            <app-short-table *ngFor="let item of dataCaracteristicasOrigen" [dataTable] = item></app-short-table>
         </div>
 
         <app-table
-            [dataSource]="dataSourceCaracteristicas"
+            [dataSource]="dataSourceCaracteristicasOrigen"
             [columns]="tableColumns"
         >
         </app-table>
@@ -15,7 +15,7 @@
         <div class="font-bold text-lg self-start">INSTALACIONES</div>
         <div class=" self-start">
             <app-table
-            [dataSource]="dataSourceInst"
+            [dataSource]="dataSourceInstOrigen"
             [columns]="tableColumnsInst"
         >
         </app-table>

@@ -59,19 +59,26 @@
                         <strong><span>DNI</span></strong>
                         <span>{{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.docIden }}</span>
                     </div>
+
                 </div>
+
+
                 <ng-template #predioInspeccion>
-                    <div class="flex flex-col">
-                        <strong><span>Nombres y apellidos</span></strong>
-                        <span
-                            >{{ item.firstname }}
-                            {{ item.lastname }}</span
-                        >
+                    <div class="flex w-90 py-2 justify-between"  >
+                        <div class="flex flex-col">
+                            <strong><span>Nombres y apellidos</span></strong>
+                            <span
+                                >{{ item.firstname }}
+                                {{ item.lastname }}</span
+                            >
+                        </div>
+                        <div class="flex flex-col">
+                            <strong><span>DNI</span></strong>
+                            <span>{{ item.dni }}</span>
+                        </div>
+
                     </div>
-                    <div class="flex flex-col">
-                        <strong><span>DNI</span></strong>
-                        <span>{{ item.dni }}</span>
-                    </div>
+
                 </ng-template>
 
                 <div class="flex w-90  justify-between" *ngIf="item.codCPU && item.codCPU !=='' && item.landStatus===1">

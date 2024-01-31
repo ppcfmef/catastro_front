@@ -27,5 +27,5 @@ export interface IUbicacion{
     registrosTitularidad: IRegistroTitularidad[];
     ubigeo: string;
     fotos: IFoto[];
-
+    address?: string;
 }

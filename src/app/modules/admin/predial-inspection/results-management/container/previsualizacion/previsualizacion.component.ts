@@ -114,7 +114,10 @@ export class PrevisualizacionComponent implements OnInit {
             matcelldef: 'aconstruida'
         },
     ];
+    dataSourceInstOrigen = [
 
+
+    ];
 
     dataSourceInst = [
         {
@@ -162,7 +165,8 @@ export class PrevisualizacionComponent implements OnInit {
 
     fotos: IFoto[]=[];
     dataGabinete: IRegistroTitularidad;
-
+    dataCaracteristicasOrigen= [];
+    dataSourceCaracteristicasOrigen =[];
     constructor(
         public dialogRef: MatDialogRef < PrevisualizacionComponent >,
         @Inject(MAT_DIALOG_DATA)public dataDialog: any,
@@ -173,6 +177,38 @@ export class PrevisualizacionComponent implements OnInit {
         console.log('dataDialog', this.dataDialog);
         this.dataGabinete = this.dataDialog.registrosTitularidad;
         this.fotos = this.dataDialog.fotos?this.dataDialog.fotos:[];
+        this.dataCaracteristicasOrigen = [
+            {
+                title: 'Long. Frente',
+                total: null
+            }, {
+                title: 'Arancel',
+                total: null
+            }, {
+                title: 'Area Terreno',
+                total: null
+            }, {
+                title: 'Predio',
+                total: null
+            },
+        ];
+        this.dataSourceCaracteristicasOrigen =    [
+            {nivel: null,
+            materialpred: null,
+            estadoConserva: null,
+            claPred: null,
+            aConst: null,
+            cMuroColumna: null,
+            cTecho: null,
+            cPiso: null,
+            cPuertaVentana: null,
+            cRevestimiento: null,
+            cBano: null,
+            cElecttricidad: null,
+            aconstruida: null
+}
+        ] ;
+
         this.dataCaracteristicas = [
             {
                 title: 'Long. Frente',
@@ -185,7 +221,7 @@ export class PrevisualizacionComponent implements OnInit {
                 total: this.dataGabinete.caracteristicas?. areaTerreno
             }, {
                 title: 'Predio',
-                total: []
+                total: null
             },
         ];
 
