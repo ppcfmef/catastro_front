@@ -9,11 +9,11 @@
 
     <div class="w-full">
         <div class="text-xl font-extrabold "><h1>Predio Original</h1> </div>
-        <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer" [isRemove]="false"></app-land-maintenance-table></div>
+        <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer" [isRemove]="false" [typeMaintenace]="'Independizar'"></app-land-maintenance-table></div>
     <div class="w-full">
         <div class="text-xl font-extrabold "><h1>Predios divididos</h1> </div>
 
-        <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo" [isRemove]="true"></app-land-maintenance-table>
+        <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo" [isRemove]="true" [typeMaintenace]="'Independizar'"></app-land-maintenance-table>
     </div>
 
     <div class="flex flex-row justify-center  space-x-4">

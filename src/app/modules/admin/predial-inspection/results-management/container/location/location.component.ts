@@ -1009,22 +1009,59 @@ eventIniciarItem(registro: IRegistroTitularidad): void{
 
 
 descargarNotificacion(data: IRegistroTitularidad): void{
-    this.generarPdf(data);
+    window.open(data.fileNotificacion);
+    /*this.generarPdf(data);*/
 }
 
 descargarNotificacionPredio(data: IRegistroTitularidad): void{
-    this.generarPdf(data);
+    window.open(data.fileNotificacion);
+    /*this.generarPdf(data);*/
 }
 
-generarNotificacion(data: IRegistroTitularidad): void{
-
-
+generarNotificacion(r: IRegistroTitularidad): void{
+    /*const contribuyente=
+    (data.suministro?.contribuyente)? `${data.suministro?.contribuyente?.nombre} ${data.suministro?.contribuyente?.apPat} ${data.suministro?.contribuyente?.apMat}`:
+    (data.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
+    (data.predioPadron?.predioContribuyente[0]?.contribuyente)? `${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
+    '';
 
   this.dialogRef = this._confirmationService.info(
         'Notificar',
         'Esta seguro de generar la notificacion?'
     );
 
+
+    this.dialogRef
+    .afterClosed()
+    .toPromise()
+    .then( (option) => {
+        if (option === 'confirmed') {
+          this.generarPdf(data);
+
+          this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
+              const form = { codContr: data.suministro?.codContr};
+              const dataForm = FormUtils.deleteKeysNullInObject(form);
+
+              if(data?.suministro?.codSuministro){
+                  this._suministroService.update(data.suministro.codSuministro,dataForm).subscribe((s)=>{
+                      this._confirmationService.success(
+                          'Notificar',
+                          'Notificacion generada'
+                      ).afterClosed().toPromise().then(()=>{
+                          this.resolverPredio();
+                          this.getStatusButton();
+                          this._resultsService.setResetMap(2);
+                          this._resultsService.setEstado(Estado.LEER);
+                      });
+
+                  });
+              }
+
+          });
+        }
+    });*/
+
+    /*
     this.dialogRef
           .afterClosed()
           .toPromise()
@@ -1054,37 +1091,198 @@ generarNotificacion(data: IRegistroTitularidad): void{
                 });
               }
           });
+*/
+
+
+const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en ${this.ubicacion.address}, por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`;
+
+
+/*{street_type} {street_name} {municipal_number} {urban_mza} {urban_lot_number}*/
+
+/*
+this.ubicacion.nomUU;
+this.datosPredio.mz = this.ubicacion.mznUrb;
+this.datosPredio.lote = this.ubicacion.lotUrb;
+this.datosPredio.type = this.ubicacion.codTipVia;
+this.datosPredio.name = this.ubicacion.nomVia;
+this.datosPredio.numdoor = this.ubicacion.numMun;
+this.datosPredio.address = this.ubicacion.nomVia;
+
+*/
+
+    this.dialogRef = this._confirmationService.info(
+        'Notificar',
+        'Esta seguro de generar la notificacion?'
+    );
+
+    this.dialogRef
+          .afterClosed()
+          .toPromise()
+          .then( (option) => {
+              if (option === 'confirmed') {
+
+                const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
+                    {width:'650px',
+                    data: {registrosTitularidad: r,texto_editar: texto,texto_fijo:''},
+                });
+
+                dialogRef2
+                .afterClosed()
+                .toPromise()
+                    .then((text2) => {
+
+
+
+                        const contribuyente=
+                        (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
+                        (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                        (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                        '';
+
+                        const payload = {
+                            "codTicket":this.ticket.codTicket,
+                            'contribuyente':contribuyente,
+                            'codTit' :r.codTit,
+                            'texto':text2,
+                            //'direccion' : ''
+                        }
+
+                        this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
+
+                            const blob = new Blob([response], { type: 'application/pdf' });
+                            saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');
+
+
+
+                            this._confirmationService.success(
+                                'Notificar',
+                                'Notificacion generada'
+                            ).afterClosed().toPromise().then((res)=>{
+
+                                const form = { codContr: r.suministro?.codContr};
+                                const dataForm = FormUtils.deleteKeysNullInObject(form);
+                                if(r?.suministro?.codSuministro){
+                                    this._suministroService.update(r.suministro.codSuministro,dataForm).subscribe((s)=>{
+                                        this._registroTitularidadService.update(r.codTit,{'status':6,'fileNotificacion':blob}).subscribe((res)=>{
+                                            this.resolverPredio();
+                                            this.getStatusButton();
+                                            this._resultsService.setResetMap(2);
+                                            this._resultsService.setEstado(Estado.LEER);
+
+                                        });
+
+                                    });
+
+                                }
+
+                            });
+                        });
+
+
+
+                    });
+
+
+
+              }
+
+
+
+            });
+
+
+
 
 }
 
-generarNotificacionPredio(data: IRegistroTitularidad): void{
+generarNotificacionPredio(r: IRegistroTitularidad): void{
+    //const  direccion = `${this.ubicacion.address}`;
+    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en ${this.ubicacion.address}, por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`;
 
 
+    /*{street_type} {street_name} {municipal_number} {urban_mza} {urban_lot_number}*/
 
-    this.dialogRef = this._confirmationService.info(
-          'Notificar',
-          'Esta seguro de generar la notificacion?'
-      );
+/*
+this.ubicacion.nomUU;
+    this.datosPredio.mz = this.ubicacion.mznUrb;
+    this.datosPredio.lote = this.ubicacion.lotUrb;
+    this.datosPredio.type = this.ubicacion.codTipVia;
+    this.datosPredio.name = this.ubicacion.nomVia;
+    this.datosPredio.numdoor = this.ubicacion.numMun;
+    this.datosPredio.address = this.ubicacion.nomVia;
 
-      this.dialogRef
-            .afterClosed()
-            .toPromise()
-            .then( (option) => {
-                if (option === 'confirmed') {
-                  this.generarPdf(data);
-                  this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
-                    this._confirmationService.success(
-                        'Notificar',
-                        'Notificacion generada'
-                    ).afterClosed().toPromise().then(()=>{
-                        this.resolverPredio();
-                        this.getStatusButton();
-                        this._resultsService.setResetMap(2);
-                        this._resultsService.setEstado(Estado.LEER);
+*/
+
+        this.dialogRef = this._confirmationService.info(
+            'Notificar',
+            'Esta seguro de generar la notificacion?'
+        );
+
+        this.dialogRef
+              .afterClosed()
+              .toPromise()
+              .then( (option) => {
+                  if (option === 'confirmed') {
+
+                    const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
+                        {width:'650px',
+                        data: {registrosTitularidad: r,texto_editar: texto,texto_fijo:''},
                     });
-                  });
-                }
-            });
+
+                    dialogRef2
+                    .afterClosed()
+                    .toPromise()
+                        .then((text2) => {
+
+
+
+                            const contribuyente=
+                            (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
+                            (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                            (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                            '';
+
+                            const payload = {
+                                "codTicket":this.ticket.codTicket,
+                                'contribuyente':contribuyente,
+                                'codTit' :r.codTit,
+                                'texto':text2,
+                                //'direccion' : ''
+                            }
+
+                            this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
+
+                                const blob = new Blob([response], { type: 'application/pdf' });
+                                saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');
+
+                                this._confirmationService.success(
+                                    'Notificar',
+                                    'Notificacion generada'
+                                ).afterClosed().toPromise().then((res)=>{
+
+                                    this._registroTitularidadService.update(r.codTit,{'status':6,'fileNotificacion':blob}).subscribe((res)=>{
+                                        this.resolverPredio();
+                                        this.getStatusButton();
+                                        this._resultsService.setResetMap(2);
+                                        this._resultsService.setEstado(Estado.LEER);
+                                    });
+
+                                });
+                            });
+
+
+
+                        });
+
+
+
+                  }
+
+
+
+                });
+
+
 
   }
 
@@ -1212,38 +1410,6 @@ generarPdf(data: IRegistroTitularidad): void{
 }
 
 
-/*
-updateIicket(ticket: ITicket): void{
-
-    const cantTotalResueltos = ticket.ubicaciones.filter(u=> u.status !==0).length;
-    const cantUbiAprob= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.RESUELTO_GESTION_RESULTADOS).length;
-    const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
-    const totalUbicaciones =ticket.ubicaciones.length;
-
-    console.log('cantUbiObs>>>',cantUbiObs);
-    console.log('cantUbiAprob>>>',cantUbiAprob);
-    console.log('cantTotalResueltos>>>',cantTotalResueltos);
-    console.log('totalUbicaciones>>>',cantTotalResueltos);
-    if( cantTotalResueltos === totalUbicaciones  ){
-      if(cantUbiObs> 0){
-        ticket.codEstTrabajoTicket = String(TicketStatus.OBSERVADO_GESTION_RESULTADOS);
-      }
-      else if(cantUbiAprob === totalUbicaciones){
-        ticket.codEstTrabajoTicket = String(TicketStatus.RESUELTO_GESTION_RESULTADOS);
-      }
-
-      this._ticketService.update(ticket.codTicket,{codEstTrabajoTicket:this.ticket.codEstTrabajoTicket}).subscribe(r=>{
-
-        this._router.navigate([
-          './land-inspection/results-management',
-          ]);
-      });
-
-    }
-
-  }
-*/
-
 
 updateLocation(ubicacion: IUbicacion, nroNoticacion: number=null): void{
     this.eventUpdateLocation.emit({codUbicacion:ubicacion.codUbicacion,nroNoticacion:nroNoticacion});
@@ -1251,66 +1417,59 @@ updateLocation(ubicacion: IUbicacion, nroNoticacion: number=null): void{
 
 previsualizacion(registroTitularidad: IRegistroTitularidad): void {
 
-const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
-        {width:'100%', height:'100%',
-        data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
-    });
+    const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
+            {width:'100%', height:'100%',
+            data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
+        });
 
-dialogRef
-  .afterClosed()
-  .toPromise()
-  .then((option) => {
-    console.log('option',option);
-        if (option === 'confirmar') {
+    dialogRef
+    .afterClosed()
+    .toPromise()
+    .then((option) => {
+        console.log('option',option);
+            if (option === 'confirmar') {
 
-            this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((r2)=>{
+                this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((r2)=>{
 
-                this.resolverPredio();
-                /*this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
-                    this.updateLocation(this.ubicacion);
-                    this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
+                    this.resolverPredio();
+                    /*this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
+                        this.updateLocation(this.ubicacion);
+                        this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
 
-                        this._router.navigate([
-                          './land-inspection/results-management',
-                          ]);
+                            this._router.navigate([
+                            './land-inspection/results-management',
+                            ]);
 
+                        });
+
+                    });*/
+
+                });
+
+            }
+
+            else if (option === 'subvaluar'){
+                const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
+                    {width:'650px',
+                    data: {registrosTitularidad: registroTitularidad,texto_editar:`las ventanillas Nro 7 a 9`,texto_fijo:`Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha
+                    adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y
+                    PU que serán proporcionados en`},
+                });
+
+                dialogRef2
+                .afterClosed()
+                .toPromise()
+                    .then((text) => {
+                        this.generarNotificacionSubvaluado(registroTitularidad, text);
                     });
+            }
 
-                });*/
+            else{
 
-              });
-
-            /*this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((res)=>{
-                this.updateLocation(this.ubicacion);
-                this.getStatusButton();
-                this._resultsService.setResetMap(2);
-                this._resultsService.setEstado(Estado.LEER);
-
-            });*/
-        }
-
-        else if (option === 'subvaluar'){
-            const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
-                {width:'650px',
-                data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
-            });
-
-            /*const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
-                {width:'100%', height:'100%',
-                data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
-            });*/
-            dialogRef2
-            .afterClosed()
-            .toPromise()
-                .then((text) => {this.generarNotificacionSubvaluado(registroTitularidad, text);});
-        }
-
-        else{
-
-        }
+            }
 
 
-    });
+        });
 
 }
 
@@ -1325,7 +1484,7 @@ generarNotificacionSubvaluado(data: IRegistroTitularidad,text): void{
         'texto':text
     }
 
-    this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
+    this._registroTitularidadService.generarNotificacionSubvaluado(payload).subscribe((response)=>{
 
         const blob = new Blob([response], { type: 'application/pdf' });
         saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');

@@ -9,7 +9,8 @@ export class NotificacionModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<NotificacionModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public dataDialog: any,
+    //@Inject(MAT_DIALOG_DATA)public dataDialog: any,
     )
      {
 
@@ -18,10 +19,10 @@ export class NotificacionModalComponent implements OnInit {
 
 
       save(): void{
-        this.dialogRef.close( this.data);
+        this.dialogRef.close( this.dataDialog.texto_editar);
       }
         ngOnInit(): void {
-            this.data =' las ventanillas Nro 7 a 9';
+            //this.data =' las ventanillas Nro 7 a 9';
         }
 
 }

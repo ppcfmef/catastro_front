@@ -28,6 +28,7 @@ export class LandMaintenanceFormComponent implements OnInit {
     districts: District[];
     codigoPredio: string='';
     _this = this;
+    typeMaintenace ='';
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -45,7 +46,8 @@ export class LandMaintenanceFormComponent implements OnInit {
         this.landModel= new LandModel();
         console.log('landModel>>',this.landModel);
         this.action=(data && data.action)?data.action:Actions.CREAR;
-        console.log('Actions>>',Actions.CREAR);
+        this.typeMaintenace =(data && data.typeMaintenace)?data.typeMaintenace:'';
+
 
         if(data){
             this.codigoPredio = data.land.cpm;
@@ -105,27 +107,54 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       initForm(): void{
-        this.formLand = this.fb.group({
-            cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
-            ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
-            cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required,this.cpmValidator]],
-            resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
-            resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
-            uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
-            codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
-            habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
-            codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
-            streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
-            streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
-            urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
-            urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
-            block: [{value:this.landModel?.block,disabled:this.readOnly}],
-            indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
-            floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
-            km: [{value:this.landModel?.km,disabled:this.readOnly}],
-            municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
-            apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
-          });
+        if (this.typeMaintenace === 'Reasignar'){
+            this.formLand = this.fb.group({
+                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
+                ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
+                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required]],
+                resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
+                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
+                uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
+                codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
+                habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
+                codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
+                streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
+                streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
+                block: [{value:this.landModel?.block,disabled:this.readOnly}],
+                indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
+                floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
+                km: [{value:this.landModel?.km,disabled:this.readOnly}],
+                municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
+                apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
+              });
+        }
+
+        else {
+            this.formLand = this.fb.group({
+                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
+                ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
+                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required,this.cpmValidator]],
+                resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
+                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
+                uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
+                codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
+                habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
+                codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
+                streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
+                streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
+                block: [{value:this.landModel?.block,disabled:this.readOnly}],
+                indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
+                floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
+                km: [{value:this.landModel?.km,disabled:this.readOnly}],
+                municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
+                apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
+              });
+        }
+
       }
 
       cpmValidator(control: AbstractControl): {[s: string ]: boolean} {

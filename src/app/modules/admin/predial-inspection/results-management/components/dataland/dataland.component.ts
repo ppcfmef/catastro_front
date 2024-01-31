@@ -33,7 +33,7 @@ export class DatalandComponent implements OnInit {
     this.datosPredio.type = this.ubicacion.codTipVia;
     this.datosPredio.name = this.ubicacion.nomVia;
     this.datosPredio.numdoor = this.ubicacion.numMun;
-    this.datosPredio.address = this.ubicacion.nomVia;
+    this.datosPredio.address = this.ubicacion.address;
     //this._resultsService.setUbicacionData(this.ubicacion);
   }
 

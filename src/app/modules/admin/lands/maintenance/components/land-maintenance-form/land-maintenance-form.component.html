@@ -6,7 +6,7 @@
 
         <mat-form-field
         class=" w-full pr-2 pb-2">
-            <mat-label>Ubigeo(*)</mat-label>
+            <mat-label>Ubigeo</mat-label>
             <!--<input matInput type="text" formControlName="ubigeo">-->
             <mat-select formControlName="ubigeo" >
                 <mat-option *ngFor="let district of districts" [value]="district.code"> {{district.name}}</mat-option>
@@ -32,7 +32,7 @@
 
         <mat-form-field
         class="w-full pr-2 pb-2">
-            <mat-label>Codigo de Predio Municipal(*) </mat-label>
+            <mat-label>Codigo de Predio Municipal </mat-label>
             <input matInput type="text" formControlName="cpm">
             <mat-error *ngIf="formLand.get('cpm').hasError('required')">
                 El campo es obligatorio.
@@ -49,7 +49,7 @@
         </mat-form-field>
 
         <mat-form-field class=" w-6/12 pr-2 pb-2">
-            <mat-label>Tipo Doc. Sustento(*)</mat-label>
+            <mat-label>Tipo Doc. Sustento</mat-label>
 
             <mat-select formControlName="resolutionType">
                 <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id"> {{domain.name}}</mat-option>
@@ -67,7 +67,7 @@
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
-            <mat-label>Nro. Doc. Sustento(*)</mat-label>
+            <mat-label>Nro. Doc. Sustento</mat-label>
             <input matInput type="text" formControlName="resolutionDocument">
             <mat-error *ngIf="formLand.get('resolutionDocument').hasError('required')">
                 El campo es obligatorio.
@@ -95,7 +95,7 @@
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
-            <mat-label>Nombre de Habilitacion(*)</mat-label>
+            <mat-label>Nombre de Habilitacion</mat-label>
             <input matInput type="text" formControlName="habilitacionName">
             <mat-error *ngIf="formLand.get('habilitacionName').hasError('required')">
                 El campo es obligatorio.
@@ -103,7 +103,7 @@
         </mat-form-field>
 
        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
-            <mat-label>Tipo vía(*)</mat-label>
+            <mat-label>Tipo vía</mat-label>
             <mat-select formControlName="streetType" >
                 <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
             </mat-select>
@@ -118,7 +118,7 @@
         </mat-form-field>
 
       <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
-            <mat-label>Nombre de vía(*)</mat-label>
+            <mat-label>Nombre de vía</mat-label>
             <input matInput type="text" formControlName="streetName">
             <mat-error *ngIf="formLand.get('streetName').hasError('required')">
                 El campo es obligatorio.
@@ -126,18 +126,18 @@
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
-            <mat-label>Mz. urbana(*)</mat-label>
+            <mat-label>Mz. urbana</mat-label>
             <input matInput type="text" formControlName="urbanMza" (change)="toggleRequired()">
         </mat-form-field>
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
-            <mat-label>Lt. urbano(*)</mat-label>
+            <mat-label>Lt. urbano</mat-label>
             <input matInput type="text" formControlName="urbanLotNumber" (change)="toggleRequired()">
         </mat-form-field>
 
 
         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
-            <mat-label>Nro. Puerta(*)</mat-label>
+            <mat-label>Nro. Puerta</mat-label>
             <input matInput type="text" formControlName="municipalNumber" (change)="toggleRequired()">
         </mat-form-field>
 

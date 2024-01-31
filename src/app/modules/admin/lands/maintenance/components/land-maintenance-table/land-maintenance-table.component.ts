@@ -37,7 +37,7 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
     landSelection(land: LandUI): void{
 
         const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-            data: {land:land,action:this.typeAction,ubigeo :this.ubigeo},
+            data: {land:land,action:this.typeAction,ubigeo :this.ubigeo,typeMaintenace:this.typeMaintenace},
             width: '600px',
             height:'100%'
           });

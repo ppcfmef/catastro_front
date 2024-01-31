@@ -1,22 +1,32 @@
 <h1 mat-dialog-title>Desea Modificar la Notificacion?</h1>
 
 <div mat-dialog-content>
-<p> Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha
-    adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y
-    PU que serán proporcionados en
+<p> {{dataDialog.texto_fijo}}
 </p>
-
-<textarea name="" id="" cols="70" rows="7"  [(ngModel)]="data" placeholder="modifique el texto" >
+<br>
+<textarea name="" id="" cols="70" rows="7"  [(ngModel)]="dataDialog.texto_editar" placeholder="modifique el texto" >
 
 </textarea>
 
 </div>
-<div mat-dialog-actions class="flex  flex-row">
 
 
-<div class="flex   gap-4">
-    <button class="btn red"  (click)="save()">Modificar</button>
+<div class="flex items-center justify-center sm:justify-end  py-4 space-x-3  dark:bg-black dark:bg-opacity-10">
+
+
+
+
+    <button class="btn red"  (click)="save()">Guardar</button>
+
 
 </div>
 
+
+<!--<div mat-dialog-actions class="flex  flex-row">
+
+
+
+
+
 </div>
+-->
