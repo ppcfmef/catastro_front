@@ -5,6 +5,7 @@ import {NoAuthGuard} from 'app/core/auth/guards/noAuth.guard';
 import {LayoutComponent} from 'app/layout/layout.component';
 import {InitialDataResolver} from 'app/app.resolvers';
 
+
 // @formatter:off
 // tslint:disable:max-line-length
 export const appRoutes: Route[] = [
@@ -55,8 +56,32 @@ export const appRoutes: Route[] = [
             {
                 path: 'errors',
                 loadChildren: () => import('app/modules/errors/errors.module').then(m => m.ErrorsModule)
-            },
+            }
         ]
+    },
+
+    {
+        path: '',
+        canMatch: [AuthGuard],
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        resolve: {
+            initialData: InitialDataResolver,
+        },
+       children: [
+        {
+            path: 'geovisor',
+            loadComponent: () => import('app/modules/admin/mapping/mapping.component').then(m => m.MappingComponent),
+        },
+        {
+            path: 'render',
+            loadComponent: () => import('app/modules/admin/mapping/render.component').then(m => m.RenderComponent),
+            outlet: 'primary',
+            data: { target: '_blank' }
+        },
+       ]
     },
 
     // Admin routes
@@ -68,13 +93,14 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
+
             {
                 path: 'account',
                 loadChildren: () => import('app/modules/admin/account/account.module').then(m => m.AccountModule)
             },
             {
                 path: 'home',
-                loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule)
+                loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule),
             },
             {
                 path: 'security',
@@ -86,7 +112,6 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'gesvalo',
-               
                 loadChildren: () => import('app/modules/admin/valuation/valuation.module').then(m => m.ValuationModule)
             },
             {
