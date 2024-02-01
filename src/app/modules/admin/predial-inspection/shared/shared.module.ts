@@ -36,6 +36,7 @@ import { SharedModule as Shared } from 'app/shared/shared.module';
         RouterModule,
         Shared,
 
+
     ],
     exports: [TableComponent, WidgetComponent, CardPredialComponent,WidgetMainComponent,MapComponent],
 })

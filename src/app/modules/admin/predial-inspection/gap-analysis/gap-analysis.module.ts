@@ -30,7 +30,7 @@ import { GapAnalysisMapComponent } from './components/gap-analysis-map/gap-analy
 import { GapAnalysisBlockListComponent } from './components/gap-analysis-block-list/gap-analysis-block-list.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GrowingBlockComponent } from './containers/growing-block/growing-block.component';
-
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 @NgModule({
     declarations: [
         GapAnalysisPage,
@@ -63,6 +63,7 @@ import { GrowingBlockComponent } from './containers/growing-block/growing-block.
         ReactiveFormsModule,
         MatPaginatorModule,
         MatAutocompleteModule,
+        FuseScrollbarModule
     ],
 })
 export class GapAnalysisModule {}
