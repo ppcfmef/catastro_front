@@ -10,7 +10,8 @@ class="flex flex-col bg-white container-list-load text py-6 px-5 w-full h-full r
 <h2 class="text-xl font-bold">{{title}}</h2>
 <div class="w-full mt-3">
     <div class="tabs">MANZANAS</div>
-    <app-table
+    <app-table fuseScrollbar
+        [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
         [dataSource]="dataSource"
         [columns]="tableColumns"
         [config]="tableConfig"

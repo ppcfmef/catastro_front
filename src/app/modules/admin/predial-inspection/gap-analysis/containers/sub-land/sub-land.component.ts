@@ -225,7 +225,7 @@ export class SubLandComponent implements OnInit {
     user: User;
     pageIndex = 0;
     pageSize = 10;
-    pageSizeOptions = [5, 10, 15];
+    pageSizeOptions = [5, 10, 25, 50, 100, 250, 500];
     resetTable = false;
     private defaultTableLimit = this.pageSize;
 

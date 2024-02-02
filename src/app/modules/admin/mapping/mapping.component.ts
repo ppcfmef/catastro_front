@@ -10,7 +10,8 @@ import { CommonService } from 'app/core/common/services/common.service';
 @Component({
     selector: 'app-mapping',
     templateUrl: './mapping.component.html',
-    styleUrls: ['./mapping.component.scss']
+    styleUrls: ['./mapping.component.scss'],
+    standalone: true,
 })
 export class MappingComponent implements OnInit {
 
