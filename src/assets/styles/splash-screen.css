@@ -1,5 +1,5 @@
 body fuse-splash-screen {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -8,23 +8,19 @@ body fuse-splash-screen {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(17, 24, 39, 1);
+    background-color: rgba(31, 31, 64, 0.6);
     color: #F9FAFB;
     z-index: 999999;
     pointer-events: all;
     opacity: 1;
     visibility: visible;
-    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) ;
 }
 
 body.opacityBg-fuse-splash-screen fuse-splash-screen{
     background-color: rgba(17, 24, 39, 0.7);
 }
 
-body fuse-splash-screen img {
-    width: 240px;
-    max-width: 240px;
-}
 
 body fuse-splash-screen .spinner {
     display: flex;
@@ -81,4 +77,8 @@ body:not(.fuse-splash-screen-hidden) {
 body.fuse-splash-screen-hidden fuse-splash-screen {
     visibility: hidden;
     opacity: 0;
+}
+
+body.fuse-splash-screen-show fuse-splash-screen {
+    display: flex;
 }
