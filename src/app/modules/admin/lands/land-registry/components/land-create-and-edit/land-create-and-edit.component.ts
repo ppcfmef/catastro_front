@@ -117,6 +117,10 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
   saveLand(): void {
     if(this.formEdit.valid) {
+        if (this.formEdit.get('ubigeo').disabled) {
+            this.formEdit.get('ubigeo').enable();
+            this.formEdit.get('ubigeo').setValue(this.landMergeRecord?.ubigeo);
+          }
       const data = this.formEdit.value;
       data.owner = this.ownerId;
       data.status = this.toggleToStatus(data.status);
