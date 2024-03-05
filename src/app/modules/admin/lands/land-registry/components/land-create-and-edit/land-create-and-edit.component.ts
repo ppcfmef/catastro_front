@@ -117,30 +117,32 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
   saveLand(): void {
     if(this.formEdit.valid) {
-        if (this.formEdit.get('ubigeo').disabled) {
-            this.formEdit.get('ubigeo').enable();
-            this.formEdit.get('ubigeo').setValue(this.landMergeRecord?.ubigeo);
-          }
-      const data = this.formEdit.value;
-      data.owner = this.ownerId;
-      data.status = this.toggleToStatus(data.status);
-      // ToDo: debe ser en el container
-      if (data.idPlot && !data.cup) {
+
+        // Habilitar todos los campos deshabilitados en el formulario
+        Object.keys(this.formEdit.controls).forEach((controlName) => {
+        this.formEdit.get(controlName).enable();
+        });
+        const data = this.formEdit.value;
+        console.log(data, 'data');
+        data.owner = this.ownerId;
+        data.status = this.toggleToStatus(data.status);
+        // ToDo: debe ser en el container
+        if (data.idPlot && !data.cup) {
         this._fuseSplashScreenService.show();
         this.landRegistryMapService.createCpu(data).toPromise()
         .then(result => this.saveLandApi(result));
-      }else {
+        }else {
         this._fuseSplashScreenService.show();
         this.saveLandApi(data);
-      }
+        }
 
     }else {
-      this.confirmationService.error(
+        this.confirmationService.error(
         'Registro de predio',
         'Error al registrar el predio, intente nuevamente'
-      );
+        );
     }
-  }
+    }
 
   onToggleStatus(value: MatSlideToggleChange): void {
     if (!value.checked) {
