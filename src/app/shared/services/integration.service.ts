@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, from} from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
@@ -33,5 +33,17 @@ export class IntegrationService {
         'Skip-Auth': 'true',
       }
     });
+  }
+
+  getLandOwnerNSRTM(ubigeo: string, landOwnerCode: string): Observable<any> {
+
+    const url=`${environment.apiNSRTMUrl}/contribuyente/consultas-externas/listar-datos-contribuyente-por-documento?ubigeo=${ubigeo}&codigo_contribuyente=${landOwnerCode}`;
+    const call =  fetch(`${url}`, {
+        method: 'GET',
+    }).then(response => response.json());
+
+    return from(call);
+
+    //return this.http.get<any>(`${environment.apiNSRTMUrl}/contribuyente/consultas-externas/listar-datos-contribuyente-por-documento?ubigeo=${ubigeo}&codigo_contribuyente=${landOwnerCode}`);
   }
 }

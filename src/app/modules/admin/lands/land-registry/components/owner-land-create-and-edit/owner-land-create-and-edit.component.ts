@@ -205,6 +205,23 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
           });
     }
     else {
+        this.integrationService.getLandOwnerNSRTM(ubigeo, landOwnerCode)
+        .toPromise().then(
+          (result) => {
+            this.formEdit.get('dni').setValue(result.numeroDocumento);
+            if (result.tipoDocumento === 2) {
+              this.formEdit.get('documentType').setValue('06');
+              this.formEdit.get('descriptionOwner').setValue(result.razonSocial);
+            } else {
+              this.formEdit.get('name').setValue(result.nombres);
+              this.formEdit.get('documentType').setValue('01');
+              this.formEdit.get('maternalSurname').setValue(result.materno);
+              this.formEdit.get('paternalSurname').setValue(result.paterno);
+
+            }
+          });
+
+        /*
 
       this.integrationService.getLandOwner(ubigeo, landOwnerCode)
         .toPromise().then(
@@ -221,6 +238,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
             }
           });
+          */
     }
 
   }
