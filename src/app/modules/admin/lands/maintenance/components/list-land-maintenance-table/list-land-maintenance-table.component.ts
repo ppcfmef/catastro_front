@@ -46,9 +46,9 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                 {
                     id:4 , text :'Inactivar',routerLink:null,
                     },
-                    {
+                    /*{
                         id:5 , text :'Independizar',routerLink:'independence',
-                        },
+                        },*/
 
 ];
     private unsubscribeAll = new Subject<any>();
