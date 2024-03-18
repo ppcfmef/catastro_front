@@ -10,9 +10,11 @@
         </ng-template>
     </p>
     <p class="w-3/12"><b>{{ 'DNI' }} :</b> {{ landOwner.dni }}</p>
-    <p><b>Telefono:</b> {{ landOwner.phone }}</p>
+   <!-- <p><b>Telefono:</b> {{ landOwner.phone }}</p>
     <p class="w-full"><b>Email:</b> {{ landOwner.email }}</p>
+   -->
 
+  <!--
     <h3 class="subtitle-card mb-2 mt-6">
         <div (click)="showAddress = !showAddress" class="cursor-pointer flex items-center w-max">
             Domicilio Fiscal
@@ -43,12 +45,11 @@
             <b class="ml-2">Lt. </b> {{ landOwner.address?.urbanLotNumber }}
             <b class="ml-2">Piso. </b> {{ landOwner.address?.floor }}
             <b class="ml-2">Interior. </b> {{ landOwner.address?.indoor }}
-            <!--<b class="ml-2">Nro. C.</b> 15
-            <b class="ml-2">Lado</b>
-            <b class="ml-2">Nro. Puerta</b>
-            -->
+
         </p>
     </ng-container>
+
+-->
         <button class="edit-container" (click)="emitShowFormEdit()">
             <mat-icon svgIcon="mat_outline:edit"></mat-icon>
         </button>
