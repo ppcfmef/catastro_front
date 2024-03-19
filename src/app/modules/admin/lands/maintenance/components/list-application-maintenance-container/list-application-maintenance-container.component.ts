@@ -30,7 +30,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
             id:2 , text :'Acumulación'
             },
             {
-                id:3 , text :'División'
+                id:3 , text :'Subdivisión'
                 },
                 {
                     id:4 , text :'Inactivar'
