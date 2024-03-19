@@ -25,7 +25,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   private landOwnerId!: number;
   private landOwner: LandOwner;
   private defaultTableLimit = 5;
-
+    private servicesSubscribe;
   constructor(
     private landRegistryService: LandRegistryService,
     private landRegistryMapService: LandRegistryMapService,
@@ -53,7 +53,8 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
       this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     });*/
     //console.log('ubigeo',this.ubigeo);
-    combineLatest([
+
+   combineLatest([
       this.landRegistryService.getLandOwner(), // Se ejecuta cuando cambiamos de propietario
       this.landRegistryService.getLandRegister() // se ejecuta cuando agregamos o editamos registros
     ])
@@ -66,15 +67,17 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
           this.landRecords = null;
         }
 
-        if (ownerResult) {
+        if (ownerResult && ownerResult !== null) {
+
           this.landOwner = ownerResult;
           this.landOwnerId = ownerResult?.id;
         }
         else {
+            console.log('ownerResult>>',ownerResult);
           this.landOwnerId = registerLand?.owner;
         }
-        if (this.landOwnerId) {
-
+        if (this.landOwnerId && ownerResult) {
+          console.log('landOwnerId>>',this.landOwnerId);
           const queryParams = CommonUtils.deleteKeysNullInObject( { limit: this.defaultTableLimit , ubigeo:this.ubigeo });
 
           if (this.landId) {
@@ -118,6 +121,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     this.landRegistryService.getLandList(queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
+
   }
 
   downloadDeclaration(landRecord: LandRegistryMap): void {
@@ -128,8 +132,11 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnDestroy(): void {
+
     this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
+
+
   }
 
 }

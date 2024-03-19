@@ -67,7 +67,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             }
 
             else if (this.action=== Actions.CREAR){
-                const keysData=['ubigeo','uuType','streetType','codStreet','codUu','streetName','habilitacionName','urbanMza','habilitacionName'];
+                const keysData=['ubigeo','uuType','streetType','codStreet','codUu','streetName','habilitacionName','urbanMza','habilitacionName',];
                 keysData.forEach((key)=> {
                     if(this.landModel.hasOwnProperty(key)){
                         this.landModel[key] = data.land[key];

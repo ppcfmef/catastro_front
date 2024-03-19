@@ -9,6 +9,6 @@ id="uploadfile"  #uploadfile>
 (click)="uploadfile.click()"
 > Archivo
 <mat-icon svgIcon="heroicons_outline:document-text"></mat-icon>
-<label *ngif="this.fileName">{{fileName}}</label>
+<h1 *ngIf="fileName">{{fileName}}</h1>
 </button>
 </div>

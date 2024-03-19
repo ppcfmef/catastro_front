@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-new-owner-land',
@@ -19,11 +21,13 @@ export class NewOwnerLandPage implements OnInit {
   unsubscribeAll: Subject<any> = new Subject<any>();
   ubigeo: string;
   constructor(
+    private landRegistryService: LandRegistryService,
     private route: ActivatedRoute,
     private navigationAuthorizationService: NavigationAuthorizationService,
   ) { }
 
   ngOnInit(): void {
+    this.landRegistryService.setLandOwner(null);
     this.route.params.subscribe((params) => {
       this.ownerId = params.ownerId ? Number(params.ownerId) : params.ownerId;
       this.landId = params.landId ? Number(params.landId) : params.landId;
