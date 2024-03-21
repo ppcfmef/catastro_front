@@ -135,8 +135,12 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
   }
 
   emitShowFormEdit(value: boolean): void {
+    /*this.formEdit?.reset();*/
+     
+
     if (this.isCreate) {
       this.formEdit?.reset();
+      this.showFormEdit.emit(value);
     } else {
       this.showFormEdit.emit(value);
     }

@@ -121,8 +121,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         type: 'picture-marker',
         url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
         //url: '/assets/images/map/location2.png',
-        width: '30px',
-        height: '30px',
+        width: '50px',
+        height: '50px',
         yoffset: '15px',
     };
 
@@ -131,8 +131,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
         type: 'picture-marker',
         url: 'https://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png',
-        width: '30px',
-        height: '30px',
+        width: '50px',
+        height: '50px',
         yoffset: '15px',
     };
 
@@ -586,7 +586,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: any) => {
                 this.user = user;
-               // console.log('this.user>>', this.user);
+               console.log('this.user>>', this.user);
                 this.userUbigeo =
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
@@ -1697,7 +1697,7 @@ getFrase(data: any,frase: string='Holas'): string{
 
         if (view) {
             view.center = [land.longitude, land.latitude];
-            view.zoom = 19;
+            view.zoom = 20;
         }
         setTimeout(async () => {
             const screenshot = await view.takeScreenshot({
@@ -1907,7 +1907,7 @@ getFrase(data: any,frase: string='Holas'): string{
 
                     [
                         {
-                            content: `Operador Plataforma: ${this.user.name}`,
+                           content: `Operador Plataforma: ${this.user.name}`,
                            colSpan:2,
 
                         },
