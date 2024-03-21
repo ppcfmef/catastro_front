@@ -89,6 +89,7 @@ export interface Predio {
      VAL_ACT: number;
 
      ESTADO: number;
+     NUM_ALT: string;
 }
 
 

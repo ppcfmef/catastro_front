@@ -28,6 +28,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     streetName: string;
     streetNameAlt: string;
     municipalNumber: string;
+    municipalNumberAlt: string;
     block: string;
     indoor: string;
     floor: string;
@@ -159,6 +160,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.ranNum=l?.ranNum;
         this.streetBlock=l?.streetBlock;
         this.rangCup= l?.rangCup;
+        this.municipalNumberAlt = l?.municipalNumberAlt;
 
     }
 

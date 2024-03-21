@@ -43,7 +43,7 @@ export class FormatUtils {
         land.ranNum=lote.RAN_NUM;
         land.streetBlock=lote.CUADRA;
         land.rangCup = lote.RAN_CPU;
-
+        land.municipalNumber = lote.NUM_MUN;
     return land;
 
 }
@@ -97,7 +97,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         ID_PRED: land.idLandCartographic,
 
         NUM_MUN: land.municipalNumber,
-
+        NUM_ALT: land.municipalNumberAlt,
         COD_PRE: land.cpm,
 
         SEC_EJEC: '',
@@ -206,7 +206,7 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         MZN_URB: land.urbanMza,
 
         NUM_MUN: land.municipalNumber,
-
+        NUM_ALT: land.municipalNumberAlt,
         COD_PRE: land.cpm,
 
 

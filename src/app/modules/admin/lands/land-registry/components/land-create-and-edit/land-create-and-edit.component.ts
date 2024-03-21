@@ -86,6 +86,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       floor: [{ value: this.landMergeRecord?.floor, disabled :(this.landMergeRecord?.floor)?true:disabled }],
       km: [{ value: this.landMergeRecord?.km, disabled:(this.landMergeRecord?.km)?true:disabled  }],
       municipalNumber: [{ value: this.landMergeRecord?.municipalNumber, disabled:  (this.landMergeRecord?.municipalNumber)?true:disabled }],
+      municipalNumberAlt: [{ value: this.landMergeRecord?.municipalNumberAlt, disabled}],
       apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled: (this.landMergeRecord?.apartmentNumber)?true:disabled }],
       resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled }],
       resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
