@@ -26,6 +26,7 @@ export interface GestionPredio {
     NOM_UU: string;
     NOM_VIA: string;
     NUM_MUN: string;
+    NUM_ALT: string;
     PARTIDA: string;
     PISO: string;
     RAN_NUM: string;

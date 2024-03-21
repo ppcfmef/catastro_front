@@ -22,6 +22,7 @@ export interface LandRegistryMap {
     streetName: string;
     streetNameAlt: string;
     municipalNumber: string;
+    municipalNumberAlt: string;
     block: string;
     indoor: string;
     floor: string;

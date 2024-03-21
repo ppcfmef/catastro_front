@@ -121,8 +121,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         type: 'picture-marker',
         url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
         //url: '/assets/images/map/location2.png',
-        width: '30px',
-        height: '30px',
+        width: '50px',
+        height: '50px',
         yoffset: '15px',
     };
 
@@ -131,8 +131,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
         type: 'picture-marker',
         url: 'https://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png',
-        width: '30px',
-        height: '30px',
+        width: '50px',
+        height: '50px',
         yoffset: '15px',
     };
 
@@ -586,7 +586,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: any) => {
                 this.user = user;
-               // console.log('this.user>>', this.user);
+               console.log('this.user>>', this.user);
                 this.userUbigeo =
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
@@ -1697,7 +1697,14 @@ getFrase(data: any,frase: string='Holas'): string{
 
         if (view) {
             view.center = [land.longitude, land.latitude];
-            view.zoom = 19;
+            view.zoom = 20;
+            this.addPoint(
+                land.latitude,
+                land.longitude,
+                this.simpleMarkerSymbol,
+                Estado.LEER
+            );
+
         }
         setTimeout(async () => {
             const screenshot = await view.takeScreenshot({
@@ -1899,7 +1906,7 @@ getFrase(data: any,frase: string='Holas'): string{
                             content: 'Huella : ',
                             styles: {
 
-                                minCellHeight:40
+                                minCellHeight:20
                             },
 
                         },
@@ -1907,12 +1914,25 @@ getFrase(data: any,frase: string='Holas'): string{
 
                     [
                         {
-                            content: `Operador Plataforma: ${this.user.name}`,
+                           content: `Operador Plataforma: ${this.user.name}`,
                            colSpan:2,
-
                         },
 
                     ],
+
+                    [
+                        {
+                            content: `DNI: ${this.user.dni}`,
+                            colSpan:2,
+                         },
+                    ],
+                    [
+
+                        {
+                            content: `Cargo: ${this.user.role.name} `,
+                            colSpan:2,
+                         },
+                    ]
 
                 ],
 
@@ -1944,7 +1964,7 @@ getFrase(data: any,frase: string='Holas'): string{
 
 
             doc.save('Declaración Jurada de Ubicación de Predio.pdf');
-        }, 1500);
+        }, 2000);
 
     }
 
@@ -1996,7 +2016,7 @@ async saveNewPointGestionPredio(): Promise<void>{
         const _urlBase = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
 
         const wkid = 4326;
-
+        console.log('data saveLandRegistryMap>>>',data);
         if (data.idPlot) {
             const _predio= FormatUtils.formatLandRegistryMapModelToPredio(data);
             _predio.NOM_USER = this.user.username;
@@ -2046,6 +2066,7 @@ async saveNewPointGestionPredio(): Promise<void>{
             _gestionPredio.ESTADO=0;
             /*_gestionPredio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
             _gestionPredio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;*/
+            console.log('_gestionPredio>>',_gestionPredio)
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio],4326);
 
