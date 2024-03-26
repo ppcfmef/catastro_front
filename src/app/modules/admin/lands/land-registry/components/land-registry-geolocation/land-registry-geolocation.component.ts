@@ -96,7 +96,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [-1,0, 1, 2,101],
+    children: [0, 1, 2,101],
 },
 
         {
@@ -145,21 +145,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
     };*/
 
+
     layersInfo = [
-       /* {
-            title: 'Lotes Zona 17',
-            id: 0,
-            idServer: 0,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 17,
-            projection: 32717,
-        },*/
+
 
 
         {
@@ -175,7 +163,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             popupTemplate: null,
             utm: null,
             projection: null,
-            visible:false,
+            visible:true,
         },
 
 
@@ -816,9 +804,13 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     title: g.title,
                     layers: fs,
                 });
-                this.map.add(demographicGroupLayer);
+
+
+               this.map.add(demographicGroupLayer);
             });
 
+            const layerPredio=this.layersInfo.find(l => l.id === -1)?.featureLayer;
+            this.map.add(layerPredio);
 
             const cs1 = new SpatialReference({
                 wkid: 32717, //PE_GCS_ED_1950
@@ -877,6 +869,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
 
                         this.view.hitTest(event).then((response) => {
+                            console.log('response.results>>',response.results);
                             const results = response.results.filter((r) => {
                                 if (
                                     r &&
@@ -887,8 +880,26 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                     return r;
                                 }
                             });
+                            const resultsPredio = response.results.filter((r) => {
+                                if (
+                                    r &&
+                                    r.graphic &&
+                                    r.graphic.layer &&
+                                    r.graphic.layer.layerId === 0
+                                ) {
+                                    return r;
+                                }
+                            });
 
                             console.log('results<<',results);
+
+                            if(resultsPredio.length > 0){
+
+                                //const resultsPredioLen = resultsPredio.length - 1;
+
+                            }
+
+
                             if (results.length > 0) {
                                 const resultsLen = results.length - 1;
 
@@ -909,19 +920,11 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                         graphic.attributes &&
                                         graphic.attributes['ID_LOTE']
                                     ) {
-
-
                                         this.addPoint(
                                             latitude,
                                             longitude,
                                             this.simpleMarkerSymbol
                                         );
-
-                                        /*let dialogRef = this.confirmationService.info(
-                                            'Asignar Lote',
-                                            'Desea asignar este lote'
-                                        );
-    */
                                         let dialogRef = null;
                                         if(this.landRegistryMapModel.cup)
                                             {
@@ -953,56 +956,31 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                 'Asignar Lote',
                                                 'Desea asignar este lote?'
                                             );
-
-
-                                           /*
-                                           dialogRef = this.confirmationService.info(
-                                                'Actualizar Predio',
-                                                'Desea actualizar el predio?'
-                                            );
-                                            */
-
                                         }
 
                                     dialogRef.afterClosed().toPromise().then( (option) => {
                                         if (option === 'confirmed') {
 
-                                            /*latitude =
-                                            graphic.attributes['COORD_Y'];
-                                        longitude =
-                                            graphic.attributes['COORD_X'];*/
                                             graphic.attributes['COORD_X'] = longitude;
                                             graphic.attributes['COORD_Y'] =latitude;
-
-
-                                        this.lote = graphic.attributes;
-                                        console.log('lote>>',this.lote);
-
-                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
-
-                                        this._landRegistryMapService.setEstado(Estado.LEER);
-                                        this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                            this.lote = graphic.attributes;
+                                            console.log('lote>>',this.lote);
+                                            this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
+                                            this._landRegistryMapService.setEstado(Estado.LEER);
+                                            this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                         }
 
                                         else{
-
-                                            /*this.addPoint(
-                                                this.landRegistryMapModel.latitude,
-                                                this.landRegistryMapModel.longitude,
-                                                this.simpleMarkerSymbol
-                                            );*/
-
                                         }
 
 
                                     });
 
-}
                                 }
-                            } else {
+                                }
 
+                                else {
                                 if(!this.landRegistryMapModel.cup ){
-
                                     intersect.then((data: any) => {
                                         if (data && data.attributes) {
                                             const ubigeo = data.attributes['UBIGEO'];
@@ -1064,10 +1042,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
 
                             }
-
-                        });
-
                     }
+                });
+
+                }
 
                 });
 
@@ -1424,9 +1402,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     position: 'top-right',
                 });
 
-                this.view.ui.add([baseMapGalleryExpand], {
+               /* this.view.ui.add([baseMapGalleryExpand], {
                     position: 'top-right',
-                });
+                });*/
 
                 this.changeUI();
 

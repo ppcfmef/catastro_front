@@ -85,7 +85,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
   onAgregarResult(): void{
 
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR,land:this.landRecords[0]},
+        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results},
         width: '600px',
         height:'100%'
       });
@@ -129,10 +129,19 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
             dataForm.file= this.file;
             this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
                 if(r && r.success){
-                    this._messageProviderService.showAlert(
+                    /*this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-                    this._router.navigate(['/land/maintenance']);
+                    this._router.navigate(['/land/maintenance']);*/
+
+                    const m=this._messageProviderService.showAlert(
+                        'Solicitud registrada'
+                    );
+
+                    m.afterClosed().subscribe(r=>{
+                        this._router.navigate(['/land/maintenance']);
+                    });
+
                 }
             });
 

@@ -11,7 +11,7 @@
         <div class="text-xl font-extrabold "><h1>Predio Original</h1> </div>
         <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer" [isRemove]="false" [typeMaintenace]="'Independizar'"></app-land-maintenance-table></div>
     <div class="w-full">
-        <div class="text-xl font-extrabold "><h1>Predios divididos</h1> </div>
+        <div class="text-xl font-extrabold "><h1>Predios independizados</h1> </div>
 
         <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo" [isRemove]="true" [typeMaintenace]="'Independizar'"></app-land-maintenance-table>
     </div>
@@ -21,7 +21,7 @@
         <button mat-raised-button class="mat-primary"   (click)="onAgregarResult()" ><mat-icon svgIcon="heroicons_outline:plus"></mat-icon>  Agregar Predio  </button>
 
 
-        <button  mat-raised-button  class="bg-success" *ngIf="results.length>1 && file"
+        <button  mat-raised-button  class="bg-success" *ngIf="results.length>0 && file"
 
          [color]="'primary'" (click)="onGenerateSplit()" >
         Generar Independizacion

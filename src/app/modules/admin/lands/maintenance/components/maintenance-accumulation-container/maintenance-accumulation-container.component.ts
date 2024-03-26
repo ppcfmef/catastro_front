@@ -15,6 +15,7 @@ import { ResultModel } from '../../models/result.model';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-maintenance-accumulation-container',
@@ -40,6 +41,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     private applicationMaintenaceService: ApplicationMaintenanceService,
     private _router: Router,
     protected _messageProviderService: MessageProviderService,
+    private confirmationService: CustomConfirmationService,
     ) {
 
     this._userService.user$
@@ -96,7 +98,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
 
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         //data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
-        data: {action:Actions.CREAR,land:this.landRecords[0]},
+        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
         width: '600px',
         height:'100%'
       });
@@ -118,15 +120,24 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                 dataForm.file= this.file;
                 this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
                     if(r && r.success){
-                        this._messageProviderService.showAlert(
+                        const m=this._messageProviderService.showAlert(
                             'Solicitud registrada'
                         );
-                        this._router.navigate(['/land/maintenance']);
+
+                        m.afterClosed().subscribe(r=>{
+                            this._router.navigate(['/land/maintenance']);
+                        });
+
                     }
                 });
             }
-        });
-
+        },(err)=>{
+            console.log('error',err);
+            this.confirmationService.error(
+              'Registro de predio',
+               `Error al registrar el predio, ${err.error.message}`
+            );
+          });
       });
 
 

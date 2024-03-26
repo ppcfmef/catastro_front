@@ -11,6 +11,8 @@ import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictService } from '../../services/district.service';
 import { District } from 'app/core/common/interfaces/common.interface';
 import { keys } from 'lodash';
+import { LandUI } from '../../interfaces/land.interface';
+import { ResultUI } from '../../interfaces/result.interface';
 
 let _this: any;
 @Component({
@@ -29,6 +31,8 @@ export class LandMaintenanceFormComponent implements OnInit {
     codigoPredio: string='';
     _this = this;
     typeMaintenace ='';
+    landRecords: LandUI[]=[];
+    results : ResultUI[];
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -59,6 +63,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 this.landModel = new LandModel();
             }
 
+            this.landRecords = data?.landRecords?data?.landRecords:[];
+            this.results = data?.results?data?.results:[];
 
             this.ubigeo = (data && data.land && data.land.ubigeo)?data.land.ubigeo:null;
 
@@ -101,6 +107,10 @@ export class LandMaintenanceFormComponent implements OnInit {
         .pipe(takeUntil(this.unsubscribeAll))
         .subscribe((result) => {
             this.masterDomain = result;
+            /*console.log('this.masterDomain.resolutionType>>',this.masterDomain.resolutionType);*/
+
+            const indexConstancia=this.masterDomain.resolutionType.findIndex(e=> e.id ==='3');
+            this.masterDomain.resolutionType.splice(indexConstancia,1);
             this.initForm();
 
         });
@@ -190,7 +200,13 @@ export class LandMaintenanceFormComponent implements OnInit {
       save(): void{
         //results{}
         if(this.action!== Actions.LEER){
+
+            const codUu=this.formLand.get('codUu');
+            const urbanMza=this.formLand.get('urbanMza');
+            const urbanLotNumber=this.formLand.get('urbanLotNumber');
+
             this.dialogRef.close(this.formLand.value);
+
         }
         else{
             this.dialogRef.close();
@@ -226,6 +242,8 @@ export class LandMaintenanceFormComponent implements OnInit {
           municipalNumberControl.updateValueAndValidity();
 
         }
+
+
       }
 
 
