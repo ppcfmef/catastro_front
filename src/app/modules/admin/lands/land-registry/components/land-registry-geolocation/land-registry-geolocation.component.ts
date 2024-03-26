@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { DistrictResource, IPagination } from 'app/core/common/interfaces/common.interface';
 
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
@@ -19,7 +19,7 @@ import { loadModules } from 'esri-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GestionPredio } from '../../interfaces/gestion-predios.interface';
-import { LandMapIn } from '../../interfaces/land-map-in.interface';
+import { Land, LandMapIn } from '../../interfaces/land-map-in.interface';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandMapInModel } from '../../models/land-map-in.model';
 import { LandRegistryMapModel } from '../../models/land-registry-map.model';
@@ -41,6 +41,11 @@ import { LandOwner } from '../../interfaces/land-owner.interface';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { Lote } from '../../interfaces/lote.interface';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { LandRecordService } from '../../services/land-record.service';
+import { LandOwnerService } from '../../services/land-owner.service';
+import { LandRecord } from '../../interfaces/land-record.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertLandOwnerComponent } from '../alert-land-owner/alert-land-owner.component';
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -452,6 +457,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         private _landRegistryService: LandRegistryService,
         private confirmationService: CustomConfirmationService,
         private _fuseSplashScreenService: FuseSplashScreenService,
+        private _landRecordService: LandRecordService,
+        private _landOwnerService: LandOwnerService,
+        public dialog: MatDialog
     ) {}
 
     ngOnDestroy(): void {
@@ -893,11 +901,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
                             console.log('results<<',results);
 
-                            if(resultsPredio.length > 0){
 
-                                //const resultsPredioLen = resultsPredio.length - 1;
-
-                            }
 
 
                             if (results.length > 0) {
@@ -942,39 +946,103 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                         'Desea actualizar el predio?'
                                                     );
 
-                                                   /*
-                                                   dialogRef = this.confirmationService.info(
-                                                        'Asignar Lote',
-                                                        'Desea asignar este lote?'
-                                                    );
-                                                    */
                                                 }
 
                                             }
                                         else{
-                                            dialogRef = this.confirmationService.info(
-                                                'Asignar Lote',
-                                                'Desea asignar este lote?'
-                                            );
+
+                                            if(resultsPredio.length > 0){
+
+                                                graphic = resultsPredio[resultsPredio.length-1].graphic;
+                                                const attributes = graphic.attributes;
+                                                const filters ={cup:attributes['COD_CPU'], ubigeo:attributes['UBIGEO'] };
+
+
+                                                this._landRecordService.getList(filters).subscribe( (r: IPagination<LandRecord>) =>{
+                                                    const landRecords: LandRecord[] = r.results;
+                                                    if (landRecords.length>0){
+                                                        const id = landRecords[0].id;
+                                                        console.log('landRecords[0]>>',landRecords[0]);
+                                                        this._landOwnerService.getLandDetail(id)
+                                                        .subscribe(
+                                                            (responseOwner) => {
+
+                                                                const owners = responseOwner.results;
+                                                                console.log('owners>',owners);
+                                                                dialogRef = this.dialog.open(AlertLandOwnerComponent,{
+                                                                    data: {owners:owners},
+                                                                    width: '600px',
+                                                                });
+
+                                                                /*const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
+
+                                                                    data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
+                                                                    width: '600px',
+                                                                    height:'100%'
+                                                                  });*/
+
+                                                                /*dialogRef = this.confirmationService.info(
+                                                                    'Ya existe un Titular/Contribuyente, asignado',
+                                                                    `DNI:${owners[0].dni} Nombre:${owners[0].name} ${owners[0].paternalSurname} ${owners[0].maternalSurname}`
+                                                                );*/
+
+                                                                dialogRef.afterClosed().toPromise().then( (option) => {
+                                                                    if (option === 'confirmed') {
+
+                                                                        graphic.attributes['COORD_X'] = longitude;
+                                                                        graphic.attributes['COORD_Y'] =latitude;
+                                                                        this.lote = graphic.attributes;
+                                                                        console.log('lote>>',this.lote);
+                                                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
+                                                                        this._landRegistryMapService.setEstado(Estado.LEER);
+                                                                        this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                                                    }
+
+                                                                    else{
+                                                                    }
+
+
+                                                                });
+
+
+
+                                                            });
+
+                                                    }
+
+
+                                                });
+
+                                            }
+                                            else {
+                                                dialogRef = this.confirmationService.info(
+                                                    'Asignar Lote',
+                                                    'Desea asignar este lote?'
+                                                );
+
+
+                                                dialogRef.afterClosed().toPromise().then( (option) => {
+                                                    if (option === 'confirmed') {
+
+                                                        graphic.attributes['COORD_X'] = longitude;
+                                                        graphic.attributes['COORD_Y'] =latitude;
+                                                        this.lote = graphic.attributes;
+                                                        console.log('lote>>',this.lote);
+                                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
+                                                        this._landRegistryMapService.setEstado(Estado.LEER);
+                                                        this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                                    }
+
+                                                    else{
+                                                    }
+
+
+                                                });
+                                            }
+
                                         }
 
-                                    dialogRef.afterClosed().toPromise().then( (option) => {
-                                        if (option === 'confirmed') {
 
-                                            graphic.attributes['COORD_X'] = longitude;
-                                            graphic.attributes['COORD_Y'] =latitude;
-                                            this.lote = graphic.attributes;
-                                            console.log('lote>>',this.lote);
-                                            this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
-                                            this._landRegistryMapService.setEstado(Estado.LEER);
-                                            this._landRegistryMapService.landOut = this.landRegistryMapModel;
-                                        }
-
-                                        else{
-                                        }
-
-
-                                    });
 
                                 }
                                 }

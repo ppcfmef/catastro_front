@@ -38,6 +38,7 @@ import { LandDetailSummaryComponent } from './components/land-detail-summary/lan
 import { LandRegistryGeolocationComponent } from './components/land-registry-geolocation/land-registry-geolocation.component';
 import { SearchPlaceholderComponent } from './components/search-placeholder/search-placeholder.component';
 import { MapPlaceholderComponent } from './components/map-placeholder/map-placeholder.component';
+import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-land-owner.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { MapPlaceholderComponent } from './components/map-placeholder/map-placeh
     LandRegistryGeolocationComponent,
     SearchPlaceholderComponent,
     MapPlaceholderComponent,
+    AlertLandOwnerComponent,
   ],
   imports: [
     CommonModule,

@@ -13,6 +13,7 @@ import { District } from 'app/core/common/interfaces/common.interface';
 import { keys } from 'lodash';
 import { LandUI } from '../../interfaces/land.interface';
 import { ResultUI } from '../../interfaces/result.interface';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 
 let _this: any;
 @Component({
@@ -44,6 +45,7 @@ export class LandMaintenanceFormComponent implements OnInit {
         //private _commonService: CommonService,
         public dialogRef: MatDialogRef<LandMaintenanceFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
+        private confirmationService: CustomConfirmationService,
 
       ) {
 
@@ -201,11 +203,32 @@ export class LandMaintenanceFormComponent implements OnInit {
         //results{}
         if(this.action!== Actions.LEER){
 
-            const codUu=this.formLand.get('codUu');
-            const urbanMza=this.formLand.get('urbanMza');
-            const urbanLotNumber=this.formLand.get('urbanLotNumber');
+            const codUu=this.formLand.get('codUu').value;
+            const urbanMza=this.formLand.get('urbanMza').value;
+            const urbanLotNumber=this.formLand.get('urbanLotNumber').value;
+            const cantRepetidos=
+            this.landRecords.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length
+            + this.results.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length;
 
-            this.dialogRef.close(this.formLand.value);
+            if(cantRepetidos>0){
+                const diag=this.confirmationService.error(
+                    'Registro de predio',
+                    'Existe un lote urbano con la misma denominación, dentro del mismo ámbito de unidad urbana y manzana urbana.Desea continuar con el registro?'
+                  );
+
+                  diag.afterClosed().subscribe((option)=>{
+                    if(option==='confirmed'){
+                        this.dialogRef.close(this.formLand.value);
+                    }
+
+                  });
+
+            }
+
+            else{
+                this.dialogRef.close(this.formLand.value);
+            }
+
 
         }
         else{
