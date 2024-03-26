@@ -196,6 +196,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     const ordering = this.orderingFormater(data.sort);
     const queryParams = { limit, offset, owner, ordering,  };
 
+
+
     this.landRecordService.getList(queryParams).subscribe(
       (response) => {
         this.dataSourceLands = response.results;

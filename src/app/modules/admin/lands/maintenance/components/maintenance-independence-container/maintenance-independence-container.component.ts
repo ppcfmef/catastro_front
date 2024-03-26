@@ -15,6 +15,7 @@ import { ResultModel } from '../../models/result.model';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-maintenance-independence-container',
@@ -41,7 +42,8 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
         public dialog: MatDialog,
         private applicationMaintenaceService: ApplicationMaintenanceService,
         private _router: Router,
-        private _messageProviderService: MessageProviderService
+        private _messageProviderService: MessageProviderService,
+        private confirmationService: CustomConfirmationService,
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this._userService.user$
@@ -149,7 +151,13 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
         }
 
 
-    });
+    },(err)=>{
+        console.log('error',err);
+        this.confirmationService.error(
+          'Registro de predio',
+           `Error al registrar el predio, ${err.error.message}`
+        );
+      });
 
   }
 
