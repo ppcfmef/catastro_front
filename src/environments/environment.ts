@@ -11,7 +11,7 @@ export const environment = {
     apiUrl: host + 'api/v1',
     portalUrl: 'https://ws.mineco.gob.pe/portaldf',
     customViewerUrl: 'https://ws.mineco.gob.pe/portaldf/apps/webappviewer',
-    mancartoUrl: 'https://catastrofiscaldev.github.io/mancarto',
+    mancartoUrl: 'https://vmd120205.contaboserver.net/widgets/mancarto',
     mediaUrl: host + 'media',
     exportUrl: host + 'export',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv',
