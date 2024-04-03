@@ -14,6 +14,7 @@ import { LandUI } from '../../interfaces/land.interface';
 import { ApplicationModel } from '../../models/application.model';
 import { ApplicationMaintenanceService } from '../../services/application-maintenance.service';
 import { LandMaintenanceDesactivateComponent } from '../land-maintenance-desactivate/land-maintenance-desactivate.component';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 @Component({
   selector: 'app-list-land-maintenance-table',
   templateUrl: './list-land-maintenance-table.component.html',
@@ -57,7 +58,8 @@ export class ListLandMaintenanceTableComponent implements OnInit {
     public dialog: MatDialog ,
     private _userService: UserService,
     private applicationMaintenaceService: ApplicationMaintenanceService,
-    private _messageProviderService: MessageProviderService
+    private _messageProviderService: MessageProviderService,
+    private _fuseSplashScreenService: FuseSplashScreenService
     )
      {
 
@@ -99,7 +101,7 @@ export class ListLandMaintenanceTableComponent implements OnInit {
 
             //console.log(result);
             if(result && result.option){
-
+                this._fuseSplashScreenService.show();
                 const application = new ApplicationModel();
                 application.idStatus=1;
                 application.idType=4;
@@ -120,11 +122,17 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                         dataForm.file= result.file;
 
                         this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
+                            this._fuseSplashScreenService.hide();
                             if(r && r.success){
-                                this._messageProviderService.showAlert(
+                                const m=this._messageProviderService.showAlert(
                                     'Solicitud registrada'
                                 );
-                                this._router.navigate(['/land/maintenance']);
+
+                                m.afterClosed().subscribe(r=>{
+                                      this._router.navigate(['/land/maintenance']);
+                                  });
+
+                                /*this._router.navigate(['/land/maintenance']);*/
                             }
                         });
                     }

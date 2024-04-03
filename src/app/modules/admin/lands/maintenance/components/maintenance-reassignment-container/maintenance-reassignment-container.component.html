@@ -17,7 +17,7 @@
 
         <button  mat-raised-button  class="bg-success"
 
-         [color]="'primary'" (click)="onGenerateApplication()" *ngIf="landRecords.length>0 && file" >
+         [color]="'primary'" (click)="onGenerateApplication()" *ngIf="landRecords.length>0 && file" [disabled]="disabled">
         Generar Solicitud
 
     <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>

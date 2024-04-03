@@ -10,6 +10,7 @@ import { ApplicationMaintenanceService } from '../../services/application-mainte
 import { Router } from '@angular/router';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { ApplicationUI } from '../../interfaces/application';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-maintenance-reassignment-container',
@@ -23,12 +24,14 @@ export class MaintenanceReassignmentContainerComponent implements OnInit,OnChang
     fileName: string;
     file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    disabled =false;
   constructor(
     private landMaintenanceService: LandMaintenanceService,
     private _userService: UserService,
 private applicationMaintenaceService: ApplicationMaintenanceService,
 private _router: Router,
 protected _messageProviderService: MessageProviderService,
+private _fuseSplashScreenService: FuseSplashScreenService
     ) {
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
@@ -73,7 +76,8 @@ protected _messageProviderService: MessageProviderService,
         results:this.landRecords,
         lands:this.landRecords
     };
-
+    this.disabled =true;
+    this._fuseSplashScreenService.show();
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
         if(res){
             const dataForm: any= {};
@@ -85,12 +89,14 @@ protected _messageProviderService: MessageProviderService,
                         'Solicitud registrada'
                     );
                     this._router.navigate(['/land/maintenance']);*/
-
+                    this._fuseSplashScreenService.hide();
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
 
                     m.afterClosed().subscribe( r =>{
+                     
+                        this.disabled =false;
                         this._router.navigate(['/land/maintenance']);
                     });
 
