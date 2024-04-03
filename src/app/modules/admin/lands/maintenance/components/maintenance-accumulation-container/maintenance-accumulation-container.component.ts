@@ -16,6 +16,7 @@ import { ApplicationMaintenanceService } from '../../services/application-mainte
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-maintenance-accumulation-container',
@@ -32,7 +33,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     ubigeo: string;
     fileName: string;
     file: any;
-
+    disabled =false;
     _unsubscribeAll: Subject<any> = new Subject<any>();
   constructor(
     private landMaintenanceService: LandMaintenanceService,
@@ -42,6 +43,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     private _router: Router,
     protected _messageProviderService: MessageProviderService,
     private confirmationService: CustomConfirmationService,
+    private _fuseSplashScreenService: FuseSplashScreenService
     ) {
 
     this._userService.user$
@@ -94,8 +96,8 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     application.idType=2;
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
-
-
+    this.disabled =false;
+    this._fuseSplashScreenService.show();
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         //data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
         data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
@@ -120,11 +122,14 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                 dataForm.file= this.file;
                 this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
                     if(r && r.success){
+                   
                         const m=this._messageProviderService.showAlert(
                             'Solicitud registrada'
                         );
+                        this._fuseSplashScreenService.hide();
 
                         m.afterClosed().subscribe(r=>{
+                          this.disabled =true;
                             this._router.navigate(['/land/maintenance']);
                         });
 

@@ -16,6 +16,7 @@ import { ApplicationMaintenanceService } from '../../services/application-mainte
 import { LandMaintenanceService } from '../../services/land-maintenance.service';
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
   selector: 'app-maintenance-independence-container',
@@ -35,7 +36,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
     fileName: string;
     file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    disabled = false;
     constructor(
         private landMaintenanceService: LandMaintenanceService,
         private _userService: UserService,
@@ -44,6 +45,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
         private _router: Router,
         private _messageProviderService: MessageProviderService,
         private confirmationService: CustomConfirmationService,
+        private _fuseSplashScreenService: FuseSplashScreenService
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this._userService.user$
@@ -123,7 +125,8 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
         results: this.results,
         lands:this.landRecords
     };
-
+    this.disabled  = true;
+    this._fuseSplashScreenService.show();
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
         if(res){
             const dataForm: any= {};
@@ -135,12 +138,13 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
                         'Solicitud registrada'
                     );
                     this._router.navigate(['/land/maintenance']);*/
-
+                    this._fuseSplashScreenService.hide();
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-
+                   
                     m.afterClosed().subscribe(r=>{
+                        this.disabled  = false;
                         this._router.navigate(['/land/maintenance']);
                     });
 

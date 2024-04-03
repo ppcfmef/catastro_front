@@ -23,7 +23,7 @@
 
             <button  mat-raised-button  class="bg-success"
 
-             [color]="'primary'" (click)="onGenerateAccumulation()" *ngIf="landRecords.length>1 && file" >
+             [color]="'primary'" (click)="onGenerateAccumulation()" *ngIf="landRecords.length>1 && file" [disabled]="disabled"  >
             Generar Acumulación
 
         <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
