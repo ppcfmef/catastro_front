@@ -142,8 +142,9 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-                   
+
                     m.afterClosed().subscribe(r=>{
+
                         this.disabled  = false;
                         this._router.navigate(['/land/maintenance']);
                     });
@@ -156,6 +157,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
 
 
     },(err)=>{
+        this._fuseSplashScreenService.hide();
         console.log('error',err);
         this.confirmationService.error(
           'Registro de predio',

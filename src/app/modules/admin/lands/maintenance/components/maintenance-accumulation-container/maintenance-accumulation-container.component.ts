@@ -97,7 +97,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
     this.disabled =false;
-    this._fuseSplashScreenService.show();
+
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         //data: {action:Actions.CREAR,ubigeo:this.landRecords[0].ubigeo},
         data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
@@ -106,6 +106,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
       });
 
       dialogRef.afterClosed().subscribe((result) => {
+        this._fuseSplashScreenService.show();
         console.log('result>>',result);
         console.log('The dialog was closed');
         this.results =  [new ResultModel(result)];
@@ -122,7 +123,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                 dataForm.file= this.file;
                 this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
                     if(r && r.success){
-                   
+
                         const m=this._messageProviderService.showAlert(
                             'Solicitud registrada'
                         );
@@ -137,6 +138,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                 });
             }
         },(err)=>{
+            this._fuseSplashScreenService.hide();
             console.log('error',err);
             this.confirmationService.error(
               'Registro de predio',

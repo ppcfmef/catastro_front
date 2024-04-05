@@ -127,15 +127,15 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
                         'Solicitud registrada'
                     );
                     this._router.navigate(['/land/maintenance']);*/
-
+                    this._fuseSplashScreenService.hide();
 
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-                    this._fuseSplashScreenService.hide();
+
                     m.afterClosed().subscribe(r=>{
                         this.disabled =false;
-                 
+
                         this._router.navigate(['/land/maintenance']);
                     });
 
@@ -147,6 +147,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
 
     },(err)=>{
+        this._fuseSplashScreenService.hide();
       console.log('error',err);
       this.confirmationService.error(
         'Registro de predio',
