@@ -999,6 +999,12 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                                     }
 
                                                                     else{
+
+                                                                        if(this.view){
+
+                                                                            this.view.popup.close();
+                                                                            this.view.graphics.removeAll();
+                                                                        }
                                                                     }
 
 
@@ -1034,6 +1040,12 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                     }
 
                                                     else{
+                                                        if(this.view){
+
+                                                            this.view.popup.close();
+                                                            this.view.graphics.removeAll();
+                                                        }
+
                                                     }
 
 
@@ -1085,9 +1097,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                                         this.landRegistryMapModel.longitude = longitude;
                                                         this.landRegistryMapModel.ubigeo = ubigeo;
 
-
                                                         this.saveNewPointGestionPredio();
-
                                                         this._landRegistryMapService.setEstado(Estado.LEER);
                                                    /*     this._landRegistryMapService.landOut = this.landRegistryMapModel;*/
                                                     }
