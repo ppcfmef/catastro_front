@@ -71,7 +71,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       inactiveReason: [{ value: this.landMergeRecord?.inactiveReason, disabled}],
       statusImg: [{ value: this.landMergeRecord?.statusImg, disabled}],
       cup: [{ value: this.landMergeRecord?.cup, disabled: (this.landMergeRecord?.cup)?true:disabled}],
-      cpm: [{ value: this.landMergeRecord?.cpm, disabled},Validators.required],
+      cpm: [{ value: this.landMergeRecord?.cpm, disabled}],
       ubigeo: [{ value: this.landMergeRecord?.ubigeo, disabled:(this.landMergeRecord?.ubigeo)?true:disabled}],
       uuType: [{ value: this.landMergeRecord?.uuType, disabled}],
       codUu: [{ value: this.landMergeRecord?.codUu, disabled:(this.landMergeRecord?.codUu)?true:disabled}],

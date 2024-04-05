@@ -55,6 +55,28 @@ export class CustomConfirmationService {
     });
   }
 
+  errorInfo(title: string, message: string): MatDialogRef<FuseConfirmationDialogComponent> {
+    return this.confirmation.open({
+      title: title,
+      message: message,
+      icon: {
+        name: 'heroicons_outline:exclamation',
+        color: 'warn',
+      },
+      actions: {
+        confirm: {
+          show: true,
+          label: 'Aceptar',
+          color: 'primary'
+        },
+        cancel: {
+          show: false,
+          label:'Cancelar'
+        }
+      }
+    });
+  }
+
   info(title: string, message: string): MatDialogRef<FuseConfirmationDialogComponent> {
     return this.confirmation.open({
       title: title,

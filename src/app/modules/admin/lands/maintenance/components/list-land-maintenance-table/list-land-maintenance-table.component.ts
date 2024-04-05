@@ -35,9 +35,9 @@ export class ListLandMaintenanceTableComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
 
     typesMaintenance =[
-        {
+        /*{
         id:1 , text :'Reasignar ubicación',routerLink:'reassignment',
-        },
+        },*/
         {
             id:2 , text :'Acumulación',routerLink:'accumulation',
             },

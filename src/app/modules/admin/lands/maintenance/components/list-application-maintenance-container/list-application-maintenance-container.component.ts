@@ -23,9 +23,9 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
     filters={};
     formFilters: UntypedFormGroup;
     typesMaintenance =[
-        {
+        /*{
         id:1 , text :'Reasignar ubicación'
-        },
+        },*/
         {
             id:2 , text :'Acumulación'
             },
