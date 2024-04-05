@@ -13,7 +13,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 })
 export class NewOwnerLandPage implements OnInit {
   expandMap = true;
-  initialPage = false;
+  initialPage = true;
   ownerId: number;
   landId: number;
   idView = 'gprpregist';

@@ -7,24 +7,19 @@
                 </mat-icon>
             </button>
         </section>
-
-        <button class="btn-success box-shadow-z1"
-        (click)="newOwner()"> Nuevo contribuyente
-            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        <button mat-button class="box-shadow-z1 rounded-md bg-mef-red text-white"
+        (click)="clean()">
+            <span class="ml-1">Limpiar</span>
+             <mat-icon class="text-white " svgIcon="mat_outline:cleaning_services"></mat-icon>
         </button>
     </article>
+    
     <ng-container [ngSwitch]="showFormEdit">
         <app-owner-land-detail
             *ngSwitchCase="false"
             [landOwnerIn]="landOwner"
-            (formEdit)="receivedShowFormEdit($event)">
+        >
         </app-owner-land-detail>
-
-        <app-owner-land-create-and-edit
-            *ngSwitchCase="true"
-            [landOwnerIn]="landOwner"
-            (showFormEdit)="receivedShowFormEdit($event)">
-        </app-owner-land-create-and-edit>
 
         <ng-container *ngSwitchDefault>
             <app-search-placeholder texto="Ingrese un documento para buscar el propietario"></app-search-placeholder>

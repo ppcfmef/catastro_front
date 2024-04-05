@@ -91,6 +91,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
         .toPromise()
         .then(
           (result: any) => {
+            console.log('result>>',result);
             this._fuseSplashScreenService.hide();
             if (result && result.length>0){
                 this.receivedShowFormEdit(false);
@@ -101,16 +102,19 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
             else{
 
                 const dialogRef = this.confirmationService.error(
-                    'Contribuyente no encontrado',
-                    `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
+                  `Contribuyente no encontrado`,
+                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
                   );
 
                   dialogRef.afterClosed().subscribe((option) => {
-                    if (option === 'confirmed') {
-                      this.receivedShowFormEdit(true);
-                      console.log('pasar documento al formulario', searchText);
-                    }
+                    // if (option === 'confirmed') {
+                    //   this.receivedShowFormEdit(true);
+                    //   console.log('pasar documento al formulario', searchText);
+                    // }
+                   
                     this.search.reset();
+                    this.showFormEdit = null;
+                    this.landRegistryService.setLandOwner(null);
                   });
             }
 
@@ -133,6 +137,12 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
         );
     }
 
+  }
+
+  clean(): void{
+    this.search.reset();
+    this.showFormEdit = null;
+    this.landRegistryService.setLandOwner(null);
   }
 
   ngOnDestroy(): void{
