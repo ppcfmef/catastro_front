@@ -39,6 +39,7 @@ import { LandRegistryGeolocationComponent } from './components/land-registry-geo
 import { SearchPlaceholderComponent } from './components/search-placeholder/search-placeholder.component';
 import { MapPlaceholderComponent } from './components/map-placeholder/map-placeholder.component';
 import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-land-owner.component';
+import { SearchMapComponent } from './components/search-map/searchMap.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-lan
     MapsModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    SearchMapComponent
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: []
