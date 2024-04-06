@@ -29,3 +29,40 @@
   left: 93px;
     top: 131px;
 }
+
+:host ::ng-deep {
+  .esri-component.esri-search.esri-widget{
+    position: absolute !important;
+    top: 0 !important;
+    left: 40px !important;
+  }
+
+  .esri-component.esri-zoom.esri-widget {
+    display: flex;
+    gap: 8px;
+    background: transparent;
+  }
+  .esri-zoom
+  .esri-widget--button{
+    background: #1A73E8;
+    color: white;
+    border-radius: 4px;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+
+
+
+.search {
+  position:absolute;
+  top: 64px;
+  left: 64px;
+  user-select: none;
+  cursor: pointer;
+  z-index: 100;
+  width: 240px;
+}
