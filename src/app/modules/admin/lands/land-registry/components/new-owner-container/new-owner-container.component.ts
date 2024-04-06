@@ -165,20 +165,8 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
               else{
 
-                //this.searhSrtm(searchText);
-             
-
-                const dialogRef = this.confirmationService.errorInfo(
-                  `Contribuyente no encontrado`,
-                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
-                  );
-
-                  dialogRef.afterClosed().subscribe(() => {
-                    this.search.reset();
-                    this.showFormEdit = null;
-                    this.landRegistryService.setLandOwner(null);
-                    this.showButtons = false;
-                  });
+                this.searhSrtm(searchText);
+            
              
                   /*const dialogRef = this.confirmationService.errorInfo(
                     `Contribuyente no encontrado`,
@@ -316,12 +304,12 @@ searhSrtm(searchText: any): void{
             }, ()=>{
                 const dialogRef = this.confirmationService.errorInfo(
                     'Contribuyente no encontrado',
-                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
+                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
                     );
 
                     dialogRef.afterClosed().subscribe((option) => {
 
-
+                      this.showButtons = false;
                       this.search.reset();
                       this.showFormEdit = null;
                       this.landRegistryService.setLandOwner(null);
@@ -337,10 +325,10 @@ searhSrtm(searchText: any): void{
                 if (result && result.codigo==='404' ){
                     const dialogRef = this.confirmationService.errorInfo(
                         'Contribuyente no encontrado',
-                        `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
+                        `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
                         );
                         dialogRef.afterClosed().subscribe((option) => {
-
+                          this.showButtons = false;
                           this.search.reset();
                           this.showFormEdit = null;
                           this.landRegistryService.setLandOwner(null);
@@ -371,10 +359,10 @@ searhSrtm(searchText: any): void{
             }, ()=>{
                 const dialogRef = this.confirmationService.errorInfo(
                     'Contribuyente no encontrado',
-                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
+                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en wl sistema de renta`
                     );
                     dialogRef.afterClosed().subscribe((option) => {
-
+                      this.showButtons = false;
                       this.search.reset();
                       this.showFormEdit = null;
                       this.landRegistryService.setLandOwner(null);
