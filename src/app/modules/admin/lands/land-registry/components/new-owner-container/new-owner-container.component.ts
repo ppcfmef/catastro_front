@@ -22,6 +22,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   @Input() ownerId: number;
   @Input() ubigeo: string;
   showFormEdit: boolean | null;
+  showButtons: boolean = false;
   params: any ={};
   search: UntypedFormControl = new UntypedFormControl();
   landOwner: LandOwnerModel = new LandOwnerModel();
@@ -147,12 +148,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   searchOwnerbyDocument(searchText: any):void{
     if(searchText!==''){
         const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
-
-
-
         this._fuseSplashScreenService.show();
-
-
           this.landRegistryService.searchOwnerbyDocument(params)
           .toPromise()
           .then(
@@ -163,12 +159,27 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
               if (result && result.length>0){
                   this.receivedShowFormEdit(false);
                   this.landRegistryService.setLandOwner(result[0]);
+                  this.showButtons = true;
 
               }
 
               else{
-                this.searhSrtm(searchText);
 
+                //this.searhSrtm(searchText);
+             
+
+                const dialogRef = this.confirmationService.errorInfo(
+                  `Contribuyente no encontrado`,
+                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
+                  );
+
+                  dialogRef.afterClosed().subscribe(() => {
+                    this.search.reset();
+                    this.showFormEdit = null;
+                    this.landRegistryService.setLandOwner(null);
+                    this.showButtons = false;
+                  });
+             
                   /*const dialogRef = this.confirmationService.errorInfo(
                     `Contribuyente no encontrado`,
                     `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
@@ -216,14 +227,14 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
             if (result && result.length>0){
                 this.receivedShowFormEdit(false);
                 this.landRegistryService.setLandOwner(result[0]);
-
+                this.showButtons = true;
             }
 
             else{
 
                 const dialogRef = this.confirmationService.errorInfo(
                   `Contribuyente no encontrado`,
-                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
+                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
                   );
 
                   dialogRef.afterClosed().subscribe((option) => {
@@ -235,6 +246,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
                     this.search.reset();
                     this.showFormEdit = null;
                     this.landRegistryService.setLandOwner(null);
+                    this.showButtons = false;
                   });
             }
 
@@ -242,16 +254,20 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
           (error) => {
             this._fuseSplashScreenService.hide();
             const dialogRef = this.confirmationService.error(
-              'Contribuyente no encontrado',
-              `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
-            );
+              `Contribuyente no encontrado`,
+              `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
+              );
+
 
             dialogRef.afterClosed().subscribe((option) => {
-              if (option === 'confirmed') {
-                this.receivedShowFormEdit(true);
-                console.log('pasar documento al formulario', searchText);
-              }
+              // if (option === 'confirmed') {
+              //   this.receivedShowFormEdit(true);
+              //   console.log('pasar documento al formulario', searchText);
+              // }
+              
               this.search.reset();
+              this.showFormEdit = null;
+              this.landRegistryService.setLandOwner(null);
             });
           }
         );*/
@@ -408,11 +424,16 @@ searhSrtm(searchText: any): void{
 
 
   clean(): void{
+    this.showButtons = false;
     this.search.reset();
     this.showFormEdit = null;
     this.landRegistryService.setLandOwner(null);
   }
 
+  createLandRecord(): void {
+    this.landRegistryService.setLandCreate(true);
+    //this.landRegistryMapService.landIn = null;
+  }
   ngOnDestroy(): void{
     this.landRegistryService.setLandOwner(null);
     this.unsubscribeAll.next(null);

@@ -106,6 +106,7 @@ const config = {
             'mef-backgroud-icon':'#83818169',
             'mef-grennSea':'#3ABEB0',
             'mef-blueVista': '#9398EC',
+            'mef-skyBlue':'#71A9F7',
             'mef-text-primary': '#071E55',
             'mef-text-secondary': '#1089d4',
             'mef-secondary':'#1e90ff',

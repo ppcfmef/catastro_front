@@ -1,15 +1,21 @@
-<section class="container mt-4" *ngIf="landOwner">
-    <h3 class="subtitle-card mb-2">Datos del contribuyente</h3>
-    <p class="w-full">
-        <b>Contribuyente:</b>
-        <ng-container *ngIf="landOwner.isBussiness;else documentGeneral">
-            {{ landOwner.descriptionOwner }}
-        </ng-container>
-        <ng-template #documentGeneral>
-            {{ landOwner.name }} {{ landOwner.paternalSurname }} {{ this.landOwner.maternalSurname }}
-        </ng-template>
-    </p>
-    <p class="w-3/12"><b>{{ 'DNI' }} :</b> {{ landOwner.dni }}</p>
+<section class="flex flex-col p-4 shadow rounded-md overflow-hidden bg-card mt-4" *ngIf="landOwner">
+    <div class="text-lg mb-3 font-semibold tracking-[-0.5px]">Datos del contribuyente</div>
+    <div class="flex w-full">
+        <div class="w-full">
+            <b class="font-medium">Contribuyente : </b>
+            <ng-container *ngIf="landOwner.isBussiness;else documentGeneral">
+                {{ landOwner.descriptionOwner }}
+            </ng-container>
+            <ng-template #documentGeneral>
+                {{ landOwner.name | titlecase }} {{ landOwner.paternalSurname | titlecase}} {{ this.landOwner.maternalSurname | titlecase }}
+            </ng-template>
+        </div>
+        <div class="w-[200px]">
+            <b class="font-medium" >{{ 'DNI' }} : </b> {{ landOwner.dni }}
+        </div>
+        
+    </div>
+
    <!-- <p><b>Telefono:</b> {{ landOwner.phone }}</p>
     <p class="w-full"><b>Email:</b> {{ landOwner.email }}</p>
    -->

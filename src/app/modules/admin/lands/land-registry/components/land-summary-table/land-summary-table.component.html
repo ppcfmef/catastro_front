@@ -22,7 +22,6 @@
       <th mat-header-cell *matHeaderCellDef> Declaracion <br /> Jurada</th>
       <td mat-cell *matCellDef="let element"  class="text-center">
         <button
-
          *ngIf="element?.status!==3"
           mat-icon-button
           (click)="onDownloadDeclaration(element)">
@@ -36,33 +35,46 @@
         <th mat-header-cell *matHeaderCellDef> Dirección </th>
         <td mat-cell *matCellDef="let element">
             <article class="block-via">
-                <section>
+                <section class="m-2">
                     <div [ngSwitch]="element?.status">
                       <ng-container *ngSwitchCase="1">
-                        <mat-icon class="mr-2 text-red-600" svgIcon="feather:map-pin"></mat-icon>
-                        <b>Con cartografía asignada (Lote)</b>
+                        <div class="text-mef-red bg-red-50 p-1 w-full rounded-sm flex items-end justify-center">
+                          <mat-icon class="mr-1 text-mef-red icon-size-4 self-center" svgIcon="feather:map-pin"></mat-icon>
+                          <b>Con cartografía asignada (Lote)</b>
+                        </div>
                       </ng-container>
                       <ng-container *ngSwitchCase="2">
-                        <mat-icon class="mr-2 text-blue-600" svgIcon="feather:map-pin"></mat-icon>
-                        <b>Con cartografía asignada (Punto Imagen)</b>
+                        <div class="text-blue-600 bg-blue-50 p-1 w-full rounded-sm flex items-end justify-center" >
+                          <mat-icon class="mr-2 text-blue-600 icon-size-4 self-center" svgIcon="feather:map-pin"></mat-icon>
+                          <b>Con cartografía asignada (Punto Imagen)</b>
+                        </div>
+    
                       </ng-container>
                       <ng-container *ngSwitchCase="3">
-                        <mat-icon class="mr-2 text-gray-600" svgIcon="feather:toggle-left"></mat-icon>
-                        <b>Predio Inactivo</b>
+                        <div class="text-gray-600 bg-gray-50 p-1 w-full rounded-sm flex items-end justify-center">
+                          <mat-icon class="mr-2 text-gray-600 icon-size-4 self-center" svgIcon="feather:toggle-left"></mat-icon>
+                          <b>Predio Inactivo</b>
+                        </div>
                       </ng-container>
                       <ng-container *ngSwitchDefault>
-                        <mat-icon class="mr-2 text-orange-600" svgIcon="feather:x-circle"></mat-icon>
-                        <b>Sin cartografía asignada</b>
+                        <div class="text-orange-600 bg-orange-50 p-1 w-full rounded-sm flex items-end justify-center">
+                          <mat-icon class="mr-2 text-orange-600 icon-size-4 self-center" svgIcon="feather:x-circle"></mat-icon>
+                          <b>Sin cartografía asignada</b>
+                        </div>
                       </ng-container>
                     </div>
                     <div>{{element.ubigeo}}</div><!-- cambiar por departamento, provincia y distrito-->
-                    <div>{{element.habilitacionName}}</div>
+                    <div>{{element.habilitacionName | titlecase}}</div>
                     <div>{{element.streetName}}</div> <!-- direccion -->
                 </section>
                 <section>
-                    <button class="container-triangle"    (click)="landSelection(element)">
-
-                        <span class="triangle"></span>
+                    <button mat-icon-button btn-detail
+                        #tooltip="matTooltip"
+                        matTooltip="Ver en el mapa"
+                        (click)="landSelection(element)"
+                        class="btn-detail"
+                     >
+                        <mat-icon  [class.item-selected]="isIconClicked(element.cpm)" svgIcon="double_arrow"></mat-icon>
                     </button>
                 </section>
             </article>

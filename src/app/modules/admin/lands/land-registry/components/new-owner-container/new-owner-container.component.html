@@ -1,17 +1,25 @@
 <section class="container">
     <article class="flex">
-        <section class="input-btn-icon mr-6">
+        <section class="input-btn-icon mr-3">
             <input type="search" placeholder="Codigo de contribuyente" [formControl]="search">
             <button (click)="searchOwner()">Buscar
                 <mat-icon svgIcon="heroicons_outline:search">
                 </mat-icon>
             </button>
         </section>
-        <button mat-button class="box-shadow-z1 rounded-md bg-mef-red text-white"
+        <button mat-button class="box-shadow-z1 rounded-md bg-mef-skyBlue text-white"
         (click)="clean()">
             <span class="ml-1">Limpiar</span>
              <mat-icon class="text-white " svgIcon="mat_outline:cleaning_services"></mat-icon>
         </button>
+
+        <ng-container *ngIf="showButtons">
+            <button mat-button class="box-shadow-z1 rounded-md bg-mef-aplleGreen-100 ml-2 text-white"
+            (click)="createLandRecord()"> Crear predio nuevo
+            <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
+        </button>
+        </ng-container>
+   
     </article>
     
     <ng-container [ngSwitch]="showFormEdit">

@@ -5,12 +5,9 @@
         </button>
 </section>
 -->
-<section *ngIf="landRecords" class="container">
-    <h3 class="subtitle-card mb-2">Predios del contribuyente</h3>
-    <button class="add-container btn-success box-shadow-z1"
-        (click)="createLandRecord()"> Nuevo predio
-        <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
-    </button>
+<section *ngIf="landRecords" class="bg-card p-4 rounded-md shadow">
+    <h3 class="text-lg mb-4 font-semibold tracking-[-0.5px]">Predios del contribuyente</h3>
+
     <app-land-summary-table
     [dataSource]="landRecords"
     [length]="tableLength"

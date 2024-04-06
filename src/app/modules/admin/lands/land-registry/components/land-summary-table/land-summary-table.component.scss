@@ -1,43 +1,60 @@
 @import 'styles/mixins.scss';
 
-:host ::ng-deep{
+:host ::ng-deep {
     @include table-base;
     @include table-line-divider;
-    table tbody td{
+
+    table tbody td {
         font-size: 12px;
     }
+
+    table.table-base {
+        thead tr {
+        box-shadow: none !important;      
+        position: relative;
+      }
+        thead tr th:first-child{
+            padding: 0 8px !important;
+        }
+       
+        thead tr th {
+            text-align: center;
+            padding: 4px !important;
+            background-color: #eef6fb !important;
+            color: #01121e !important;
+        }
+
+    }
+
+    table.table-line-divider {
+
+        thead tr th,
+        tbody tr td {
+            border-right: solid 1px #e2e8f0;
+        }
+
+        tbody tr td {
+            border-top: solid 2px #e2e8f0;
+        }
+    }
+
+
 }
 
-.block-via{
+.block-via {
     display: flex;
     flex-direction: row;
-    section:nth-child(2){
-        width: 36px;
-        min-width: 36px;
-        display: flex;
-        align-items: center;
-        justify-items: center;
-        position: relative;
-    }
+    align-items: center;
+    justify-content: center;
 }
 
-.container-triangle{
-    padding: 10px;
-}
 
-.triangle{
-    display: block;
-    width: 0;
-    height: 0;
-    border-top: 13px solid transparent;
-    border-bottom: 13px solid transparent;
-    border-left: 12px solid #54C8FA;
-}
 
 :host ::ng-deep table tbody tr.predioSelected {
-    background-color: #FFF7EC;
+    background-color: #FFF7EC !important;
     position: relative;
-    &::after{
+
+    &::after {
         content: "";
         width: calc(100% + 22px);
         height: 100%;
@@ -49,20 +66,35 @@
         box-shadow: -3px 4px 4px rgb(145 143 143 / 42%);
     }
 
-    td{
+    td {
         position: relative;
         z-index: 2;
     }
 
-    .block-via{
-        section:nth-child(2){
-            .container-triangle{
+    .block-via {
+        section:nth-child(2) {
+            .container-triangle {
                 position: relative;
                 right: -32px;
-                .triangle{
+
+                .triangle {
                     border-left: 12px solid #666699;
                 }
             }
         }
     }
-  }
+}
+
+.btn-detail:hover {
+    background-color: var(mef-accent) !important;
+
+    mat-icon {
+        color: #5d99ab !important;
+    }
+}
+
+.item-selected {
+    color: #008DB8 !important;
+}
+
+  

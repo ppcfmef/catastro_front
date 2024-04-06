@@ -106,10 +106,10 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     this.landRegistryMapService.landIn = landRecord;
   }
 
-  createLandRecord(): void {
-    this.landRegistryService.setLandCreate(true);
-    //this.landRegistryMapService.landIn = null;
-  }
+  // createLandRecord(): void {
+  //   this.landRegistryService.setLandCreate(true);
+  //   //this.landRegistryMapService.landIn = null;
+  // }
 
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     const ownerFilter = { owner: this.landOwnerId };
