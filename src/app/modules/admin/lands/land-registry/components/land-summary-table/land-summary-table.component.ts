@@ -24,6 +24,7 @@ export class LandSummaryTableComponent implements OnInit {
   pageIndex = 0;
   pageSize = 5;
   pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+  clickedRow: string | null = null;
   private unsubscribeAll = new Subject<any>();
 
   constructor(
@@ -47,8 +48,15 @@ export class LandSummaryTableComponent implements OnInit {
     this.landSelected.clear();
     this.landSelected.add(landRecord);
     this.seledRecord.emit(landRecord);
+    console.log(this.landSelected, 'selec');
+    this.clickedRow = landRecord.cpm;
+    console.log(this.clickedRow, 'clicked');
   }
 
+
+  isIconClicked(cpm: string): boolean {
+    return this.clickedRow === cpm;
+  }
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
     this.changePage.emit(paginator);

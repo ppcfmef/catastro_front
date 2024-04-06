@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { LandsRoutingModule } from './lands-routing.module';
 import { MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -16,7 +18,9 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     LandsRoutingModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   providers: [{
     provide: MAT_RADIO_DEFAULT_OPTIONS,

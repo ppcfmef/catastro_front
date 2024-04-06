@@ -25,6 +25,8 @@ export class OwnerLandDetailComponent implements OnInit, OnChanges {
     const ownerCurentValue = changes?.landOwnerIn?.currentValue;
     if (ownerCurentValue) {
       this.landOwner.setValue(ownerCurentValue);
+      console.log('ownerCurentValue',ownerCurentValue);
+      console.log('landOwner',this.landOwner);
     }
   }
 
@@ -34,7 +36,7 @@ export class OwnerLandDetailComponent implements OnInit, OnChanges {
   // }
 
   getDocumentType(code): string {
-    const typeDocument = this.typeDocs.find(element => element.name === code);
+    const typeDocument = this.typeDocs.find(element => element.val === code);
     return typeDocument?.name;
   }
 }
