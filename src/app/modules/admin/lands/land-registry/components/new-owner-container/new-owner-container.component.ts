@@ -46,7 +46,11 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
     this.landRegistryService.getLandOwner()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
+
+
       this.landOwner.setValue( result);
+
+      console.log(' this.landOwner>>', this.landOwner);
     });
 
     /*this.navigationAuthorizationService.userScopePermission(this.idView)
@@ -166,8 +170,8 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
               else{
 
                 this.searhSrtm(searchText);
-            
-             
+
+
                   /*const dialogRef = this.confirmationService.errorInfo(
                     `Contribuyente no encontrado`,
                     `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
@@ -252,7 +256,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
               //   this.receivedShowFormEdit(true);
               //   console.log('pasar documento al formulario', searchText);
               // }
-              
+
               this.search.reset();
               this.showFormEdit = null;
               this.landRegistryService.setLandOwner(null);
@@ -320,8 +324,8 @@ searhSrtm(searchText: any): void{
           this.integrationService.getLandOwnerNSRTM(ubigeo, landOwnerCode)
           .subscribe(
             (result) => {
-                console.log('holasss');
-                console.log('result>>',result);
+                /*console.log('holasss');
+                console.log('result>>',result);*/
                 if (result && result.codigo==='404' ){
                     const dialogRef = this.confirmationService.errorInfo(
                         'Contribuyente no encontrado',
