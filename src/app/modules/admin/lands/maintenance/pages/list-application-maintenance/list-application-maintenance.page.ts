@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-application-maintenance',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListApplicationMaintenancePage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+  ) { }
 
   ngOnInit(): void {
   }
-
+  onAddApplication(): void {
+    this._router.navigate(['/land/maintenance/list']);
+  }
 }

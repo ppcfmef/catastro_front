@@ -1,19 +1,61 @@
 @import 'styles/mixins';
 
 @include button-style-icons-2();
-/*
-.mat-header-cell {
-  background: #e55e47;
-  color: white !important;
-}
 
-.active-tr{
-  table tbody tr:hover td{
-    background-color: #bbc6eb5e;
+:host ::ng-deep {
+  @include table-base;
+  table.table-base {
+      thead tr {
+      box-shadow: none !important;      
+      position: relative;
+    }
+      thead tr th:first-child{
+          padding: 0 8px !important;
+      }
+     
+      thead tr th {
+          text-align: start;
+          padding: 0px !important;
+          background-color: #eef6fb !important;
+          color: #01121e !important;
+      }
   }
+
 }
 
-*/
+:host ::ng-deep {
+  table.icon-color {
+    thead tr th .mat-sort-header-container .mat-sort-header-arrow {
+      color: #01121e !important;
+    } 
+  }
+
+}
+
+
+.label {
+  text-align: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  width: max-content;
+  font-weight: bolder;
+  font-size: 12px;
+}
+.pending {
+  color: #ffc107;
+  background: #FFF8DD;
+}
+
+.success {
+  color: #10B981;
+  background: #E8FFF3;
+}
+
+.rejected {
+  color: #F1416C;
+  background: #FFF5F8;
+}
+
 ::ng-deep .no-hide-arrow .mat-sort-header-arrow {
   color: #fff !important;
 }

@@ -32,7 +32,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     drawerMode: 'side' | 'over';
 
-    title = 'Gestion de roles y permisos';
+    title = 'Gestión de roles y permisos';
 
     filters: UntypedFormGroup;
 

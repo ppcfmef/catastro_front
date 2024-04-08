@@ -34,7 +34,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     drawerMode: 'side' | 'over';
 
-    title = 'Gestion de usuarios';
+    title = 'Gestión de usuarios';
 
     displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'rol', 'status', 'creationDate', 'actions'];
 
