@@ -21,8 +21,8 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
     dataTable = new MatTableDataSource<ApplicationUI>();
     displayedColumns: string[] = ['nro','ubigeo', 'c_predios','type','date', 'status'];//,'username'
     pageIndex = 0;
-    pageSize = 5;
-    pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+    pageSize = 10;
+    pageSizeOptions = [1, 10, 25, 50, 100, 250, 500];
 
     //sortedData: ApplicationUI[];
     //

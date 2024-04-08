@@ -112,7 +112,8 @@ const config = {
             'mef-secondary':'#1e90ff',
             'mef-title':'#26292E',
             'c-secondary':'#0056AC',
-            'mef-accent': '#ECF2F9'
+            'mef-accent': '#ECF2F9',
+            'mef-btn-success':"#007bff "
         },
         fontSize: {
             'xs'  : '0.625rem',
