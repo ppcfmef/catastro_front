@@ -171,7 +171,6 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
                 this.searhSrtm(searchText);
 
-
                   /*const dialogRef = this.confirmationService.errorInfo(
                     `Contribuyente no encontrado`,
                     `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`

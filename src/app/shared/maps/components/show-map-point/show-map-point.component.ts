@@ -266,7 +266,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
         {
             idServer: 0,
-            title: 'Gestion de Predios',
+            title: 'Gestión de Predios',
             id: 0,
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/MapServer',

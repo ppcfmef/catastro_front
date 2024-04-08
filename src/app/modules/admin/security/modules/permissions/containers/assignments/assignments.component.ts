@@ -19,7 +19,7 @@ import {PermissionListComponent} from '../../components/permission-list/permissi
 export class AssignmentsComponent implements OnInit {
 
     @ViewChild(PermissionListComponent) permissionListComponent: PermissionListComponent;
-    title = 'Gestion de Roles y Permisos';
+    title = 'Gestión de Roles y Permisos';
     id: number;
     editForm: UntypedFormGroup;
     permissionsNavigation: NavigationView[] = [];

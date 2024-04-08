@@ -15,7 +15,7 @@ import { CommonService } from 'app/core/common/services/common.service';
 export class ManagementUploadPage implements OnInit {
 
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
-    title = 'Gestion y Carga de Cartografia Base';
+    title = 'Gestión y Carga de Cartografia Base';
     drawerMode: 'side' | 'over';
     userUbigeo: string;
     _unsubscribeAll: Subject<any> = new Subject<any>();

@@ -32,7 +32,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     drawerMode: 'side' | 'over';
 
-    title = 'Gestion de Roles y permisos';
+    title = 'Gestión de Roles y permisos';
 
     displayedColumns = ['nro', 'name', 'actions'];
 
