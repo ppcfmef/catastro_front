@@ -206,7 +206,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
                         (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
-                    ).slice(0,5);
 
                 }
                 this.init=false;
@@ -253,7 +252,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     onSelectionChangeVia(value, data): void {
         console.log('data>>',data);
         this.searchForm.tipovia = value;
-        this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
+        /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
     }
 
     onChangeVia(value): void {
@@ -263,7 +262,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     onSelectionChangeUU(value): void {
         this.searchForm.tipouu = value;
         /*this.searchForm.tipovia = value;*/
-        this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;
+        /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;*/
         //this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
     }
 
