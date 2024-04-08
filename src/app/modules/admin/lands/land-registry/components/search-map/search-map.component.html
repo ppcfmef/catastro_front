@@ -1,20 +1,17 @@
 <!-- search toggle -->
-<div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm" (click)="openPanel()"
+<div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm box-shadow-z1" (click)="openPanel()"
     #searchOrigin>
     <mat-icon svgIcon="mat_outline:search"></mat-icon>
-    <input type="search" placeholder="Buscar predio" class="w-full ml-2" readonly>
+    <input matInput placeholder="Buscar predio" class="w-full ml-2" readonly>
 </div>
 
 <!-- seacrch panel -->
 <ng-template #searchPanel>
-    <div class="flex w-[240px] bg-card p-2">
-        <div>
-
-        </div>
-        <form [formGroup]="searchForm" class="container overflow-hidden rounded-sm  p-2 w-full">
+    <div class="flex w-[240px] bg-card py-4 px-2 rounded-sm shadow-2xl ">
+        <form [formGroup]="searchForm" class=" px-2 w-full">
             <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                 <mat-label>Buscar por:</mat-label>
-                <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                <mat-icon class="mr-2" svgIcon="heroicons_outline:adjustments-horizontal"></mat-icon>
                 <mat-select required placeholder="Opciones" (selectionChange)=onSelectionChange($event.value)>
                     <mat-option
                         *ngFor="let option of options, trackBy: trackByFn" value="{{option.cod}}">{{option.option}}</mat-option>
@@ -32,45 +29,43 @@
         
                 <ng-container *ngSwitchCase="2">
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Tipo de Via</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <mat-label>Tipo de vía</mat-label>
+                        <mat-icon svgIcon="mat_solid:merge_type"></mat-icon>
                         <mat-select required placeholder="Via" formControlName="via">
-                            <mat-option value="option.cod"
-                                *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>
+                            <mat-option value="{{option.id}}"
+                                *ngFor="let option of typesVia, trackBy: trackByFn">{{option.type}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Dirección</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <mat-icon svgIcon="mat_outline:location_on"></mat-icon>
                         <input matInput required placeholder="Ejem: Cusco" formControlName="address"/>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Nro de puerta</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput  placeholder="Ejem: 758" formControlName="door"/>
+                        <mat-icon svgIcon="mat_outline:door_front"></mat-icon>
+                        <input type="number" matInput  placeholder="Ejem: 758" formControlName="door"/>
                     </mat-form-field>
                 </ng-container>
 
                 <ng-container *ngSwitchCase="3">
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Hab. urbana</mat-label>
+                        <mat-label>Habilitación urbana</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: Hab. urbana Las Rosas " formControlName="habUrb"/>
+                        <input matInput required placeholder="Ejem: Las Rosas " formControlName="habUrb"/>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Mz</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
                         <input matInput required placeholder="Ejem: 04" formControlName="mz"/>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Lt</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: 12" formControlName="lt"/>
+                        <input matInput type="number" required placeholder="Ejem: 12" formControlName="lt"/>
                     </mat-form-field>
                 </ng-container> 
             </ng-container>
 
-            <button mat-button>Buscar</button>
+            <button mat-button class="w-full bg-[#009fdf] text-white rounded-md">Buscar</button>
         </form>
     </div>
 </ng-template>

@@ -3,6 +3,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +17,7 @@ import { Subject } from 'rxjs';
         CommonModule,
         MatIconModule,
         MatFormFieldModule,
+        MatButtonModule,
         MatInputModule,
         MatSelectModule
     ],
@@ -33,6 +35,16 @@ export class SearchMapComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchForm: FormGroup;
     options = [];
+    typesVia = [
+        { id: 1, type: 'Avenida' },
+        { id: 2, type: 'Calle' },
+        { id: 3, type: 'Camino' },
+        { id: 4, type: 'Paseo' },
+        { id: 5, type: 'Vía' },
+        { id: 6, type: 'Callejón' },
+        { id: 7, type: 'Pasaje' },
+        { id: 8, type: 'Otros' }
+      ];
     selectedOption: string | null = null;
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
