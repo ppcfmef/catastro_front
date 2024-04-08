@@ -86,15 +86,20 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.landRegistryService
             .getMasterDomain()
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((result) => (this.masterDomain = result));
+            .subscribe((result) =>
+                {
+                    this.masterDomain = result;
+                console.log('this.masterDomain>>',this.masterDomain);
+            });
 
         this.searchForm = {
             pr: null,
             mz: null,
             lt: null,
-            cod: null,
+            tipovia: null,
             door: null,
             habUrb: null,
+            tipouu:null,
             address: null,
             via: null,
         };
@@ -148,7 +153,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
     onSearch(): void {
         //this.searchForm.value
-        this.init=false;
+
         let where = '';
 
 
@@ -159,7 +164,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         if (this.selectedOption === '1') {
             //let where = '';
-            const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr,'NOM_VIA':this.searchForm?.address,'NUM_MUN':this.searchForm?.door};
+            const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
             where=CommonUtils.generateWhereArgis(params);
             this._cfPredioService
                 .getList(where,this.limit)
@@ -170,17 +175,22 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     throw new Error('Something went wrong');
                 })
                 .then((responseJson) => {
+
                     if (responseJson['features'] && responseJson['features']) {
                         this.results = responseJson['features'].map(
                             (f: any) => f['attributes']
                         ).slice(0,10);
                     }
+                    this.init=false;
                 })
                 .catch((error) => {
+
                     console.log(error);
+                    this.init=false;
                 });
         }
         else if(this.selectedOption === '2'){
+
             const params ={'UBIGEO':this.ubigeo, 'TIP_VIA':this.searchForm?.cod, 'NOM_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
             where=CommonUtils.generateWhereArgis(params);
             this._cfLoteService
@@ -192,19 +202,25 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 throw new Error('Something went wrong');
             })
             .then((responseJson) => {
+
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
-                        (f: any) => f['attributes']
+                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
                     ).slice(0,5);
+
                 }
+                this.init=false;
             })
             .catch((error) => {
+
                 console.log(error);
+                this.init=false;
             });
         }
 
         else if(this.selectedOption === '3'){
-            const params ={'UBIGEO':this.ubigeo, 'NOM_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz,'LOT_URB':this.searchForm?.lt};
+
+            const params ={'UBIGEO':this.ubigeo, 'TIPO_UU': this.searchForm?.tipouu,'NOM_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz,'LOT_URB':this.searchForm?.lt};
             where=CommonUtils.generateWhereArgis(params);
             this._cfLoteService
             .getList(where,this.limit)
@@ -215,14 +231,16 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 throw new Error('Something went wrong');
             })
             .then((responseJson) => {
+                /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===this.searchForm?.tipouu).shortName;*/
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
-                        (f: any) => f['attributes']
-                    ).slice(0,5);
+                        (f: any) => ({...f['attributes'],'NOM_TIPO_UU': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']).shortName })).slice(0,5);
                 }
+                this.init=false;
             })
             .catch((error) => {
                 console.log(error);
+                this.init=false;
             });
         }
 
@@ -232,12 +250,21 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     onChangePr(value: any): void {
         this.searchForm.pr = value;
     }
-    onSelectionChangeVia(value): void {
-        this.searchForm.cod = value;
+    onSelectionChangeVia(value, data): void {
+        console.log('data>>',data);
+        this.searchForm.tipovia = value;
+        this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
     }
 
     onChangeVia(value): void {
         this.searchForm.via = value;
+    }
+
+    onSelectionChangeUU(value): void {
+        this.searchForm.tipouu = value;
+        /*this.searchForm.tipovia = value;*/
+        this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;
+        //this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
     }
 
     onChangeDoor(value): void {

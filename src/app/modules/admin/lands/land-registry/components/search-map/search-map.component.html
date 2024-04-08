@@ -34,7 +34,7 @@
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Tipo de Via</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <mat-select required placeholder="Via"  (selectionChange)=onSelectionChangeVia($event.value)>
+                        <mat-select required placeholder="Via"  (selectionChange)=onSelectionChangeVia($event.value,$event)>
                             <!--<mat-option value="option.cod"
                                 *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>-->
                                 <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
@@ -58,6 +58,18 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="3">
+
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
+                        <mat-label>Tipo de Habilitacion</mat-label>
+                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <mat-select required placeholder="Escoga tipo"  (selectionChange)=onSelectionChangeUU($event.value)>
+                            <!--<mat-option value="option.cod"
+                                *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>-->
+                                <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
+                        </mat-select>
+
+
+                    </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Hab. urbana</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
@@ -96,7 +108,22 @@
 
                 <ng-container *ngSwitchCase="2">
                     <div class="results" *ngFor="let r of results">
-                        <div >  {{r?.COD_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}}
+                        <div > {{r?.NOM_TIPO_VIA}}  {{r?.NOM_VIA}} {{r?.NUM_MUN}}
+
+                            <button mat-icon-button class="mat-primary" type="button"
+                            (click)="onGo(r)"
+                            matTooltip="it">
+                            <mat-icon [svgIcon]="'heroicons_solid:eye'"  style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+
+                <ng-container *ngSwitchCase="3">
+                    <div class="results" *ngFor="let r of results">
+                        <div >  {{r?.NOM_TIPO_UU}} {{ r?.NOM_UU }} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:''  }} {{ r?.LOT_URB? 'Lt.'+r?.LOT_URB:''}}
 
                             <button mat-icon-button class="mat-primary" type="button"
                             (click)="onGo(r)"

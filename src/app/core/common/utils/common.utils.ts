@@ -35,7 +35,7 @@ export class CommonUtils {
             if (!(params[key] === null || params[key] === undefined || params[key] === '')) {
                 //delete rawValue[key];
 
-                const data = typeof params[key] === 'string' ? `like '%${params[key].toUpperCase()}%'`: `= ${params[key]}`;
+                const data = typeof params[key] === 'string' ? `like '%${params[key].toUpperCase().trim()}%'`: `= ${params[key]}`;
                 where = i>0? `${where} AND ${key}  ${data}`:`${key}  ${data}`;
                 i =i +1;
           }
