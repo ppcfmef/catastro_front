@@ -27,4 +27,19 @@ export class CommonUtils {
         });
         return rawValue;
     }
+
+    static generateWhereArgis(params): string {
+        let where ='';
+        let i: number =0;
+        Object.keys(params).forEach((key) => {
+            if (!(params[key] === null || params[key] === undefined || params[key] === '')) {
+                //delete rawValue[key];
+
+                const data = typeof params[key] === 'string' ? `like '%${params[key].toUpperCase().trim()}%'`: `= ${params[key]}`;
+                where = i>0? `${where} AND ${key}  ${data}`:`${key}  ${data}`;
+                i =i +1;
+          }
+        });
+        return where;
+    }
 }

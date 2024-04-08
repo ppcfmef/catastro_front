@@ -26,51 +26,126 @@
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Partida regitral</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: P01247899" formControlName="pr"/>
+                        <input matInput required placeholder="Ejem: P01247899" (change)="onChangePr($event.target.value)" />
                     </mat-form-field>
                 </ng-container>
-        
+
                 <ng-container *ngSwitchCase="2">
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Tipo de Via</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <mat-select required placeholder="Via" formControlName="via">
-                            <mat-option value="option.cod"
-                                *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>
+                        <mat-select required placeholder="Via"  (selectionChange)=onSelectionChangeVia($event.value,$event)>
+                            <!--<mat-option value="option.cod"
+                                *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>-->
+                                <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
                         </mat-select>
+
+                        <!--<mat-select formControlName="streetType" [disabled]="!landActive">
+                            <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
+                        </mat-select>
+                    -->
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Dirección</mat-label>
+                        <mat-label>Via</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: Cusco" formControlName="address"/>
+                        <input matInput required placeholder="Ejem: Cusco" formControlName="via" (change)="onChangeVia($event.target.value)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Nro de puerta</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput  placeholder="Ejem: 758" formControlName="door"/>
+                        <input matInput  placeholder="Ejem: 758" formControlName="door" (change)="onChangeDoor($event.target.value)"/>
                     </mat-form-field>
                 </ng-container>
 
                 <ng-container *ngSwitchCase="3">
+
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
+                        <mat-label>Tipo de Habilitacion</mat-label>
+                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <mat-select required placeholder="Escoga tipo"  (selectionChange)=onSelectionChangeUU($event.value)>
+                            <!--<mat-option value="option.cod"
+                                *ngFor="let option of options, trackBy: trackByFn">{{option.option}}</mat-option>-->
+                                <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
+                        </mat-select>
+
+
+                    </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Hab. urbana</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: Hab. urbana Las Rosas " formControlName="habUrb"/>
+                        <input matInput required placeholder="Ejem: Hab. urbana Las Rosas " formControlName="habUrb" (change)="onChangehabUrb($event.target.value)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Mz</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: 04" formControlName="mz"/>
+                        <input matInput required placeholder="Ejem: 04" formControlName="mz" (change)="onChangeMz($event.target.value)" />
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
                         <mat-label>Lt</mat-label>
                         <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: 12" formControlName="lt"/>
+                        <input matInput required placeholder="Ejem: 12" formControlName="lt" (change)="onChangeLt($event.target.value)"/>
                     </mat-form-field>
-                </ng-container> 
+                </ng-container>
             </ng-container>
 
-            <button mat-button>Buscar</button>
+            <button mat-button type="button" class="primary" (click)="onSearch()">Buscar</button>
+            <ng-container *ngIf="this.results && this.results.length>0;else  noResults" [ngSwitch]="selectedOption" >
+
+                <ng-container *ngSwitchCase="1">
+
+                    <div *ngFor="let r of results">
+                        <div>  {{r.PARTIDA}}
+
+                            <button mat-icon-button class="mat-primary" type="button"
+                            (click)="onGo(r)"
+                            matTooltip="it">
+                            <mat-icon [svgIcon]="'heroicons_solid:eye'"  style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="2">
+                    <div class="results" *ngFor="let r of results">
+                        <div > {{r?.NOM_TIPO_VIA}}  {{r?.NOM_VIA}} {{r?.NUM_MUN}}
+
+                            <button mat-icon-button class="mat-primary" type="button"
+                            (click)="onGo(r)"
+                            matTooltip="it">
+                            <mat-icon [svgIcon]="'heroicons_solid:eye'"  style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+
+                <ng-container *ngSwitchCase="3">
+                    <div class="results" *ngFor="let r of results">
+                        <div >  {{r?.NOM_TIPO_UU}} {{ r?.NOM_UU }} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:''  }} {{ r?.LOT_URB? 'Lt.'+r?.LOT_URB:''}}
+
+                            <button mat-icon-button class="mat-primary" type="button"
+                            (click)="onGo(r)"
+                            matTooltip="it">
+                            <mat-icon [svgIcon]="'heroicons_solid:eye'"  style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+
+
+            </ng-container>
+            <ng-template #noResults>
+
+                <div *ngIf=" !(init) && results && results?.length===0"  >No hay Resultados</div>
+
+            </ng-template>
+
         </form>
+
+
     </div>
 </ng-template>

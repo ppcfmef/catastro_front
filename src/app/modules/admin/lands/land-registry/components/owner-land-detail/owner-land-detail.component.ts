@@ -10,7 +10,7 @@ import { LandOwnerModel } from '../../models/land-owner.model';
 export class OwnerLandDetailComponent implements OnInit, OnChanges {
   @Input() landOwnerIn: LandOwner;
   // @Output() formEdit = new EventEmitter<boolean>();
-  landOwner = new LandOwnerModel();
+  @Input()landOwner = new LandOwnerModel();
   showAddress = false;
   typeDocs = [
     {val: '01', name:'DNI'},

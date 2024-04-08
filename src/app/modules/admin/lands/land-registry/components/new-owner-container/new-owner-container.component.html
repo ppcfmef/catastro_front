@@ -1,8 +1,8 @@
 <section class="container">
     <article class="flex">
         <section class="input-btn-icon mr-3">
-            <input type="search" placeholder="Codigo de contribuyente" [formControl]="search">
-            <button (click)="searchOwner()">Buscar
+            <input type="search" placeholder="Codigo de contribuyente" [formControl]="search" (keyup.enter)="searchOwner()" >
+            <button (click)="searchOwner()" >Buscar
                 <mat-icon svgIcon="heroicons_outline:search">
                 </mat-icon>
             </button>
@@ -19,13 +19,14 @@
             <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
         </button>
         </ng-container>
-   
+
     </article>
-    
+
     <ng-container [ngSwitch]="showFormEdit">
+
         <app-owner-land-detail
             *ngSwitchCase="false"
-            [landOwnerIn]="landOwner"
+            [landOwner]="landOwner"
         >
         </app-owner-land-detail>
 
