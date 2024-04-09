@@ -1,2 +1,15 @@
 @import 'styles/mixins';
 @include box-shadow-z1;
+
+.results{
+  font-size: '7px'
+}
+
+
+input::placeholder {
+  font-size: 12px !important;
+}
+
+mat-label {
+  font-size: 13px !important;
+}

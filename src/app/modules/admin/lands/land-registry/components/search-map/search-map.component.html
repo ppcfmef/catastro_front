@@ -1,71 +1,151 @@
 <!-- search toggle -->
-<div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm box-shadow-z1" (click)="openPanel()"
-    #searchOrigin>
-    <mat-icon svgIcon="mat_outline:search"></mat-icon>
-    <input matInput placeholder="Buscar predio" class="w-full ml-2" readonly>
-</div>
-
+<ng-container>
+    <div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm box-shadow-z1"
+        ([ngModel])="showSelected" (click)="openPanel()" #searchOrigin>
+        <mat-icon svgIcon="mat_outline:search"></mat-icon>
+        <input matInput placeholder="Buscar predio" class="w-full ml-2" readonly [(ngModel)]="showSelected">
+    </div>
+</ng-container>
 <!-- seacrch panel -->
 <ng-template #searchPanel>
-    <div class="flex w-[240px] bg-card py-4 px-2 rounded-sm shadow-2xl ">
-        <form [formGroup]="searchForm" class=" px-2 w-full">
-            <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                <mat-label>Buscar por:</mat-label>
-                <mat-icon class="mr-2" svgIcon="heroicons_outline:adjustments-horizontal"></mat-icon>
-                <mat-select required placeholder="Opciones" (selectionChange)=onSelectionChange($event.value)>
-                    <mat-option
-                        *ngFor="let option of options, trackBy: trackByFn" value="{{option.cod}}">{{option.option}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+    <div class="flex flex-col bg-card py-3 shadow-md h-max w-full">
+        <div class="flex gap-10 px-4 ">
+            <div *ngFor="let option of options" (click)="onOpenOption(option)"
+                class="flex justify-center items-center w-max text-center">
+                <span class="text-sm">{{option.option}}</span>
+            </div>
+        </div>
 
-            <ng-container [ngSwitch]="selectedOption">
-                <ng-container *ngSwitchCase="1">
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Partida regitral</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: P01247899" formControlName="pr"/>
-                    </mat-form-field>
-                </ng-container>
-        
-                <ng-container *ngSwitchCase="2">
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Tipo de vía</mat-label>
-                        <mat-icon svgIcon="mat_solid:merge_type"></mat-icon>
-                        <mat-select required placeholder="Via" formControlName="via">
-                            <mat-option value="{{option.id}}"
-                                *ngFor="let option of typesVia, trackBy: trackByFn">{{option.type}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Dirección</mat-label>
-                        <mat-icon svgIcon="mat_outline:location_on"></mat-icon>
-                        <input matInput required placeholder="Ejem: Cusco" formControlName="address"/>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Nro de puerta</mat-label>
-                        <mat-icon svgIcon="mat_outline:door_front"></mat-icon>
-                        <input type="number" matInput  placeholder="Ejem: 758" formControlName="door"/>
-                    </mat-form-field>
-                </ng-container>
+        <mat-divider class="my-3 border-t-4"></mat-divider>
 
-                <ng-container *ngSwitchCase="3">
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Habilitación urbana</mat-label>
-                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                        <input matInput required placeholder="Ejem: Las Rosas " formControlName="habUrb"/>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Mz</mat-label>
-                        <input matInput required placeholder="Ejem: 04" formControlName="mz"/>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-full">
-                        <mat-label>Lt</mat-label>
-                        <input matInput type="number" required placeholder="Ejem: 12" formControlName="lt"/>
-                    </mat-form-field>
-                </ng-container> 
+        <ng-container [ngSwitch]="selectedOption">
+            <ng-container *ngSwitchCase="'1'">
+                <mat-form-field appearance="fill" class="w-full px-4">
+                    <mat-label>Ingresar Partida Regitral</mat-label>
+                    <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                    <input matInput placeholder="Ejem: P01247899" [(ngModel)]="searchForm.pr" name="pr"
+                        (change)="onChangePr($event.target.value)" />
+                </mat-form-field>
             </ng-container>
 
-            <button mat-button class="w-full bg-[#009fdf] text-white rounded-md">Buscar</button>
-        </form>
+            <ng-container *ngSwitchCase="'2'">
+                <div class="flex px-4 gap-2">
+                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
+                        <mat-label>Ingresar Dirección</mat-label>
+                        <input matInput placeholder="Ejem: Cusco" (change)="onChangeVia($event.target.value)">
+                        <mat-select class="w-12" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
+                            matPrefix>
+                            <mat-option class="truncate" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
+                                {{domain.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-3/12">
+                        <mat-label>Nro.</mat-label>
+                        <input matInput placeholder="75" 
+                            (change)="onChangeDoor($event.target.value)" />
+                    </mat-form-field>
+                    
+                </div>
+                
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'3'">
+                <div class="flex px-4 gap-2 flex-wrap">
+                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
+                        <mat-label>Ingresar Habilitacion</mat-label>
+                        <input matInput required placeholder="Ejem: Las Rosas" (change)="onChangeMz($event.target.value)" />
+                        <mat-select class="w-12"
+                             (selectionChange)=onSelectionChangeUU($event.value) 
+                             [value]="'1'"
+                             matPrefix>
+                            <mat-option class="truncate" *ngFor="let domain of masterDomain.uuType" [value]="domain.id">
+                                {{domain.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-2/12">
+                        <mat-label>Mz.</mat-label>
+                        <input matInput placeholder="A" 
+                        (change)="onChangeMz($event.target.value)"/>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-2/12">
+                        <mat-label>Lt.</mat-label>
+                        <input matInput placeholder="5" 
+                        (change)="onChangeLt($event.target.value)" />
+                    </mat-form-field>
+                    
+                </div>
+
+            </ng-container>
+
+            <div class="flex justify-end items-ce">
+                <button mat-button type="button" class="primary" (click)="onClean()">Limpiar</button>
+                <button mat-button type="button" class="primary" (click)="onSearch()">Buscar</button>
+            </div>
+            <ng-container *ngIf="this.results && this.results.length>0;else  noResults" [ngSwitch]="selectedOption">
+
+                <ng-container *ngSwitchCase="1">
+                    <div fuseScrollbar
+                        [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
+                        class="flex flex-col h-80">
+                        <ng-container *ngFor="let r of results">
+                            <div class="flex flex-col items-start justify-center px-4 py-2 max-w-90"> 
+                                <span>{{r.PARTIDA}}</span>
+                                <ng-container *ngIf="r?.DIR_URB; else noUrb">
+                                    <span 
+                                    [matTooltip]="r?.DIR_URB"
+                                    class="truncate w-72">{{r?.DIR_URB | titlecase}}</span>
+                                </ng-container>
+                                <ng-template #noUrb>
+                                    <span class="truncate w-72">{{r?.NOM_UU | titlecase }} {{ r?.MZN_URB | titlecase }} {{ r?.LOT_URB | titlecase }}</span>
+                                </ng-template>
+                                <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="ver">
+                                    <mat-icon [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+           
+
+                    </div>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="2">
+                    <div class="results" *ngFor="let r of results">
+                        <div> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}}
+
+                            <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="it">
+                                <mat-icon [svgIcon]="'heroicons_solid:eye'"
+                                    style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+
+                <ng-container *ngSwitchCase="3">
+                    <div class="results" *ngFor="let r of results">
+                        <div> {{r?.NOM_TIPO_UU}} {{ r?.NOM_UU }} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:'' }} {{ r?.LOT_URB?
+                            'Lt.'+r?.LOT_URB:''}}
+
+                            <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="it">
+                                <mat-icon [svgIcon]="'heroicons_solid:eye'"
+                                    style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </ng-container>
+
+
+
+            </ng-container>
+            <ng-template #noResults>
+
+                <div *ngIf=" !(init) && results && results?.length===0">No hay Resultados</div>
+
+            </ng-template>
+        </ng-container>
     </div>
 </ng-template>

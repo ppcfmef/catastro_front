@@ -19,16 +19,17 @@
 </div>
 <!--
 <div id="popupDiv"   [ngStyle]="{'display': displayPopupDiv}">
-  
+
     <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>
- 
+
 </div>
 -->
 </div>
 
 <div class="search">
-  <search-map></search-map>
+  <search-map (eventOnGo) = "eventOnGo($event)" ></search-map>
 </div>
+
 
 
 <link

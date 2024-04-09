@@ -40,6 +40,7 @@ import { SearchPlaceholderComponent } from './components/search-placeholder/sear
 import { MapPlaceholderComponent } from './components/map-placeholder/map-placeholder.component';
 import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-land-owner.component';
 import { SearchMapComponent } from './components/search-map/searchMap.component';
+import { SearchModule } from 'app/layout/common/search/search.module';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { SearchMapComponent } from './components/search-map/searchMap.component'
     MapsModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    SearchMapComponent
+    SearchMapComponent,
+    SearchModule
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: []

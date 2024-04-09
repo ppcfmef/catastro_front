@@ -140,8 +140,25 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         height: '50px',
         yoffset: '15px',
     };
+    simpleMarkerSearch = {
+        type: 'simple-marker',
+        style: 'square',
+        size: '10px', // pixels
+        color: [0, 255, 0, 0.5],
+
+        outline: {
+            color: [0, 255, 0], // White
+            width: 1.5,
+        },
+    };
 
 
+    /*simpleMarkerSearch = {
+        type: 'web-style',
+        name: 'push-pin-1',
+        styleName: 'Esri2DPointSymbolsStyle',
+        width: '15px'
+    };*/
     /*simpleMarkerSymbolUndefined = {
         type: 'web-style',
         name: 'tear-pin-2',
@@ -1447,23 +1464,25 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         },
                     ];
 
-                    const searchWidget = new Search({
-                        view: this.view,
-                        includeDefaultSources: false,
-                        sources:sources,
-                        popupEnabled:false
-                    });
 
-                    searchWidget.on('select-result', (event) => {
-                        this.view.zoom = 19;
-                        console.log('event>>',event);
-                    });
+                    //remove widget search 
+                    // const searchWidget = new Search({
+                    //     view: this.view,
+                    //     includeDefaultSources: false,
+                    //     sources:sources,
+                    //     popupEnabled:false
+                    // });
+
+                    // searchWidget.on('select-result', (event) => {
+                    //     this.view.zoom = 19;
+                    //     console.log('event>>',event);
+                    // });
 
 
-                    this.view.ui.add(searchWidget, {
-                        position: 'top-left',
-                        index: 1,
-                    });
+                    // this.view.ui.add(searchWidget, {
+                    //     position: 'top-left',
+                    //     index: 1,
+                    // });
 
                 }
 
@@ -2248,6 +2267,23 @@ async saveNewPointGestionPredio(): Promise<void>{
             feature = results.features[0];
         }
         return feature;
+    }
+
+    eventOnGo(r: any): void{
+        const x=r.COORD_X;
+        const y = r.COORD_Y;
+
+        if (this.view) {
+            this.view.center = [x, y];
+            this.view.zoom = 19;
+            this.addPoint(
+                y,
+                x,
+                this.simpleMarkerSearch,
+            );
+
+        }
+
     }
 }
 
