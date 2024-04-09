@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { ApplicationUI } from '../../interfaces/application';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 
 @Component({
   selector: 'app-maintenance-reassignment-container',
@@ -31,7 +32,8 @@ export class MaintenanceReassignmentContainerComponent implements OnInit,OnChang
 private applicationMaintenaceService: ApplicationMaintenanceService,
 private _router: Router,
 protected _messageProviderService: MessageProviderService,
-private _fuseSplashScreenService: FuseSplashScreenService
+private _fuseSplashScreenService: FuseSplashScreenService,
+private confirmationService: CustomConfirmationService,
     ) {
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))
@@ -93,9 +95,7 @@ private _fuseSplashScreenService: FuseSplashScreenService
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-
                     m.afterClosed().subscribe( r =>{
-                     
                         this.disabled =false;
                         this._router.navigate(['/land/maintenance']);
                     });
@@ -103,7 +103,14 @@ private _fuseSplashScreenService: FuseSplashScreenService
                 }
             });
         }
-    });
+    },(err)=>{
+        this._fuseSplashScreenService.hide();
+        console.log('error',err);
+        this.confirmationService.error(
+          'Registro de predio',
+           `Error al registrar el predio, ${err.error.message}`
+        );
+      });
 
   }
 }

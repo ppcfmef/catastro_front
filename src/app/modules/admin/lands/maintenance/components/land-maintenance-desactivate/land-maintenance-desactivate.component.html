@@ -9,7 +9,7 @@
         <div class="flex flex-row "> <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support></div>
     <div mat-dialog-actions  class="flex flex-row justify-between space-x-4" >
 
-        <button mat-raised-button  color="primary" (click)="save()"  class="bg-success"   ><mat-icon svgIcon="heroicons_outline:trash"  ></mat-icon>Confirmar</button>
+        <button mat-raised-button  color="primary" (click)="save()"  class="bg-success" [disabled]="disabled"  ><mat-icon svgIcon="heroicons_outline:check"  ></mat-icon>Confirmar</button>
         <button mat-raised-button color="primary" class ="bg-danger"  (click)="close()"><mat-icon svgIcon="heroicons_outline:x"  ></mat-icon> Cancelar</button>
     </div>
 </div>

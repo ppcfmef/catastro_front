@@ -101,7 +101,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [0, 1, 2,101],
+    children: [ 1, 2,101,0],
 },
 
         {
@@ -187,14 +187,15 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             projection: null,
             visible:true,
         },
+        /*https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/TEMATICOS_CF/MapServer/0*/
 
 
-        {
+       /* {
             title: 'Lotes Zona',
             id: 0,
-            idServer: 1,
+            idServer: 5,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/TEMATICOS_CF/MapServer/0',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -203,8 +204,35 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: null,
             visible:true,
+            renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+                    color: [0, 255, 255, 0.5],
+                    style: 'solid',
+                    outline: {
+                        // autocasts as new SimpleLineSymbol()
+                        color: [0, 255, 255],
+                        width: 1.5,
+                    },
+                },
+            },
+        },*/
+        {
+            title: 'Lotes Zona',
+            id: 0,
+            idServer: 1,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            order: 1,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible:true,
         },
-
         {
             title: 'Lotes Poligono Zona',
             id: 1,
@@ -219,6 +247,78 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: null,
             visible:true,
+            renderer: {
+                type: 'class-breaks',  // autocasts as new UniqueValueRenderer()
+                field: 'ESTADO_INS',
+
+                classBreakInfos: [
+                    {
+                    minValue: 0,  // 0 acres
+                    maxValue: 0,  // 200,000 acres
+                    symbol:   {
+                        type: 'simple-fill',
+                        color: [205, 102, 102, 0.5],
+                        style: 'solid',
+                        outline: {
+                            color: [205, 102, 102, 0.8],
+                            width: 1,
+                        },
+                    },  // will be assigned sym1
+
+                    }, {
+                    minValue: 1,  // 200,001 acres
+                    maxValue: 162,  // 500,000 acres
+                    symbol:   {
+                        type: 'simple-fill',
+                        color: [68, 101, 137, 0.5],
+                        style: 'solid',
+                        outline: {
+                            color: [68, 101, 137, 0.8],
+                            width: 1,
+                        },
+                    },
+                    },
+                ]
+                //type: 'simple',
+                /*symbol: {
+                    type: 'simple-fill',
+                    color: [0, 255, 255, 0],
+                    style: 'solid',
+                    outline: {
+                        color: [0, 255, 255],
+                        width: 1.5,
+                    },
+                },*/
+            },
+            /*labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    yoffset: 5,
+                    font: {
+                        // autocast as new Font()
+                        family: 'Playfair Display',
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.ID_MZN_U',
+                },
+            },*/
+            /*renderer: {
+                type: 'simple',
+                symbol: {
+                    type: 'simple-fill',
+                    color: [0, 255, 255, 0],
+                    style: 'solid',
+                    outline: {
+                        color: [0, 255, 255],
+                        width: 1.5,
+                    },
+                },
+            },*/
         },
 
         {
@@ -805,7 +905,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     outFields: ['*'],
                     visible:l.visible
                 };
-
+                if(l['renderer']){
+                    console.log('renderer>>',l);
+                    options['renderer'] = l['renderer'];
+                }
                 if (l.title.includes('Via')) {
                     options['labelingInfo'] = [labelClassVias];
                 }
