@@ -95,7 +95,7 @@ private confirmationService: CustomConfirmationService,
                     const m=this._messageProviderService.showAlert(
                         'Solicitud registrada'
                     );
-                    m.afterClosed().subscribe( r =>{
+                    m.afterClosed().subscribe(r=>{
                         this.disabled =false;
                         this._router.navigate(['/land/maintenance']);
                     });
