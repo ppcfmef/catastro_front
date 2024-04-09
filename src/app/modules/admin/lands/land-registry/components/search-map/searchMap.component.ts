@@ -1,21 +1,8 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    NgModule,
-    OnDestroy,
-    OnInit,
-    Output,
-    TemplateRef,
-    ViewChild,
-    ViewContainerRef,
-} from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgModule, OnDestroy, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -28,16 +15,28 @@ import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { UserService } from 'app/core/user/user.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { FuseValidators } from '@fuse/validators';
-
+import { MatButtonModule } from '@angular/material/button';
+import {MatTabsModule} from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 @Component({
     selector: 'search-map',
     standalone: true,
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         MatIconModule,
         MatFormFieldModule,
+        MatButtonModule,
         MatInputModule,
         MatSelectModule,
+        MatTabsModule,
+        MatTooltipModule,
+        FormsModule,
+        MatDividerModule,
+        MatTooltipModule,
+        FuseScrollbarModule 
     ],
     templateUrl: './search-map.component.html',
     styleUrls: ['./search-map.component.scss'],
@@ -49,15 +48,20 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     @ViewChild('searchPanel') private _messagesPanel: TemplateRef<any>;
     ubigeo: string;
     masterDomain: MasterDomain;
-    searchForm: any;
-    options = [];
-    selectedOption: string | null = null;
     results: any[]= null;
     //pr:any;
     limit=10;
     init=true;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    searchForm: any;
+    selectedOption: string | null = null;
+    showSelected: null | string =null; 
+
+    //options 
+    options: any[] | null;
+    //panel  
+    opened: boolean = false;
 
     constructor(
         private landRegistryService: LandRegistryService,
@@ -79,10 +83,28 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         });
 
+        this.options = [
+            {
+                cod: '2',
+                option: 'Dirección',
+                icon:"mat_solid:my_location"
+            },
+            {
+                cod: '1',
+                option: 'Partida Registral',
+                icon:"heroicons_solid:document-magnifying-glass"
+            },
+
+            {
+                cod: '3',
+                option: 'Unidad urbana',
+                icon:"mat_solid:other_houses"
+            },
+        ];
+
     }
     ngOnInit(): void {
-
-
+        this.selectedOption = null;
         this.landRegistryService
             .getMasterDomain()
             .pipe(takeUntil(this._unsubscribeAll))
@@ -91,46 +113,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     this.masterDomain = result;
                 console.log('this.masterDomain>>',this.masterDomain);
             });
-
-        this.searchForm = {
-            pr: null,
-            mz: null,
-            lt: null,
-            tipovia: null,
-            door: null,
-            habUrb: null,
-            tipouu:null,
-            address: null,
-            via: null,
-        };
-        /*this.searchForm = new FormGroup({
-            pr: new FormControl(null,Validators.required),
-            mz: new FormControl(),
-            lt: new FormControl(),
-            cod: new FormControl(),
-            door: new FormControl(),
-            habUrb: new FormControl(),
-            address: new FormControl(),
-            via: new FormControl(),
-        });*/
-
-        this.options = [
-            {
-                cod: '1',
-                option: 'Partida Registral',
-            },
-            {
-                cod: '2',
-                option: 'Dirección',
-            },
-            {
-                cod: '3',
-                option: 'Unidad urbana',
-            },
-        ];
+        this.resetForm();
     }
 
     openPanel(): void {
+       
         // Return if the messages panel or its origin is not defined
         if (!this._messagesPanel || !this._searchOrigin) {
             return;
@@ -152,6 +139,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     }
 
     onSearch(): void {
+        console.log(this.selectedOption , 'options');
         //this.searchForm.value
 
         let where = '';
@@ -164,6 +152,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         if (this.selectedOption === '1') {
             //let where = '';
+        
             const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
             where=CommonUtils.generateWhereArgis(params);
             this._cfPredioService
@@ -180,6 +169,8 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                         this.results = responseJson['features'].map(
                             (f: any) => f['attributes']
                         ).slice(0,10);
+
+                        console.log('this.results>>',this.results);
                     }
                     this.init=false;
                 })
@@ -203,6 +194,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             })
             .then((responseJson) => {
 
+                console.log(this.masterDomain, 'domina');
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
                         (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
@@ -284,7 +276,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
     onGo(value: any): void{
         this.eventOnGo.emit(value);
+        console.log('valueselec7',this.selectedOption);
+        this.parsearData(value, this.selectedOption);
+        console.log('valueselec',this.showSelected);
     }
+
 
 
     onSelectionChange(value): void {
@@ -294,6 +290,21 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.results =[];
     }
 
+    parsearData(val, typeSearch){
+        switch(typeSearch) {
+            case '1':
+              this.showSelected = val.PARTIDA
+              break;
+            case '2':
+              console.log("La opción es 2");
+              break;
+            case '3':
+              console.log("La opción es 3");
+              break;
+            default:
+              console.log("Opción no válida");
+          }
+    }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -307,7 +318,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             scrollStrategy: this._overlay.scrollStrategies.block(),
             positionStrategy: this._overlay
                 .position()
-                .flexibleConnectedTo(this._searchOrigin.nativeElement)
+                .flexibleConnectedTo(this._searchOrigin)
                 .withLockedPosition(true)
                 .withPush(true)
                 .withPositions([
@@ -341,6 +352,75 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         // Detach the overlay from the portal on backdrop click
         this._overlayRef.backdropClick().subscribe(() => {
             this._overlayRef.detach();
+            this.resetForm(); 
+            this.results =[];
+            this._changeDetectorRef.markForCheck();
         });
     }
+
+    onTabChange(events) {
+        console.log(this.searchForm.pr, 'this.searchForm.pr')
+        events = events+1
+        this.results =[];
+        this.resetForm();
+        console.log(this.searchForm.pr, 'this.searchForm.pr2')
+        this.selectedOption = events.toString();
+        console.log('events', events);
+
+      }
+
+      //panel 
+      open(): void
+      {
+          // Return if it's already opened
+          if ( this.opened )
+          {
+              return;
+          }
+  
+          // Open the search
+          this.opened = true;
+      }
+  
+      close(): void
+    {
+        // Return if it's already closed
+        if ( !this.opened )
+        {
+            return;
+        }
+
+        // Clear the search input
+        // this.searchControl.setValue('');
+
+        // Close the search
+        this.opened = false;
+    }
+      onClean(){
+        this.resetForm();
+        this.results =[];
+      }
+      resetForm() {
+        this.searchForm = {
+            pr: null,
+            mz: null,
+            lt: null,
+            tipovia: null,
+            door: null,
+            habUrb: null,
+            tipouu:null,
+            address: null,
+            via: null,
+        };
+      }
+
+
+      onOpenOption(data):void{
+        this.results =[];
+        this.resetForm();
+        console.log(this.searchForm.pr, 'this.searchForm.pr2')
+        this.selectedOption = data.cod;
+        console.log('selected',  this.selectedOption);
+
+      }
 }

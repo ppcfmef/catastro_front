@@ -1464,23 +1464,25 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         },
                     ];
 
-                    const searchWidget = new Search({
-                        view: this.view,
-                        includeDefaultSources: false,
-                        sources:sources,
-                        popupEnabled:false
-                    });
 
-                    searchWidget.on('select-result', (event) => {
-                        this.view.zoom = 19;
-                        console.log('event>>',event);
-                    });
+                    //remove widget search 
+                    // const searchWidget = new Search({
+                    //     view: this.view,
+                    //     includeDefaultSources: false,
+                    //     sources:sources,
+                    //     popupEnabled:false
+                    // });
+
+                    // searchWidget.on('select-result', (event) => {
+                    //     this.view.zoom = 19;
+                    //     console.log('event>>',event);
+                    // });
 
 
-                    this.view.ui.add(searchWidget, {
-                        position: 'top-left',
-                        index: 1,
-                    });
+                    // this.view.ui.add(searchWidget, {
+                    //     position: 'top-left',
+                    //     index: 1,
+                    // });
 
                 }
 

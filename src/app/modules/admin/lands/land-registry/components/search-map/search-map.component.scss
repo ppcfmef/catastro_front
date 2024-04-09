@@ -2,14 +2,14 @@
 @include box-shadow-z1;
 
 .results{
-    font-size: '7px'
+  font-size: '7px'
 }
-.container {
-  display: flex;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
 
+
+input::placeholder {
+  font-size: 12px !important;
+}
+
+mat-label {
+  font-size: 13px !important;
 }
