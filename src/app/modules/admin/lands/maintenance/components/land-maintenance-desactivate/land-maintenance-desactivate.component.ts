@@ -12,6 +12,7 @@ export class LandMaintenanceDesactivateComponent implements OnInit {
 land: LandUI;
 fileName: string;
 file: any;
+disabled = true;
 //fileEventEmit: EventEmitter<any>;
   constructor( public dialogRef: MatDialogRef<LandMaintenanceDesactivateComponent>,
      @Inject(MAT_DIALOG_DATA) public data: any,) {
@@ -32,6 +33,7 @@ file: any;
     this.dialogRef.close({option: false});
   }
   fileUpload(file: any): void{
+    this.disabled = false;
 
     this.file = file;
 

@@ -128,6 +128,7 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                                     );
 
                                     m.afterClosed().subscribe(r => {
+                                        //this._fuseSplashScreenService.hide();
                                         this._router.navigate(['/land/maintenance']);
                                     });
 
@@ -138,13 +139,19 @@ export class ListLandMaintenanceTableComponent implements OnInit {
 
                         else {
                             if (res) {
-
+                                this._fuseSplashScreenService.hide();
                                 this._messageProviderService.showAlert(
                                     'Solicitud registrada'
                                 );
                                 this._router.navigate(['/land/maintenance']);
                             }
                         }
+
+                    },(error)=>{
+                        this._fuseSplashScreenService.hide();
+                        this._messageProviderService.showAlert(
+                            'Error al registrar'
+                        );
 
                     });
 
