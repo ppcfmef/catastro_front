@@ -123,7 +123,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             this.formLand = this.fb.group({
                 cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
-                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required]],
+                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
                 resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
@@ -147,7 +147,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             this.formLand = this.fb.group({
                 cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
-                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [Validators.required,this.cpmValidator]],
+                cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, [this.cpmValidator]],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
                 resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],

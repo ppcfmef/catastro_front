@@ -33,13 +33,22 @@
                     <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
                         <mat-label>Ingresar Dirección</mat-label>
                         <input matInput placeholder="Ejem: Cusco" (change)="onChangeVia($event.target.value)">
+         
+
+
                         <mat-select class="w-12" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
                             matPrefix>
                             <mat-option class="truncate" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
                                 {{domain.name}}
                             </mat-option>
                         </mat-select>
+
+
+                                       
+            
                     </mat-form-field>
+
+                    
                     <mat-form-field appearance="fill" class="fuse-mat-dense w-3/12">
                         <mat-label>Nro.</mat-label>
                         <input matInput placeholder="75" 
@@ -54,7 +63,7 @@
                 <div class="flex px-4 gap-2 flex-wrap">
                     <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
                         <mat-label>Ingresar Habilitacion</mat-label>
-                        <input matInput required placeholder="Ejem: Las Rosas" (change)="onChangeMz($event.target.value)" />
+                        <input matInput required placeholder="Ejem: Las Rosas" (change)="onChangehabUrb($event.target.value)" />
                         <mat-select class="w-12"
                              (selectionChange)=onSelectionChangeUU($event.value) 
                              [value]="'1'"
@@ -111,6 +120,10 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="2">
+
+
+             
+
                     <div class="results" *ngFor="let r of results">
                         <div> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}}
 
@@ -121,6 +134,17 @@
                         </div>
 
                     </div>
+
+                    <!--<div *ngIf ="" class="results" *ngFor="let r of results">
+                        <div> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}}
+
+                            <button mat-icon-button class="mat-primary" type="button" (click)="onGoVia(r)" matTooltip="it">
+                                <mat-icon [svgIcon]="'heroicons_solid:eye'"
+                                    style="color: #0090f8 !important;"></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>-->
                 </ng-container>
 
 

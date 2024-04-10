@@ -20,6 +20,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { CFViaService } from '../../services/cfvia.service';
 @Component({
     selector: 'search-map',
     standalone: true,
@@ -52,17 +53,18 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     //pr:any;
     limit=10;
     init=true;
-    private _overlayRef: OverlayRef;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     searchForm: any;
     selectedOption: string | null = null;
     showSelected: null | string =null; 
 
     //options 
     options: any[] | null;
-    //panel  
+    //panel 
     opened: boolean = false;
-
+    vias : any[] | null;
+    private _overlayRef: OverlayRef;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     constructor(
         private landRegistryService: LandRegistryService,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -71,6 +73,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         private _cfLoteService: CFLoteService,
         private _cfPredioService: CFPredioService,
         private _userService: UserService,
+        private _cfViaService: CFViaService,
 
     ) {
         this._userService.user$
@@ -152,9 +155,12 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         if (this.selectedOption === '1') {
             //let where = '';
-        
+
             const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
             where=CommonUtils.generateWhereArgis(params);
+
+
+
             this._cfPredioService
                 .getList(where,this.limit)
                 .then((response) => {
@@ -184,32 +190,82 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
             const params ={'UBIGEO':this.ubigeo, 'TIP_VIA':this.searchForm?.cod, 'NOM_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
             where=CommonUtils.generateWhereArgis(params);
-            this._cfLoteService
-            .getList(where,this.limit)
-            .then((response) => {
-                if (response) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then((responseJson) => {
+            if(this.searchForm?.door){
+                this._cfLoteService
+                .getList(where,this.limit)
+                .then((response) => {
+                    if (response) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong');
+                })
+                .then((responseJson) => {
+    
+                    //console.log(this.masterDomain, 'domina');
+                    if (responseJson['features'] && responseJson['features']) {
+                        
+                        this.results = responseJson['features'].map(
+                            (f: any) => {
+                                const codStreet =this.masterDomain.codStreet.find(s=> s.id ===f['attributes']['TIPO_UU']);
+                                const shortName= codStreet?.shortName;
+                                return  {...f['attributes'],'NOM_TIPO_VIA': shortName };
+                            }
+                               
+                                
+                                );
+    
+                    }
+                    this.init=false;
+                })
+                .catch((error) => {
+    
+                    console.log(error);
+                    this.init=false;
+                });
+            }
 
-                console.log(this.masterDomain, 'domina');
-                if (responseJson['features'] && responseJson['features']) {
-                    this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
+            else if (this.searchForm?.via){
+                this._cfViaService
+                .getList(where,this.limit,'true')
+                .then((response) => {
+                    if (response) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong');
+                })
+                .then((responseJson) => {
+                    //console.log(this.masterDomain, 'domina');
+                    if (responseJson['features'] && responseJson['features']) {
 
-                }
-                this.init=false;
-            })
-            .catch((error) => {
+                        
+                        this.results = responseJson['features'].map(
+                            (f: any) =>
+                    
+                            {
+                                const codStreet =this.masterDomain.codStreet.find(s=> s.id ===f['attributes']['TIPO_UU']);
+                                const shortName= codStreet?.shortName;
+                                return {...f['attributes'],'NOM_TIPO_VIA': shortName,'geometry': f['geometry']  }
+                            
+                            
+                            }
+                            
+                            
+                            );
 
-                console.log(error);
-                this.init=false;
-            });
+                    }
+                    this.init=false;
+                })
+                .catch((error) => {
+
+                    console.log(error);
+                    this.init=false;
+                });
+            }
+
         }
 
         else if(this.selectedOption === '3'){
+
 
             const params ={'UBIGEO':this.ubigeo, 'TIPO_UU': this.searchForm?.tipouu,'NOM_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz,'LOT_URB':this.searchForm?.lt};
             where=CommonUtils.generateWhereArgis(params);
@@ -225,7 +281,14 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===this.searchForm?.tipouu).shortName;*/
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_UU': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']).shortName })).slice(0,5);
+                        (f: any) => {
+                            const uuType =this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']);
+                            const shortName= uuType?.shortName;
+
+                            return {...f['attributes'],'NOM_TIPO_UU':shortName  };
+
+                        }
+                            ).slice(0,5);
                 }
                 this.init=false;
             })
@@ -244,6 +307,13 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     onSelectionChangeVia(value, data): void {
         console.log('data>>',data);
         this.searchForm.tipovia = value;
+        this.searchForm.codvia = null;
+
+        /*const params ={'UBIGEO':this.ubigeo, 'TIP_VIA':this.searchForm?.tipovia};
+        const where=CommonUtils.generateWhereArgis(params);
+        this._cfViaService.getList(where,10000,'true').subscribe(res=>{
+            
+        });*/
         /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
     }
 
@@ -275,13 +345,24 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     }
 
     onGo(value: any): void{
-        this.eventOnGo.emit(value);
+        console.log('value>>',value);
+        console.log(value?.geometry);
+        if (value?.geometry){
+            const geo = value?.geometry;
+            const extent = geo.getExtent();
+            console.log('extent>>',extent);
+        }
+        /*this.eventOnGo.emit(value);*/
         console.log('valueselec7',this.selectedOption);
         this.parsearData(value, this.selectedOption);
         console.log('valueselec',this.showSelected);
     }
 
+    onGoVia(value: any): void{
 
+        /*this.eventOnGo.emit(value);*/
+        this.parsearData(value, this.selectedOption);
+    }
 
     onSelectionChange(value): void {
         console.log(value, 'value');
