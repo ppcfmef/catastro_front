@@ -26,8 +26,11 @@
                 <mat-form-field appearance="fill" class="w-full px-4">
                     <mat-label>Ingresar Partida Regitral</mat-label>
                     <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                    <input matInput placeholder="Ejem: P01247899" [(ngModel)]="searchForm.pr" name="pr"
-                        (change)="onChangePr($event.target.value)" />
+                    <input 
+                        matInput placeholder="Ejem: P01247899"
+                        [(ngModel)]="searchForm.pr" name="pr"
+                        (change)="onChangePr($event.target.value)"
+                    />
                 </mat-form-field>
             </ng-container>
 
@@ -35,7 +38,18 @@
                 <div class="flex px-4 gap-2">
                     <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
                         <mat-label>Ingresar Dirección</mat-label>
-                        <input matInput placeholder="Ejem: Cusco" (change)="onChangeVia($event.target.value)">
+                        <input 
+                            [formControl]="addressControl"
+                            [matAutocomplete]="auto"
+                            matInput placeholder="Ejem: Cusco" 
+                            (change)="onChangeVia($event.target.value)"
+                        >
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            <mat-option  
+                                *ngFor="let option of filteredOptions | async" [value]="option.id">
+                                {{option.name}}
+                            </mat-option>
+                          </mat-autocomplete>
                         <mat-select class="w-16" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
                             matPrefix>
                             <mat-option class="truncate text-sm" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
