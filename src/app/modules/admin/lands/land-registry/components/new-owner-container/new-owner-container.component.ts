@@ -12,6 +12,7 @@ import { IntegrationService } from 'app/shared/services/integration.service';
 import { SatLandOwner } from 'app/shared/interfaces/integrations.inteface';
 import { LandOwnerModel } from '../../models/land-owner.model';
 import { error } from 'console';
+import { FuseValidators } from '@fuse/validators';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -93,6 +94,9 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   searchOwner(): void {
     const searchText = this.search.value;
+    if(FuseValidators.isEmptyInputValue(searchText)){
+      return;
+    };
     this.searchOwnerbyDocument(searchText);
 
   /*  if(searchText!==''){
@@ -379,6 +383,7 @@ searhSrtm(searchText: any): void{
     console.log('saveForm');
     //if (this.formEdit.valid) {
       this._fuseSplashScreenService.show();
+      this.landOwner.id=null;
       //this.landOwner.setValue(this.formEdit.value);
       this.landRegistryService.saveOwner(this.landOwner)
         .toPromise()
@@ -387,7 +392,7 @@ searhSrtm(searchText: any): void{
             this._fuseSplashScreenService.hide();
             this.landOwner.id=result.id;
             this.landRegistryService.setLandOwner(this.landOwner);
-
+            this.searchOwner();
             /*this.searchOwner();*/
             /*this.emitShowFormEdit(false);*/
             /*this.confirmationService.success(
