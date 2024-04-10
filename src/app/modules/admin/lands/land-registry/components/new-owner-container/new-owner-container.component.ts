@@ -12,6 +12,7 @@ import { IntegrationService } from 'app/shared/services/integration.service';
 import { SatLandOwner } from 'app/shared/interfaces/integrations.inteface';
 import { LandOwnerModel } from '../../models/land-owner.model';
 import { error } from 'console';
+import { FuseValidators } from '@fuse/validators';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -93,6 +94,9 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   searchOwner(): void {
     const searchText = this.search.value;
+    if(FuseValidators.isEmptyInputValue(searchText)){
+      return;
+    };
     this.searchOwnerbyDocument(searchText);
 
   /*  if(searchText!==''){
