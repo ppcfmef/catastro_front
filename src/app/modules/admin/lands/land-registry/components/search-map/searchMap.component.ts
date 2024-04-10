@@ -20,6 +20,9 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/splash-screen';
+
 @Component({
     selector: 'search-map',
     standalone: true,
@@ -36,7 +39,9 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
         FormsModule,
         MatDividerModule,
         MatTooltipModule,
-        FuseScrollbarModule 
+        FuseScrollbarModule,
+        MatAutocompleteModule,
+        FuseSplashScreenModule
     ],
     templateUrl: './search-map.component.html',
     styleUrls: ['./search-map.component.scss'],
@@ -54,10 +59,12 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     init=true;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+   
+
     searchForm: any;
     selectedOption: string | null = null;
     showSelected: null | string =null; 
-
+    changeStyle: string | null = null;
     //options 
     options: any[] | null;
     //panel  
@@ -71,6 +78,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         private _cfLoteService: CFLoteService,
         private _cfPredioService: CFPredioService,
         private _userService: UserService,
+        private _fuseSplashScreenService: FuseSplashScreenService,
 
     ) {
         this._userService.user$
@@ -116,200 +124,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.resetForm();
     }
 
-    openPanel(): void {
-       
-        // Return if the messages panel or its origin is not defined
-        if (!this._messagesPanel || !this._searchOrigin) {
-            return;
-        }
-
-        // Create the overlay if it doesn't exist
-        if (!this._overlayRef) {
-            this._createOverlay();
-        }
-
-        // Attach the portal to the overlay
-        this._overlayRef.attach(
-            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
-        );
-    }
-
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
-    onSearch(): void {
-        console.log(this.selectedOption , 'options');
-        //this.searchForm.value
-
-        let where = '';
-
-
-        /*if ( FuseValidators.isEmptyInputValue( this.ubigeo)){
-            where = `UBIGEO ='${this.ubigeo}'`;
-        }*/
-
-
-        if (this.selectedOption === '1') {
-            //let where = '';
-        
-            const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
-            where=CommonUtils.generateWhereArgis(params);
-            this._cfPredioService
-                .getList(where,this.limit)
-                .then((response) => {
-                    if (response) {
-                        return response.json();
-                    }
-                    throw new Error('Something went wrong');
-                })
-                .then((responseJson) => {
-
-                    if (responseJson['features'] && responseJson['features']) {
-                        this.results = responseJson['features'].map(
-                            (f: any) => f['attributes']
-                        ).slice(0,10);
-
-                        console.log('this.results>>',this.results);
-                    }
-                    this.init=false;
-                })
-                .catch((error) => {
-
-                    console.log(error);
-                    this.init=false;
-                });
-        }
-        else if(this.selectedOption === '2'){
-
-            const params ={'UBIGEO':this.ubigeo, 'TIP_VIA':this.searchForm?.cod, 'NOM_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
-            where=CommonUtils.generateWhereArgis(params);
-            this._cfLoteService
-            .getList(where,this.limit)
-            .then((response) => {
-                if (response) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then((responseJson) => {
-
-                console.log(this.masterDomain, 'domina');
-                if (responseJson['features'] && responseJson['features']) {
-                    this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
-
-                }
-                this.init=false;
-            })
-            .catch((error) => {
-
-                console.log(error);
-                this.init=false;
-            });
-        }
-
-        else if(this.selectedOption === '3'){
-
-            const params ={'UBIGEO':this.ubigeo, 'TIPO_UU': this.searchForm?.tipouu,'NOM_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz,'LOT_URB':this.searchForm?.lt};
-            where=CommonUtils.generateWhereArgis(params);
-            this._cfLoteService
-            .getList(where,this.limit)
-            .then((response) => {
-                if (response) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then((responseJson) => {
-                /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===this.searchForm?.tipouu).shortName;*/
-                if (responseJson['features'] && responseJson['features']) {
-                    this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_UU': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']).shortName })).slice(0,5);
-                }
-                this.init=false;
-            })
-            .catch((error) => {
-                console.log(error);
-                this.init=false;
-            });
-        }
-
-        /*console.log('buscando');*/
-    }
-
-    onChangePr(value: any): void {
-        this.searchForm.pr = value;
-    }
-    onSelectionChangeVia(value, data): void {
-        console.log('data>>',data);
-        this.searchForm.tipovia = value;
-        /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
-    }
-
-    onChangeVia(value): void {
-        this.searchForm.via = value;
-    }
-
-    onSelectionChangeUU(value): void {
-        this.searchForm.tipouu = value;
-        /*this.searchForm.tipovia = value;*/
-        /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;*/
-        //this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
-    }
-
-    onChangeDoor(value): void {
-        this.searchForm.door = value;
-    }
-
-    onChangehabUrb(value): void {
-        this.searchForm.habUrb = value;
-    }
-
-
-    onChangeMz(value): void {
-        this.searchForm.mz = value;
-    }
-    onChangeLt(value): void {
-        this.searchForm.lt = value;
-    }
-
-    onGo(value: any): void{
-        this.eventOnGo.emit(value);
-        console.log('valueselec7',this.selectedOption);
-        this.parsearData(value, this.selectedOption);
-        console.log('valueselec',this.showSelected);
-    }
-
-
-
-    onSelectionChange(value): void {
-        console.log(value, 'value');
-        this.selectedOption = value;
-        this.init=true;
-        this.results =[];
-    }
-
-    parsearData(val, typeSearch){
-        switch(typeSearch) {
-            case '1':
-              this.showSelected = val.PARTIDA
-              break;
-            case '2':
-              console.log("La opción es 2");
-              break;
-            case '3':
-              console.log("La opción es 3");
-              break;
-            default:
-              console.log("Opción no válida");
-          }
-    }
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-
     private _createOverlay(): void {
         // Create the overlay
         this._overlayRef = this._overlay.create({
@@ -353,54 +167,213 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this._overlayRef.backdropClick().subscribe(() => {
             this._overlayRef.detach();
             this.resetForm(); 
-            this.results =[];
+            this.results = null;
             this._changeDetectorRef.markForCheck();
         });
     }
-
-    onTabChange(events) {
-        console.log(this.searchForm.pr, 'this.searchForm.pr')
-        events = events+1
-        this.results =[];
-        this.resetForm();
-        console.log(this.searchForm.pr, 'this.searchForm.pr2')
-        this.selectedOption = events.toString();
-        console.log('events', events);
-
-      }
-
-      //panel 
-      open(): void
-      {
-          // Return if it's already opened
-          if ( this.opened )
-          {
-              return;
-          }
-  
-          // Open the search
-          this.opened = true;
-      }
-  
-      close(): void
-    {
-        // Return if it's already closed
-        if ( !this.opened )
-        {
+    openPanel(): void {
+       
+        // Return if the messages panel or its origin is not defined
+        if (!this._messagesPanel || !this._searchOrigin) {
             return;
         }
 
-        // Clear the search input
-        // this.searchControl.setValue('');
+        // Create the overlay if it doesn't exist
+        if (!this._overlayRef) {
+            this._createOverlay();
+        }
 
-        // Close the search
-        this.opened = false;
+        // Attach the portal to the overlay
+        this._overlayRef.attach(
+            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
+        );
     }
-      onClean(){
-        this.resetForm();
+
+  
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+
+    onSearch(): void {
+        console.log(this.selectedOption , 'options');
+        //this.searchForm.value
+
+        let where = '';
+
+        if (this.selectedOption === '1') {
+            //let where = '';
+            if(FuseValidators.isEmptyInputValue(this.searchForm?.pr)){
+                return;
+            };
+
+            this._fuseSplashScreenService.show();
+            const params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
+            where=CommonUtils.generateWhereArgis(params);
+            this._cfPredioService
+                .getList(where,this.limit)
+                .then((response) => {
+                    if (response) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong');
+                })
+                .then((responseJson) => {
+                    this._fuseSplashScreenService.hide();
+                    if (responseJson['features'] && responseJson['features']) {
+                        this.results = responseJson['features'].map(
+                            (f: any) => f['attributes']
+                        ).slice(0,10);
+
+                    }
+                    this.init=false;
+                })
+                .catch((error) => {
+
+                    console.log(error);
+                    this.init=false;
+                });
+        }
+        else if(this.selectedOption === '2'){
+            this._fuseSplashScreenService.show();
+            const params ={'UBIGEO':this.ubigeo, 'TIP_VIA':this.searchForm?.cod, 'NOM_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
+            where=CommonUtils.generateWhereArgis(params);
+            this._cfLoteService
+            .getList(where,this.limit)
+            .then((response) => {
+                if (response) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((responseJson) => {
+                this._fuseSplashScreenService.hide();
+                console.log(this.masterDomain, 'domina');
+                if (responseJson['features'] && responseJson['features']) {
+                    this.results = responseJson['features'].map(
+                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
+
+                }
+                this.init=false;
+            })
+            .catch((error) => {
+
+                console.log(error);
+                this.init=false;
+            });
+        }
+
+        else if(this.selectedOption === '3'){
+            // if(
+            //     FuseValidators.isEmptyInputValue(this.searchForm?.tipouu) || 
+            //     FuseValidators.isEmptyInputValue(this.searchForm?.habUrb)){
+            //     return;
+            // }
+            this._fuseSplashScreenService.show();
+            const params ={'UBIGEO':this.ubigeo, 'TIPO_UU': this.searchForm?.tipouu,'NOM_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz,'LOT_URB':this.searchForm?.lt};
+            where=CommonUtils.generateWhereArgis(params);
+            this._cfLoteService
+            .getList(where,this.limit)
+            .then((response) => {
+                if (response) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then((responseJson) => {
+                this._fuseSplashScreenService.hide();
+                /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===this.searchForm?.tipouu).shortName;*/
+                if (responseJson['features'] && responseJson['features']) {
+                    this.results = responseJson['features'].map(
+                        (f: any) => ({...f['attributes'],'NOM_TIPO_UU': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']).shortName })).slice(0,5);
+                }
+                this.init=false;
+            })
+            .catch((error) => {
+                console.log(error);
+                this.init=false;
+            });
+        }
+        else if(!this.selectedOption){
+            console.log('not option')
+            return;
+        }
+
+        /*console.log('buscando');*/
+    }
+
+    onChangePr(value: any): void {
+        this.searchForm.pr = value;
+    }
+    onSelectionChangeVia(value, data): void {
+        console.log('data>>',data);
+        this.searchForm.tipovia = value;
+        /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
+    }
+
+    onChangeVia(value): void {
+        this.searchForm.via = value;
+    }
+
+    onSelectionChangeUU(value): void {
+        this.searchForm.tipouu = value;
+        /*this.searchForm.tipovia = value;*/
+        /*this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;*/
+        //this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;
+    }
+
+    onChangeDoor(value): void {
+        this.searchForm.door = value;
+    }
+
+    onChangehabUrb(value): void {
+        this.searchForm.habUrb = value;
+    }
+
+
+    onChangeMz(value): void {
+        this.searchForm.mz = value;
+    }
+    onChangeLt(value): void {
+        this.searchForm.lt = value;
+    }
+
+    onGo(value: any): void{
+        this.eventOnGo.emit(value);
+        this.parsearData(value, this.selectedOption);
+        console.log(value,'valueeGo')
+    }
+
+
+
+    onSelectionChange(value): void {
+        this.selectedOption = value;
+        this.init=true;
         this.results =[];
-      }
-      resetForm() {
+    }
+
+    parsearData(val, typeSearch){
+        switch(typeSearch) {
+            case '1':
+              this.showSelected = val.PARTIDA
+              this.changeStyle = val?.PARTIDA
+              break;
+            case '2':
+              console.log("La opción es 2");
+              break;
+            case '3':
+                this.showSelected = `${val?.NOM_TIPO_UU} ${val?.NOM_UU} ${val?.MZN_URB} ${val?.LOT_URB}`
+                this.changeStyle = val?.ID_LOTE
+              break;
+            default:
+              console.log("Opción no válida");
+          }
+    }
+ 
+    onClean(){
+        this.resetForm();
+        this.results = null;
+    }
+    resetForm() {
         this.searchForm = {
             pr: null,
             mz: null,
@@ -412,15 +385,18 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             address: null,
             via: null,
         };
-      }
-
+    }
 
       onOpenOption(data):void{
-        this.results =[];
+        this.results = null;
         this.resetForm();
-        console.log(this.searchForm.pr, 'this.searchForm.pr2')
-        this.selectedOption = data.cod;
-        console.log('selected',  this.selectedOption);
-
+        this.selectedOption = data.cod; 
       }
+
+      ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
 }
+

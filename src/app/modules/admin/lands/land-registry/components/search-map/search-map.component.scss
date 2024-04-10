@@ -5,11 +5,28 @@
   font-size: '7px'
 }
 
+input{
+  height: 20px !important;
+}
 
 input::placeholder {
   font-size: 12px !important;
 }
 
 mat-label {
-  font-size: 13px !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+.bg-selected {
+  color: #3c5364 !important;
+  font-weight: 600;
+}
+
+.bg-selected-result {
+  background-color: #ECF2F9 !important;
+  box-shadow: -3px 4px 4px rgb(145 143 143 / 42%);
+  mat-icon {
+    color:#0689b1 !important ;
+  };
 }

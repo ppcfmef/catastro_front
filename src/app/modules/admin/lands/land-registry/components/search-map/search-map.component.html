@@ -3,14 +3,17 @@
     <div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm box-shadow-z1"
         ([ngModel])="showSelected" (click)="openPanel()" #searchOrigin>
         <mat-icon svgIcon="mat_outline:search"></mat-icon>
-        <input matInput placeholder="Buscar predio" class="w-full ml-2" readonly [(ngModel)]="showSelected">
+        <input matInput placeholder="Buscar predio" class="w-full ml-2 text-md" readonly [(ngModel)]="showSelected">
     </div>
 </ng-container>
 <!-- seacrch panel -->
 <ng-template #searchPanel>
-    <div class="flex flex-col bg-card py-3 shadow-md h-max w-full">
-        <div class="flex gap-10 px-4 ">
-            <div *ngFor="let option of options" (click)="onOpenOption(option)"
+    <div class="flex flex-col bg-card py-4 shadow-md h-max w-full">
+        <div class="flex gap-4 px-4 ">
+            <div 
+                *ngFor="let option of options" 
+                (click)="onOpenOption(option)"
+                [ngClass]="{'bg-selected': selectedOption === option.cod}"
                 class="flex justify-center items-center w-max text-center">
                 <span class="text-sm">{{option.option}}</span>
             </div>
@@ -33,14 +36,14 @@
                     <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
                         <mat-label>Ingresar Dirección</mat-label>
                         <input matInput placeholder="Ejem: Cusco" (change)="onChangeVia($event.target.value)">
-                        <mat-select class="w-12" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
+                        <mat-select class="w-16" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
                             matPrefix>
-                            <mat-option class="truncate" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
+                            <mat-option class="truncate text-sm" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
                                 {{domain.name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-3/12">
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-14">
                         <mat-label>Nro.</mat-label>
                         <input matInput placeholder="75" 
                             (change)="onChangeDoor($event.target.value)" />
@@ -51,99 +54,113 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'3'">
-                <div class="flex px-4 gap-2 flex-wrap">
-                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
+                <div class="flex flex-col px-4">
+                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto w-full">
                         <mat-label>Ingresar Habilitacion</mat-label>
                         <input matInput required placeholder="Ejem: Las Rosas" (change)="onChangeMz($event.target.value)" />
-                        <mat-select class="w-12"
+                        <mat-select class="w-20"
                              (selectionChange)=onSelectionChangeUU($event.value) 
                              [value]="'1'"
                              matPrefix>
-                            <mat-option class="truncate" *ngFor="let domain of masterDomain.uuType" [value]="domain.id">
+                            <mat-option class="truncat text-sm" *ngFor="let domain of masterDomain.uuType" [value]="domain.id">
                                 {{domain.name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-2/12">
-                        <mat-label>Mz.</mat-label>
-                        <input matInput placeholder="A" 
-                        (change)="onChangeMz($event.target.value)"/>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-2/12">
-                        <mat-label>Lt.</mat-label>
-                        <input matInput placeholder="5" 
-                        (change)="onChangeLt($event.target.value)" />
-                    </mat-form-field>
+                    <div class="flex w-full justify-between">
+                        <mat-form-field appearance="fill" class="fuse-mat-dense w-[120px]">
+                            <mat-label>Mz.</mat-label>
+                            <input 
+                                matInput placeholder="Ejemplo: A" 
+                                (change)="onChangeMz($event.target.value)"/>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
+                            <mat-label>Lt.</mat-label>
+                            <input 
+                                matInput placeholder="Ejemplo: 5" 
+                                (change)="onChangeLt($event.target.value)" />
+                        </mat-form-field>
+                    </div>
+
                     
                 </div>
 
             </ng-container>
 
-            <div class="flex justify-end items-ce">
-                <button mat-button type="button" class="primary" (click)="onClean()">Limpiar</button>
-                <button mat-button type="button" class="primary" (click)="onSearch()">Buscar</button>
+            <div class="flex items-center justify-end gap-4 px-4 mb-3">
+                <button mat-stroked-button	 type="button" class="text-[#0066CC] border border-[#0066CC]  rounded-[4px]" (click)="onClean()">Limpiar</button>
+                <button mat-raised-button type="button" class="bg-[#0066CC] text-white rounded-[4px]" (click)="onSearch()">Buscar</button>
             </div>
+            
             <ng-container *ngIf="this.results && this.results.length>0;else  noResults" [ngSwitch]="selectedOption">
 
-                <ng-container *ngSwitchCase="1">
-                    <div fuseScrollbar
-                        [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
-                        class="flex flex-col h-80">
-                        <ng-container *ngFor="let r of results">
-                            <div class="flex flex-col items-start justify-center px-4 py-2 max-w-90"> 
-                                <span>{{r.PARTIDA}}</span>
-                                <ng-container *ngIf="r?.DIR_URB; else noUrb">
-                                    <span 
-                                    [matTooltip]="r?.DIR_URB"
-                                    class="truncate w-72">{{r?.DIR_URB | titlecase}}</span>
-                                </ng-container>
-                                <ng-template #noUrb>
-                                    <span class="truncate w-72">{{r?.NOM_UU | titlecase }} {{ r?.MZN_URB | titlecase }} {{ r?.LOT_URB | titlecase }}</span>
-                                </ng-template>
-                                <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="ver">
-                                    <mat-icon [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <div 
+                    fuseScrollbar
+                    [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
+                    class="flex flex-col w-[300px]  max-h-80 ">
+
+                    <mat-divider class="mb-3 border-t-2"></mat-divider>
+                    <!-- <span class="text-base font-semibold my-3 px-4">Resultado </span> -->
+
+                    <ng-container *ngSwitchCase="1">
+                        <div class="flex flex-col h-auto max-h-72 w-full">
+                            <ng-container *ngFor="let r of results">
+                                <div 
+                                    [ngClass]="{'bg-selected-result': changeStyle === r.PARTIDA}"
+                                    class="flex w-full items-center justify-between px-4"> 
+                                    <div class="flex flex-col items-start justify-center py-2 ">
+                                        <span class="font-semibold text-sm">{{r.PARTIDA}}</span>
+                                        <ng-container *ngIf="r?.DIR_URB; else noUrb">
+                                            <span 
+                                            class="truncate w-56 text-sm text-[#595961]">{{r?.DIR_URB | titlecase}}</span>
+                                        </ng-container>
+                                        <ng-template #noUrb>
+                                            <span class="truncate w-56 text-sm text-[#595961]">{{r?.NOM_UU | titlecase }} {{ r?.MZN_URB | titlecase }} {{ r?.LOT_URB | titlecase }}</span>
+                                        </ng-template>
+                                    </div>
+
+                                    <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
+                                        <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+    
+                    <ng-container *ngSwitchCase="2">
+                        <div class="results" *ngFor="let r of results">
+                            <div class="flex w-full items-center justify-between px-4"> 
+                                <span  class="font-semibold text-sm"> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}} </span>
+                                <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
+                                    <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
                                 </button>
                             </div>
-                        </ng-container>
-           
-
-                    </div>
-                </ng-container>
-
-                <ng-container *ngSwitchCase="2">
-                    <div class="results" *ngFor="let r of results">
-                        <div> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}}
-
-                            <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="it">
-                                <mat-icon [svgIcon]="'heroicons_solid:eye'"
-                                    style="color: #0090f8 !important;"></mat-icon>
-                            </button>
+    
                         </div>
-
-                    </div>
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="3">
-                    <div class="results" *ngFor="let r of results">
-                        <div> {{r?.NOM_TIPO_UU}} {{ r?.NOM_UU }} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:'' }} {{ r?.LOT_URB?
-                            'Lt.'+r?.LOT_URB:''}}
-
-                            <button mat-icon-button class="mat-primary" type="button" (click)="onGo(r)" matTooltip="it">
-                                <mat-icon [svgIcon]="'heroicons_solid:eye'"
-                                    style="color: #0090f8 !important;"></mat-icon>
-                            </button>
+                    </ng-container>
+                    
+                    <ng-container *ngSwitchCase="3">
+                        <div class="results" *ngFor="let r of results">
+                            <div 
+                                [ngClass]="{'bg-selected-result': changeStyle === r.ID_LOTE}"
+                                class="flex w-full items-center justify-between px-4"> 
+                                <span class="font-semibold text-sm">
+                                    {{r?.NOM_TIPO_UU | titlecase}} {{ r?.NOM_UU | titlecase}} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:'' }} {{ r?.LOT_URB?
+                                        'Lt.'+r?.LOT_URB:''}}
+                                </span>
+    
+                                <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
+                                    <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
+                                </button>
+                            </div>
+    
                         </div>
-
-                    </div>
-                </ng-container>
-
-
-
+                    </ng-container>
+                </div>
             </ng-container>
             <ng-template #noResults>
-
-                <div *ngIf=" !(init) && results && results?.length===0">No hay Resultados</div>
+                <div class="p-4 "
+                    *ngIf=" !(init) && results && results?.length===0">No se han encontrado resultados</div>
 
             </ng-template>
         </ng-container>
