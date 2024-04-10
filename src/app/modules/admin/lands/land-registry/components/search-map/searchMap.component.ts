@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { CFLoteService } from '../../services/cflote.service';
 import { CFPredioService } from '../../services/cfpredio.service';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -60,7 +60,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
    
-
+    
     searchForm: any;
     selectedOption: string | null = null;
     showSelected: null | string =null; 
@@ -69,6 +69,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     options: any[] | null;
     //panel  
     opened: boolean = false;
+
+    //implementar 
+    addressControl = new FormControl('');
+    optionsDirection = [];
+    filteredOptions: Observable<any[]>;
 
     constructor(
         private landRegistryService: LandRegistryService,
@@ -91,6 +96,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         });
 
+        //options Type
         this.options = [
             {
                 cod: '2',
@@ -110,6 +116,22 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             },
         ];
 
+        //Options directions
+        this.optionsDirection = [
+            {
+                id:'1',
+                name:'Norte',
+            },
+            {
+                id:'2',
+                name:'sur',
+            },
+            {
+                id:'3',
+                name:'este',
+            },
+        ]
+
     }
     ngOnInit(): void {
         this.selectedOption = null;
@@ -122,8 +144,21 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 console.log('this.masterDomain>>',this.masterDomain);
             });
         this.resetForm();
-    }
+        
+        console.log('this.searchForm.tipovia',this.searchForm.tipovia);
 
+        this.filteredOptions = this.addressControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value || '')),
+          );
+    }
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        console.log(value,'value insert' )
+        console.log(filterValue,'filterValue' )
+        return this.optionsDirection.filter(option => option.name.includes(filterValue));
+      }
+    
     private _createOverlay(): void {
         // Create the overlay
         this._overlayRef = this._overlay.create({
@@ -306,7 +341,25 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     }
     onSelectionChangeVia(value, data): void {
         console.log('data>>',data);
+        console.log('value>>',value);
         this.searchForm.tipovia = value;
+
+        //update options by type via 
+        // this.optionsDirection = [
+        //     {
+        //         id:'1',
+        //         name:'Norte',
+        //     },
+        //     {
+        //         id:'2',
+        //         name:'sur',
+        //     },
+        //     {
+        //         id:'3',
+        //         name:'este',
+        //     },
+        // ]
+
         /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
     }
 
