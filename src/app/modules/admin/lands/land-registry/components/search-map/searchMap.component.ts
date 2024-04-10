@@ -233,7 +233,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 console.log(this.masterDomain, 'domina');
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
+                        (f: any) => ({...f['attributes']})).slice(0,5);
 
                 }
                 this.init=false;

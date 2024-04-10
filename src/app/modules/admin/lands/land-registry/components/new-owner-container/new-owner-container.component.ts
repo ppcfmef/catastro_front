@@ -153,8 +153,8 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 */
   }
 
-  searchOwnerbyDocument(searchText: any):void{
-    if(searchText!==''){
+  searchOwnerbyDocument(searchText: any): void{
+    if(!FuseValidators.isEmptyInputValue(searchText)){
         const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
         this._fuseSplashScreenService.show();
           this.landRegistryService.searchOwnerbyDocument(params)
@@ -329,7 +329,7 @@ searhSrtm(searchText: any): void{
             (result) => {
                 /*console.log('holasss');
                 console.log('result>>',result);*/
-                if (result && result.codigo==='404' ){
+                if (result && (result.codigo==='404' ||result.status===403 )  ){
                     const dialogRef = this.confirmationService.errorInfo(
                         'Contribuyente no encontrado',
                         `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
@@ -342,7 +342,7 @@ searhSrtm(searchText: any): void{
                         });
                 }
 
-                else if(result){
+                else if(result && result.tipoDocumento){
                     this._fuseSplashScreenService.hide();
                     this.landOwner.dni =result.numeroDocumento;
                     if (result.tipoDocumento === 2) {
