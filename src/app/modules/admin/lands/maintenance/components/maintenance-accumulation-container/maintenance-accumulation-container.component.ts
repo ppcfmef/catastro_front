@@ -135,7 +135,15 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                         });
 
                     }
-                });
+                },
+                (err)=>{
+                  this._fuseSplashScreenService.hide();
+                console.log('error',err);
+                this.confirmationService.error(
+                  'Registro de predio',
+                   `Error al registrar el predio, ${err.error.message}`
+                );
+              });
             }
         },(err)=>{
             this._fuseSplashScreenService.hide();
