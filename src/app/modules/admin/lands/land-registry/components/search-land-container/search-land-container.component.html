@@ -29,12 +29,13 @@
         matPrefix
         class="hidden sm:flex icon-size-5"
         [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-    <mat-select (selectionChange)="onFilterStatus()" formControlName="status">
-        <mat-option>Todos</mat-option>
-        <mat-option [value]="0">Predios sin Cartografia</mat-option>
+    <mat-select
+        (selectionChange)="onFilterStatus()" formControlName="status">
+        <mat-option *ngFor="let option of optionS" [value]="option.cod">{{option.option}}</mat-option>
+        <!-- <mat-option [value]="0">Predios sin Cartografia</mat-option>
         <mat-option [value]="1">Predios con Cartografia</mat-option>
         <mat-option [value]="2">Coordenada de Imagen</mat-option>
-        <mat-option [value]="3">Inactivo</mat-option>
+        <mat-option [value]="3">Predios Inactivos</mat-option> -->
     </mat-select>
   </mat-form-field>
   <!-- select ubigeo -->
@@ -42,17 +43,6 @@
     <select-ubigeo *ngIf="!hideSelectUbigeo"
     (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
   </div>
-
-  <!-- fin select ubigeo -->
-  <!--<div style=" padding-top: 20px;">
-    <button mat-flat-button [color]="'primary'" style="float: right;"
-    (click)="onDownloadReport()"
-    >
-      <mat-icon [svgIcon]="'heroicons_solid:document-download'"></mat-icon>
-      Descargar reporte
-    </button>
-  </div>
--->
 </div>
 
 <app-search-land-table
@@ -69,17 +59,20 @@
 
 
 
-<div class="container-panel flex w-full"  *ngIf="showLandsMap" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+<div class="container-panel flex w-full justify-between gap-8"  *ngIf="showLandsMap" [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
   <div class="map-container" >
     <app-show-map-point *ngIf="showLandsMap" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner"  ></app-show-map-point>
   </div>
 
-  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
-    <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
-    <button mat-flat-button [color]="'primary'"
-    (click)="onDowloandCroquis()" >
-      <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
-      CROQUIS
-    </button>
+  <div id="dowloandCroquis" class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
+    <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" class="h-full" ></app-detail-predio>
+    <ng-container *ngIf="landRecord.longitude || landRecord.latitude">
+        <button mat-flat-button [color]="'primary'" class="m-8 rounded-md" 
+        (click)="onDowloandCroquis()" >
+          <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
+          <span class="ml-4">CROQUIS</span>
+        </button>
+    </ng-container>
+
   </div>
 </div>

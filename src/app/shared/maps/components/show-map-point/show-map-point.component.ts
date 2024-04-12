@@ -34,10 +34,8 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
         { latitude: -13.53063, longitude: -71.955921 },
         { latitude: -13.54, longitude: -71.955921 },
     ];
-    @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
-
-
-
+    @ViewChild('mapViewNode', { static: false }) private mapViewEl: ElementRef;
+    renderMap: boolean = true;
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
@@ -55,190 +53,155 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     };
 
     layersInfo: any[] = [
-      /*  {
-            idServer: 0,
-            title: 'Zona 17',
-            id: 0,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            legend: null,
-            sublayers: 'all',
-        },
-
         {
-            idServer: 0,
-            title: 'Zona 18',
+            title: 'Cartografia Fiscal',
             id: 0,
+            idServer: 0,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
             featureTable: null,
             popupTemplate: null,
             legend: null,
-            sublayers: 'all',
-        },
-
-        {
-            idServer: 0,
-            title: 'Zona 19',
-            id: 0,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            legend: null,
-            sublayers: 'all',
-        },
-*/
-
-{
-    title: 'Cartografia Fiscal',
-    id: 0,
-    idServer: 0,
-    urlBase:
-        'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
-    order: 0,
-    featureLayer: null,
-    definitionExpression: '1=1',
-    featureTable: null,
-    popupTemplate: null,
-    legend: null,
-    sublayers: [
-        {id:10,
-            visible:true,
-            title:'CF_SECTOR'
-        },
-        {id:9,
-            visible:true,
-            title:'CF_MANZANA_URB',
-            labelingInfo: {
-              symbol: {
-                  type: 'text', // autocasts as new TextSymbol()
-                  color: 'blue',
-                  haloColor: 'white',
-                  haloSize: 1,
-                  font: {
-                      // autocast as new Font()
-                      family: 'arial',
-                      size: 10,
-                      weight: 'bold',
-
-                  },
-              },
-              labelPlacement: 'above-center',
-              labelExpressionInfo: {
-                  expression: '$feature.MZN_URB',
-              },
-            }
-
-        },
-        {id:8,
-            visible:false,
-            title:'CF_MANZANA'
-
-          },
-
-
-          {id:7,
-              visible:true,
-              title:'CF_PARQUES'
-
-          },
-          {id:6,
-            visible:true,
-            title:'CF_UNIDADES_URBANAS'
-          },
-          {id:5,
-            visible:true,
-            title:'CF_LOTES',
-            labelingInfo: {
-              symbol: {
-              type: 'text',
-              color: 'black',
-              font: {
-
-                  family: 'arial',
-                  size: 10,
-                  weight: 'bold',
-
-              },
-          },
-          labelPlacement: 'above-center',
-          labelExpressionInfo: {
-              expression: '$feature.LOT_URB',
-          },
-      }
-
-        },
-          {id:4,
-            visible:true,
-            title:'CF_ARANCEL'
-          },
-          {id:3,
-            visible:true,
-            title:'CF_NUMERACION'
-
-        },
-
-          {id:2,
-            visible:true,
-            title:'CF_EJE_VIAL',
-            labelingInfo: {
-                symbol: {
-                    type: 'text', // autocasts as new TextSymbol()
-                    color: 'black',
-                    font: {
-                        // autocast as new Font()
-                        family: 'arial',
-                        size: 8,
-                        //weight: 'bold'
-                    },
+            sublayers: [
+                {
+                    id: 10,
+                    visible: true,
+                    title: 'CF_SECTOR'
                 },
-                labelPlacement: 'above-center',
-                labelExpressionInfo: {
-                    expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+                {
+                    id: 9,
+                    visible: true,
+                    title: 'CF_MANZANA_URB',
+                    labelingInfo: {
+                        symbol: {
+                            type: 'text', // autocasts as new TextSymbol()
+                            color: 'blue',
+                            haloColor: 'white',
+                            haloSize: 1,
+                            font: {
+                                // autocast as new Font()
+                                family: 'arial',
+                                size: 10,
+                                weight: 'bold',
+
+                            },
+                        },
+                        labelPlacement: 'above-center',
+                        labelExpressionInfo: {
+                            expression: '$feature.MZN_URB',
+                        },
+                    }
+
                 },
-            }
+                {
+                    id: 8,
+                    visible: false,
+                    title: 'CF_MANZANA'
 
-          },
-          {id:1,
-            visible:true,
-            title:'CF_LOTES_PUN'
+                },
 
+
+                {
+                    id: 7,
+                    visible: true,
+                    title: 'CF_PARQUES'
+
+                },
+                {
+                    id: 6,
+                    visible: true,
+                    title: 'CF_UNIDADES_URBANAS'
+                },
+                {
+                    id: 5,
+                    visible: true,
+                    title: 'CF_LOTES',
+                    labelingInfo: {
+                        symbol: {
+                            type: 'text',
+                            color: 'black',
+                            font: {
+
+                                family: 'arial',
+                                size: 10,
+                                weight: 'bold',
+
+                            },
+                        },
+                        labelPlacement: 'above-center',
+                        labelExpressionInfo: {
+                            expression: '$feature.LOT_URB',
+                        },
+                    }
+
+                },
+                {
+                    id: 4,
+                    visible: true,
+                    title: 'CF_ARANCEL'
+                },
+                {
+                    id: 3,
+                    visible: true,
+                    title: 'CF_NUMERACION'
+
+                },
+
+                {
+                    id: 2,
+                    visible: true,
+                    title: 'CF_EJE_VIAL',
+                    labelingInfo: {
+                        symbol: {
+                            type: 'text', // autocasts as new TextSymbol()
+                            color: 'black',
+                            font: {
+                                // autocast as new Font()
+                                family: 'arial',
+                                size: 8,
+                                //weight: 'bold'
+                            },
+                        },
+                        labelPlacement: 'above-center',
+                        labelExpressionInfo: {
+                            expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+                        },
+                    }
+
+                },
+                {
+                    id: 1,
+                    visible: true,
+                    title: 'CF_LOTES_PUN'
+
+                },
+
+                {
+                    id: 0,
+                    visible: true,
+                    title: 'CF_PREDIO',
+                    labelingInfo: {
+                        symbol: {
+                            type: 'text', // autocasts as new TextSymbol()
+                            color: 'black',
+                            font: {
+                                // autocast as new Font()
+                                family: 'arial',
+                                size: 10,
+                                //weight: 'bold'
+                            },
+                        },
+                        labelPlacement: 'above-center',
+                        labelExpressionInfo: {
+                            expression: '$feature.COD_CPU',
+                        },
+                    }
+                },
+            ],
         },
-
-          {id:0,
-            visible:true,
-            title:'CF_PREDIO',
-            labelingInfo: {
-              symbol: {
-                  type: 'text', // autocasts as new TextSymbol()
-                  color: 'black',
-                  font: {
-                      // autocast as new Font()
-                      family: 'arial',
-                      size: 10,
-                      //weight: 'bold'
-                  },
-              },
-              labelPlacement: 'above-center',
-              labelExpressionInfo: {
-                  expression: '$feature.COD_CPU',
-              },
-          }
-          },
-    ],
-},
 
         {
             idServer: 0,
@@ -253,13 +216,15 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             popupTemplate: null,
             legend: null,
             sublayers: [
-                {id:0,
-                  visible:true,
-                  title:'ACT_ARANCEL'
+                {
+                    id: 0,
+                    visible: true,
+                    title: 'ACT_ARANCEL'
                 },
-                {id:1,
-                    visible:true,
-                    title:'ACT_MANZANA'
+                {
+                    id: 1,
+                    visible: true,
+                    title: 'ACT_MANZANA'
                 },
             ],
         },
@@ -277,9 +242,10 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             popupTemplate: null,
             legend: null,
             sublayers: [
-                {id:0,
-                    visible:true,
-                    title:'TB_PUNTO_IMG'
+                {
+                    id: 0,
+                    visible: true,
+                    title: 'TB_PUNTO_IMG'
                 }
             ],
         },
@@ -289,7 +255,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
         private _userService: UserService
-    ) {}
+    ) { }
     ngOnDestroy(): void {
 
         this.subscription.unsubscribe();
@@ -298,7 +264,10 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     }
 
     ngOnInit(): void {
-        this.subscription   =this._landRecordService
+        console.log(this.landOwner, 'landOwner')
+        console.log(this.landRecord, 'landRecord')
+        console.log(this.points, 'points')
+        this.subscription = this._landRecordService
             .getLandRecordDownloadCroquis()
             .subscribe((res: boolean) => {
                 if (res) {
@@ -314,21 +283,20 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                     this.user.placeScope && this.user?.ubigeo
                         ? this.user?.ubigeo
                         : '150101';
-                /* this._commonService
-            .getDistrictResource(ubigeo)
-            .subscribe((data: DistrictResource) => {
-
-
-
-            });*/
             });
     }
 
     ngAfterViewInit(): void {
+
+        this.renderMap = this.points.every(point => point.latitude != null && point.longitude != null);
+
+        if(this.renderMap) {
+            setTimeout(() => {
+                this.initializeMap();
+            }, 2000);
+        }
         //this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
-        setTimeout(() => {
-            this.initializeMap();
-        }, 1000);
+   
     }
 
     ngOnChanges(): void {
@@ -386,15 +354,15 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             this.layersInfo.reverse().forEach(async (l) => {
                 let options: any = {};
 
-                if (l.sublayers === 'all'){
+                if (l.sublayers === 'all') {
                     options = {
-                        url : l.urlBase,
+                        url: l.urlBase,
                     };
                 }
 
                 else {
                     options = {
-                        url : l.urlBase,
+                        url: l.urlBase,
                         sublayers: l.sublayers
                     };
                 }
@@ -407,18 +375,12 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                 const response = await fetch(urlLegend);
                 const legendLayers: any = await response.json();
                 l.legend = legendLayers;
-                /*const layers: any[]=infoLayers.layers;*/
             });
-
-          /*  const screenshotDiv = document.getElementById('screenshotDiv');*/
-
 
             const basemapGallery = new BasemapGallery({
                 view: this.view,
             });
-
-
-
+            
             const baseMapGalleryExpand = new Expand({
                 view: this.view,
                 content: basemapGallery,
@@ -550,27 +512,27 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
                 [
                     {
-                        content: `Código Predial Único: ${this.landRecord.cup?this.landRecord.cup:''}`,
+                        content: `Código Predial Único: ${this.landRecord.cup ? this.landRecord.cup : ''}`,
 
                     },
 
-                    { content: `Puesto Laboral: ${this.user?.jobTitle?this.user?.jobTitle:'-' }` },
+                    { content: `Puesto Laboral: ${this.user?.jobTitle ? this.user?.jobTitle : '-'}` },
                 ],
                 [
                     {
-                        content: `Código de Predio Municipal: ${this.landRecord.cpm?this.landRecord.cpm:''}`,
+                        content: `Código de Predio Municipal: ${this.landRecord.cpm ? this.landRecord.cpm : ''}`,
                         colSpan: 2,
                     },
                 ],
                 [
                     {
-                        content: `Latitud: ${this.landRecord.latitude?this.landRecord.latitude:''}`,
+                        content: `Latitud: ${this.landRecord.latitude ? this.landRecord.latitude : ''}`,
                         colSpan: 2,
                     },
                 ],
                 [
                     {
-                        content: `Longitud: ${this.landRecord.longitude?this.landRecord.longitude:''}`,
+                        content: `Longitud: ${this.landRecord.longitude ? this.landRecord.longitude : ''}`,
                         colSpan: 2,
                     },
                 ],
@@ -580,14 +542,14 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                         colSpan: 2,
                     },
                 ],
-                [{ content: `RUC / DNI: ${this.landOwner?.dni }`, colSpan: 2 }],
+                [{ content: `RUC / DNI: ${this.landOwner?.dni}`, colSpan: 2 }],
                 [
                     {
-                        content: `Área terreno: ${this.landRecord?.landArea?this.landRecord?.landArea +'mt2':'-' }   `,
+                        content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `,
                         colSpan: 2,
                     },
                 ],
-                [{ content:  `Área terreno: ${this.landRecord?.landArea?this.landRecord?.landArea +'mt2':'-' }   `, colSpan: 2 }],
+                [{ content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `, colSpan: 2 }],
             ],
         });
 

@@ -17,6 +17,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { SharedModule } from 'app/shared/shared.module';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
         MatRippleModule,
         MatSelectModule,
         MatSlideToggleModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        SharedModule
     ]
 })
 export class UsersModule {

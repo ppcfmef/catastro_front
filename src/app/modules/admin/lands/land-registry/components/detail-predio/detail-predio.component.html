@@ -1,9 +1,56 @@
-<h2 id="mapLandDetail" class="text-center font-bold text-xl mb-2 c-purple-mef">Datos del predio</h2>
+<div  class="flex flex-col w-full p-8">
+    <div id="mapLandDetail" class="text-2xl font-semibold leading-tight mb-6">Datos del predio </div>
+    <div class="flex flex-col gap-4">
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'mat_solid:house_siding'"></mat-icon>
+            <span class="leading-none font-medium text-base mr-2">CPU: </span>
+            <span class="leading-none text-base"> {{ landRecord?.cup }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'mat_solid:holiday_village'"></mat-icon>
+            <span class="leading-none font-medium text-base mr-2">CPM: </span>
+            <span class="leading-none text-base">{{ landRecord?.cpm }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'mat_solid:person'"></mat-icon>
+            <span class="leading-none font-medium text-lg mr-2">Propietario: </span>
+            <span class="leading-none text-base">{{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname | titlecase }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+            <span class="leading-none font-medium text-lg mr-2">DNI: </span>
+            <span class="leading-none text-base">{{ landOwner?.dni }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+            <span class="leading-none font-medium text-base mr-2">Codigo de predio: </span>
+            <span class="leading-none text-base"> {{ (landOwner?.code)?landOwner?.code:'-' }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'mat_solid:map'"></mat-icon>
+            <span class="leading-none font-medium text-base mr-2"> Área del Terreno: </span>
+            <span class="leading-none text-base"> {{ (landRecord?.landArea)? landRecord?.landArea +'mt2':'-'  }}</span>
+        </div>
+        <div class="flex items-center">
+            <mat-icon
+                class="icon-size-5 mr-2"
+                [svgIcon]="'mat_solid:maps_home_work'"></mat-icon>
+            <span class="leading-none font-medium text-base mr-2">Área construida:</span>
+            <span class="leading-none text-base">{{ (builtArea?.landArea)? builtArea?.landArea +'mt2':'-' }} </span>
+        </div>
+    </div>
+</div>
 
-<p class="list-detail"> <b><mat-icon svgIcon="mat_solid:house_siding"></mat-icon> CPU:</b>  {{ landRecord?.cup }}</p>
-<p class="list-detail"> <b><mat-icon svgIcon="mat_solid:holiday_village"></mat-icon> CPM:</b> {{ landRecord?.cpm }}</p>
-<p class="list-detail"> <b><mat-icon svgIcon="mat_solid:person"></mat-icon> Propietario:</b> {{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname  }}</p>
-<p class="list-detail"> <b><mat-icon svgIcon="heroicons_outline:identification"></mat-icon> DNI:</b> {{ landOwner?.dni }}</p>
-<p class="list-detail"> <b><mat-icon svgIcon="heroicons_outline:identification"></mat-icon> Codigo de predio:</b> {{ (landOwner?.code)?landOwner?.code:'-' }}</p>
-<p class="list-detail"> <b><mat-icon svgIcon="mat_solid:map"></mat-icon> Área del Terreno:</b> {{ (landRecord?.landArea)? landRecord?.landArea +'mt2':'-'  }}   </p>
-<p class="list-detail"> <b><mat-icon svgIcon="mat_solid:maps_home_work"></mat-icon> Área construida:</b> {{ (builtArea?.landArea)? builtArea?.landArea +'mt2':'-' }} </p>
+

@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LandOwner } from '../../interfaces/land-owner.interface';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-search-owner-table',
@@ -27,7 +28,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   tableFilters: {paginator: any; sort: Sort};
   defaultPaginator;
 
-  constructor() {}
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
@@ -70,8 +71,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   onShowLandsTable(landOwner: LandOwner): void {
-    console.log('dataSource>>',this.dataSource);
-    console.log('landOwner>>>',landOwner);
+    console.log('click-table')
     this.showLandsTable.emit(landOwner);
     this.showLandOwner.emit(landOwner);
   }

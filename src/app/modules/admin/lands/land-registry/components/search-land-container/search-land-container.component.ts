@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,6 +13,7 @@ import { LandRecordService } from '../../services/land-record.service';
 import { takeUntil } from 'rxjs/operators';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { FuseValidators } from '@fuse/validators';
 
 
 @Component({
@@ -42,7 +43,28 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   unsubscribeAll: Subject<any> = new Subject<any>();
   idView = 'gprpregist';
   hideSelectUbigeo = true;
-
+  optionS = [
+    {
+      cod:'',
+      option:'Todos'
+    },
+    {
+      cod:'0',
+      option:'Predios sin Cartografia'
+    },
+    {
+      cod:'1',
+      option:'Predios con Cartografia'
+    },
+    {
+      cod:'2',
+      option:'Coordenada de Imagen'
+    },
+    {
+      cod:'3',
+      option:'Predios Inactivos'
+    }
+  ]
   constructor(
     private router: Router,
     private cdRef: ChangeDetectorRef,
@@ -50,11 +72,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     private landRecordService: LandRecordService,
     private exportReportService: ExportReportService,
     private navigationAuthorizationService: NavigationAuthorizationService,
-  ) {
-    this.createFormFilters();
-  }
+  ) {}
 
   ngOnInit(): void {
+     this.createFormFilters();
     this.navigationAuthorizationService.userScopePermission(this.idView)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((data: any) => {
@@ -74,6 +95,14 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   ngAfterViewInit(): void {
     const queryParams = this.makeQueryParams();
     this.getLandRecords({limit: 10, ...queryParams});
+    this.landRecordService.filtersOptions$.subscribe(option => {
+      if(FuseValidators.isEmptyInputValue(option)){
+        this.formFilters.controls.status.setValue('');
+      }else{
+        this.formFilters.controls.status.setValue(option);   
+      }
+      this.onFilterStatus();
+    });
   }
 
   ngOnDestroy(): void {
@@ -91,7 +120,6 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    console.log('onShowLandsMap landRecord>>',landRecord);
     this._landOwnerService.getLandDetail(landRecord.id)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
@@ -103,10 +131,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.showOwnerTable = true;
         this.showLandsMap = true;
         setTimeout(() => {
-          document.querySelector('#mapLandDetail').scrollIntoView(
-            { behavior: 'smooth', block: 'center' }
-          );
-        }, 1000);
+          document.getElementById('dowloandCroquis').scrollIntoView()}, 0);
       }
     );
   }
@@ -139,14 +164,19 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onFilterStatus(): void {
-    const status = this.formFilters.get('status').value;
+    let status = this.formFilters.get('status').value;
     this.showOwnerTable = false;
     this.showLandsMap = false;
-    if (status !== undefined) {
-      this.onClickSearch(); // Todo: se debe unificar en un solo metodo
-    }else {
-      this.getDefaultData();
-    }
+    this.landRecordService.filtersOptionsSelect$.next(status);
+    this.onClickSearch()
+    
+    // if (status !== undefined) {
+    //   console.log(status, 'status2');
+    //   this.onClickSearch(); // Todo: se debe unificar en un solo metodo
+    // }else {
+    //   console.log(status, 'status1');
+    //   this.getDefaultData();
+    // }
   }
 
   onDownloadReport(): void {
@@ -191,10 +221,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private createFormFilters(): void {
-    this.formFilters = new UntypedFormGroup({
-      search: new UntypedFormControl(),
-      view: new UntypedFormControl('predio'),
-      status: new UntypedFormControl(),
+    this.formFilters = new FormGroup({
+      search: new FormControl(),
+      view: new FormControl('predio'),
+      status: new FormControl(''),
     });
   }
 

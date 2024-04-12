@@ -21,7 +21,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   dataTable = new MatTableDataSource<LandRecord>();
 
   displayedColumns = [
-    'nro', 'ubigeo', 'landCode', 'municipalLandCode', 'idPlot', 'idCartographicImg', 'habilitacionName', 'streetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber',
+    'nro', 'ubigeo', 'landCode', 'idPlot', 'idCartographicImg', 'habilitacionName', 'streetName', 'urbanMza', 'urbanLotNumber', 'roadBlockNumber',
     'municipalNumber', 'creationDate', 'map'
   ];
   pageIndex = 0;

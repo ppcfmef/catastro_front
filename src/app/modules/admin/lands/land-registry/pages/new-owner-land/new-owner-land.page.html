@@ -1,4 +1,4 @@
-<div class="flex w-full container-block my-3">
+<div class="flex w-full container-block my-3 mx-2">
   <div class="flex flex-col flex-auto gap-4" [ngClass]="{block:expandMap, hidden:!expandMap}" *ngIf="initialPage">
     <app-new-owner-container [ownerId]="ownerId" [ubigeo]="ubigeo"></app-new-owner-container>
     <app-list-land-container [landId]="landId" [ubigeo]="ubigeo" ></app-list-land-container>

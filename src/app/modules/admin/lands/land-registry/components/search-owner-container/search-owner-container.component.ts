@@ -73,12 +73,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
         this.hideSelectUbigeo = true;
         this.ubigeo = data?.ubigeo;
       }
-
-      this.cdRef.detectChanges();
       this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
 
       const queryParams = this.makeQueryParams();
       this.getLandOwnerRecords({limit: 10, ...queryParams});
+      this.cdRef.detectChanges();
     });
   }
 
@@ -112,13 +111,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     const ubigeo = this.ubigeo;
     queryParams['search'] = search;
     queryParams['ubigeo'] = ubigeo;
-    /*if (search !== null) {
-      queryParams['search'] = search;
-    }
 
-    if (ubigeo !== null && ubigeo !== undefined) {
-      queryParams['ubigeo'] = ubigeo;
-    }*/
     return CommonUtils.deleteKeysNullInObject( queryParams);
   }
 
@@ -156,7 +149,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     delete filterQueryParams['search'];
 
     this.showLandsTable = true;
-    this.showLandsMap = false;
+    this.showLandsMap = true;
     this.landOwner = landOwner;
     const queryParams = { limit: 10 ,...filterQueryParams };
 
@@ -171,21 +164,10 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
         this.landRecord = landResult.results && landResult.results.length>0? this.dataSourceLands[0]:null;
         this.showLandsMap= true;
-        /*this.landRecords = landResult.results;
-        this.tableLength = landResult.count;
-        if (this.landId && this.tableLength > 0) {
-          setTimeout(() => { // ToDo: Coordinar con frank porque demora tanto su mapa
-            this.seledRecord(this.landRecords[0]);
-          }, 6000);
-        }*/
+     
       }
     );
-    /*this.landRecordService.getList(queryParams).subscribe(
-      (response) => {
-        this.dataSourceLands = response.results;
-        this.lengthLandsOwner = response.count;
-      }
-    );*/
+    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0);
   }
 
   onChangePageLand(data: {paginator: any; sort: Sort}): void {
@@ -207,9 +189,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onShowLandsMap(landRecord: LandRecord): void {
-    this.showLandsMap = false;
+    this.showLandsMap = true;
     this.landRecord = landRecord;
-    setTimeout(()=> { this.showLandsMap = true; }, 1000);
   }
 
   onDowloandCroquis(): void{

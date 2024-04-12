@@ -1,17 +1,20 @@
-<article class="flex ml-8">
+<article class="flex items-center">
     <ng-container *ngIf="isHome; else notIsHome">
-        <a [routerLink]="'/home'">
-            <mat-icon svgIcon="heroicons_outline:home"></mat-icon> 
-            <span>Inicio</span>
+        <a [routerLink]="'/home'" class="flex items-center">
+            <!-- <mat-icon class="icon-size-5" svgIcon="heroicons_outline:home"></mat-icon>  -->
+            <span class="cursor-pointer text-[#64748B]">Inicio</span>
         </a>
     </ng-container>
     <ng-template #notIsHome>
         <a [routerLink]="'/home'">
-            <mat-icon svgIcon="heroicons_outline:home"></mat-icon> 
-            <span>Inicio</span></a>
+            <!-- <mat-icon svgIcon="heroicons_outline:home"></mat-icon>  -->
+            <span class="text-[#64748B] " >Inicio </span>
+        </a>
+        <mat-icon svgIcon="mat_solid:keyboard_arrow_right"></mat-icon>
         <a *ngFor="let bread of breadCrumbTemplate; let i = index" (click)="redirectPage(bread)"
-         class="bread-mid" [ngClass]="{active : (breadCrumbTemplate.length -1) === i }">
-            <span>{{ bread.title}}</span>
+         class="cursor-pointer flex items-center text-[#64748B]" [ngClass]="{active : (breadCrumbTemplate.length -1) === i }">
+            <span>{{ bread.title}} </span>
+            <mat-icon svgIcon="mat_solid:keyboard_arrow_right"></mat-icon>
         </a>
     </ng-template>
     

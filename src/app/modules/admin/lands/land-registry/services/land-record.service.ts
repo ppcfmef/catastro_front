@@ -15,8 +15,8 @@ export class LandRecordService {
 
   apiUrl = environment.apiUrl;
   private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
-
-
+  filtersOptions$ = new BehaviorSubject<string>(null);
+  filtersOptionsSelect$ = new BehaviorSubject<any>(null);
   constructor(
     private http: HttpClient
   ) { }
