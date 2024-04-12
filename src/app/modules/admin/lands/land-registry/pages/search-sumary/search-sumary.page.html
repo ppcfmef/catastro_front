@@ -1,10 +1,9 @@
 <div class="flex flex-col flex-auto min-w-0">
-
   <!-- Header -->
   <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
       <div class="flex-1 min-w-0">
           <!-- Title -->
-          <div class="text-4xl font-extrabold tracking-tight">
+          <div class="text-3xl font-semibold tracking-tight leading-8">
             {{ 'Listado de predios' }}
           </div>
       </div>
@@ -17,7 +16,7 @@
             [color]="'primary'"
             (click)="onGoToNewRecord()">
             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-            <span class="ml-2 mr-1">{{ 'Nuevo registro' }}</span>
+            <span class="ml-2 mr-1">Nuevo registro</span>
         </button>
       </div>
   </div>
@@ -25,37 +24,18 @@
   <!-- Main -->
   <div class="flex flex-col flex-auto p-6 sm:p-10">
     <div class="flex justify-center pb-10" *ngIf="summary">
-        <div class="block-icon">
+        <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
+            *ngFor = "let option of optionsLands"
+            [ngClass]="[option.class, selectedCardId === option.id ? 'itemSelected' : '']"
+            (click)="onSelect(option)">
             <div class="flex items-center justify-center p-4 rounded-full bgIcon">
                 <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
             </div>
             <div class="block-text">
-                <p>Predios Registrados</p>
-                <h5>{{ summary.totalRecords }}</h5>
+                <p>{{option.titleCard}}</p>
+                <h5>{{ option.total}}</h5>
             </div>
         </div>
-
-        <div class="block-icon green">
-            
-            <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-                <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-            </div>
-            <div class="block-text">
-                <p>Predios con Cartografia</p>
-                <h5>{{ summary.mappingRecords }}</h5>
-            </div>
-        </div>
-
-        <div class="block-icon red">
-            
-            <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-                <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-            </div>
-            <div class="block-text">
-                <p>Predios sin Cartografia</p>
-                <h5>{{ summary.withoutMappingRecords }}</h5>
-            </div>
-        </div>    
     </div>
     <!--
     <app-tabs [navLinks]="tabs"></app-tabs>

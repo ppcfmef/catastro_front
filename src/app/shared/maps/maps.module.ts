@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowMapPointComponent } from './components/show-map-point/show-map-point.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -8,7 +9,8 @@ import { ShowMapPointComponent } from './components/show-map-point/show-map-poin
     ShowMapPointComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatIconModule
   ],
   exports: [
     ShowMapPointComponent,

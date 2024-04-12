@@ -1,5 +1,5 @@
 <div *ngIf="dataSource" class="mb-8">
-  <h2 class="text-xl font-bold mb-2 c-purple-mef">Predios del contribuyente</h2>
+  <h2 class="mb-4 text-2xl font-semibold tracking-tight leading-6">Predios del contribuyente</h2>
   <table mat-table [dataSource]="dataTable" 
   matSort matSortStart="desc" matSortActive="creationDate" matSortDirection="desc" matSortDisableClear #landTableSort="matSort" matSortDisableClear
   class="shadow bg-card w-full">
@@ -18,18 +18,18 @@
     </ng-container>
     
     <ng-container matColumnDef="landCode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código único de predio</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio único (CPU) </th>
         <td mat-cell *matCellDef="let element">
             {{ element.cup }}
         </td>
     </ng-container>
     
-    <ng-container matColumnDef="municipalLandCode">
+    <!-- <ng-container class="" matColumnDef="municipalLandCode">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio municipal</th>
         <td mat-cell *matCellDef="let element">
           {{ element.cpm }}
         </td>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="idPlot">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Lote</th>

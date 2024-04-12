@@ -10,6 +10,7 @@ export class DetailPredioComponent implements OnInit {
   @Input() landOwner: any;
   @Input() builtArea: any;
 
+  
   constructor() { }
 
   ngOnInit(): void {

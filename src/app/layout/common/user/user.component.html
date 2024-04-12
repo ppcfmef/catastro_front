@@ -1,8 +1,11 @@
 <!-- Button -->
 <button
-    mat-icon-button
+    mat-button
     [matMenuTriggerFor]="userActions">
-    <span class="relative">
+    <span class="relative flex items-center gap-2">
+        <span class="w-full whitespace-nowrap overflow-ellipsis overflow-hidden text-center font-medium">
+            {{user?.name || '-'}}
+        </span>
         <img
             class="w-7 h-7 rounded-full"
             *ngIf="showAvatar && user.avatar"
@@ -11,10 +14,7 @@
             *ngIf="!showAvatar || !user.avatar"
             [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
         <span
-            class="absolute right-0 bottom-0 w-2 h-2 rounded-full"
-            [ngClass]="{'mr-px mb-px': !showAvatar || !user.avatar,
-                          'bg-green-500': user?.isActive,
-                          'bg-red-500': !user?.isActive}"
+            class="bg-green-500 absolute right-0 bottom-0 w-2 h-2 rounded-full mr-px mb-1"
         ></span>
     </span>
 </button>
@@ -24,8 +24,8 @@
     #userActions="matMenu">
     <button mat-menu-item>
         <span class="flex flex-col leading-none">
-            <span>Usted ha iniciado sesion con</span>
-            <span class="mt-1.5 text-md font-medium">{{user.email}}</span>
+            <span class="text-base font-semibold">{{user?.name || '-'}}</span>
+            <span class="mt-1.5 text-md font-medium text-mef-gray-200">{{user?.email || '-'}}</span>
         </span>
     </button>
     <mat-divider class="my-2"></mat-divider>
@@ -37,12 +37,12 @@
         <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
         <span>Configuracion</span>
     </button>
-    <button
+    <!-- <button
         mat-menu-item
         [matMenuTriggerFor]="userStatus">
         <mat-icon [svgIcon]="'heroicons_outline:dots-circle-horizontal'" *ngIf="false"></mat-icon>
         <span>Estado</span>
-    </button>
+    </button> -->
     <mat-divider class="my-2"></mat-divider>
     <button
         mat-menu-item

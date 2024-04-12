@@ -3,6 +3,7 @@ import { NavigationService } from '../../../core/navigation/navigation.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-bread-crumbs',
@@ -241,7 +242,6 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
 
   obtenerHijosDeRutasRecursivo(itemMenu, urlString, pathParent = null): void{
     if(itemMenu.link === urlString){
-      console.log('itemMenu>>>',itemMenu);
       let pathSend = [];
       if(pathParent !== null){
         pathSend = [pathParent];
