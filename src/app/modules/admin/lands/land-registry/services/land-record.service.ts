@@ -17,6 +17,8 @@ export class LandRecordService {
   private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
   filtersOptions$ = new BehaviorSubject<string>(null);
   filtersOptionsSelect$ = new BehaviorSubject<any>(null);
+  lengthOwner$ = new BehaviorSubject<number>(null);
+  renderOption$ = new Subject<boolean>();
   constructor(
     private http: HttpClient
   ) { }

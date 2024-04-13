@@ -30,9 +30,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   ownerLandSubscription: Subscription;
 
   formFilters: FormGroup;
-
   showLandsTable = false;
-
   showLandsMap = false;
 
   dataSource: LandOwner[] = [];
@@ -40,7 +38,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   lengthOwner: number = 0;
   lengthLandsOwner: number = 0;
   landOwner: LandOwner;
-  landRecord: LandRecord;
+  landRecord: LandRecord | null;
   ubigeo: string;
   unsubscribeAll: Subject<any> = new Subject<any>();
   idView = 'gprpregist';
@@ -53,15 +51,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     private landRecordService: LandRecordService,
     private landRegistryService: LandRegistryService,
     private navigationAuthorizationService: NavigationAuthorizationService,
-  ) {
-    this.createFormFilters();
-  }
+  ) {}
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-
+    this.landRecordService.renderOption$.next(false);
+    this.createFormFilters();
     this.navigationAuthorizationService.userScopePermission(this.idView)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((data: any) => {
@@ -74,11 +68,12 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
         this.ubigeo = data?.ubigeo;
       }
       this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
-
-      const queryParams = this.makeQueryParams();
-      this.getLandOwnerRecords({limit: 10, ...queryParams});
-      this.cdRef.detectChanges();
     });
+  }
+
+  ngAfterViewInit(): void {
+    const queryParams = this.makeQueryParams();
+    this.getLandOwnerRecords({limit: 10, ...queryParams});
   }
 
   ngOnDestroy(): void {
@@ -87,6 +82,9 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onSelectUbigeo(ubigeo: string): void {
+    this.showLandsTable = false;
+    this.showLandsMap = false;
+    this.landRecord = null;
     this.ubigeo = ubigeo;
     this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     const queryParams = this.makeQueryParams();
@@ -116,6 +114,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onClickSearch(): void {
+    this.showLandsTable = false;
+    this.showLandsMap = false;
     const rawValue = this.formFilters.getRawValue();
     const search = rawValue?.search || '';
     const filterQueryParams = this.makeQueryParams();
@@ -163,11 +163,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
         this.lengthLandsOwner = landResult.count;
 
         this.landRecord = landResult.results && landResult.results.length>0? this.dataSourceLands[0]:null;
-        this.showLandsMap= true;
+        // this.showLandsMap= true;
      
       }
     );
-    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0);
+    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0.010);
   }
 
   onChangePageLand(data: {paginator: any; sort: Sort}): void {
@@ -191,6 +191,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onShowLandsMap(landRecord: LandRecord): void {
     this.showLandsMap = true;
     this.landRecord = landRecord;
+    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0.001);
   }
 
   onDowloandCroquis(): void{
@@ -198,11 +199,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   }
 
   onCleanSearch(): void {
-
     this.formFilters.get('search').setValue(null);
     const filterQueryParams = this.makeQueryParams();
     this.showLandsTable = false;
     this.showLandsMap = false;
+    this.landRecord = null;
     this._landOwnerService.getList({ limit: 10 ,... filterQueryParams})
     .subscribe((response: IPagination<LandOwner>) => {
       this.dataSource = response.results;
@@ -213,9 +214,11 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onChangeView(): void {
     const tabView = this.formFilters.get('view').value;
     if (tabView === 'predio') {
+      this.landRecordService.renderOption$.next(true);
       this.router.navigate(['/land/registry/search/search-land']);
     }
     else if (tabView === 'Contribuyente') {
+      this.landRecordService.renderOption$.next(false);
       this.router.navigate(['/land/registry/search/search-owner']);
     }
   }

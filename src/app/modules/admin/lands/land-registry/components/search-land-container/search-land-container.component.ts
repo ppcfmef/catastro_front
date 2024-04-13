@@ -75,7 +75,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   ) {}
 
   ngOnInit(): void {
-     this.createFormFilters();
+    this.landRecordService.renderOption$.next(true);
+    this.createFormFilters();
     this.navigationAuthorizationService.userScopePermission(this.idView)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((data: any) => {
@@ -131,7 +132,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.showOwnerTable = true;
         this.showLandsMap = true;
         setTimeout(() => {
-          document.getElementById('dowloandCroquis').scrollIntoView()}, 0);
+          document.getElementById('dowloandCroquis').scrollIntoView()}, 0.010);
       }
     );
   }
@@ -156,9 +157,11 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   onChangeView(): void {
     const tabView = this.formFilters.get('view').value;
     if (tabView === 'predio') {
+      this.landRecordService.renderOption$.next(true);
       this.router.navigate(['/land/registry/search/search-land']);
     }
     else if (tabView === 'Contribuyente') {
+      this.landRecordService.renderOption$.next(false);
       this.router.navigate(['/land/registry/search/search-owner']);
     }
   }
@@ -190,10 +193,14 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     const queryParams = this.makeQueryParams();
     this.getLandRecords(queryParams);
+    this.showOwnerTable = false;
+    this.showLandsMap = false;
   }
 
   onShowLandOwner(landOwner: LandOwner): void{
     this.landOwner = landOwner;
+    setTimeout(() => {document.getElementById('dowloandCroquis').scrollIntoView()}, 0.001);
+    
   }
 
   private makeQueryParams(): {[key: string]: string | number} {

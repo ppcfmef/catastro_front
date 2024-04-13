@@ -28,14 +28,15 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   tableFilters: {paginator: any; sort: Sort};
   defaultPaginator;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
+  constructor(private cdRef: ChangeDetectorRef) {
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
     this.tableFilters = {
       paginator: this.defaultPaginator,
       sort: {active: 'creationDate', direction: 'desc'}
     };
+  }
+
+  ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,6 +45,8 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
       }
 
       if (changes?.length?.currentValue) {
+        console.log(changes?.length?.currentValue, 'here'); 
+        console.log(this.tableFilters, 'this.tableFilters.paginator');
         this.tableFilters.paginator.length = changes?.length?.currentValue;
       }
   }
@@ -71,7 +74,6 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   onShowLandsTable(landOwner: LandOwner): void {
-    console.log('click-table')
     this.showLandsTable.emit(landOwner);
     this.showLandOwner.emit(landOwner);
   }

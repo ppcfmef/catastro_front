@@ -4,8 +4,6 @@
     app-tabs {
         @include tavStyleActive();
     }
-
-    @include block-icon();
 }
 
 .block-icon {
@@ -28,6 +26,7 @@
         margin-left: 16px;
         display: flex;
         flex-direction: column;
+        font-weight: 500;
 
         p {
             color: #333;
