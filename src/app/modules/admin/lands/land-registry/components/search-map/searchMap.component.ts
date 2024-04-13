@@ -57,23 +57,24 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     //pr:any;
     limit=10;
     init=true;
-    private _overlayRef: OverlayRef;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-   
-    
+    //implementar 
+    addressControl = new FormControl('');
+    optionsDirection = [];
+    filteredOptions: Observable<any[]>;
+ 
     searchForm: any;
     selectedOption: string | null = null;
     showSelected: null | string =null; 
     changeStyle: string | null = null;
     //options 
     options: any[] | null;
-    //panel  
+    //panel 
     opened: boolean = false;
+    vias : any[] | null;
+    private _overlayRef: OverlayRef;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    //implementar 
-    addressControl = new FormControl('');
-    optionsDirection = [];
-    filteredOptions: Observable<any[]>;
+
 
     constructor(
         private landRegistryService: LandRegistryService,
@@ -152,60 +153,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             map(value => this._filter(value || '')),
           );
     }
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        console.log(value,'value insert' )
-        console.log(filterValue,'filterValue' )
-        return this.optionsDirection.filter(option => option.name.includes(filterValue));
-      }
-    
-    private _createOverlay(): void {
-        // Create the overlay
-        this._overlayRef = this._overlay.create({
-            hasBackdrop: true,
-            backdropClass: 'fuse-backdrop-on-mobile',
-            scrollStrategy: this._overlay.scrollStrategies.block(),
-            positionStrategy: this._overlay
-                .position()
-                .flexibleConnectedTo(this._searchOrigin)
-                .withLockedPosition(true)
-                .withPush(true)
-                .withPositions([
-                    {
-                        originX: 'start',
-                        originY: 'bottom',
-                        overlayX: 'start',
-                        overlayY: 'top',
-                    },
-                    {
-                        originX: 'start',
-                        originY: 'top',
-                        overlayX: 'start',
-                        overlayY: 'bottom',
-                    },
-                    {
-                        originX: 'end',
-                        originY: 'bottom',
-                        overlayX: 'end',
-                        overlayY: 'top',
-                    },
-                    {
-                        originX: 'end',
-                        originY: 'top',
-                        overlayX: 'end',
-                        overlayY: 'bottom',
-                    },
-                ]),
-        });
 
-        // Detach the overlay from the portal on backdrop click
-        this._overlayRef.backdropClick().subscribe(() => {
-            this._overlayRef.detach();
-            this.resetForm(); 
-            this.results = null;
-            this._changeDetectorRef.markForCheck();
-        });
-    }
     openPanel(): void {
        
         // Return if the messages panel or its origin is not defined
@@ -285,7 +233,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 console.log(this.masterDomain, 'domina');
                 if (responseJson['features'] && responseJson['features']) {
                     this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_VIA': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIP_VIA']).shortName })).slice(0,5);
+                        (f: any) => ({...f['attributes']})).slice(0,5);
 
                 }
                 this.init=false;
@@ -404,7 +352,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.results =[];
     }
 
-    parsearData(val, typeSearch){
+    parsearData(val, typeSearch): void{
         switch(typeSearch) {
             case '1':
               this.showSelected = val.PARTIDA
@@ -422,11 +370,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
           }
     }
  
-    onClean(){
+    onClean(): void{
         this.resetForm();
         this.results = null;
     }
-    resetForm() {
+    resetForm(): void {
         this.searchForm = {
             pr: null,
             mz: null,
@@ -450,6 +398,59 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        console.log(value,'value insert' )
+        console.log(filterValue,'filterValue' )
+        return this.optionsDirection.filter(option => option.name.includes(filterValue));
+      }
+    
+    private _createOverlay(): void {
+        // Create the overlay
+        this._overlayRef = this._overlay.create({
+            hasBackdrop: true,
+            backdropClass: 'fuse-backdrop-on-mobile',
+            scrollStrategy: this._overlay.scrollStrategies.block(),
+            positionStrategy: this._overlay
+                .position()
+                .flexibleConnectedTo(this._searchOrigin)
+                .withLockedPosition(true)
+                .withPush(true)
+                .withPositions([
+                    {
+                        originX: 'start',
+                        originY: 'bottom',
+                        overlayX: 'start',
+                        overlayY: 'top',
+                    },
+                    {
+                        originX: 'start',
+                        originY: 'top',
+                        overlayX: 'start',
+                        overlayY: 'bottom',
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'bottom',
+                        overlayX: 'end',
+                        overlayY: 'top',
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'top',
+                        overlayX: 'end',
+                        overlayY: 'bottom',
+                    },
+                ]),
+        });
 
+        // Detach the overlay from the portal on backdrop click
+        this._overlayRef.backdropClick().subscribe(() => {
+            this._overlayRef.detach();
+            this.resetForm(); 
+            this.results = null;
+            this._changeDetectorRef.markForCheck();
+        });
+    }
 }
 
