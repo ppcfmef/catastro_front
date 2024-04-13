@@ -1,7 +1,7 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
   <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-5/12 input-icon-form">
-    <mat-label>Buscar</mat-label>
-    <input type="text" matInput formControlName="search"
+    <mat-label class=" font-semibold">Buscar</mat-label>
+    <input type="text" matInput formControlName="search" 
            placeholder=" Buscar por CPU -Codigo de predio municipal- ID lote o ID Imagen"
            autocomplete="off">
     <mat-select formControlName="view" matPrefix
@@ -9,15 +9,15 @@
       <mat-option [value]="'predio'">Predios</mat-option>
       <mat-option [value]="'Contribuyente'">Contribuyente</mat-option>
     </mat-select>
-        <mat-icon
+        <mat-icon matsuffix
           [matTooltip]="'Limpiar buscador'"
-          class="hidden sm:flex icon-size-5"
+          class="hidden sm:flex icon-size-5 mr-2"
           [svgIcon]="'heroicons_solid:x'"
           (click)="onCleanSearch()"
         ></mat-icon>
         <button mat-flat-button
-        [color]="'primary'"
-        (click)="onClickSearch()"
+          [color]="'primary'"
+          (click)="onClickSearch()"
         >
           <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
         </button>

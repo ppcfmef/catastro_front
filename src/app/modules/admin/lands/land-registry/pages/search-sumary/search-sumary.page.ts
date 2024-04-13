@@ -55,10 +55,20 @@ export class SearchSumaryPage implements OnInit {
 
     }
   ];
+
+  optionOwner: any[] = [
+    {
+      id:'',
+      titleCard: 'Total de Contribuyentes Registrados',
+      class:'',
+      label:'totalRecords',
+      total: null
+    },
+  ];
   ubigeo: string;
   unsubscribeAll: Subject<any> = new Subject<any>();
   selectedCardId;
- 
+  renderOption:boolean;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -68,6 +78,10 @@ export class SearchSumaryPage implements OnInit {
   ) { }
  
   ngOnInit(): void {
+ 
+    this.landRecordService.renderOption$.subscribe(render => {
+      this.renderOption = render;
+    })
     this.navigationAuthorizationService.ubigeoNavigation$
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((ubigeo: string | null) => {
@@ -75,7 +89,8 @@ export class SearchSumaryPage implements OnInit {
 
       if (ubigeo !== null && ubigeo !== undefined) {
         queryParams['ubigeo'] = ubigeo;
-      }
+      };
+
       this.landRecordService.getSummary(queryParams)
       .subscribe(summary => {
         this.updatePrediosValues(this.optionsLands, summary);
@@ -114,5 +129,9 @@ export class SearchSumaryPage implements OnInit {
     this.selectedCardId = option.id;
     this.landRecordService.filtersOptions$.next(option.id);
     console.log(this.selectedCardId, 'op')
+  };
+
+  onSelectOwner(option):void{
+    
   }
 }

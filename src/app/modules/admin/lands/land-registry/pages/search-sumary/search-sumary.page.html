@@ -21,26 +21,45 @@
       </div>
   </div>
 
-  <!-- Main -->
+  <!-- options predios -->
   <div class="flex flex-col flex-auto p-6 sm:p-10">
-    <div class="flex justify-center pb-10" *ngIf="summary">
-        <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
-            *ngFor = "let option of optionsLands"
-            [ngClass]="[option.class, selectedCardId === option.id ? 'itemSelected' : '']"
-            (click)="onSelect(option)">
-            <div class="flex items-center justify-center p-4 rounded-full bgIcon">
-                <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
-            </div>
-            <div class="block-text">
-                <p>{{option.titleCard}}</p>
-                <h5>{{ option.total}}</h5>
+    <ng-container *ngIf="renderOption; else owners">
+        <div class="flex justify-center pb-10" *ngIf="summary">
+            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
+                *ngFor = "let option of optionsLands"
+                [ngClass]="[option.class, selectedCardId === option.id ? 'itemSelected' : '']"
+                (click)="onSelect(option)">
+                <div class="flex items-center justify-center p-4 rounded-full bgIcon">
+                    <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
+                </div>
+                <div class="block-text">
+                    <p>{{option.titleCard}}</p>
+                    <h5>{{ option.total}}</h5>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+   
+    <ng-template #owners>
+        <div class="flex justify-center pb-10">
+            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
+                *ngFor = "let option of optionOwner"
+                [ngClass]="option.class"
+                (click)="onSelectOwner(option)">
+                <div class="flex items-center justify-center p-4 rounded-full bgIcon">
+                    <mat-icon svgIcon="heroicons_outline:home"></mat-icon>
+                </div>
+                <div class="block-text">
+                    <p>{{option.titleCard}}</p>
+                    <h5>{{ option.total}}</h5>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
     <!--
     <app-tabs [navLinks]="tabs"></app-tabs>
     -->
     <router-outlet></router-outlet>
   </div>
-
 </div>

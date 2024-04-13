@@ -29,15 +29,15 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   tableFilters: {paginator: any; sort: Sort};
   defaultPaginator;
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor() {
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
     this.tableFilters = {
       paginator: {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0},
       sort: {active: 'creationDate', direction: 'desc'}
     };
   }
+
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
       if (changes?.dataSource?.currentValue) {
@@ -50,6 +50,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   ngAfterViewInit(): void {
+    console.log(this.dataTable, 'data table');
     this.dataTable.sort = this.tableSort;
 
     merge(this.tableSort?.sortChange, this.tablePaginator?.page)
@@ -61,7 +62,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
       if (res?.pageSize) {
         this.tableFilters.paginator = res;
       }
-      this.pageIndex = this.tableFilters.paginator.pageIndex;
+      this.pageIndex = this.tableFilters.paginator?.pageIndex;
       this.changePage.emit(this.tableFilters);
     });
   }

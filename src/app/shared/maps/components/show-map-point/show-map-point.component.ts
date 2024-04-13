@@ -8,6 +8,7 @@ import {
     ViewChild,
     OnChanges,
     OnDestroy,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import jsPDF from 'jspdf';
@@ -35,7 +36,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
         { latitude: -13.54, longitude: -71.955921 },
     ];
     @ViewChild('mapViewNode', { static: false }) private mapViewEl: ElementRef;
-    renderMap: boolean = true;
+    renderMap: boolean;
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
@@ -254,7 +255,8 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
-        private _userService: UserService
+        private _userService: UserService,
+        private _changeDetectorRef: ChangeDetectorRef,
     ) { }
     ngOnDestroy(): void {
 
@@ -284,16 +286,19 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                         ? this.user?.ubigeo
                         : '150101';
             });
+
+           
+            this._changeDetectorRef.markForCheck();
     }
 
     ngAfterViewInit(): void {
-
-        this.renderMap = this.points.every(point => point.latitude != null && point.longitude != null);
-
+        this.renderMap = this.points.every(point => point.latitude != null || point.longitude != null);
+        console.log(this.renderMap, 'renderMap');
         if(this.renderMap) {
+            console.log(this.renderMap, ' volver a reiniciar mapa');
             setTimeout(() => {
                 this.initializeMap();
-            }, 2000);
+            }, 0.0010);
         }
         //this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
    
@@ -303,6 +308,13 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
         if (this.view) {
             this.addPoints(this.points);
         }
+        this.renderMap = this.points.every(point => point.latitude != null || point.longitude != null);
+        this._changeDetectorRef.markForCheck();
+        console.log(this.renderMap, 'renderMap onchange');
+        console.log(this.landRecord, 'landRecord onchange')
+        console.log(this.points, 'points onchange')
+
+
     }
     /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
@@ -487,13 +499,15 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             styles: {
                 overflow: 'hidden',
                 lineWidth: 0,
+                cellPadding: 2,
             },
+        
             body: [
                 [
                     {
                         content: 'FICHA DE PREDIO - CATASTRO FISCAL',
                         colSpan: 2,
-                        styles: { halign: 'center' },
+                        styles: { halign: 'center', fontStyle: 'bold', fontSize: 14},
                     },
                 ],
 
@@ -501,55 +515,87 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                     {
                         content: `MUNICIPALIDAD DE ${_districtResource?.name} UBIGEO  ${this.landRecord.ubigeo}`,
                         colSpan: 2,
-                        styles: { halign: 'center' },
+                        styles: { halign: 'center', fontStyle: 'normal', fontSize: 10,},
                     },
                 ],
 
                 [
-                    { content: `Fecha: ${moment().format('DD/MM/YYYY')}` },
-                    { content: `Usuario: ${this.user?.name}` },
+                    { content: `Fecha:  ${moment().format('DD/MM/YYYY')}`,
+                        styles: { halign: 'left', fontSize: 11,cellPadding: [12,4,4,8] , fontStyle: 'bold'},
+                    },
+                ],
+
+            
+                [
+                    { content: `Datos del predio`,
+                         styles: { halign: 'left', fontSize: 11,cellPadding: [1,4,4,8] , fontStyle: 'bold'}
+                        
+                    },
+
+                    {
+                        content: `Datos del contribuyente`,
+                        styles: { halign: 'left', fontSize: 10,cellPadding:[1,4,4,8], fontStyle: 'bold'},
+                      
+                    },
+                    
                 ],
 
                 [
                     {
                         content: `Código Predial Único: ${this.landRecord.cup ? this.landRecord.cup : ''}`,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
 
                     },
+                    { content: `RUC / DNI: ${this.landOwner?.dni}`,
+                      styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+                    }
 
-                    { content: `Puesto Laboral: ${this.user?.jobTitle ? this.user?.jobTitle : '-'}` },
                 ],
                 [
                     {
                         content: `Código de Predio Municipal: ${this.landRecord.cpm ? this.landRecord.cpm : ''}`,
-                        colSpan: 2,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+
                     },
+                    {
+                        content: `Contribuyente: ${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}`,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+                    }
                 ],
+                
                 [
                     {
                         content: `Latitud: ${this.landRecord.latitude ? this.landRecord.latitude : ''}`,
-                        colSpan: 2,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+
+                    },
+
+                    { content: `Puesto Laboral: ${this.user?.jobTitle ? this.user?.jobTitle : '-'}`,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+
                     },
                 ],
+
                 [
                     {
                         content: `Longitud: ${this.landRecord.longitude ? this.landRecord.longitude : ''}`,
-                        colSpan: 2,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
+
+                    },
+                    { content: `Usuario: ${this.user?.name}`,
+                      styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
                     },
                 ],
-                [
-                    {
-                        content: `Contribuyente: ${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}`,
-                        colSpan: 2,
-                    },
-                ],
-                [{ content: `RUC / DNI: ${this.landOwner?.dni}`, colSpan: 2 }],
+            
                 [
                     {
                         content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `,
                         colSpan: 2,
+                        styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
                     },
                 ],
-                [{ content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `, colSpan: 2 }],
+
+
             ],
         });
 
@@ -560,7 +606,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
         doc.addImage(screenshot?.dataUrl, 'JPEG', 35, 100, 135, 75);
         const x: number = 35;
-        const y: number = 185;
+        const y: number = 200;
         const bodyLegend = [];
 
         const columns = 3;
@@ -603,7 +649,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
             styles: {
                 overflow: 'hidden',
-                lineWidth: 0,
+                lineWidth: 0,  
                 //lineColor: [217, 216, 216]
             },
             // eslint-disable-next-line @typescript-eslint/no-shadow

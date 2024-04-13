@@ -19,7 +19,7 @@
     
     <ng-container matColumnDef="landCode">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio único (CPU) </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="font-semibold">
             {{ element.cup }}
         </td>
     </ng-container>
@@ -77,14 +77,14 @@
     <ng-container matColumnDef="roadBlockNumber">
         <th mat-header-cell *matHeaderCellDef> Nro cuadra </th>
         <td mat-cell *matCellDef="let element">
-            {{ element.roadBlockNumber }}
+            {{ element.roadBlockNumber ?? '-' }}
         </td>
     </ng-container>
 
     <ng-container matColumnDef="municipalNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro </th>
+        <th mat-header-cell *matHeaderCellDef> Nro Puerta</th>
         <td mat-cell *matCellDef="let element">
-            {{ element.municipalNumber }}
+            {{ element.municipalNumber ?? element.municipalNumberAlt ?? '-'}}        
         </td>
     </ng-container>
 
