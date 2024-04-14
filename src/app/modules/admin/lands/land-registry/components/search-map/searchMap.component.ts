@@ -1,7 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgModule, OnDestroy, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, NgModule, OnDestroy, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,6 +48,7 @@ import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchMapComponent implements OnInit, OnDestroy {
+    @Input()layersInfo: any =[];
     @Output() eventOnGo: EventEmitter<any>= new EventEmitter();
     @ViewChild('searchOrigin') private _searchOrigin: ElementRef;
     @ViewChild('searchPanel') private _messagesPanel: TemplateRef<any>;
