@@ -23,7 +23,7 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { MapUtils } from 'app/shared/utils/map.utils';
-
+import { NgZone } from '@angular/core';
 
 @Component({
     selector: 'search-map',
@@ -43,7 +43,7 @@ import { MapUtils } from 'app/shared/utils/map.utils';
         MatTooltipModule,
         FuseScrollbarModule,
         MatAutocompleteModule,
-        FuseSplashScreenModule
+        FuseSplashScreenModule,
     ],
     templateUrl: './search-map.component.html',
     styleUrls: ['./search-map.component.scss'],
@@ -92,8 +92,20 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         private _cfPredioService: CFPredioService,
         private _userService: UserService,
         private _fuseSplashScreenService: FuseSplashScreenService,
-
+        private zone: NgZone
     ) {
+        this.searchForm = {
+            pr: null,
+            mz: null,
+            lt: null,
+            ltT: null,
+            tipovia: null,
+            door: null,
+            habUrb: null,
+            tipouu:null,
+            address: null,
+            via: null,
+        };
         this._userService.user$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: any) => {
@@ -112,16 +124,16 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 option: 'Dirección',
                 icon:"mat_solid:my_location"
             },
-            {
-                cod: '1',
-                option: 'Partida Registral',
-                icon:"heroicons_solid:document-magnifying-glass"
-            },
-
+            
             {
                 cod: '3',
                 option: 'Unidad urbana',
                 icon:"mat_solid:other_houses"
+            },
+            {
+                cod: '1',
+                option: 'Partida Registral',
+                icon:"heroicons_solid:document-magnifying-glass"
             },
         ];
 
@@ -144,7 +156,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 console.log('this.masterDomain>>',this.masterDomain);
             });
         this.resetForm();
-        console.log('this.searchForm.tipovia',this.searchForm.tipovia);
+       
         this.filteredOptions = this.addressControl.valueChanges.pipe(
             startWith(''),
             map(value => this._filter(value || '')),
@@ -245,7 +257,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     }
                     );
                 });
-
         }
         else if(this.selectedOption === '2'){
 
@@ -254,7 +265,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 params ={'UBIGEO':this.ubigeo,  'COD_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
                 where=CommonUtils.generateWhereArgis(params);
                 const featureLayer = this.layersInfo.find((l)=>l.id === 0 )?.featureLayer;
-
+                 console.log(' featureLayer>>',  featureLayer);
                 MapUtils.queryFeaturelayer(featureLayer,where).then((features)=>{
                     this._fuseSplashScreenService.hide();
                     this.results = features.map(
@@ -264,6 +275,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                             const shortName= tipoVia?.shortName;
                             return { id: attributes['PARTIDA'], name: `${shortName} ${attributes['NOM_VIA']  }  ${attributes['NUM_MUN']  }  `, geometry: f.geometry};
                         });
+                        console.log('  this.results 2>>',  this.results);
                     });
 
             /*this._cfLoteService
@@ -301,10 +313,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         else if(this.selectedOption === '3'){
 
 
-            if(this.searchForm?.lt){
-
-
-
+            if(this.searchForm?.lt?.id){
             }
 
 
@@ -364,27 +373,10 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         console.log('value>>',value);
         this.searchForm.tipovia = value.id;
         this.selectedOptionFeature = value;
-        //update options by type via 
-        // this.optionsDirection = [
-        //     {
-        //         id:'1',
-        //         name:'Norte',
-        //     },
-        //     {
-        //         id:'2',
-        //         name:'sur',
-        //     },
-        //     {
-        //         id:'3',
-        //         name:'este',
-        //     },
-        // ]
-
-        /*this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
     }
 
     onChangeVia(value): void {
-        console.log('value',value);
+        console.log('value2',value);
         this.searchForm.via = value.id;
         this.selectedOptionFeature = value;
     }
@@ -402,11 +394,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     }
 
     onChangehabUrb(value): void {
-        this.searchForm.habUrb = value.id;
+        this.searchForm.habUrb = value;
         this.selectedOptionFeature = value;
 
 
-        const params ={'UBIGEO':this.ubigeo,'COD_UU':this.searchForm?.habUrb,};
+        const params ={'UBIGEO':this.ubigeo,'COD_UU':this.searchForm?.habUrb.id,};
         const where=CommonUtils.generateWhereArgis(params);
 
 
@@ -424,11 +416,10 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
 
     onChangeMz(value): void {
-        this.searchForm.mz = value.id;
-        this.selectedOptionFeature = value;
+        this.searchForm.mz = value;
+        this.selectedOptionFeature = value; 
 
-
-        const params ={'UBIGEO':this.ubigeo,'COD_UU':this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz};
+        const params ={'UBIGEO':this.ubigeo,'COD_UU':this.searchForm?.habUrb.id,'MZN_URB':this.searchForm?.mz?.id};
         const where=CommonUtils.generateWhereArgis(params,true);
 
 
@@ -445,9 +436,8 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         });
     }
     onChangeLt(value): void {
-        this.searchForm.lt = value.id;
+        this.searchForm.lt = value;
         this.selectedOptionFeature = value;
-
     }
 
     onGo(value: any): void{
@@ -457,9 +447,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             console.log(value,'valueeGo');
         }
 
-    }
-
-
+    };
 
     onSelectionChange(value): void {
         this.selectedOption = value;
@@ -478,7 +466,8 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 this.changeStyle = val?.id;
               break;
             case '3':
-                this.showSelected = val.name;
+                console.log('val 3>>',val);
+                this.showSelected = this.searchForm?.habUrb?.name + ' ' + 'Mz'+ this.searchForm?.mz?.name + ' ' +'Lt'+ this.searchForm?.lt?.name;
                 this.changeStyle = val?.id;
               break;
             default:
@@ -494,6 +483,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.searchForm = {
             pr: null,
             mz: null,
+            ltT: null,
             lt: null,
             tipovia: null,
             door: null,

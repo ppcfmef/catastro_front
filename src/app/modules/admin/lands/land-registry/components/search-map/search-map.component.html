@@ -1,7 +1,7 @@
 <!-- search toggle -->
 <ng-container>
     <div class="flex items-center justify-center cursor-pointer bg-card p-1 px-2 rounded-sm box-shadow-z1"
-        ([ngModel])="showSelected" (click)="openPanel()" #searchOrigin>
+        (click)="openPanel()" #searchOrigin>
         <mat-icon svgIcon="mat_outline:search"></mat-icon>
         <input matInput placeholder="Buscar predio" class="w-full ml-2 text-md" readonly [(ngModel)]="showSelected">
     </div>
@@ -27,8 +27,8 @@
                     <mat-label>Ingresar Partida Regitral</mat-label>
                     <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
                     <input 
+                        [(value)]="searchForm.pr"
                         matInput placeholder="Ejem: P01247899"
-                        [(ngModel)]="searchForm.pr" name="pr"
                         (change)="onChangePr($event.target.value)"
                     />
                 </mat-form-field>
@@ -38,24 +38,19 @@
                 <div class="flex px-4 gap-2">
                     <mat-form-field  appearance="fill" class="flex-auto">
                         <mat-label>Ingresar Dirección</mat-label>
-
-    
-
-                        <mat-select class="w-full" (selectionChange)=onChangeVia($event.value)  
-                            >
+                        <mat-select class="w-full" 
+                             [(value)]="searchForm.tipouu"
+                            (selectionChange)=onChangeVia($event.value)>
                             <mat-option *ngFor="let option of optionsDirection " [value]="option">
                                 {{option.name}}
                             </mat-option>
                         </mat-select>
-
-
-                                       
-            
                     </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-14">
+                    <mat-form-field appearance="fill" class="fuse-mat-dense w-14" >
                         <mat-label>Nro.</mat-label>
                         <input matInput placeholder="75" 
-                            (change)="onChangeDoor($event.target.value)" />
+                            [(value)]="searchForm.door"
+                            (change)="onChangeDoor($event.target.value)"  />
                     </mat-form-field>
                     
                 </div>
@@ -66,11 +61,9 @@
                 <div class="flex flex-col px-4">
                     <mat-form-field  appearance="fill" class="flex-auto">
                         <mat-label>Ingresar Habilitacion Urbana</mat-label>
-
-    
-
-                        <mat-select class="w-full" (selectionChange)=onChangehabUrb($event.value)  
-                            >
+                        <mat-select class="w-full" 
+                            [(value)]="searchForm.habUrb"
+                            (selectionChange)=onChangehabUrb($event.value)>
                             <mat-option *ngFor="let option of optionsUU " [value]="option">
                                 {{option.name}}
                             </mat-option>
@@ -82,10 +75,11 @@
                     <div class="flex w-full justify-between">
                         <mat-form-field appearance="fill" class="fuse-mat-dense w-[120px]">
                             <mat-label>Mz.</mat-label>
-
-                            <mat-select class="w-full" (selectionChange)=onChangeMz($event.value)  
-                            >
-                            <mat-option *ngFor="let option of optionsMz " [value]="option">
+                            <mat-select class="w-full" 
+                                [(value)]="searchForm.mz"
+                                (selectionChange)=onChangeMz($event.value)
+                                >
+                            <mat-option *ngFor="let option of optionsMz;trackBy: trackByFn" [value]="option">
                                 {{option.name}}
                             </mat-option>
                         </mat-select>
@@ -95,8 +89,10 @@
                         </mat-form-field>
                         <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
                             <mat-label>Lt.</mat-label>
-                            <mat-select class="w-full" (selectionChange)=onChangeLt($event.value)  >
-                                <mat-option *ngFor="let option of optionsLt " [value]="option"  >
+                            <mat-select class="w-full" 
+                                [(value)]="searchForm.lt"
+                                (selectionChange)=onChangeLt($event.value)  >
+                                <mat-option *ngFor="let option of optionsLt ;trackBy: trackByFn" [value]="option">
                                     {{option.name}}
                                 </mat-option>
                             </mat-select>
@@ -188,7 +184,7 @@
             </ng-container>
             <ng-template #noResults>
                 <div class="p-4 "
-                    *ngIf=" !(init) && results && results?.length===0">No se han encontrado resultados</div>
+                    *ngIf=" (init) && results && results?.length===0">No hay resultados.</div>
 
             </ng-template>
         </ng-container>
