@@ -370,7 +370,34 @@ static async createArcgisJSON(
        }).catch((error) => {
          console.log(error.error);
        });*/
-
+    static getCenterOfPolyline(polyline: any): any {
+        const paths = polyline.paths;
+    
+        let totalMidpointX = 0;
+        let totalMidpointY = 0;
+        let totalSegments = 0;
+    
+        paths.forEach((path) => {
+          for (let i = 0; i < path.length - 1; i++) {
+            const startPoint = path[i];
+            const endPoint = path[i + 1];
+            
+            const midpointX = (startPoint[0] + endPoint[0]) / 2;
+            const midpointY = (startPoint[1] + endPoint[1]) / 2;
+        
+            totalMidpointX += midpointX;
+            totalMidpointY += midpointY;
+            totalSegments++;
+          }
+        });
+    
+        const centerOfPolyline = {
+           x:totalMidpointX / totalSegments,
+           y:totalMidpointY / totalSegments
+        };
+        return centerOfPolyline;
+    
+    }
 projectPoint(point: any,proj4SrcKey: string,proj4DestKey: string): any {
     return proj4(
         proj4.defs[proj4SrcKey],
