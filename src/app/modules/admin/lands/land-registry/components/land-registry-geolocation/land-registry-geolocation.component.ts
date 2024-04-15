@@ -1377,10 +1377,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         });
 
 
-                        this.view.ui.add(searchWidget, {
-                            position: 'top-left',
-                            index: 1,
-                        });
+                        // this.view.ui.add(searchWidget, {
+                        //     position: 'top-left',
+                        //     index: 1,
+                        // });
 
 
 
@@ -1600,6 +1600,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
     buscar(ubigeo: string): void{
         const where = `UBIGEO='${ubigeo}'`;
+        console.log('where',this.layersInfo);
         this.layersInfo.forEach((l) => {
             if(l.featureLayer){
                 const featureLayer = l.featureLayer;
@@ -2217,8 +2218,9 @@ async saveNewPointGestionPredio(): Promise<void>{
         }
 
        // this._fuseSplashScreenService.hide();
-
+       console.log('data saveLandRegistryMap>>>',data);
         return data;
+       
     }
 
 
@@ -2318,6 +2320,7 @@ async saveNewPointGestionPredio(): Promise<void>{
         if (results.features && results.features.length > 0) {
             feature = results.features[0];
         }
+        console.log(feature , 'feature');
         return feature;
     }
 
@@ -2326,6 +2329,8 @@ async saveNewPointGestionPredio(): Promise<void>{
         const y = r.COORD_Y;*/
 
         if (this.view) {
+
+            console.log('r>>', r);
           
             if (r.geometry.type ==='point'){
                 this.view.center =[r.geometry.x,r.geometry.y] ;
