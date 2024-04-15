@@ -36,24 +36,15 @@
 
             <ng-container *ngSwitchCase="'2'">
                 <div class="flex px-4 gap-2">
-                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto">
+                    <mat-form-field  appearance="fill" class="flex-auto">
                         <mat-label>Ingresar Dirección</mat-label>
-                        <input 
-                            [formControl]="addressControl"
-                            [matAutocomplete]="auto"
-                            matInput placeholder="Ejem: Cusco" 
-                            (change)="onChangeVia($event.target.value)"
-                        >
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option  
-                                *ngFor="let option of filteredOptions | async" [value]="option.id">
+
+    
+
+                        <mat-select class="w-full" (selectionChange)=onChangeVia($event.value)  
+                            >
+                            <mat-option *ngFor="let option of optionsDirection " [value]="option">
                                 {{option.name}}
-                            </mat-option>
-                          </mat-autocomplete>
-                        <mat-select class="w-16" (selectionChange)=onSelectionChangeVia($event.value,$event) [value]="'01'"
-                            matPrefix>
-                            <mat-option class="truncate text-sm" *ngFor="let domain of masterDomain.codStreet" [value]="domain.id">
-                                {{domain.name}}
                             </mat-option>
                         </mat-select>
 
@@ -73,30 +64,46 @@
 
             <ng-container *ngSwitchCase="'3'">
                 <div class="flex flex-col px-4">
-                    <mat-form-field [ngClass]="formFieldHelpers" class="flex-auto w-full">
-                        <mat-label>Ingresar Habilitacion</mat-label>
-                        <input matInput required placeholder="Ejem: Las Rosas" (change)="onChangeMz($event.target.value)" />
-                        <mat-select class="w-20"
-                             (selectionChange)=onSelectionChangeUU($event.value) 
-                             [value]="'1'"
-                             matPrefix>
-                            <mat-option class="truncat text-sm" *ngFor="let domain of masterDomain.uuType" [value]="domain.id">
-                                {{domain.name}}
+                    <mat-form-field  appearance="fill" class="flex-auto">
+                        <mat-label>Ingresar Habilitacion Urbana</mat-label>
+
+    
+
+                        <mat-select class="w-full" (selectionChange)=onChangehabUrb($event.value)  
+                            >
+                            <mat-option *ngFor="let option of optionsUU " [value]="option">
+                                {{option.name}}
                             </mat-option>
                         </mat-select>
+
                     </mat-form-field>
+
+                    
                     <div class="flex w-full justify-between">
                         <mat-form-field appearance="fill" class="fuse-mat-dense w-[120px]">
                             <mat-label>Mz.</mat-label>
-                            <input 
+
+                            <mat-select class="w-full" (selectionChange)=onChangeMz($event.value)  
+                            >
+                            <mat-option *ngFor="let option of optionsMz " [value]="option">
+                                {{option.name}}
+                            </mat-option>
+                        </mat-select>
+                           <!-- <input 
                                 matInput placeholder="Ejemplo: A" 
-                                (change)="onChangeMz($event.target.value)"/>
+                                (change)="onChangeMz($event.target.value)"/>-->
                         </mat-form-field>
                         <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
                             <mat-label>Lt.</mat-label>
-                            <input 
+                            <mat-select class="w-full" (selectionChange)=onChangeLt($event.value)  >
+                                <mat-option *ngFor="let option of optionsLt " [value]="option"  >
+                                    {{option.name}}
+                                </mat-option>
+                            </mat-select>
+                            
+                          <!--  <input 
                                 matInput placeholder="Ejemplo: 5" 
-                                (change)="onChangeLt($event.target.value)" />
+                                (change)="onChangeLt($event.target.value)" />-->
                         </mat-form-field>
                     </div>
 
@@ -124,17 +131,20 @@
                         <div class="flex flex-col h-auto max-h-72 w-full">
                             <ng-container *ngFor="let r of results">
                                 <div 
-                                    [ngClass]="{'bg-selected-result': changeStyle === r.PARTIDA}"
+                                    [ngClass]="{'bg-selected-result': changeStyle === r.partida}"
                                     class="flex w-full items-center justify-between px-4"> 
                                     <div class="flex flex-col items-start justify-center py-2 ">
-                                        <span class="font-semibold text-sm">{{r.PARTIDA}}</span>
-                                        <ng-container *ngIf="r?.DIR_URB; else noUrb">
+                                        <span class="font-semibold text-sm">{{r?.partida}}</span>
+                                        <span 
+                                        class="truncate w-56 text-sm text-[#595961]" [matTooltip]="r?.name" >{{r?.name | titlecase}}</span>
+                                    
+                                        <!--<ng-container *ngIf="r?.DIR_URB; else noUrb">
                                             <span 
                                             class="truncate w-56 text-sm text-[#595961]">{{r?.DIR_URB | titlecase}}</span>
                                         </ng-container>
                                         <ng-template #noUrb>
                                             <span class="truncate w-56 text-sm text-[#595961]">{{r?.NOM_UU | titlecase }} {{ r?.MZN_URB | titlecase }} {{ r?.LOT_URB | titlecase }}</span>
-                                        </ng-template>
+                                        </ng-template>-->
                                     </div>
 
                                     <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
@@ -148,7 +158,7 @@
                     <ng-container *ngSwitchCase="2">
                         <div class="results" *ngFor="let r of results">
                             <div class="flex w-full items-center justify-between px-4"> 
-                                <span  class="font-semibold text-sm"> {{r?.NOM_TIPO_VIA}} {{r?.NOM_VIA}} {{r?.NUM_MUN}} </span>
+                                <span  class="font-semibold text-sm"> {{r?.name}} </span>
                                 <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
                                     <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
                                 </button>
@@ -157,14 +167,14 @@
                         </div>
                     </ng-container>
                     
-                    <ng-container *ngSwitchCase="3">
+                    <!--<ng-container *ngSwitchCase="3">
                         <div class="results" *ngFor="let r of results">
                             <div 
-                                [ngClass]="{'bg-selected-result': changeStyle === r.ID_LOTE}"
+                                [ngClass]="{'bg-selected-result': changeStyle === r.id}"
                                 class="flex w-full items-center justify-between px-4"> 
                                 <span class="font-semibold text-sm">
-                                    {{r?.NOM_TIPO_UU | titlecase}} {{ r?.NOM_UU | titlecase}} {{ r?.MZN_URB? 'Mz.'+r?.MZN_URB:'' }} {{ r?.LOT_URB?
-                                        'Lt.'+r?.LOT_URB:''}}
+                                    <span 
+                                    class="truncate w-56 text-sm text-[#595961]" [matTooltip]="r?.name" >{{r?.name | titlecase}}</span>
                                 </span>
     
                                 <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
@@ -173,7 +183,7 @@
                             </div>
     
                         </div>
-                    </ng-container>
+                    </ng-container>-->
                 </div>
             </ng-container>
             <ng-template #noResults>

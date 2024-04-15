@@ -85,6 +85,7 @@ private confirmationService: CustomConfirmationService,
             const dataForm: any= {};
             dataForm.id_app= res.id;
             dataForm.file= this.file;
+
             this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
                 if(r && r.success){
                     /*this._messageProviderService.showAlert(
@@ -101,7 +102,15 @@ private confirmationService: CustomConfirmationService,
                     });
 
                 }
-            });
+            },
+            (err)=>{
+              this._fuseSplashScreenService.hide();
+            console.log('error',err);
+            this.confirmationService.error(
+              'Registro de predio',
+               `Error al registrar el predio, ${err.error.message}`
+            );
+          });
         }
     },(err)=>{
         this._fuseSplashScreenService.hide();

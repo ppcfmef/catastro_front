@@ -114,14 +114,14 @@ export class LandMaintenanceFormComponent implements OnInit {
             const indexConstancia=this.masterDomain.resolutionType.findIndex(e=> e.id ==='3');
             this.masterDomain.resolutionType.splice(indexConstancia,1);
             this.initForm();
-
+            this.toggleRequired();
         });
       }
 
       initForm(): void{
         if (this.typeMaintenace === 'Reasignar'){
             this.formLand = this.fb.group({
-                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
+                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
@@ -141,11 +141,12 @@ export class LandMaintenanceFormComponent implements OnInit {
                 municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
                 apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
               });
+              //this.toggleRequired();
         }
 
         else {
             this.formLand = this.fb.group({
-                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}, [Validators.required]],
+                cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, ],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
@@ -165,7 +166,11 @@ export class LandMaintenanceFormComponent implements OnInit {
                 municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
                 apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
               });
+              //this.toggleRequired();
         }
+        console.log('formLand>>',this.formLand);
+        console.log('formLand.valid>>',this.formLand.valid);
+
 
       }
 

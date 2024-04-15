@@ -134,7 +134,14 @@ export class ListLandMaintenanceTableComponent implements OnInit {
 
                                     /*this._router.navigate(['/land/maintenance']);*/
                                 }
-                            });
+                            },
+                            (err)=>{
+                              this._fuseSplashScreenService.hide();
+                            console.log('error',err);
+                            this._messageProviderService.showAlert(
+                              'Error al registrar'
+                            );
+                          });
                         }
 
                         else {

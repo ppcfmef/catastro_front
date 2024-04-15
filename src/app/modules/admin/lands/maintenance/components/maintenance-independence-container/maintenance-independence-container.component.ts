@@ -144,13 +144,20 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
                     );
 
                     m.afterClosed().subscribe(r=>{
-
                         this.disabled  = false;
                         this._router.navigate(['/land/maintenance']);
                     });
 
                 }
-            });
+            },
+            (err)=>{
+              this._fuseSplashScreenService.hide();
+            console.log('error',err);
+            this.confirmationService.error(
+              'Registro de predio',
+               `Error al registrar el predio, ${err.error.message}`
+            );
+          });
 
 
         }

@@ -28,18 +28,27 @@ export class CommonUtils {
         return rawValue;
     }
 
-    static generateWhereArgis(params): string {
+    static generateWhereArgis(params,exact=false): string {
         let where ='';
         let i: number =0;
         Object.keys(params).forEach((key) => {
             if (!(params[key] === null || params[key] === undefined || params[key] === '')) {
                 //delete rawValue[key];
-
-                const data = typeof params[key] === 'string' ? `like '%${params[key].toUpperCase().trim()}%'`: `= ${params[key]}`;
-                where = i>0? `${where} AND ${key}  ${data}`:`${key}  ${data}`;
+                let filter ='';
+ 
+                if(exact){
+                    filter = typeof params[key] === 'string' ? `  = '${params[key].toUpperCase().trim()}'`: `= ${params[key]}`;
+                }
+                else{
+                    filter = typeof params[key] === 'string' ? `  like '%${params[key].toUpperCase().trim()}%'`: `= ${params[key]}`;
+                }
+                where = i>0? `${where} AND ${key}  ${filter}`:`${key}  ${filter}`;
                 i =i +1;
           }
         });
         return where;
     }
+
+    
+
 }

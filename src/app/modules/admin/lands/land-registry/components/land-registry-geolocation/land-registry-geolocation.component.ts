@@ -101,7 +101,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [ 1, 2,101,0],
+    children: [ 1, 2,3,0],
 },
 
         {
@@ -140,7 +140,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
         height: '50px',
         yoffset: '15px',
     };
-    simpleMarkerSearch = {
+    /*simpleMarkerSearch = {
         type: 'simple-marker',
         style: 'square',
         size: '10px', // pixels
@@ -151,14 +151,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             width: 1.5,
         },
     };
+*/
 
-
-    /*simpleMarkerSearch = {
+    simpleMarkerSearch = {
         type: 'web-style',
         name: 'push-pin-1',
         styleName: 'Esri2DPointSymbolsStyle',
         width: '15px'
-    };*/
+    };
     /*simpleMarkerSymbolUndefined = {
         type: 'web-style',
         name: 'tear-pin-2',
@@ -187,37 +187,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             projection: null,
             visible:true,
         },
-        /*https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/TEMATICOS_CF/MapServer/0*/
 
-
-       /* {
-            title: 'Lotes Zona',
-            id: 0,
-            idServer: 5,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/TEMATICOS_CF/MapServer/0',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: null,
-            projection: null,
-            visible:true,
-            renderer: {
-                type: 'simple',
-                symbol: {
-                    type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-                    color: [0, 255, 255, 0.5],
-                    style: 'solid',
-                    outline: {
-                        // autocasts as new SimpleLineSymbol()
-                        color: [0, 255, 255],
-                        width: 1.5,
-                    },
-                },
-            },
-        },*/
         {
             title: 'Lotes Zona',
             id: 0,
@@ -279,46 +249,9 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     },
                     },
                 ]
-                //type: 'simple',
-                /*symbol: {
-                    type: 'simple-fill',
-                    color: [0, 255, 255, 0],
-                    style: 'solid',
-                    outline: {
-                        color: [0, 255, 255],
-                        width: 1.5,
-                    },
-                },*/
+
             },
-            /*labelClass: {
-                symbol: {
-                    type: 'text', // autocasts as new TextSymbol()
-                    color: 'black',
-                    yoffset: 5,
-                    font: {
-                        // autocast as new Font()
-                        family: 'Playfair Display',
-                        size: 12,
-                        weight: 'bold',
-                    },
-                },
-                labelPlacement: 'above-center',
-                labelExpressionInfo: {
-                    expression: '$feature.ID_MZN_U',
-                },
-            },*/
-            /*renderer: {
-                type: 'simple',
-                symbol: {
-                    type: 'simple-fill',
-                    color: [0, 255, 255, 0],
-                    style: 'solid',
-                    outline: {
-                        color: [0, 255, 255],
-                        width: 1.5,
-                    },
-                },
-            },*/
+
         },
 
         {
@@ -340,9 +273,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
         {
             title: 'Manzana Urbana Zona',
-            id: 101,
+            id: 3,
             idServer: 9,
-//https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0
             urlBase:
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
@@ -353,6 +285,23 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: null,
             visible:true,
+        },
+
+
+        {
+            title: 'Unidad Urbana',
+            id: 4,
+            idServer: 6,
+            urlBase:
+                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            order: 0,
+            featureLayer: null,
+            definitionExpression: '1=1',
+            featureTable: null,
+            popupTemplate: null,
+            utm: null,
+            projection: null,
+            visible:false,
         },
 
 /*
@@ -2373,17 +2322,38 @@ async saveNewPointGestionPredio(): Promise<void>{
     }
 
     eventOnGo(r: any): void{
-        const x=r.COORD_X;
-        const y = r.COORD_Y;
+        /*const x=r.COORD_X;
+        const y = r.COORD_Y;*/
 
         if (this.view) {
-            this.view.center = [x, y];
-            this.view.zoom = 19;
-            this.addPoint(
-                y,
-                x,
-                this.simpleMarkerSearch,
-            );
+          
+            if (r.geometry.type ==='point'){
+                this.view.center =[r.geometry.x,r.geometry.y] ;
+                this.view.zoom = 19;
+                this.addPoint(
+                    r.geometry.y,
+                    r.geometry.x,
+                    this.simpleMarkerSearch,
+                );
+            }
+
+            if (r.geometry.type ==='polyline'){
+                const center=MapUtils.getCenterOfPolyline(r.geometry);
+                this.view.center =center;
+                this.view.zoom = 20;
+
+                this.addPoint(
+                    center.y,
+                    center.x,
+                    this.simpleMarkerSearch,
+                );
+            }
+           
+            else{
+
+                this.view.goTo({ target: r.geometry }); //= r.geometry.extent.center;
+            }
+
 
         }
 
