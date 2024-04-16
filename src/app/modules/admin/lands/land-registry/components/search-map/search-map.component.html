@@ -10,9 +10,7 @@
 <ng-template #searchPanel>
     <div class="flex flex-col bg-card py-4 shadow-md h-max w-full">
         <div class="flex gap-4 px-4 ">
-            <div 
-                *ngFor="let option of options" 
-                (click)="onOpenOption(option)"
+            <div *ngFor="let option of options" (click)="onOpenOption(option)"
                 [ngClass]="{'bg-selected': selectedOption === option.cod}"
                 class="flex justify-center items-center w-max text-center">
                 <span class="text-sm">{{option.option}}</span>
@@ -21,172 +19,231 @@
 
         <mat-divider class="my-3 border-t-4"></mat-divider>
 
-        <ng-container [ngSwitch]="selectedOption">
-            <ng-container *ngSwitchCase="'1'">
-                <mat-form-field appearance="fill" class="w-full px-4">
-                    <mat-label>Ingresar Partida Regitral</mat-label>
-                    <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
-                    <input 
-                        [(value)]="searchForm.pr"
-                        matInput placeholder="Ejem: P01247899"
-                        (change)="onChangePr($event.target.value)"
-                    />
-                </mat-form-field>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'2'">
-                <div class="flex px-4 gap-2">
-                    <mat-form-field  appearance="fill" class="flex-auto">
-                        <mat-label>Ingresar Dirección</mat-label>
-                        <mat-select class="w-full" 
-                             [(value)]="searchForm.tipouu"
-                            (selectionChange)=onChangeVia($event.value)>
-                            <mat-option *ngFor="let option of optionsDirection " [value]="option">
-                                {{option.name}}
+        <form action="" [formGroup]="searchForms">
+            <ng-container [ngSwitch]="selectedOption">
+                <ng-container *ngSwitchCase="'1'">
+                    <mat-form-field appearance="fill" class="w-full px-4">
+                        <mat-label>Ingresar Partida Regitral</mat-label>
+                        <mat-icon matPrefix [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                        <input formControlName="pr" 
+                                class="w-full" 
+                                matInput 
+                                [placeholder]="'Ejem: P01247899'"
+                                [matAutocomplete]="prAutocomplete"/>
+                        <mat-autocomplete 
+                            class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
+                            [autoSelectActiveOption]="true" 
+                            [disableRipple]="true" 
+                            #prAutocomplete="matAutocomplete">
+                            <mat-option class="py-0 px-6 text-md pointer-events-none text-secondary bg-transparent"
+                                *ngIf="this.results && !this.results.length>0">
+                                No hay resultados
                             </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill" class="fuse-mat-dense w-14" >
-                        <mat-label>Nro.</mat-label>
-                        <input matInput placeholder="75" 
-                            [(value)]="searchForm.door"
-                            (change)="onChangeDoor($event.target.value)"  />
-                    </mat-form-field>
-                    
-                </div>
-                
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'3'">
-                <div class="flex flex-col px-4">
-                    <mat-form-field  appearance="fill" class="flex-auto">
-                        <mat-label>Ingresar Habilitacion Urbana</mat-label>
-                        <mat-select class="w-full" 
-                            [(value)]="searchForm.habUrb"
-                            (selectionChange)=onChangehabUrb($event.value)>
-                            <mat-option *ngFor="let option of optionsUU " [value]="option">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-select>
-
-                    </mat-form-field>
-
-                    
-                    <div class="flex w-full justify-between">
-                        <mat-form-field appearance="fill" class="fuse-mat-dense w-[120px]">
-                            <mat-label>Mz.</mat-label>
-                            <mat-select class="w-full" 
-                                [(value)]="searchForm.mz"
-                                (selectionChange)=onChangeMz($event.value)
-                                >
-                            <mat-option *ngFor="let option of optionsMz;trackBy: trackByFn" [value]="option">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-select>
-                           <!-- <input 
-                                matInput placeholder="Ejemplo: A" 
-                                (change)="onChangeMz($event.target.value)"/>-->
-                        </mat-form-field>
-                        <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
-                            <mat-label>Lt.</mat-label>
-                            <mat-select class="w-full" 
-                                [(value)]="searchForm.lt"
-                                (selectionChange)=onChangeLt($event.value)  >
-                                <mat-option *ngFor="let option of optionsLt ;trackBy: trackByFn" [value]="option">
-                                    {{option.name}}
+                            <ng-container *ngFor="let result of results; trackBy: trackByFn">
+                                <mat-option
+                                    class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                                    [value]="result.partida">
+                                    {{result.partida}}
                                 </mat-option>
-                            </mat-select>
-                            
-                          <!--  <input 
-                                matInput placeholder="Ejemplo: 5" 
-                                (change)="onChangeLt($event.target.value)" />-->
+                            </ng-container>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'2'">
+                    <div class="flex px-4 gap-2">
+                        <mat-form-field appearance="fill" class="flex-auto">
+                            <mat-label>Ingresar Dirección</mat-label>
+                            <input formControlName="tipouu" 
+                                class="w-full" 
+                                matInput 
+                                [placeholder]="'Ejem: Av. Brasil'"
+                                [matAutocomplete]="tipouuAutocomplete"
+                            />
+                            <mat-autocomplete 
+                                [displayWith]="displayFn"
+                                class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
+                                [autoSelectActiveOption]="true" 
+                                [disableRipple]="true" 
+                                #tipouuAutocomplete="matAutocomplete">
+                                <mat-option *ngIf="loading">Cargando...</mat-option>
+                                <mat-option class="py-0 px-6 text-md pointer-events-none text-secondary bg-transparent"
+                                    *ngIf="this.results && !this.results.length>0">
+                                    No hay resultados
+                                </mat-option>
+                                <ng-container *ngFor="let option of filteredOptions | async">
+                                    <mat-option
+                                        class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                                        [value]="option">
+                                        {{option.name}}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
                         </mat-form-field>
+                        <mat-form-field appearance="fill" class="fuse-mat-dense w-14">
+                            <mat-label>Nro.</mat-label>
+                            <input matInput placeholder="75" formControlName="door"/>
+                        </mat-form-field>
+
                     </div>
 
-                    
+                </ng-container>
+                <ng-container *ngSwitchCase="'3'">
+                    <div class="flex flex-col px-4">
+                        <mat-form-field appearance="fill" class="flex-auto">
+                            <mat-label>Ingresar unidad Urbana</mat-label>
+                            <input formControlName="habUrb" 
+                            class="w-full" 
+                            matInput 
+                            [placeholder]="'Ejem: Las Rosas'"
+                            [matAutocomplete]="habUrbAutocomplete"
+                            />
+                            <mat-autocomplete 
+                                [displayWith]="displayFn"
+                                class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
+                                [autoSelectActiveOption]="true" 
+                                [disableRipple]="true" 
+                                #habUrbAutocomplete="matAutocomplete">
+                                <mat-option *ngIf="loading">Cargando...</mat-option>
+                                <ng-container *ngFor="let option of filteredOptionsUU | async">
+                                    <mat-option
+                                        class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                                        [value]="option">
+                                        {{option.name}}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+
+                        <div class="flex w-full justify-between">
+                            <mat-form-field appearance="fill" class="fuse-mat-dense w-[120px]">
+                                <mat-label>Mz.</mat-label>
+                                <input 
+                                formControlName="mz" 
+                                class="w-full" 
+                                matInput 
+                                [placeholder]="'Ejem: A'"
+                                [matAutocomplete]="mzAutocomplete"
+                                />
+                                <mat-autocomplete 
+                                [displayWith]="displayFn"
+                                class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
+                                [autoSelectActiveOption]="true" 
+                                [disableRipple]="true" 
+                                #mzAutocomplete="matAutocomplete">
+                                <mat-option *ngIf="loading">Cargando...</mat-option>
+                                    <ng-container *ngFor="let option of optionsMz; trackBy: trackByFn">
+                                        <mat-option
+                                            class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                                            [value]="option">
+                                            {{option.name}}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-autocomplete>
+                                <!-- <mat-select class="w-full">
+                                    <mat-option *ngFor="let option of optionsMz;trackBy: trackByFn" [value]="option">
+                                        {{option.name}}
+                                    </mat-option>
+                                </mat-select> -->
+                                <!-- <input 
+                                    matInput placeholder="Ejemplo: A" 
+                                    (change)="onChangeMz($event.target.value)"/>-->
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
+                                <mat-label>Lt.</mat-label>
+                                <input 
+                                formControlName="lt" 
+                                class="w-full" 
+                                matInput 
+                                [placeholder]="'Ejem: A'"
+                                [matAutocomplete]="mltAutocomplete"
+                                />
+                                <mat-autocomplete 
+                                [displayWith]="displayFn"
+                                class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
+                                [autoSelectActiveOption]="true" 
+                                [disableRipple]="true" 
+                                #mltAutocomplete="matAutocomplete">
+                                <mat-option *ngIf="loading">Cargando...</mat-option>
+                                <ng-container *ngFor="let option of optionsMz; trackBy: trackByFn">
+                                    <mat-option
+                                        class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+                                        [value]="option">
+                                        {{option.name}}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                                <mat-select class="w-full">
+                                    
+                                    <mat-option *ngFor="let option of optionsLt ;trackBy: trackByFn" [value]="option">
+                                        {{option.name}}
+                                    </mat-option>
+                                </mat-select>
+
+                                <!--  <input 
+                                    matInput placeholder="Ejemplo: 5" 
+                                    (change)="onChangeLt($event.target.value)" />-->
+                            </mat-form-field>
+                        </div>
+
+
+                    </div>
+
+                </ng-container>
+
+                <div class="flex items-center justify-end gap-4 px-4 mb-3">
+                    <button mat-stroked-button type="button"
+                        class="text-[#0066CC] border border-[#0066CC]  rounded-[4px]"
+                        (click)="onClean()">Limpiar</button>
+                    <button mat-raised-button type="button" class="bg-[#0066CC] text-white rounded-[4px]"
+                        (click)="onSearch()">Buscar</button>
                 </div>
 
-            </ng-container>
+                <ng-container *ngIf="this.results && this.results.length>0;else  noResults" [ngSwitch]="selectedOption">
 
-            <div class="flex items-center justify-end gap-4 px-4 mb-3">
-                <button mat-stroked-button	 type="button" class="text-[#0066CC] border border-[#0066CC]  rounded-[4px]" (click)="onClean()">Limpiar</button>
-                <button mat-raised-button type="button" class="bg-[#0066CC] text-white rounded-[4px]" (click)="onSearch()">Buscar</button>
-            </div>
-            
-            <ng-container *ngIf="this.results && this.results.length>0;else  noResults" [ngSwitch]="selectedOption">
+                    <div fuseScrollbar [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
+                        class="flex flex-col w-[300px]  max-h-80 ">
 
-                <div 
-                    fuseScrollbar
-                    [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
-                    class="flex flex-col w-[300px]  max-h-80 ">
+                        <mat-divider class="mb-3 border-t-2"></mat-divider>
+                        <!-- <span class="text-base font-semibold my-3 px-4">Resultado </span> -->
+                        <ng-container *ngSwitchCase="2">
+                            <div class="results" *ngFor="let r of results">
+                                <div class="flex w-full items-center justify-between px-4">
+                                    <span class="font-semibold text-sm"> {{r?.name}} </span>
+                                    <button mat-icon-button type="button" (click)="onGo(r)" matTooltip="ver">
+                                        <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
+                                    </button>
+                                </div>
 
-                    <mat-divider class="mb-3 border-t-2"></mat-divider>
-                    <!-- <span class="text-base font-semibold my-3 px-4">Resultado </span> -->
+                            </div>
+                        </ng-container>
 
-                    <ng-container *ngSwitchCase="1">
-                        <div class="flex flex-col h-auto max-h-72 w-full">
-                            <ng-container *ngFor="let r of results">
+                        <!--<ng-container *ngSwitchCase="3">
+                            <div class="results" *ngFor="let r of results">
                                 <div 
-                                    [ngClass]="{'bg-selected-result': changeStyle === r.partida}"
+                                    [ngClass]="{'bg-selected-result': changeStyle === r.id}"
                                     class="flex w-full items-center justify-between px-4"> 
-                                    <div class="flex flex-col items-start justify-center py-2 ">
-                                        <span class="font-semibold text-sm">{{r?.partida}}</span>
+                                    <span class="font-semibold text-sm">
                                         <span 
                                         class="truncate w-56 text-sm text-[#595961]" [matTooltip]="r?.name" >{{r?.name | titlecase}}</span>
-                                    
-                                        <!--<ng-container *ngIf="r?.DIR_URB; else noUrb">
-                                            <span 
-                                            class="truncate w-56 text-sm text-[#595961]">{{r?.DIR_URB | titlecase}}</span>
-                                        </ng-container>
-                                        <ng-template #noUrb>
-                                            <span class="truncate w-56 text-sm text-[#595961]">{{r?.NOM_UU | titlecase }} {{ r?.MZN_URB | titlecase }} {{ r?.LOT_URB | titlecase }}</span>
-                                        </ng-template>-->
-                                    </div>
-
+                                    </span>
+        
                                     <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
                                         <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
                                     </button>
                                 </div>
-                            </ng-container>
-                        </div>
-                    </ng-container>
-    
-                    <ng-container *ngSwitchCase="2">
-                        <div class="results" *ngFor="let r of results">
-                            <div class="flex w-full items-center justify-between px-4"> 
-                                <span  class="font-semibold text-sm"> {{r?.name}} </span>
-                                <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
-                                    <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
-                                </button>
+        
                             </div>
-    
-                        </div>
-                    </ng-container>
-                    
-                    <!--<ng-container *ngSwitchCase="3">
-                        <div class="results" *ngFor="let r of results">
-                            <div 
-                                [ngClass]="{'bg-selected-result': changeStyle === r.id}"
-                                class="flex w-full items-center justify-between px-4"> 
-                                <span class="font-semibold text-sm">
-                                    <span 
-                                    class="truncate w-56 text-sm text-[#595961]" [matTooltip]="r?.name" >{{r?.name | titlecase}}</span>
-                                </span>
-    
-                                <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
-                                    <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
-                                </button>
-                            </div>
-    
-                        </div>
-                    </ng-container>-->
-                </div>
-            </ng-container>
-            <ng-template #noResults>
-                <div class="p-4 "
-                    *ngIf=" (init) && results && results?.length===0">No hay resultados.</div>
+                        </ng-container>-->
+                    </div>
+                </ng-container>
+                <ng-template #noResults>
+                    <div class="p-4 " *ngIf=" (init) && results && results?.length===0">No hay resultados.</div>
 
-            </ng-template>
-        </ng-container>
+                </ng-template>
+            </ng-container>
+        </form>
+
     </div>
 </ng-template>

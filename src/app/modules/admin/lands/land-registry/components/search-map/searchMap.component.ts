@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Observable, Subject, from, map, startWith, takeUntil } from 'rxjs';
+import { Observable, Subject, debounceTime, filter, from, map, startWith, switchMap, takeUntil, tap } from 'rxjs';
 import { CFLoteService } from '../../services/cflote.service';
 import { CFPredioService } from '../../services/cfpredio.service';
 import { LandRegistryService } from '../../services/land-registry.service';
@@ -20,10 +20,11 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatAutocomplete, MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { MapUtils } from 'app/shared/utils/map.utils';
 import { NgZone } from '@angular/core';
+import { values } from 'lodash';
 
 @Component({
     selector: 'search-map',
@@ -44,6 +45,7 @@ import { NgZone } from '@angular/core';
         FuseScrollbarModule,
         MatAutocompleteModule,
         FuseSplashScreenModule,
+        ReactiveFormsModule
     ],
     templateUrl: './search-map.component.html',
     styleUrls: ['./search-map.component.scss'],
@@ -62,13 +64,20 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     init=true;
     //implementar 
     addressControl = new FormControl('');
-    optionsDirection = [];
-    optionsUU = [];
-    optionsMz = [];
-    optionsLt =[];
     filteredOptions: Observable<any[]>;
+    optionsDirection = [];
+
+    filteredOptionsUU: any[];
+    optionsUU = [];
+
+    filteredOptionsMz: Observable<any[]>;
+    optionsMz = [];
+
+    optionsLt =[];
+
  
     searchForm: any;
+    searchForms: FormGroup;
     selectedOption: string | null = null;
     showSelected: null | string =null; 
     changeStyle: string | null = null;
@@ -78,9 +87,10 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     opened: boolean = false;
     vias : any[] | null;
     selectedOptionFeature: any;
+    loading:boolean = false;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    private _matAutocomplete: MatAutocomplete;
 
 
     constructor(
@@ -94,6 +104,20 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         private _fuseSplashScreenService: FuseSplashScreenService,
         private zone: NgZone
     ) {
+
+        this.searchForms = new FormGroup ({
+            pr: new FormControl(''),
+            mz: new FormControl(''),
+            lt: new FormControl(''),
+            ltT: new FormControl(''),
+            tipovia: new FormControl(''),
+            door: new FormControl(''),
+            habUrb: new FormControl(''),
+            tipouu: new FormControl(''),
+            address: new FormControl(''),
+            via: new FormControl(''),
+        });
+
         this.searchForm = {
             pr: null,
             mz: null,
@@ -139,12 +163,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         //Options directions
         this.optionsDirection = [];
-
         this.optionsUU=[];
-
         this.optionsMz =[];
         this.optionsLt =[];
     }
+
     ngOnInit(): void {
         this.selectedOption = null;
         this.landRegistryService
@@ -155,42 +178,109 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     this.masterDomain = result;
                 console.log('this.masterDomain>>',this.masterDomain);
             });
-        this.resetForm();
+        
        
-        this.filteredOptions = this.addressControl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(value || '')),
-          );
+        //filter by pr
+        this.searchForms.get('pr').valueChanges
+            .pipe(
+                debounceTime(300),
+                takeUntil(this._unsubscribeAll),
+                map((value:string) =>
+                {
+                    if ( !value || value.length < 1 )
+                    {
+                        this.results = null;
+                    }
+
+                    // Continue
+                    return value;
+                }),
+                filter((value:string) => value && value.length >1),
+            )
+            .subscribe((value) =>
+            {
+                let where = '';
+                let params={};
+                params ={'UBIGEO':this.ubigeo, 'PARTIDA':value};
+                where=CommonUtils.generateWhereArgis(params);
+    
+                const featureLayer = this.layersInfo.find((l)=>l.id === -1 )?.featureLayer;
+                MapUtils.queryFeaturelayer(featureLayer,where).then((features)=>{
+                    this.results = features.map(
+                        (f: any) => {
+                            const attributes =f.attributes;
+                            const tipoVia =this.masterDomain.codStreet.find(s=> s.id ===attributes['TIP_VIA']);
+                            const shortName= tipoVia?.shortName;
+                            return { id: attributes['COD_VIA'], name: attributes['DIR_URB']? attributes['DIR_URB']:
+                            `${shortName} ${attributes['NOM_UU']}  ${attributes['MZN_URB'] } ${attributes['LOT_URB']} `,
+                            partida:attributes['PARTIDA'], geometry: f.geometry};
+                        });
+                    });
+            });
+
+        //select address
+        this.filteredOptions = this.searchForms.get('tipouu').valueChanges
+            .pipe(
+              startWith(''),
+              debounceTime(300),
+              takeUntil(this._unsubscribeAll),
+              map(value => this._filter(value, this.optionsDirection))
+        )
+
+        //select habUrb
+        this.searchForms.get('habUrb').valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(300),
+                takeUntil(this._unsubscribeAll),
+                map(value => this._filter(value,this.optionsUU))
+        )
+        .subscribe(select => {
+            this.filteredOptionsUU = select;
+            console.log(this.filteredOptionsUU);
+        });
+
+        //select mz
+        this.searchForms.get('mz').valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(300),
+                takeUntil(this._unsubscribeAll),
+            ).subscribe((value) =>{
+                console.log('value mz>>',value);
+                this.selectedOptionFeature = this.searchForms.get('habUrb').value;
+                console.log('this.selectedOptionFeature mx>>',this.selectedOptionFeature);
+        
+                const params ={'UBIGEO':this.ubigeo,'COD_UU':this.searchForms.get('habUrb').value.id,};
+                console.log(params, 'params')
+                const where=CommonUtils.generateWhereArgis(params);
+    
+                const featureLayer = this.layersInfo.find((l)=>l.id ===3 )?.featureLayer;
+                MapUtils.queryFeaturelayer(featureLayer,where).then((features)=>{
+                    this.optionsMz=  features.map(
+                        (f: any) => {
+                            const attributes =f.attributes;
+                                    return { id: attributes['MZN_URB'], name: `${attributes['MZN_URB'] }`, geometry: f.geometry};
+                            }
+                        );  
+                });
+                console.log('  this.optionsMz>>',  this.optionsMz);
+                
+            })
+        
+
     }
+        
 
-    openPanel(): void {
-        // Return if the messages panel or its origin is not defined
-        if (!this._messagesPanel || !this._searchOrigin) {
-            return;
-        }
 
-        // Create the overlay if it doesn't exist
-        if (!this._overlayRef) {
-            this._createOverlay();
-        }
 
-        // Attach the portal to the overlay
-        this._overlayRef.attach(
-            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
-        );
-        this.initSelect();
-    }
 
-  
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
+    //init data mat-option
     initSelect(): void {
-
        let params ={};
        let where ='';
        if(this.ubigeo){
+            this.loading = true;
             params ={'UBIGEO':this.ubigeo};
             where=CommonUtils.generateWhereArgis(params);
             const featureLayer = this.layersInfo.find((l)=>l.id ===2  )?.featureLayer;
@@ -201,13 +291,10 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                             const attributes =f.attributes;
                             const tipoVia =this.masterDomain.codStreet.find(s=> s.id ===attributes['TIP_VIA']);
                             const shortName= tipoVia?.shortName;
+                            this.loading = false;
                             return { id: attributes['COD_VIA'], name: `${shortName}. ${attributes['NOM_VIA'] }`, geometry: f.geometry};
-                        }
-
-                        );
-                        //console.log('  this.filteredOptions>>',  this.optionsDirection);
+                        });
                     });
-
             const featureLayer2 = this.layersInfo.find((l)=>l.id ===4  )?.featureLayer;
             MapUtils.queryFeaturelayer(featureLayer2,where).then((features)=>{
                 this.optionsUU=  features.map(
@@ -215,57 +302,33 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                         const attributes =f.attributes;
                         const tipoUU =this.masterDomain.uuType.find(s=> s.id ===attributes['TIPO_UU']);
                         const shortName= tipoUU?.shortName;
+                        this.loading = false;
                         return { id: attributes['COD_UU'], name: `${shortName} ${attributes['NOM_UU'] }`, geometry: f.geometry};
                     }
 
                     );
-                    //console.log('  this.filteredOptions>>',  this.optionsDirection);
+                    console.log(' optionsUU',  this.optionsUU);
                 });
-
-        }
-
-
-    }
+        };
+    };
 
     onSearch(): void {
         console.log(this.selectedOption , 'options');
-        //this.searchForm.value
-
         let where = '';
         let params={};
         if (this.selectedOption === '1') {
-            //let where = '';
-            if(FuseValidators.isEmptyInputValue(this.searchForm?.pr)){
-                return;
-            };
-
-            this._fuseSplashScreenService.show();
-            params ={'UBIGEO':this.ubigeo, 'PARTIDA':this.searchForm?.pr};
-            where=CommonUtils.generateWhereArgis(params);
-
-            const featureLayer = this.layersInfo.find((l)=>l.id === -1 )?.featureLayer;
-            MapUtils.queryFeaturelayer(featureLayer,where).then((features)=>{
-                this._fuseSplashScreenService.hide();
-                this.results = features.map(
-                    (f: any) => {
-                        const attributes =f.attributes;
-                        const tipoVia =this.masterDomain.codStreet.find(s=> s.id ===attributes['TIP_VIA']);
-                        const shortName= tipoVia?.shortName;
-                        return { id: attributes['COD_VIA'], name: attributes['DIR_URB']? attributes['DIR_URB']:
-                        `${shortName} ${attributes['NOM_UU']}  ${attributes['MZN_URB'] } ${attributes['LOT_URB']} `,
-                        partida:attributes['PARTIDA'], geometry: f.geometry};
-                    }
-                    );
-                });
+            const r = this.searchForms.get('pr').value;
+            this.onGo(this.results[0]);
         }
-        else if(this.selectedOption === '2'){
-
-            if(this.searchForm?.door){
+        if(this.selectedOption === '2'){
+            this.selectedOptionFeature = this.searchForms.get('tipouu').value;
+          
+            if(this.searchForms.get('door').value){
                 this._fuseSplashScreenService.show();
-                params ={'UBIGEO':this.ubigeo,  'COD_VIA':this.searchForm?.via,'NUM_MUN':this.searchForm?.door };
+                const tipouu = this.searchForms.get('tipouu').value
+                params ={'UBIGEO':this.ubigeo, 'COD_VIA':tipouu.id,'NUM_MUN':this.searchForms.get('door').value};
                 where=CommonUtils.generateWhereArgis(params);
                 const featureLayer = this.layersInfo.find((l)=>l.id === 0 )?.featureLayer;
-                 console.log(' featureLayer>>',  featureLayer);
                 MapUtils.queryFeaturelayer(featureLayer,where).then((features)=>{
                     this._fuseSplashScreenService.hide();
                     this.results = features.map(
@@ -277,32 +340,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                         });
                         console.log('  this.results 2>>',  this.results);
                     });
-
-            /*this._cfLoteService
-                .getList(where,this.limit)
-                .then((response) => {
-                    if (response) {
-                        return response.json();
-                    }
-                    throw new Error('Something went wrong');
-                })
-                .then((responseJson) => {
-                    this._fuseSplashScreenService.hide();
-                    console.log(this.masterDomain, 'domina');
-                    if (responseJson['features'] && responseJson['features']) {
-                        this.results = responseJson['features'].map(
-                            (f: any) => ({...f['attributes']}));
-
-                    }
-                    this.init=false;
-                })
-                .catch((error) => {
-                    console.log(error);
-                    this.init=false;
-                });*/
-
             }
-
             else {
                 console.log('selectedOptionFeature>>',this.selectedOptionFeature);
                 this.onGo(this.selectedOptionFeature);
@@ -311,86 +349,27 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         }
 
         else if(this.selectedOption === '3'){
-
-
             if(this.searchForm?.lt?.id){
             }
-
-
             else if(this.searchForm?.mz){
-
-                /*params ={'UBIGEO':this.ubigeo, 'COD_UU': this.searchForm?.habUrb,'MZN_URB':this.searchForm?.mz};
-                where=CommonUtils.generateWhereArgis(params);*/
-
-                
-
                 this.onGo(this.selectedOptionFeature);
-                //this._fuseSplashScreenService.hide();
             }
-
             else{
                 this.onGo(this.selectedOptionFeature);
-                //this._fuseSplashScreenService.hide();
+
             }
-
-
-            /*this._cfLoteService
-            .getList(where,this.limit)
-            .then((response) => {
-                if (response) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then((responseJson) => {
-                this._fuseSplashScreenService.hide();
-                if (responseJson['features'] && responseJson['features']) {
-                    this.results = responseJson['features'].map(
-                        (f: any) => ({...f['attributes'],'NOM_TIPO_UU': this.masterDomain.uuType.find(s=> s.id ===f['attributes']['TIPO_UU']).shortName }));
-                }
-                this.init=false;
-            })
-            .catch((error) => {
-                console.log(error);
-                this.init=false;
-            });*/
-
-
         }
         else if(!this.selectedOption){
             console.log('not option')
             return;
         }
-
-        /*console.log('buscando');*/
     }
 
-    onChangePr(value: any): void {
-        this.searchForm.pr = value;
-    }
-    
-    onSelectionChangeVia(value): void {
-        console.log('value>>',value);
-        this.searchForm.tipovia = value.id;
-        this.selectedOptionFeature = value;
-    }
 
     onChangeVia(value): void {
         console.log('value2',value);
         this.searchForm.via = value.id;
         this.selectedOptionFeature = value;
-    }
-
-    onSelectionChangeUU(value): void {
-       /* this.searchForm.tipouu = value;
-
-        this.searchForm.tipovia = value;
-        this.searchForm.nomtipouu = this.masterDomain.uuType.find(s=> s.id ===value).shortName;
-        this.searchForm.nomtipovia= this.masterDomain.codStreet.find(s=> s.id ===value).shortName;*/
-    }
-
-    onChangeDoor(value): void {
-        this.searchForm.door = value;
     }
 
     onChangehabUrb(value): void {
@@ -435,10 +414,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 });
         });
     }
-    onChangeLt(value): void {
-        this.searchForm.lt = value;
-        this.selectedOptionFeature = value;
-    }
 
     onGo(value: any): void{
         if (value){
@@ -449,6 +424,8 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
     };
 
+
+
     onSelectionChange(value): void {
         this.selectedOption = value;
         this.init=true;
@@ -458,7 +435,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     parsearData(val, typeSearch): void{
         switch(typeSearch) {
             case '1':
-              this.showSelected = val.name;
+              this.showSelected = val.partida;
               this.changeStyle = val?.partida;
               break;
             case '2':
@@ -475,46 +452,36 @@ export class SearchMapComponent implements OnInit, OnDestroy {
           }
     }
  
-    onClean(): void{
-        this.resetForm();
-        this.results = null;
-    }
-    resetForm(): void {
-        this.searchForm = {
-            pr: null,
-            mz: null,
-            ltT: null,
-            lt: null,
-            tipovia: null,
-            door: null,
-            habUrb: null,
-            tipouu:null,
-            address: null,
-            via: null,
-        };
-    }
 
+   
       onOpenOption(data):void{
         this.results = null;
-        this.resetForm();
+        this.searchForms.reset();
         this.selectedOption = data.cod;
-        //this.onSearch();
       }
 
-      ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-    private _filter(value: string): string[] {
-        const filterValue = value.toUpperCase();
-        console.log(value,'value insert' )
-        console.log(filterValue,'filterValue' )
-        return this.optionsDirection.filter(option => option.name.includes(filterValue));
-      }
+     
+    // private _filter(value, arrays): string[] {
+    //     const val =  value.name ? value.name : value;
+    //     let regex = new RegExp(val.trim().replace(/\s+/g, ''), 'i');
+    //     return arrays.filter(item => regex.test(item.name.replace(/\s+/g, '')));
+    // };
 
-      private _displayFn(e: any): any{
-        return e.name;
-      }
+    private _filter(value, arrays): string[] {
+       
+        const normalizeText = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                                          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+                                          .replace(/\s+/g, '').toLowerCase();
+      
+        const val = value && value.name ? normalizeText(value.name) : normalizeText(value);
+
+        return arrays.filter(item => {
+          const itemNameNormalized = normalizeText(item.name);
+          return itemNameNormalized.includes(val);
+        });
+      };
+
+    //overlay
     private _createOverlay(): void {
         // Create the overlay
         this._overlayRef = this._overlay.create({
@@ -557,10 +524,46 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         // Detach the overlay from the portal on backdrop click
         this._overlayRef.backdropClick().subscribe(() => {
             this._overlayRef.detach();
-            this.resetForm(); 
+            this.searchForms.reset();
             this.results = null;
             this._changeDetectorRef.markForCheck();
         });
+    }
+
+    openPanel(): void {
+        // Return if the messages panel or its origin is not defined
+        if (!this._messagesPanel || !this._searchOrigin) {
+            return;
+        }
+
+        // Create the overlay if it doesn't exist
+        if (!this._overlayRef) {
+            this._createOverlay();
+        }
+
+        // Attach the portal to the overlay
+        this._overlayRef.attach(
+            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
+        );
+        this.initSelect();
+    }
+
+  
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+
+    displayFn(option: any): string {
+        return option && option.name ? option.name : '';
+    }
+
+    onClean(): void{
+        this.searchForms.reset();
+        this.results = null;
+    }
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 }
 
