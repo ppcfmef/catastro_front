@@ -101,7 +101,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [ 1, 2,3,0],
+    children: [ 1, 2,0,-1],
 },
 
         {
@@ -150,14 +150,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             color: [0, 255, 0], // White
             width: 1.5,
         },
-    };
-*/
+    };*/
+
 
     simpleMarkerSearch = {
-        type: 'web-style',
-        name: 'push-pin-1',
-        styleName: 'Esri2DPointSymbolsStyle',
-        width: '15px'
+       /* type: 'web-style',*/
+
+        type: 'picture-marker',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/GreenPin1LargeB.png',
+
+       /* name: 'push-pin-1',
+        styleName: 'Esri2DPointSymbolsStyle',*/
+        width: '30px',
+        height: '30px',
     };
     /*simpleMarkerSymbolUndefined = {
         type: 'web-style',
@@ -1363,18 +1368,18 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             },
                         ];
 
-                        const searchWidget = new Search({
+                        /*const searchWidget = new Search({
                             view: this.view,
                             includeDefaultSources: false,
                             sources:sources
 
-                        });
+                        });*/
 
-                        searchWidget.on('select-result', (event) => {
+                        /*searchWidget.on('select-result', (event) => {
                             this.view.zoom = 19;
                             const template =event.getEffectivePopupTemplate();
                             console.log(template);
-                        });
+                        });*/
 
 
                         // this.view.ui.add(searchWidget, {
@@ -1517,7 +1522,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     ];
 
 
-                    //remove widget search 
+                    //remove widget search
                     // const searchWidget = new Search({
                     //     view: this.view,
                     //     includeDefaultSources: false,
@@ -2220,7 +2225,7 @@ async saveNewPointGestionPredio(): Promise<void>{
        // this._fuseSplashScreenService.hide();
        console.log('data saveLandRegistryMap>>>',data);
         return data;
-       
+
     }
 
 
@@ -2331,7 +2336,7 @@ async saveNewPointGestionPredio(): Promise<void>{
         if (this.view) {
 
             console.log('r>>', r);
-          
+
             if (r.geometry.type ==='point'){
                 this.view.center =[r.geometry.x,r.geometry.y] ;
                 this.view.zoom = 19;
@@ -2340,12 +2345,13 @@ async saveNewPointGestionPredio(): Promise<void>{
                     r.geometry.x,
                     this.simpleMarkerSearch,
                 );
+
             }
 
             if (r.geometry.type ==='polyline'){
                 const center=MapUtils.getCenterOfPolyline(r.geometry);
                 this.view.center =center;
-                this.view.zoom = 20;
+                this.view.zoom = 18;
 
                 this.addPoint(
                     center.y,
@@ -2353,7 +2359,7 @@ async saveNewPointGestionPredio(): Promise<void>{
                     this.simpleMarkerSearch,
                 );
             }
-           
+
             else{
 
                 this.view.goTo({ target: r.geometry }); //= r.geometry.extent.center;
