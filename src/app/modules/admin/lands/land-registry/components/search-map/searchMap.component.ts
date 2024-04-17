@@ -63,7 +63,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     //pr:any;
     limit = 10;
     init = true;
-    //implementar 
+    //implementar
     addressControl = new FormControl('');
     filteredOptions: Observable<any[]>;
     optionsDirection = [];
@@ -81,9 +81,9 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     selectedOption: string | null = null;
     showSelected: null | string = null;
     changeStyle: string | null = null;
-    //options 
+    //options
     options: any[] | null;
-    //panel 
+    //panel
     opened: boolean = false;
     vias: any[] | null;
     selectedOptionFeature: any;
@@ -219,8 +219,10 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 debounceTime(300),
                 takeUntil(this._unsubscribeAll),
                 map(value => {
-                    this.selectedOptionFeature = this.searchForms.get('habUrb').value;
-                    return this._filter(value, this.optionsUU)
+                    //this.selectedOptionFeature = this.searchForms.get('habUrb').value;
+
+
+                    return this._filter(value, this.optionsUU);
                 })
             );
 
@@ -228,25 +230,25 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.filteredOptionsMz = this.searchForms.get('mz').valueChanges
             .pipe(
                 startWith(''),
-                // debounceTime(300),
+                //debounceTime(30),
                 takeUntil(this._unsubscribeAll),
                 map(value => {
                     this.selectedOptionFeature = this.searchForms.get('mz').value;
                     return this._filter(value, this.optionsMz);
                 })
-            )
+            );
 
-        // 
+        //
         this.filteredOptionsLt = this.searchForms.get('lt').valueChanges
             .pipe(
                 startWith(''),
-                debounceTime(300),
+                debounceTime(30),
                 takeUntil(this._unsubscribeAll),
                 map(value => {
                     this.selectedOptionFeature = this.searchForms.get('lt').value;
                     return this._filter(value, this.optionsLt);
                 })
-            )
+            );
     };
 
     //init data mat-option
@@ -296,7 +298,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
             if (this.searchForms.get('door').value) {
                 this._fuseSplashScreenService.show();
-                const tipouu = this.searchForms.get('tipouu').value
+                const tipouu = this.searchForms.get('tipouu').value;
                 params = { 'UBIGEO': this.ubigeo, 'COD_VIA': tipouu.id, 'NUM_MUN': this.searchForms.get('door').value };
                 where = CommonUtils.generateWhereArgis(params);
                 const featureLayer = this.layersInfo.find((l) => l.id === 0)?.featureLayer;
@@ -320,12 +322,18 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         }
 
         else if (this.selectedOption === '3') {
+            console.log('lt>>',this.searchForms.get('lt'));
             if (this.searchForms.get('lt').value.id) {
+                console.log(this.searchForms.get('lt'));
+                this.selectedOptionFeature = this.searchForms.get('lt').value;
+                this.onGo(this.selectedOptionFeature);
             }
             else if (this.searchForms.get('mz').value) {
+                this.selectedOptionFeature = this.searchForms.get('mz').value;
                 this.onGo(this.selectedOptionFeature);
             }
             else {
+                this.selectedOptionFeature = this.searchForms.get('habUrb').value;
                 this.onGo(this.selectedOptionFeature);
 
             }
@@ -355,6 +363,17 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     return { id: attributes['MZN_URB'], name: `${attributes['MZN_URB']}`, geometry: f.geometry };
                 }
             );
+
+            this.filteredOptionsMz = this.searchForms.get('mz').valueChanges
+            .pipe(
+                startWith(''),
+                //debounceTime(30),
+                takeUntil(this._unsubscribeAll),
+                map(value => {
+                    this.selectedOptionFeature = this.searchForms.get('mz').value;
+                    return this._filter(value, this.optionsMz);
+                })
+            );
             // this.optionsLt = [];
         });
     }
@@ -378,8 +397,19 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             this.optionsLt = features.map(
                 (f: any) => {
                     const attributes = f.attributes;
-                    return { id: attributes['LOT_URB '], name: `${attributes['LOT_URB']}  `, geometry: f.geometry };
+                    return { id: attributes['LOT_URB'], name: `${attributes['LOT_URB']}`, geometry: f.geometry };
                 });
+
+                this.filteredOptionsLt = this.searchForms.get('lt').valueChanges
+                .pipe(
+                    startWith(''),
+                    debounceTime(30),
+                    takeUntil(this._unsubscribeAll),
+                    map(value => {
+                        this.selectedOptionFeature = this.searchForms.get('lt').value;
+                        return this._filter(value, this.optionsLt);
+                    })
+                );
         });
     }
 
@@ -410,7 +440,9 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 break;
             case '3':
                 console.log('val 3>>', val);
-                this.showSelected = this.searchForms.get('habUrb').value.name + ' ' + 'Mz' + this.searchForms.get('mz').value.name + ' ' + 'Lt' + this.searchForms.get('let').value.name;
+                console.log('mz',this.searchForms.get('mz'));
+                console.log('lt',this.searchForms.get('lt'));
+                this.showSelected = this.searchForms.get('habUrb').value.name + ' ' + 'Mz' + this.searchForms.get('mz').value.name + ' ' + 'Lt' + this.searchForms.get('lt').value.name;
                 this.changeStyle = val?.id;
                 break;
             default:
@@ -437,9 +469,9 @@ export class SearchMapComponent implements OnInit, OnDestroy {
 
         console.log(val, 'val normalize')
         // if (val === '') {
-        //     return arrays; 
+        //     return arrays;
         // }
-        
+
         return arrays.filter(item => {
             const itemNameNormalized = normalizeText(item.name);
             return itemNameNormalized.includes(val);
