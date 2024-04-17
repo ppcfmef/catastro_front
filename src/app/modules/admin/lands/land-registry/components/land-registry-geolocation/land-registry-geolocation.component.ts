@@ -46,6 +46,7 @@ import { LandOwnerService } from '../../services/land-owner.service';
 import { LandRecord } from '../../interfaces/land-record.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertLandOwnerComponent } from '../alert-land-owner/alert-land-owner.component';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -101,7 +102,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 {
     id: 0,
     title: 'Cartografia Fiscal',
-    children: [ 1, 2,3,0],
+    children: [ 2,3,0,-1],
 },
 
         {
@@ -150,14 +151,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             color: [0, 255, 0], // White
             width: 1.5,
         },
-    };
-*/
+    };*/
+
 
     simpleMarkerSearch = {
-        type: 'web-style',
-        name: 'push-pin-1',
-        styleName: 'Esri2DPointSymbolsStyle',
-        width: '15px'
+       /* type: 'web-style',*/
+
+        type: 'picture-marker',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/GreenPin1LargeB.png',
+
+       /* name: 'push-pin-1',
+        styleName: 'Esri2DPointSymbolsStyle',*/
+        width: '30px',
+        height: '30px',
     };
     /*simpleMarkerSymbolUndefined = {
         type: 'web-style',
@@ -224,34 +230,52 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 classBreakInfos: [
                     {
                     minValue: 0,  // 0 acres
-                    maxValue: 0,  // 200,000 acres
+                    maxValue: 0,  // 200,000 acres,
+                    label:'Lotes sin predios',
                     symbol:   {
                         type: 'simple-fill',
                         color: [205, 102, 102, 0.5],
                         style: 'solid',
                         outline: {
                             color: [205, 102, 102, 0.8],
-                            width: 1,
+                            width: 0.5,
                         },
                     },  // will be assigned sym1
 
                     }, {
                     minValue: 1,  // 200,001 acres
                     maxValue: 162,  // 500,000 acres
+                    label:'Lotes con predios',
                     symbol:   {
                         type: 'simple-fill',
                         color: [68, 101, 137, 0.5],
                         style: 'solid',
                         outline: {
                             color: [68, 101, 137, 0.8],
-                            width: 1,
+                            width: 0.5,
                         },
                     },
                     },
                 ]
 
             },
+            labelingInfo: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 10,
+                        weight: 'bold',
 
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.LOT_URB',
+                },
+            }
         },
 
         {
@@ -269,6 +293,23 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: null,
             visible:true,
+            labelingInfo: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 8,
+                        //weight: 'bold'
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+                },
+            }
+
         },
 
         {
@@ -285,6 +326,25 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: null,
             visible:true,
+            labelingInfo:{
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'blue',
+                    haloColor: 'white',
+                    haloSize: 1,
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 10,
+                        weight: 'bold',
+
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.MZN_URB',
+                },
+            }
         },
 
 
@@ -304,136 +364,6 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             visible:false,
         },
 
-/*
-        {
-            title: 'Lotes Zona 18',
-            id: 3,
-            idServer: 1,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 18,
-            projection: 32718,
-            visible:true,
-        },
-
-        {
-            title: 'Lotes Poligono Zona 18',
-            id: 4,
-            idServer: 5,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 18,
-            projection: 32718,
-            visible:true,
-        },
-
-        {
-            title: 'Via Zona 18',
-            id: 5,
-            idServer: 2,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 18,
-            projection: 32718,
-            visible:true,
-        },
-
-        {
-            title: 'Manzana Urbana Zona 18',
-            id: 102,
-            idServer: 9,
-
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 18,
-            projection: 32718,
-            visible:true,
-        },
-
-        {
-            title: 'Lotes Zona 19',
-            id: 6,
-            idServer: 1,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 19,
-            projection: 32719,
-            visible:true,
-        },
-
-        {
-            title: 'Lotes Poligono Zona 19',
-            id: 7,
-            idServer: 5,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 19,
-            projection: 32719,
-            visible:true,
-        },
-
-        {
-            title: 'Via Zona 19',
-            id: 8,
-            idServer: 2,
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 19,
-            projection: 32719,
-            visible:true,
-        },
-
-        {
-            title: 'Manzana Urbana Zona 19',
-            id: 103,
-            idServer: 9,
-
-            urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            order: 0,
-            featureLayer: null,
-            definitionExpression: '1=1',
-            featureTable: null,
-            popupTemplate: null,
-            utm: 19,
-            projection: 32719,
-            visible:true,
-        },*/
         {
             title: 'Arancel',
             id: 9,
@@ -465,6 +395,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             utm: null,
             projection: 4326,
             visible:false,
+
         },
 
         {
@@ -586,7 +517,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                         this._landRegistryMapService.setEstado(Estado.LEER);
 
                     } else if (land && land.ubigeo) {
-                        //this.resetMap();
+                        this.resetMap();
                         this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
 
@@ -653,11 +584,14 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
                         : '150101';
+
+
                   this._commonService.getDistrictResource(this.userUbigeo).subscribe((data)=>{
                     this.district =data;
                 });
                 this.idCargo = this.user.placeScope.id;
                 setTimeout(() => {
+                    this._fuseSplashScreenService.show();
                     this.initializeMap(this.points);
                 }, 1000);
             });
@@ -699,6 +633,8 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 BasemapGallery,
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 MapImageLayer,
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                Legend,
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -714,12 +650,15 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                 'esri/layers/GroupLayer',
                 'esri/widgets/BasemapGallery',
                 'esri/layers/MapImageLayer',
+                'esri/widgets/Legend'
+
             ]);
 
             const mapProperties = {
                 basemap: 'streets-vector',
 
             };
+
 
 
             this.map = new Map(mapProperties);
@@ -792,60 +731,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
             const featureDireccionesMunicipales = new FeatureLayer(
                 this.urlSearchDireccionesMunicipales
             );
-            const labelClassVias = {
-                // autocasts as new LabelClass()
-                symbol: {
-                    type: 'text', // autocasts as new TextSymbol()
-                    color: 'black',
-                    font: {
-                        // autocast as new Font()
-                        family: 'arial',
-                        size: 8,
-                        //weight: 'bold'
-                    },
-                },
-                labelPlacement: 'above-center',
-                labelExpressionInfo: {
-                    expression: '$feature.DES_VIA +" "+ $feature.NOM_VIA',
-                },
-            };
-            const labelClassManzana = {
-                symbol: {
-                    type: 'text', // autocasts as new TextSymbol()
-                    color: 'blue',
-                    haloColor: 'white',
-                    haloSize: 1,
-                    font: {
-                        // autocast as new Font()
-                        family: 'arial',
-                        size: 10,
-                        weight: 'bold',
 
-                    },
-                },
-                labelPlacement: 'above-center',
-                labelExpressionInfo: {
-                    expression: '$feature.MZN_URB',
-                },
-            };
-
-            const labelClassLote = {
-                symbol: {
-                    type: 'text', // autocasts as new TextSymbol()
-                    color: 'black',
-                    font: {
-                        // autocast as new Font()
-                        family: 'arial',
-                        size: 10,
-                        weight: 'bold',
-
-                    },
-                },
-                labelPlacement: 'above-center',
-                labelExpressionInfo: {
-                    expression: '$feature.LOT_URB',
-                },
-            };
 
             this.layersInfo.reverse().map((l) => {
                 const options = {
@@ -854,23 +740,26 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     outFields: ['*'],
                     visible:l.visible
                 };
+
+
                 if(l['renderer']){
                     console.log('renderer>>',l);
                     options['renderer'] = l['renderer'];
                 }
-                if (l.title.includes('Via')) {
-                    options['labelingInfo'] = [labelClassVias];
-                }
-                else if(l.title.includes('Manzana')){
-                    options['labelingInfo'] = [labelClassManzana];
+
+                if(l['labelingInfo']){
+                    console.log('renderer>>',l);
+                    options['labelingInfo'] = l['labelingInfo'];
                 }
 
-                else if(l.title.includes('Lotes Poligono Zona')){
-                    options['labelingInfo'] = [labelClassLote];
-                }
 
                 l.featureLayer = new FeatureLayer(options);
             });
+
+
+            const layerTematico=this.layersInfo.find(l => l.id === 1)?.featureLayer;
+            this.map.add(layerTematico);
+
 
             this.groupLayers.reverse().map((g) => {
                 const fs = g.children.map(
@@ -886,8 +775,17 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                this.map.add(demographicGroupLayer);
             });
 
-            const layerPredio=this.layersInfo.find(l => l.id === -1)?.featureLayer;
-            this.map.add(layerPredio);
+
+            /*const subtypeGroupLayer = this.view.layers.getItemAt(0);*/
+            const legend = new Legend({
+                view: this.view,
+                layerInfos: [
+                  {
+                    layer: layerTematico,
+                  }
+                ]
+              });
+
 
             const cs1 = new SpatialReference({
                 wkid: 32717, //PE_GCS_ED_1950
@@ -901,6 +799,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
             this.popupDiv = document.getElementById('popupDiv');
             this.view.when(() => {
+                this._fuseSplashScreenService.hide();
+                if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) && this.idCargo===Role.DISTRITAL) {
+                    this.buscar(this.userUbigeo);
+                }
 
                 this.view.on('click', (event) => {
                     if(this.estado === Estado.LEER){
@@ -968,8 +870,19 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                 }
                             });
 
-                            console.log('results<<',results);
+                            const resultsLote = response.results.filter((r) => {
+                                if (
+                                    r &&
+                                    r.graphic &&
+                                    r.graphic.layer &&
+                                    r.graphic.layer.layerId === 5
+                                ) {
+                                    return r;
+                                }
+                            });
 
+
+                            console.log('results<<',results);
 
 
 
@@ -1020,73 +933,87 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                                             }
                                         else{
 
-                                            if(resultsPredio.length > 0){
 
-                                                graphic = resultsPredio[resultsPredio.length-1].graphic;
-                                                const attributes = graphic.attributes;
-                                                const filters ={cup:attributes['COD_CPU'], ubigeo:attributes['UBIGEO'] };
+                                            if(resultsLote.length > 0 &&  resultsLote[0].graphic.attributes['ESTADO_INS']>0){
+                                                this._fuseSplashScreenService.show();
+                                                console.log('resultsLote>>',resultsLote);
+                                                graphic = resultsLote[0].graphic;
+                                                const layerPredio=this.layersInfo.find(l => l.id === -1)?.featureLayer;
+                                                const params = {'UBIGEO':graphic.attributes['UBIGEO'] ,'COD_UU': graphic.attributes['COD_UU'],'MZN_URB':  graphic.attributes['MZN_URB'],'LOT_URB':  graphic.attributes['LOT_URB']   } ;
+                                                const where =CommonUtils.generateWhereArgis(params,true);
+                                                console.log('where>>',where);
+                                                MapUtils.queryFeaturelayer(layerPredio,where).then((featurePredios)=>{
+                                                    console.log('featurePredios>>',featurePredios)
+                                                    const featurePredio=featurePredios[0];
+                                                    console.log('featurePredio>>',featurePredio);
+                                                    const filters ={cup:featurePredio?.attributes['COD_CPU'], ubigeo:featurePredio?.attributes['UBIGEO'] };
 
 
-                                                this._landRecordService.getList(filters).subscribe( (r: IPagination<LandRecord>) =>{
-                                                    const landRecords: LandRecord[] = r.results;
-                                                    if (landRecords.length>0){
-                                                        const id = landRecords[0].id;
-                                                        console.log('landRecords[0]>>',landRecords[0]);
-                                                        this._landOwnerService.getLandDetail(id)
-                                                        .subscribe(
-                                                            (responseOwner) => {
+                                                    this._landRecordService.getList(filters).subscribe( (r: IPagination<LandRecord>) =>{
+                                                        this._fuseSplashScreenService.hide();
+                                                        const landRecords: LandRecord[] = r.results;
+                                                        if (landRecords.length>0){
+                                                            const id = landRecords[0].id;
+                                                            console.log('landRecords[0]>>',landRecords[0]);
+                                                            this._landOwnerService.getLandDetail(id)
+                                                            .subscribe(
+                                                                (responseOwner) => {
 
-                                                                const owners = responseOwner.results;
-                                                                console.log('owners>',owners);
-                                                                dialogRef = this.dialog.open(AlertLandOwnerComponent,{
-                                                                    data: {owners:owners},
-                                                                    width: '600px',
-                                                                });
+                                                                    const owners = responseOwner.results;
+                                                                    console.log('owners>',owners);
+                                                                    dialogRef = this.dialog.open(AlertLandOwnerComponent,{
+                                                                        data: {owners:owners},
+                                                                        width: '600px',
+                                                                    });
 
-                                                                /*const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
+                                                                    /*const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
 
-                                                                    data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
-                                                                    width: '600px',
-                                                                    height:'100%'
-                                                                  });*/
+                                                                        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
+                                                                        width: '600px',
+                                                                        height:'100%'
+                                                                      });*/
 
-                                                                /*dialogRef = this.confirmationService.info(
-                                                                    'Ya existe un Titular/Contribuyente, asignado',
-                                                                    `DNI:${owners[0].dni} Nombre:${owners[0].name} ${owners[0].paternalSurname} ${owners[0].maternalSurname}`
-                                                                );*/
+                                                                    /*dialogRef = this.confirmationService.info(
+                                                                        'Ya existe un Titular/Contribuyente, asignado',
+                                                                        `DNI:${owners[0].dni} Nombre:${owners[0].name} ${owners[0].paternalSurname} ${owners[0].maternalSurname}`
+                                                                    );*/
 
-                                                                dialogRef.afterClosed().toPromise().then( (option) => {
-                                                                    if (option === 'confirmed') {
+                                                                    dialogRef.afterClosed().toPromise().then( (option) => {
+                                                                        if (option === 'confirmed') {
 
-                                                                        graphic.attributes['COORD_X'] = longitude;
-                                                                        graphic.attributes['COORD_Y'] =latitude;
-                                                                        this.lote = graphic.attributes;
-                                                                        console.log('lote>>',this.lote);
-                                                                        this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
-                                                                        this._landRegistryMapService.setEstado(Estado.LEER);
-                                                                        this._landRegistryMapService.landOut = this.landRegistryMapModel;
-                                                                    }
-
-                                                                    else{
-
-                                                                        if(this.view){
-
-                                                                            this.view.popup.close();
-                                                                            this.view.graphics.removeAll();
+                                                                            graphic.attributes['COORD_X'] = longitude;
+                                                                            graphic.attributes['COORD_Y'] =latitude;
+                                                                            this.lote = graphic.attributes;
+                                                                            console.log('lote>>',this.lote);
+                                                                            this.landRegistryMapModel = FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
+                                                                            this._landRegistryMapService.setEstado(Estado.LEER);
+                                                                            this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                                                         }
-                                                                    }
+
+                                                                        else{
+
+                                                                            if(this.view){
+
+                                                                                this.view.popup.close();
+                                                                                this.view.graphics.removeAll();
+                                                                            }
+                                                                        }
+
+
+                                                                    });
+
 
 
                                                                 });
 
+                                                        }
 
 
-                                                            });
-
-                                                    }
-
-
+                                                    });
                                                 });
+
+
+
 
                                             }
                                             else {
@@ -1198,7 +1125,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
 
 
-                this.resetMap();
+                //this.resetMap();
 
 
 
@@ -1363,18 +1290,18 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                             },
                         ];
 
-                        const searchWidget = new Search({
+                        /*const searchWidget = new Search({
                             view: this.view,
                             includeDefaultSources: false,
                             sources:sources
 
-                        });
+                        });*/
 
-                        searchWidget.on('select-result', (event) => {
+                        /*searchWidget.on('select-result', (event) => {
                             this.view.zoom = 19;
                             const template =event.getEffectivePopupTemplate();
                             console.log(template);
-                        });
+                        });*/
 
 
                         // this.view.ui.add(searchWidget, {
@@ -1517,7 +1444,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     ];
 
 
-                    //remove widget search 
+                    //remove widget search
                     // const searchWidget = new Search({
                     //     view: this.view,
                     //     includeDefaultSources: false,
@@ -1551,6 +1478,10 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
                     position: 'top-right',
                 });
 
+                this.view.ui.add([legend],{
+                    position: 'bottom-left'
+                });
+
                /* this.view.ui.add([baseMapGalleryExpand], {
                     position: 'top-right',
                 });*/
@@ -1582,7 +1513,7 @@ export class LandRegistryGeolocationComponent implements OnInit, AfterViewInit, 
 
         }
         if ( this.userUbigeo && (this.estado === Estado.INICIAR || this.estado === Estado.CREAR) && this.idCargo===Role.DISTRITAL) {
-            this.buscar(this.userUbigeo);
+            //this.buscar(this.userUbigeo);
             /*const where = `UBIGEO='${this.userUbigeo}'`;*/
 
 /*
@@ -2220,7 +2151,7 @@ async saveNewPointGestionPredio(): Promise<void>{
        // this._fuseSplashScreenService.hide();
        console.log('data saveLandRegistryMap>>>',data);
         return data;
-       
+
     }
 
 
@@ -2331,7 +2262,7 @@ async saveNewPointGestionPredio(): Promise<void>{
         if (this.view) {
 
             console.log('r>>', r);
-          
+
             if (r.geometry.type ==='point'){
                 this.view.center =[r.geometry.x,r.geometry.y] ;
                 this.view.zoom = 19;
@@ -2340,12 +2271,13 @@ async saveNewPointGestionPredio(): Promise<void>{
                     r.geometry.x,
                     this.simpleMarkerSearch,
                 );
+
             }
 
             if (r.geometry.type ==='polyline'){
                 const center=MapUtils.getCenterOfPolyline(r.geometry);
                 this.view.center =center;
-                this.view.zoom = 20;
+                this.view.zoom = 18;
 
                 this.addPoint(
                     center.y,
@@ -2353,7 +2285,7 @@ async saveNewPointGestionPredio(): Promise<void>{
                     this.simpleMarkerSearch,
                 );
             }
-           
+
             else{
 
                 this.view.goTo({ target: r.geometry }); //= r.geometry.extent.center;

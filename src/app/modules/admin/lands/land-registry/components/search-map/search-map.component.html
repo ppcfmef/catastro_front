@@ -118,7 +118,7 @@
                             <!-- LT -->
                             <mat-form-field appearance="fill" class="fuse-mat-dense w-3/6">
                                 <mat-label>Lt.</mat-label>
-                                <input formControlName="lt" class="w-full" matInput [placeholder]="'Ejem: A'"
+                                <input formControlName="lt" class="w-full" matInput [placeholder]="'Ejem: 1'"
                                     [matAutocomplete]="mltAutocomplete" />
                                 <mat-autocomplete [displayWith]="displayFn"
                                     class="max-h-128 sm:px-2 border-t rounded-b shadow-md"
@@ -132,15 +132,15 @@
                                         </mat-option>
                                     </ng-container>
                                 </mat-autocomplete>
-                                <mat-select class="w-full">
+                                <!--<mat-select class="w-full">
 
                                     <mat-option *ngFor="let option of optionsLt ;trackBy: trackByFn" [value]="option">
                                         {{option.name}}
                                     </mat-option>
                                 </mat-select>
-
-                                <!--  <input 
-                                    matInput placeholder="Ejemplo: 5" 
+                            -->
+                                <!--  <input
+                                    matInput placeholder="Ejemplo: 5"
                                     (change)="onChangeLt($event.target.value)" />-->
                             </mat-form-field>
                         </div>
@@ -179,19 +179,19 @@
 
                         <!--<ng-container *ngSwitchCase="3">
                             <div class="results" *ngFor="let r of results">
-                                <div 
+                                <div
                                     [ngClass]="{'bg-selected-result': changeStyle === r.id}"
-                                    class="flex w-full items-center justify-between px-4"> 
+                                    class="flex w-full items-center justify-between px-4">
                                     <span class="font-semibold text-sm">
-                                        <span 
+                                        <span
                                         class="truncate w-56 text-sm text-[#595961]" [matTooltip]="r?.name" >{{r?.name | titlecase}}</span>
                                     </span>
-        
+
                                     <button mat-icon-button  type="button" (click)="onGo(r)" matTooltip="ver">
                                         <mat-icon svgIcon="mat_solid:double_arrow"></mat-icon>
                                     </button>
                                 </div>
-        
+
                             </div>
                         </ng-container>-->
                     </div>
