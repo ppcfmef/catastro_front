@@ -34,6 +34,9 @@
 
 
 .label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   padding: 6px 12px;
   border-radius: 4px;
@@ -54,6 +57,7 @@
 .rejected {
   color: #F1416C;
   background: #FFF5F8;
+  cursor: pointer;
 }
 
 ::ng-deep .no-hide-arrow .mat-sort-header-arrow {

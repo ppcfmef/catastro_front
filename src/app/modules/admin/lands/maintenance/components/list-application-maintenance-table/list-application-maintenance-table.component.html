@@ -33,8 +33,11 @@
         <th mat-header-cell *matHeaderCellDef   mat-sort-header class="no-hide-arrow"> Estado </th>
         <td mat-cell *matCellDef="let element" > 
           <div class="label"
+            [matTooltip] = "element.idStatus === 3 ? 'Ver observación' : null"
+            (click)="element.idStatus === 3 && detailObserved(element)"
             [ngClass]="{'pending': element.idStatus === 1, 'success' : element.idStatus === 2, 'rejected' : element.idStatus === 3}"  > 
             {{element.status}} 
+            <mat-icon *ngIf="element.idStatus === 3" class="icon-size-4 text-[#F1416C]" svgIcon="mat_solid:double_arrow"></mat-icon>
         </div>  
         </td>
       </ng-container>

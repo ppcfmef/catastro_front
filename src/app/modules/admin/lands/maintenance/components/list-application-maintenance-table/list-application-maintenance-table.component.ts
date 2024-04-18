@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Actions } from 'app/shared/enums/actions.enum';
 import { ApplicationUI } from '../../interfaces/application';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DetailObservedService } from '../../services/detail-observed.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-application-maintenance-table',
@@ -28,6 +30,11 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
     //
     sort: Sort ;
     paginator: MatPaginator;
+
+    //inject service
+    #router = inject(Router);
+    #activatedRoute= inject(ActivatedRoute);
+
   constructor() { }
     ngOnChanges(changes: SimpleChanges): void {
         this.dataTable.data = this.dataSource;
@@ -51,8 +58,10 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
     this.pageIndex = paginator.pageIndex;
     this.paginator = paginator;
     this.changePage.emit( {paginator:this.paginator, sort: this.sort});
+  }
 
-
+  detailObserved(element){
+    this.#router.navigate([`./${element.id}`], {relativeTo: this.#activatedRoute});
   }
 
 

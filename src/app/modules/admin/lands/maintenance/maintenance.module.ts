@@ -42,6 +42,7 @@ import { ListApplicationMaintenancePage } from './pages/list-application-mainten
 import { LandMaintenanceDesactivateComponent } from './components/land-maintenance-desactivate/land-maintenance-desactivate.component';
 import { MaintenanceIndependencePage } from './pages/maintenance-independence/maintenance-independence.page';
 import { MaintenanceIndependenceContainerComponent } from './components/maintenance-independence-container/maintenance-independence-container.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 @NgModule({
@@ -88,6 +89,8 @@ import { MaintenanceIndependenceContainerComponent } from './components/maintena
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatSortModule,
+    MatSidenavModule,
+    MatTooltipModule,
   ]
 })
 export class MaintenanceModule { }
