@@ -80,7 +80,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results},
         width: '600px',
-        height:'100%'
+        /*height:'100%'*/
       });
 
       dialogRef.afterClosed().subscribe((res) => {

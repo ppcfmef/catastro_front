@@ -1,15 +1,17 @@
 <h1 mat-dialog-title class="dialog-title">Informacion del predio</h1>
-<br>
+
 <div mat-dialog-content>
-    <div class="flex flex-wrap " *ngIf="formLand" [formGroup]="formLand">
-
-
-        <mat-form-field
-        class=" w-full pr-2 pb-2">
+    <div class="flex flex-wrap" *ngIf="formLand" [formGroup]="formLand">
+        <mat-form-field class="w-full pr-2 pb-2">
             <mat-label>Ubigeo</mat-label>
             <!--<input matInput type="text" formControlName="ubigeo">-->
-            <mat-select formControlName="ubigeo" >
-                <mat-option *ngFor="let district of districts" [value]="district.code"> {{district.name}}</mat-option>
+            <mat-select formControlName="ubigeo">
+                <mat-option
+                    *ngFor="let district of districts"
+                    [value]="district.code"
+                >
+                    {{ district.name }}</mat-option
+                >
             </mat-select>
 
             <mat-error *ngIf="formLand.get('ubigeo').hasError('required')">
@@ -18,23 +20,14 @@
             <!--<div *ngIf="formLand.get('ubigeo').invalid && (formLand.get('ubigeo').touched || formLand.get('ubigeo').submitted)">
                 <div *ngIf="formLand.get('ubigeo').errors.required" class="c-danger small" ><mat-error>El campo ubigeo es obligatorio.</mat-error></div>
             </div>-->
-
-
-
         </mat-form-field>
 
+        <input matInput type="text" formControlName="cpm2" hidden="true" />
 
-            <input matInput type="text" formControlName="cpm2"  hidden="true">
-
-
-
-
-
-        <mat-form-field
-        class="w-full pr-2 pb-2">
+        <mat-form-field class="w-full pr-2 pb-2">
             <mat-label>Codigo de Predio Municipal </mat-label>
-            <input matInput type="text" formControlName="cpm">
-       <!-- <mat-error *ngIf="formLand.get('cpm').hasError('required')">
+            <input matInput type="text" formControlName="cpm" />
+            <!-- <mat-error *ngIf="formLand.get('cpm').hasError('required')">
                 El campo es obligatorio.
             </mat-error>
         -->
@@ -42,34 +35,55 @@
                 El codigo de predio debe ser diferente al original.
             </mat-error>
 
-           <!-- <mat-error>El campo es obligatorio.</mat-error>-->
+            <!-- <mat-error>El campo es obligatorio.</mat-error>-->
             <!--
             <mat-error *ngIf="formLand.get('cpm').errors.required" >El campo cpm es obligatorio.</mat-error>
             -->
         </mat-form-field>
 
-        <mat-form-field class=" w-6/12 pr-2 pb-2">
+        <mat-form-field class="w-6/12 pr-2 pb-2">
             <mat-label>Tipo Doc. Sustento</mat-label>
 
             <mat-select formControlName="resolutionType">
-                <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id"> {{domain.name}}</mat-option>
+                <mat-option
+                    *ngFor="let domain of masterDomain.resolutionType"
+                    [value]="domain.id"
+                >
+                    {{ domain.name }}</mat-option
+                >
             </mat-select>
-            <mat-error *ngIf="formLand.get('resolutionType').hasError('required')">
+            <mat-error
+                *ngIf="formLand.get('resolutionType').hasError('required')"
+            >
                 El campo es obligatorio.
             </mat-error>
 
 
-<!--
-            <div *ngIf="formLand.get('resolutionType').invalid && (formLand.get('resolutionType').touched || formLand.get('resolutionType').submitted)">
-                <div  *ngIf="formLand.get('resolutionType').errors.required" class="c-danger small" > <mat-error>El campo  es obligatorio.</mat-error> </div>
-            </div>
-        -->
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field class="w-6/12 pr-2 pb-2">
+            <mat-label>Fecha Doc. Sustento</mat-label>
+
+  <input matInput [matDatepicker]="picker"  formControlName="resolutionDate" >
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+                *ngIf="formLand.get('resolutionDate').hasError('required')"
+            >
+                El campo es obligatorio.
+            </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2"
+        >
             <mat-label>Nro. Doc. Sustento</mat-label>
-            <input matInput type="text" formControlName="resolutionDocument">
-            <mat-error *ngIf="formLand.get('resolutionDocument').hasError('required')">
+            <input matInput type="text" formControlName="resolutionDocument" />
+            <mat-error
+                *ngIf="formLand.get('resolutionDocument').hasError('required')"
+            >
                 El campo es obligatorio.
             </mat-error>
             <!--
@@ -78,34 +92,53 @@
             </div>-->
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2"
+        >
             <mat-label>Tipo de Habilitación</mat-label>
             <mat-select formControlName="uuType">
-                <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id"> {{domain.name}}</mat-option>
+                <mat-option
+                    *ngFor="let domain of masterDomain.uuType"
+                    [value]="domain.id"
+                >
+                    {{ domain.name }}</mat-option
+                >
             </mat-select>
-
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2"
+        >
             <mat-label>Código de Habilitación</mat-label>
-            <input matInput type="text" formControlName="codUu" maxlength="4">
+            <input matInput type="text" formControlName="codUu" maxlength="4" />
             <mat-error *ngIf="formLand.get('streetName').hasError('required')">
                 El campo es obligatorio.
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2"
+        >
             <mat-label>Nombre de Habilitacion</mat-label>
-            <input matInput type="text" formControlName="habilitacionName">
-            <mat-error *ngIf="formLand.get('habilitacionName').hasError('required')">
+            <input matInput type="text" formControlName="habilitacionName" />
+            <mat-error
+                *ngIf="formLand.get('habilitacionName').hasError('required')"
+            >
                 El campo es obligatorio.
             </mat-error>
         </mat-form-field>
 
-       <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2"
+        >
             <mat-label>Tipo vía</mat-label>
-            <mat-select formControlName="streetType" >
-                <mat-option *ngFor="let domain of masterDomain.codStreet" [value]="domain.id"> {{domain.name}}</mat-option>
+            <mat-select formControlName="streetType">
+                <mat-option
+                    *ngFor="let domain of masterDomain.codStreet"
+                    [value]="domain.id"
+                >
+                    {{ domain.name }}</mat-option
+                >
             </mat-select>
             <mat-error *ngIf="formLand.get('streetType').hasError('required')">
                 El campo es obligatorio.
@@ -117,62 +150,106 @@
             <input matInput type="text" formControlName="codStreet">
         </mat-form-field>-->
 
-      <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2"
+        >
             <mat-label>Nombre de vía</mat-label>
-            <input matInput type="text" formControlName="streetName">
+            <input matInput type="text" formControlName="streetName" />
             <mat-error *ngIf="formLand.get('streetName').hasError('required')">
                 El campo es obligatorio.
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2"
+        >
             <mat-label>Mz. urbana</mat-label>
-            <input matInput type="text" formControlName="urbanMza" (change)="toggleRequired()">
+            <input
+                matInput
+                type="text"
+                formControlName="urbanMza"
+                (change)="toggleRequired()"
+            />
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2 pb-2"
+        >
             <mat-label>Lt. urbano</mat-label>
-            <input matInput type="text" formControlName="urbanLotNumber" (change)="toggleRequired()">
+            <input
+                matInput
+                type="text"
+                formControlName="urbanLotNumber"
+                (change)="toggleRequired()"
+            />
         </mat-form-field>
 
-
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Nro. Puerta</mat-label>
-            <input matInput type="text" formControlName="municipalNumber" (change)="toggleRequired()">
+            <input
+                matInput
+                type="text"
+                formControlName="municipalNumber"
+                (change)="toggleRequired()"
+            />
         </mat-form-field>
 
-
-
-
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Nro. Bloque</mat-label>
-            <input matInput type="text" formControlName="block">
+            <input matInput type="text" formControlName="block" />
         </mat-form-field>
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Interior</mat-label>
-            <input matInput type="text" formControlName="indoor">
+            <input matInput type="text" formControlName="indoor" />
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Piso</mat-label>
-            <input matInput type="text" formControlName="floor">
+            <input matInput type="text" formControlName="floor" />
         </mat-form-field>
 
-
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Nro Dpto</mat-label>
-            <input matInput type="text" formControlName="apartmentNumber">
+            <input matInput type="text" formControlName="apartmentNumber" />
         </mat-form-field>
 
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2">
+        <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-4/12 pr-2 pb-2"
+        >
             <mat-label>Km</mat-label>
-            <input matInput type="text" formControlName="km">
+            <input matInput type="text" formControlName="km" />
         </mat-form-field>
+    </div>
 
-    </div>
-    <br>
-    <div mat-dialog-actions align="end" class="flex flex-row space-x-4" >
-        <button mat-raised-button *ngIf="!readOnly && formLand" color="primary" (click)="save()"  [class.button-disabled]="!formLand.valid" [class.bg-success]="formLand.valid"    [disabled]="!formLand.valid " > Guardar</button>
-       <button mat-raised-button color="primary" class ="bg-danger"  (click)="close()"><mat-icon svgIcon="heroicons_outline:x"  ></mat-icon> Cerrar</button>
-    </div>
+</div>
+<div mat-dialog-actions align="end" >
+    <button
+        mat-raised-button
+        *ngIf="!readOnly && formLand"
+        color="primary"
+        (click)="save()"
+        [class.button-disabled]="!formLand.valid"
+        [class.bg-success]="formLand.valid"
+        [disabled]="!formLand.valid"
+    >
+        Guardar
+    </button>
+    <button
+        mat-raised-button
+        color="primary"
+        class="bg-danger"
+        (click)="close()"
+    >
+        <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cerrar
+    </button>
 </div>
