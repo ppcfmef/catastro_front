@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchMapComponent } from './land-registry/components/search-map/searchMap.component';
 
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -22,7 +24,7 @@ import { SearchMapComponent } from './land-registry/components/search-map/search
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    SearchMapComponent
+    SearchMapComponent,
   ],
   providers: [{
     provide: MAT_RADIO_DEFAULT_OPTIONS,
