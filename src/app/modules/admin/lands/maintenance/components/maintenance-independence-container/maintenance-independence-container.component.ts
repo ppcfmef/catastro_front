@@ -17,6 +17,7 @@ import { LandMaintenanceService } from '../../services/land-maintenance.service'
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { FormatUtils } from 'app/shared/utils/format.utils';
 
 @Component({
   selector: 'app-maintenance-independence-container',
@@ -120,11 +121,14 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
     application.idType=5;
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
+    this.results= this.results.map(r=>  FormatUtils.formatResultUIToResultUI(r));
     const body = {
         application:application,
         results: this.results,
         lands:this.landRecords
     };
+
+    /*console.log('_results>>>',body.results);*/
     this.disabled  = true;
     this._fuseSplashScreenService.show();
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{

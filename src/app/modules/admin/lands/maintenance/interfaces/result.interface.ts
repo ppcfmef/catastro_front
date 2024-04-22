@@ -79,5 +79,5 @@ export interface ResultUI{
     streetBlock: string;
     rangCup: string;
     creationDate: string;
-
+    resolutionDate: any;
 }

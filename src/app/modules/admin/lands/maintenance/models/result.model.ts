@@ -81,6 +81,7 @@ export class ResultModel  implements ResultUI {
     streetBlock: string;
     rangCup: string;
     creationDate: string;
+    resolutionDate: any;
     constructor(l?: ResultUI){
         this.id= l?.id;
         this.hasApplications =l?.hasApplications;
@@ -158,7 +159,7 @@ export class ResultModel  implements ResultUI {
         this.streetBlock=l?.streetBlock;
         this.rangCup= l?.rangCup;
         this.creationDate=l?.creationDate;
-
+        this.resolutionDate = l?.resolutionDate;
     }
 
 }
