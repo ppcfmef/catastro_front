@@ -67,7 +67,7 @@ export class LandModel implements LandUI{
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
-    resolutionDate: Date;
+    resolutionDate: any;
     idLote: string;
     idImg: string;
     secuen: number;

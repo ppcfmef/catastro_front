@@ -2,6 +2,8 @@ import { GestionPredio } from 'app/modules/admin/lands/land-registry/interfaces/
 import { Lote } from 'app/modules/admin/lands/land-registry/interfaces/lote.interface';
 import { Predio } from 'app/modules/admin/lands/land-registry/interfaces/predio.interface';
 import { LandRegistryMapModel } from 'app/modules/admin/lands/land-registry/models/land-registry-map.model';
+import { ResultUI } from 'app/modules/admin/lands/maintenance/interfaces/result.interface';
+import moment from 'moment';
 
 export class FormatUtils {
 
@@ -235,5 +237,85 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
+
+public static  formatResultUIToResultUI(r: ResultUI):  ResultUI{
+    const result: ResultUI ={
+        id: r.id,
+        hasApplications: r.hasApplications,
+        idPlot: r.idPlot,
+        idCartographicImg:  r.idCartographicImg,
+        secEjec: r.secEjec,
+        ubigeo: r.ubigeo,
+        cup:  r.cup,
+        codSect: r.codSect,
+        cpm: r.cpm,
+        codUu: r.codUu,
+        codMzn: r.codMzn,
+        codLand: r.codLand,
+        codCuc: r.codCuc,
+        uuType: r.uuType,
+        habilitacionName: r.habilitacionName,
+        referenceName: r.referenceName,
+        urbanMza: r.urbanMza,
+        urbanLotNumber: r.urbanLotNumber,
+        streetType: r.streetType,
+        streetName: r.streetName,
+        streetNameAlt: r.streetNameAlt,
+        municipalNumber: r.municipalNumber,
+        block: r.block,
+        indoor: r.indoor,
+        floor: r.floor,
+        km: r.km,
+        site: r.site,
+        landmark: r.landmark,
+        municipalAddress: r.municipalAddress,
+        urbanAddress: r.urbanAddress,
+        assignedAddress: null,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        idAranc: r.idAranc,
+        documentType: r.documentType,
+        document: r.document,
+        codOwner: r.codOwner,
+        name: null,
+        paternalSurname: null,
+        maternalSurname: null,
+        descriptionOwner: null,
+        taxAddress: null,
+        status: r.status,
+        inactiveReason: '',
+        landArea: r.landArea,
+        frontLength: null,
+        locationPark: null,
+        groupUseDesc: null,
+        numberInhabitants: null,
+        classificationLandDesc: null,
+        buildStatusDesc: null,
+        propertyType: null,
+        selfAssessmentTotal: null,
+        condominium: null,
+        deduction: null,
+        selfAssessmentAffection: null,
+        sourceInformation: null,
+        resolutionType: r.resolutionType,
+        resolutionDocument: r.resolutionDocument,
+        apartmentNumber: r.apartmentNumber,
+        statusImg: null,
+        idLote: null,
+        idImg: null,
+        secuen: r.secuen,
+        idLandCartographic: null,
+        departure: null,
+        side: null,
+        ranNum: null,
+        streetBlock: r.streetBlock,
+        rangCup:null,
+        creationDate: null,
+        resolutionDate: moment(r.resolutionDate).format('YYYY-MM-DD')
+    };
+    return result;
+
+}
 
 }

@@ -64,15 +64,10 @@
         <mat-form-field class="w-6/12 pr-2 pb-2">
             <mat-label>Fecha Doc. Sustento</mat-label>
 
-  <input matInput [matDatepicker]="picker"  formControlName="resolutionDate" >
-  <mat-hint>DD/MM/YYYY</mat-hint>
+
+  <input matInput [matDatepicker]="picker"  [(ngModel)]="landModel.resolutionDate"  [ngModelOptions]="{standalone: true}" >
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
-            <mat-error
-                *ngIf="formLand.get('resolutionDate').hasError('required')"
-            >
-                El campo es obligatorio.
-            </mat-error>
 
         </mat-form-field>
 
