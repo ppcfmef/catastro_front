@@ -6,19 +6,18 @@
     <!-- Header -->
     <div class="bg-default">
       <div class="flex flex-col w-full mx-auto px-6 sm:px-8">
-        <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8">
-          <div class="flex flex-auto items-center min-w-0">
-            <div class="flex flex-col min-w-0">
-  
-                <div class="text-2xl md:text-4xl font-semibold tracking-tight leading-7 md:leading-snug truncate">{{
-                  'Mantenimiento de Predios' }}
-                </div>
+        <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 w-full">
+          <div class="flex flex-auto items-center min-w-0 w-full">
+            <div class="flex flex-col min-w-0 w-full">
+
+              <div class="text-2xl md:text-3xl font-semibold tracking-tight leading-7 md:leading-snug truncate w-full"
+              matTooltip=" En este submódulo, las municipalidades podrán iniciar o registrar aquellos procesos relacionados a la modificación de la propiedad inmobiliaria. 
+              Haga clic en “Añadir solicitud“ para iniciar el proceso.">{{'Mantenimiento de Predios' }}
+              </div>
 
               <div class="flex items-center">
                 <div class="leading-5 truncate text-secondary text-md">
-                  En este submódulo, las municipalidades podrán iniciar o registrar aquellos procesos relacionados a la
-                  modificación de la propiedad inmobiliaria.
-                  <br>Haga clic en “Añadir solicitud“ para iniciar el proceso.
+                  <div class="text-lg font-medium tracking-tight leading-6">Lista de Solicitudes</div>
                 </div>
               </div>
             </div>
@@ -26,8 +25,8 @@
 
           <!-- Actions -->
           <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
-            <button (click)="onAddApplication()"
-            class="bg-mef-btn-success rounded-md" mat-raised-button [color]="'accent'">
+            <button (click)="onAddApplication()" class="bg-mef-btn-success rounded-md" mat-raised-button
+              [color]="'accent'">
               <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
               <span class="ml-2">Añadir solicitud</span>
             </button>
@@ -37,7 +36,7 @@
     </div>
     <!-- Main Content -->
     <div class="w-full px-6 pb-6">
-        <app-list-application-maintenance-container></app-list-application-maintenance-container>
+      <app-list-application-maintenance-container></app-list-application-maintenance-container>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
