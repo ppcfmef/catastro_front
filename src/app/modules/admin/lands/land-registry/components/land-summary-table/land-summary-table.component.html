@@ -1,4 +1,4 @@
-<ng-container>
+<div class="container">
   <table mat-table [dataSource]="dataSource" class="table-base table-line-divider">
 
     <ng-container matColumnDef="nro">
@@ -87,11 +87,11 @@
 
         [class.predioSelected]="landSelected.has(row)"></tr>
   </table>
-  <mat-paginator [length]="length"
-          [pageIndex]="pageIndex"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="pageSizeOptions"
-          (page)="onPage($event)"
-          >
-  </mat-paginator>
-</ng-container>
+</div>
+<mat-paginator [length]="length"
+[pageIndex]="pageIndex"
+[pageSize]="pageSize"
+[pageSizeOptions]="pageSizeOptions"
+(page)="onPage($event)"
+>
+</mat-paginator>
