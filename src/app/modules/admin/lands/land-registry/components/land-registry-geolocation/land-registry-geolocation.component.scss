@@ -20,7 +20,7 @@
 
 
 .esri-view-width-less-than-medium .esri-popup__action-text {
-   display: inline!important; 
+   display: inline!important;
 }
 
 .map-placeholder {
@@ -38,7 +38,7 @@
     top: 0 !important;
     left: 6px !important;
   }
-  
+
   .esri-ui-top-left.esri-ui-corner {
     bottom: 0 !important;
     right: 0 !important;
@@ -62,6 +62,12 @@
       font-weight: 600;
     }
   }
+
+  /* width & color of legend */
+.esri-component.esri-legend.esri-widget.esri-widget--panel {
+    max-width: 200px !important;
+    /*background-color: rgba(15, 15, 15, 0.75);*/
+  }
 }
 
 
@@ -76,3 +82,5 @@
   z-index: 100;
   width: 300px;
 }
+
+

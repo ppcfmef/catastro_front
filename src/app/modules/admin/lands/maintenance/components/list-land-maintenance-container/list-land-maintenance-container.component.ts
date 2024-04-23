@@ -63,7 +63,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     this.getInitList();
   }
   getInitList(): void {
-   
+
     const filterRawValue = { limit: this.defaultTableLimit, ubigeo:this.ubigeo};
 
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
@@ -84,7 +84,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         data: {action:Actions.CREAR},
         width: '600px',
-        height:'100%'
+        /*height:'100%'*/
       });
       dialogRef.afterClosed().subscribe((result) => {
 

@@ -64,7 +64,7 @@ export interface LandUI{
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
-
+    resolutionDate: any;
     apartmentNumber: string;
     statusImg: number;
     idLote: string;

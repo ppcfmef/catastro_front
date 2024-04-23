@@ -170,7 +170,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
           this.applicationRecords = landResult.results;
           this.applicationRecords.map((a) => {
             //console.log(a.lands.map(l=>l.cpm).join(','));
-            a.landsFlat = a.lands.map(l => l.cpm).join(',');
+            a.landsFlat = a.lands.map(l => l.cup).join(',');
           });
           this.tableLength = landResult.count;
         }

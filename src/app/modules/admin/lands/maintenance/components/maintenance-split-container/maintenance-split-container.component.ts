@@ -17,6 +17,7 @@ import { LandMaintenanceService } from '../../services/land-maintenance.service'
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { FormatUtils } from 'app/shared/utils/format.utils';
 
 @Component({
   selector: 'app-maintenance-split-container',
@@ -80,7 +81,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
         data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results},
         width: '600px',
-        height:'100%'
+        /*height:'100%'*/
       });
 
       dialogRef.afterClosed().subscribe((res) => {
@@ -109,11 +110,14 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     application.idType=3;
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
+    this.results= this.results.map(r=>  FormatUtils.formatResultUIToResultUI(r));
     const body = {
         application:application,
         results: this.results,
         lands:this.landRecords
     };
+    console.log('_results>>>',body.results);
+
     this._fuseSplashScreenService.show();
     this.disabled =true;
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{

@@ -78,6 +78,7 @@ private confirmationService: CustomConfirmationService,
         results:this.landRecords,
         lands:this.landRecords
     };
+    console.log('_results>>>',body.results);
     this.disabled =true;
     this._fuseSplashScreenService.show();
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{

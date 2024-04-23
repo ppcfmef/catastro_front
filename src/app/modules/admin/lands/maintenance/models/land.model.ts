@@ -67,6 +67,7 @@ export class LandModel implements LandUI{
     sourceInformation: string;
     resolutionType: string;
     resolutionDocument: string;
+    resolutionDate: any;
     idLote: string;
     idImg: string;
     secuen: number;
@@ -83,6 +84,7 @@ export class LandModel implements LandUI{
     district: string;
     province: string;
     department: string;
+
     constructor(l?: LandUI){
         this.id= l?.id;
         this.hasApplications =l?.hasApplications;
@@ -165,6 +167,7 @@ export class LandModel implements LandUI{
         this.district=l?.district;
         this.province=l?.province;
         this.department=l?.department;
+        this.resolutionDate = l?.resolutionDate;
     }
 
 

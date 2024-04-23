@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MaintenanceRoutingModule } from './maintenance-routing.module';
 
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -43,8 +42,9 @@ import { LandMaintenanceDesactivateComponent } from './components/land-maintenan
 import { MaintenanceIndependencePage } from './pages/maintenance-independence/maintenance-independence.page';
 import { MaintenanceIndependenceContainerComponent } from './components/maintenance-independence-container/maintenance-independence-container.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [
 
@@ -91,6 +91,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatSortModule,
     MatSidenavModule,
     MatTooltipModule,
-  ]
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' } // Configura el idioma español
+  ],
 })
 export class MaintenanceModule { }

@@ -12,21 +12,7 @@ import { DetailObserverComponent } from './components/detail-observer/detail-obs
 
 
 const routes: Routes = [
-    {
-        path: '',
-        component: ListApplicationMaintenancePage,
-        canActivate: [NavigationAuthorizationGuard],
-        data: { id: 'gprmain', permissionType: 'read' },
-        children: [
-            {
-                path:':id',
-                component: DetailObserverComponent,
-                canActivate: [NavigationAuthorizationGuard],
-                data: { id: 'gprmain', permissionType: 'read' },
-            }
-        ]
-    },
-
+ 
 
     {
         path: 'list',
@@ -69,6 +55,20 @@ const routes: Routes = [
 
     },
 
+    {
+        path: '',
+        component: ListApplicationMaintenancePage,
+        canActivate: [NavigationAuthorizationGuard],
+        data: { id: 'gprmain', permissionType: 'read' },
+        children: [
+            {
+                path:':id',
+                component: DetailObserverComponent,
+                canActivate: [NavigationAuthorizationGuard],
+                data: { id: 'gprmain', permissionType: 'read' },
+            }
+        ]
+    },
 ];
 
 @NgModule({

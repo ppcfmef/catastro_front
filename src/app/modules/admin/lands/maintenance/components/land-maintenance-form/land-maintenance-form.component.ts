@@ -14,12 +14,18 @@ import { keys } from 'lodash';
 import { LandUI } from '../../interfaces/land.interface';
 import { ResultUI } from '../../interfaces/result.interface';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+/*import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';*/
+import * as _moment from 'moment';
+import {default as _rollupMoment} from 'moment';
+const moment = _rollupMoment || _moment;
 
 let _this: any;
 @Component({
   selector: 'app-land-maintenance-form',
   templateUrl: './land-maintenance-form.component.html',
-  styleUrls: ['./land-maintenance-form.component.scss']
+  styleUrls: ['./land-maintenance-form.component.scss'],
+  //providers:[MatDatepickerModule,MatNativeDateModule]
 })
 export class LandMaintenanceFormComponent implements OnInit {
     ubigeo: string;
@@ -34,6 +40,7 @@ export class LandMaintenanceFormComponent implements OnInit {
     typeMaintenace ='';
     landRecords: LandUI[]=[];
     results : ResultUI[];
+    public date = new Date();
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -119,12 +126,17 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       initForm(): void{
+        console.log('this.landModel>>',this.landModel);
+        console.log('this.landModel?.resolutionDate init form>>',this.landModel?.resolutionDate);
+        /*const resolutionDate = Date.parse(this.landModel?.resolutionDate);*/
+       /* console.log('resolutionDate>>',resolutionDate);*/
         if (this.typeMaintenace === 'Reasignar'){
             this.formLand = this.fb.group({
                 cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
+               /* resolutionDate : [{value:moment()},],*/
                 resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
                 codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
@@ -140,6 +152,7 @@ export class LandMaintenanceFormComponent implements OnInit {
                 km: [{value:this.landModel?.km,disabled:this.readOnly}],
                 municipalNumber:[{value:this.landModel?.municipalNumber,disabled:this.readOnly}],
                 apartmentNumber:[{value:this.landModel?.apartmentNumber,disabled:this.readOnly}],
+
               });
               //this.toggleRequired();
         }
@@ -150,6 +163,7 @@ export class LandMaintenanceFormComponent implements OnInit {
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, ],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
+               /* resolutionDate : [{value:moment()}, ],*/
                 resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
                 codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
@@ -205,7 +219,10 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       save(): void{
+
         //results{}
+        /*console.log('this.formLand>>',this.formLand.get('resolutionDate').value);*/
+        /*this.formLand.get('resolutionDate').setValue(this.formLand.get('resolutionDate').value.toString());*/
         if(this.action!== Actions.LEER){
 
             const codUu=this.formLand.get('codUu').value;
@@ -223,7 +240,7 @@ export class LandMaintenanceFormComponent implements OnInit {
 
                   diag.afterClosed().subscribe((option)=>{
                     if(option==='confirmed'){
-                        this.dialogRef.close(this.formLand.value);
+                        this.dialogRef.close({... this.formLand.value,  resolutionDate: this.landModel.resolutionDate});
                     }
 
                   });
@@ -231,7 +248,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             }
 
             else{
-                this.dialogRef.close(this.formLand.value);
+                this.dialogRef.close({... this.formLand.value,  resolutionDate: this.landModel.resolutionDate});
             }
 
 
