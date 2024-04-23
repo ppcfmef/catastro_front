@@ -187,7 +187,8 @@ const config = {
                 '26': '6.5rem',
                 '30': '7.5rem',
                 '50': '12.5rem',
-                '90': '22.5rem'
+                '90': '22.5rem',
+                'custom-height': 'calc(100vh - 65px)',
             },
             /**
              * Extended spacing values for width and height utilities.

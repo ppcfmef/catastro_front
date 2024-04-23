@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { DetailObservedService } from '../../services/detail-observed.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ListApplicationMaintenancePage } from '../../pages/list-application-maintenance/list-application-maintenance.page';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
-import { Subject } from 'rxjs';
+import { Subject, pipe, switchMap, takeUntil } from 'rxjs';
+import { DetailObservedService } from '../../services/detail-observed.service';
+import { ResultObservation } from '../../interfaces/observation.interface';
 
 @Component({
     selector: 'detail-observer',
     standalone: true,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         CommonModule,
         MatButtonModule,
@@ -25,22 +27,43 @@ import { Subject } from 'rxjs';
 export class DetailObserverComponent implements OnInit {
     
     #unsubscribeAll: Subject<any> = new Subject<any>();
+    observation: ResultObservation = {
+        id: null, 
+        img: '',
+        application: null, 
+        description: ''
+      };
 
+    isLoading: boolean = true;
     //inject services
     #listApplicationMaintenancePage = inject(ListApplicationMaintenancePage);
-    #router = inject(Router);
     #activeRouter = inject(ActivatedRoute);
+    #detailObservedService = inject(DetailObservedService);
+    #changeDetectorRef = inject(ChangeDetectorRef)
 
     ngOnInit(): void {
-            // Open the drawer                                                          
+            // Open the drawer 
             this.#listApplicationMaintenancePage.matDrawer.open();
-            this.#activeRouter.params.subscribe(({id}) => console.log('id', id ))
+            this.#activeRouter.params
+                .pipe(takeUntil(this.#unsubscribeAll),
+                 switchMap(({id}) => {
+                        this.isLoading = true;
+                        this.#changeDetectorRef.markForCheck();
+                        return this.#detailObservedService.getObservation(id);
+                    }))
+                    .subscribe(
+                    (response) => {
+                        this.observation = response[0];
+                        this.isLoading = false;
+                        this.#changeDetectorRef.markForCheck();
+                    });
     }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this.#unsubscribeAll.next(null);
-        this.closeDrawer();
+        this.#unsubscribeAll.complete();
+        this.closeDrawer(); 
     }
  
     /**

@@ -1,7 +1,61 @@
-<button 
-    [routerLink]="['../']"
-    [matTooltip]="'Cerrar'"
-    class="bg-pink-700 w-full" 
-    >
-  <mat-icon svgIcon="mat_solid:close"></mat-icon>
-</button>
+<div class="w-full flex flex-col h-custom-height overflow-hidden  gap-6">
+
+  <!-- header -->
+  <header class="flex justify-between items-center py-4 px-4 bg-[#f8fafc]">
+    <h1 class="text-lg font-medium leading-5 truncate text-mef-text-primary">Detalle de Solicitud</h1>
+    <button mat-icon-button [routerLink]="['../']" matTooltip="Cerrar">
+      <mat-icon  svgIcon="mat_solid:close"></mat-icon>
+    </button>
+  </header>
+
+  <!-- loading -->
+  <section class="flex-grow overflow-auto">
+    <ng-container *ngIf="isLoading; else loadedContent">
+      <div class="flex items-center justify-center h-full">
+        <mat-icon class="animate-spin text-blue-600" svgIcon="heroicons_outline:spinner"></mat-icon>
+      </div>
+    </ng-container>
+  </section>
+
+
+
+  <ng-template #loadedContent>
+    <!-- observation -->
+    <article class="mb-6 px-4">
+      <h2 class="text-base font-semibold text-gray-700">Observación</h2>
+      <hr class="mt-2 mb-4">
+      <ng-container *ngIf="observation.description; else noResult">
+        <div class="flex flex-col items-start mt-3 ng-star-inserted">
+          <div class="relative max-w-3/4 px-3 py-2 rounded-lg bg-gray-500 text-gray-50">
+            <div class="absolute bottom-0 w-3 text-gray-500 -left-1 -ml-px mb-px -scale-x-1 ng-star-inserted">
+              <svg width="100%" height="100%" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" class="ng-star-inserted"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path d="M1.01522827,0.516204834 C-8.83532715,54.3062744 61.7609863,70.5215302 64.8009949,64.3061218 C68.8074951,54.8859711 30.1663208,52.9997559 37.5036011,0.516204834 L1.01522827,0.516204834 Z" fill="currentColor" fill-rule="nonzero"></path></g></svg>
+            </div>
+            <div class="min-w-4 leading-5">{{ observation.description }}</div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noResult>
+        <p class="bg-blue-100 bg-opacity-30 p-2 rounded-md">No hay observación registrada.</p>
+      </ng-template>
+    </article>
+
+    <!-- img -->
+    <article class="px-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-base font-semibold text-gray-700">Imagen Adjunta</h2>
+        <a *ngIf="observation.img" [href]="observation.img" target="_blank" rel="noopener noreferrer" matTooltip="descargar">
+          <mat-icon class="text-mef-blue">file_download</mat-icon>
+        </a>
+      </div>
+      <hr class="my-2 mb-4 ">
+      <div class="flex-1 border rounded shadow-sm">
+        <ng-container *ngIf="observation.img; else noResultImage">
+          <img [src]="observation.img" alt="Documento adjunto" class="w-full h-auto max-h-full object-contain">
+        </ng-container>
+        <ng-template #noResultImage>
+          <p class="bg-blue-100 bg-opacity-30 p-2 rounded-md">No hay imagen adjunta.</p>
+        </ng-template>
+      </div>
+    </article>
+  </ng-template>
+</div>

@@ -4,8 +4,8 @@ import { Actions } from 'app/shared/enums/actions.enum';
 import { ApplicationUI } from '../../interfaces/application';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DetailObservedService } from '../../services/detail-observed.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DetailObservedService } from '../../services/detail-observed.service';
 
 @Component({
   selector: 'app-list-application-maintenance-table',
@@ -23,9 +23,9 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
     dataTable = new MatTableDataSource<ApplicationUI>();
     displayedColumns: string[] = ['nro','ubigeo', 'c_predios','type','date', 'status'];//,'username'
     pageIndex = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageSizeOptions = [1, 10, 25, 50, 100, 250, 500];
-
+    selectedRowIndex: number | null = null;
     //sortedData: ApplicationUI[];
     //
     sort: Sort ;
@@ -62,13 +62,9 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
 
   detailObserved(element){
     this.#router.navigate([`./${element.id}`], {relativeTo: this.#activatedRoute});
+    console.log(element, 'element');
+    this.selectedRowIndex = element.id;
   }
-
-
-
-
-
-
 
   sortData(sort: Sort): void {
     this.sort = sort;

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DetailObservedService } from '../../services/detail-observed.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher/media-watcher.service';
 import { Subject, takeUntil } from 'rxjs';
