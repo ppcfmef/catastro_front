@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MaintenanceRoutingModule } from './maintenance-routing.module';
 
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -42,10 +41,10 @@ import { ListApplicationMaintenancePage } from './pages/list-application-mainten
 import { LandMaintenanceDesactivateComponent } from './components/land-maintenance-desactivate/land-maintenance-desactivate.component';
 import { MaintenanceIndependencePage } from './pages/maintenance-independence/maintenance-independence.page';
 import { MaintenanceIndependenceContainerComponent } from './components/maintenance-independence-container/maintenance-independence-container.component';
-/*import {MatDatepickerModule} from '@angular/material/datepicker';*/
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatNativeDateModule , MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [
 
@@ -90,6 +89,8 @@ import { MatNativeDateModule , MAT_DATE_LOCALE } from '@angular/material/core';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatSortModule,
+    MatSidenavModule,
+    MatTooltipModule,
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule

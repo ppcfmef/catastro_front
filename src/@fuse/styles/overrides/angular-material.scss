@@ -1359,7 +1359,9 @@ textarea.mat-mdc-input-element {
 .mat-mdc-tooltip .mdc-tooltip__surface {
     background-color: var(--fuse-text-default) !important;
     color: white;
-
+    width: 100% !important;
+    white-space: pre-line !important; 
+    max-width: none !important;
     .dark & {
         background-color: var(--fuse-text-secondary) !important;
         color: var(--fuse-bg-default) !important;

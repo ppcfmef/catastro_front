@@ -7,9 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchMapComponent } from './land-registry/components/search-map/searchMap.component';
+import { DetailComponent } from '../security/modules/user-monitoring/components/detail/detail.component';
+import { DetailObserverComponent } from './maintenance/components/detail-observer/detail-observer.component';
 
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -25,6 +25,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatIconModule,
     MatTooltipModule,
     SearchMapComponent,
+    DetailObserverComponent,
   ],
   providers: [{
     provide: MAT_RADIO_DEFAULT_OPTIONS,

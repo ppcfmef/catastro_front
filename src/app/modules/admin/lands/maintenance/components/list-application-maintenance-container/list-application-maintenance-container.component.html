@@ -1,37 +1,28 @@
-<div class="flex flex-col">
-    <div class="flex justify-start items-center gap-2" [formGroup]="formFilters">
-
-        <div class="flex gap-4 ">
-            <mat-form-field
-                [ngClass]="formFieldHelpers"
-                class="flex-auto">
-                <mat-label class="text-secondary font-medium">Estado</mat-label>
-                <mat-select 
-                    [value]="''"
-                    (selectionChange)="onFilter($event)" formControlName="id_status">
+<div class="flex flex-col w-full flex-auto flex-grow bg-white px-4 py-4 rounded-md shadow-sm">
+    <div class="flex flex-col gap-4 my-2" [formGroup]="formFilters">
+        <div class="flex gap-4 mt-1">
+            <mat-form-field [ngClass]="formFieldHelpers" class="w-40">
+                <mat-label class="ml-1 font-medium text-secondary text-md">Estado</mat-label>
+                <mat-select [value]="''" (selectionChange)="onFilter($event)" formControlName="id_status">
                     <mat-option *ngFor="let e of status" [value]="e.id">{{e.text}}</mat-option>
-    
+
                 </mat-select>
             </mat-form-field>
-    
+
             <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-50">
-                <mat-label class="text-secondary font-medium">Tipo de Mantenimiento</mat-label>
-                <mat-select 
-                    [value]="''"
-                    (selectionChange)="onFilter($event)" formControlName="id_type">
+                <mat-label class="text-secondary font-medium ml-1 text-md">Tipo de Mantenimiento</mat-label>
+                <mat-select [value]="''" (selectionChange)="onFilter($event)" formControlName="id_type">
                     <mat-option *ngFor="let e of typesMaintenance" [value]="e.id">{{e.text}}</mat-option>
-    
+
                 </mat-select>
             </mat-form-field>
         </div>
-
         <!-- <button mat-raised-button class="bg-success"
         [color]="'primary'"   (click)="onDownload()"  >Descargar  <mat-icon svgIcon="heroicons_outline:document-download" ></mat-icon> </button>-->
     </div>
-    <div class="w-full">
-        <section *ngIf="applicationRecords" class="overflow-x-auto">
-            <app-list-application-maintenance-table [dataSource]="applicationRecords" [length]="tableLength"
-                (changePage)="onChangePage($event)"></app-list-application-maintenance-table>
-        </section>
-    </div>
+
+    <app-list-application-maintenance-table *ngIf="applicationRecords" [dataSource]="applicationRecords"
+        [length]="tableLength" (changePage)="onChangePage($event)"></app-list-application-maintenance-table>
+
+
 </div>

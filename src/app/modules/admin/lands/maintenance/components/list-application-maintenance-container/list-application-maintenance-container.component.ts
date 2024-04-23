@@ -61,7 +61,7 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
 
   ];
-  defaultTableLimit = 10;
+  defaultTableLimit = 25;
   offset = null;
   limit = this.defaultTableLimit;
   ordering = '';
@@ -198,4 +198,5 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
   {
       return this.formFieldHelpers.join(' ');
   }
+
 }

@@ -1,2 +1,13 @@
 @import "styles/mixins";
 @include box-shadow-z1;
+
+::ng-deep .mat-tooltip {
+    white-space: pre-line;
+    background-color: red !important; /* Esto hará que el texto dentro del tooltip respete los saltos de línea */
+    max-width: none; /* Establece el máximo ancho como "ninguno", de modo que pueda expandirse */
+  }
+  
+  /* Para asegurarte de que tome el 100% del ancho de su contenedor */
+  ::ng-deep .mat-tooltip-component {
+    width: 100%;
+  }
