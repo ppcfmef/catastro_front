@@ -56,10 +56,10 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       cod:'1',
       option:'Predios con Cartografia'
     },
-    {
-      cod:'2',
-      option:'Coordenada de Imagen'
-    },
+    // {
+    //   cod:'2',
+    //   option:'Coordenada de Imagen'
+    // },
     {
       cod:'3',
       option:'Predios Inactivos'
