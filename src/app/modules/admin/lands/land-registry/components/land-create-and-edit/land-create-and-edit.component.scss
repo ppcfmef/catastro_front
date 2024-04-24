@@ -2,27 +2,34 @@
 
 :host ::ng-deep{
     @include mat-form-field-style;
-    @include btn-confirm;
-    @include btn-danger;
+    .mat-mdc-outlined-button:not([disabled=true]){
+        border-color: #de2626 !important;
+    }
+
+    mat-label {
+        font-size: 12px !important;
+    }
 }
 
 :host{
     .container{
         background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        margin-top: 10px;
+        padding: 10px 16px;
+        border-radius: 4px 4px 0 0;
+        margin-top: 5px;
         position: absolute;
         width: calc(100% - 20px);
-        bottom: 0;
+        max-height: calc(100% - 20px);
+        bottom: 10px;
+        z-index: 99999;
         
     }
 
     .subtitle-card{
         font-size: 16px;
         line-height: 15px;
-        font-weight: 700;
-        color: #666699;
+        font-weight: 600;
+        color: #1e293b;
         width: 100%;
         text-align: center;
     }
