@@ -1,35 +1,78 @@
-:host{
-    table{
-        th{
-            background-color: #0090F8;
-            color: white;
-            padding: 8px;
-            text-align: center;
-        }
-        td{
-            padding: 8px;
-        }
+@import 'styles/mixins.scss';
+
+:host ::ng-deep {
+
+    mat-form-field {
+        margin: 8px !important;
     }
-    .button-success{
+    mat-form-field .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
+        height: 0 !important;
+    }
+
+    table tbody td {
+        font-size: 13px;
+    }
+
+    table.table-base {
+        thead tr {
+            position: sticky;
+            top: 0 !important;
+            background: #007BFF;
+            z-index: 10;
+        }
+
+        thead tr th {
+            text-align: left !important;
+            padding: 4px !important;
+            background-color: #007BFF !important;
+            color: white !important;
+  
+        }
+
+        tbody tr td {
+            text-align: left !important;
+            color: #01121e !important;
+            margin-left: 16px !important;
+        }
+
+    }
+}
+
+
+.container {
+    // max-height: calc(100vh - 400px) !important;
+    overflow-x: auto;
+}
+
+
+:host {
+
+    .button-success {
         padding: 8px 20px;
         background-color: #66BB6A;
         color: white;
         border-radius: 6px;
         display: flex;
         padding-right: 8px;
-        mat-icon{
-            color:white;
+
+        mat-icon {
+            color: white;
         }
-        &[disabled]{
-            background-color: #666666;
-            color: rgb(209, 209, 209);
-            mat-icon{
-                color:rgb(209, 209, 209) !important;
-                ::ng-deep{
-                    svg{
-                        color:rgb(209, 209, 209)  !important;
-                        path{
-                            color:rgb(209, 209, 209)  !important;
+
+        &[disabled] {
+            background-color: #C0C0C0
+            ;
+            color: white;
+
+            mat-icon {
+                color: white !important;
+
+                ::ng-deep {
+                    svg {
+                        color: white !important;
+
+                        path {
+                            color:white !important;
                         }
                     }
                 }
@@ -38,19 +81,3 @@
     }
 
 }
-
-
-
-:host {
-    .select-ui ::ng-deep{
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            .mat-form-field-wrapper{
-                margin-bottom: 0;
-            }
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            .mat-form-field-flex{
-                min-height: auto;
-                padding: 8px 12px;
-            }
-        }
-    }

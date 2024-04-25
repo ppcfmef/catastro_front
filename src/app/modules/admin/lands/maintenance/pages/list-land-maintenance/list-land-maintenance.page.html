@@ -1,21 +1,26 @@
 <div class="flex flex-col flex-auto min-w-0">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <div class="flex-1 min-w-0">
-            <!-- Title -->
-            <div class="text-4xl font-extrabold tracking-tight">
-              {{ 'Mantenimiento de Predios' }}
-            </div>
+  <!-- Header -->
+  <div
+    class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:px-8 border-b bg-card ">
+    <div class="flex-1 min-w-0">
+      <!-- Title -->
+      <div class="text-2xl md:text-3xl font-semibold tracking-tight leading-7 md:leading-snug truncate w-full">
+        {{ 'Mantenimiento de Predios' }}
+      </div>
+      <div class="flex items-center">
+        <div class="leading-5 truncate text-secondary text-md">
+          <div class="text-lg font-medium tracking-tight leading-6">Lista de Predios</div>
         </div>
-
-
+      </div>
     </div>
+
+
+  </div>
   <!-- Main -->
-  <div class="flex flex-col flex-auto p-6 sm:p-10">
+  <div class="flex flex-col flex-auto px-6 sm:px-8 py-4">
     <div class="w-full">
-        <app-list-land-maintenance-container></app-list-land-maintenance-container>
+      <app-list-land-maintenance-container></app-list-land-maintenance-container>
     </div>
+  </div>
 </div>
-</div>
-
