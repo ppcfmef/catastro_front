@@ -131,6 +131,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.landRecord = landRecord;
         this.showOwnerTable = true;
         this.showLandsMap = true;
+        console.log(this.landRecord , 'this.landRecord ');
+        console.log(this.landOwner , 'this.landOwner ');
         setTimeout(() => {
           document.getElementById('dowloandCroquis').scrollIntoView()}, 0.010);
       }

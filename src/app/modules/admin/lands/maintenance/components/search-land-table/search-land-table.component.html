@@ -1,20 +1,26 @@
-<div class="flex flex-row gap-4 justify-start my-4"   [formGroup]="search">
-    <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense input-icon-form integrated-search-button">
-      <mat-label>Buscar por Código de predio municipal o Código Unico de predio <span class="c-red"> (*)</span></mat-label>
-      <input type="text" matInput
-             placeholder=" Ingrese un criterio a buscar "
-             autocomplete="off" formControlName="search" >
-
-          <mat-icon
+<div class="flex flex-row gap-4 justify-start"   [formGroup]="search">
+    <mat-form-field class="w-72">
+      <!-- <mat-label>Buscar por Código de predio municipal o Código de predio único</mat-label> -->
+      <input matInput
+             placeholder="Buscar por Código de predio único"
+             formControlName="search" 
+             (keyup.enter)="onClickSearch()">
+          <mat-icon 
+            [matTooltip]="'Buscar'"
+            class="icon-size-5" 
+            svgIcon="heroicons_outline:search"
+            (click)="onClickSearch()">
+          </mat-icon>
+          <!-- <mat-icon
             [matTooltip]="'Limpiar buscador'"
             class="hidden sm:flex icon-size-5"
             [svgIcon]="'heroicons_solid:x'"
             (click)="onCleanSearch()"
-          ></mat-icon>
-          <button mat-flat-button
+          ></mat-icon> -->
+          <!-- <button mat-flat-button
           (click)="onClickSearch()"
           >
             <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
-          </button>
+          </button> -->
     </mat-form-field>
 </div>
