@@ -15,3 +15,9 @@
         }
     }
 }
+:host ::ng-deep{
+    .mat-mdc-outlined-button:not([disabled=true]){
+        border-color: #2980B9  !important;
+    }
+
+}

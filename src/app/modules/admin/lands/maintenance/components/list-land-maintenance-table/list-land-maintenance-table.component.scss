@@ -14,17 +14,11 @@
     }
 
     table.table-base {
-        thead tr {
-            position: sticky;
-            top: 0 !important;
-            background: #007BFF;
-            z-index: 10;
-        }
-
+       
         thead tr th {
             text-align: left !important;
             padding: 4px !important;
-            background-color: #007BFF !important;
+            background-color: #0090F8  !important;
             color: white !important;
   
         }
@@ -40,6 +34,9 @@
 
 
 .container {
+    padding: 16px;
+    background-color: white;
+    min-width: 518px !important;
     // max-height: calc(100vh - 400px) !important;
     overflow-x: auto;
 }
