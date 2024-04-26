@@ -37,7 +37,6 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     }
 
   ngOnInit(): void {
-    console.log('ubigeo',this.ubigeo);
     /*this.navigationAuthorizationService.userScopePermission(this.idView)
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((data: any) => {
@@ -61,6 +60,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
       (result) => {
+        console.log('result CombinaLatest>>',result);
         const ownerResult = result[0];
         const registerLand = result[1];
         if (ownerResult === null) {
@@ -113,12 +113,16 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
 
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     const ownerFilter = { owner: this.landOwnerId };
+    console.log('ownerFilter',ownerFilter);
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     //const queryParams = { limit, offset, ...ownerFilter };
+   
 
-    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset, ...ownerFilter });
-    this.landRegistryService.getLandList(queryParams)
+    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit });
+    console.log(queryParams, 'queryParams');
+    this.landRegistryService
+    .getLandbyOwner(ownerFilter.owner, queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
 

@@ -1,5 +1,5 @@
-<div class="container">
-  <table mat-table [dataSource]="dataSource" class="shadow bg-card table-base">
+<div class="container shadow-sm">
+  <table mat-table [dataSource]="dataSource" class="table-base">
     <ng-container matColumnDef="nro">
       <th mat-header-cell *matHeaderCellDef> 
         <span class="pl-4"> Nro.</span></th>
@@ -75,14 +75,18 @@
 
       ></tr>
 </table>
-<mat-paginator 
-          class="w-full"
-          [length]="length"
-          [pageIndex]="pageIndex"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="pageSizeOptions"
-          (page)="onPage($event)"
-          >
-</mat-paginator>
+<div class="w-full">
+
+  <mat-paginator 
+          
+            [length]="length"
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPage($event)"
+            >
+  </mat-paginator>
+  
+</div>
 </div>
 
