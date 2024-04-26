@@ -17,6 +17,7 @@ import { LandMaintenanceService } from '../../services/land-maintenance.service'
 import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-maintenance-form.component';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { FormatUtils } from 'app/shared/utils/format.utils';
 
 @Component({
   selector: 'app-maintenance-accumulation-container',
@@ -110,6 +111,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
         console.log('result>>',result);
         console.log('The dialog was closed');
         this.results =  [new ResultModel(result)];
+        this.results= this.landRecords.map(r=>  FormatUtils.formatResultUIToResultUI(r));
         const body = {
             application:application,
             results: this.results,
