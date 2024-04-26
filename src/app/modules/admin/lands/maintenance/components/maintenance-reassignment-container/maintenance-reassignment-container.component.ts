@@ -12,6 +12,7 @@ import { MessageProviderService } from 'app/shared/services/message-provider.ser
 import { ApplicationUI } from '../../interfaces/application';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { FormatUtils } from 'app/shared/utils/format.utils';
 
 @Component({
   selector: 'app-maintenance-reassignment-container',
@@ -26,6 +27,7 @@ export class MaintenanceReassignmentContainerComponent implements OnInit,OnChang
     file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     disabled =false;
+    results: any[];
   constructor(
     private landMaintenanceService: LandMaintenanceService,
     private _userService: UserService,
@@ -72,10 +74,10 @@ private confirmationService: CustomConfirmationService,
     application.idType=1;
     application.ubigeo=this.landRecords[0].ubigeo;
     application.username = this.user.id;
-
+    this.results= this.landRecords.map(r=>  FormatUtils.formatResultUIToResultUI(r));
     const body = {
         application:application,
-        results:this.landRecords,
+        results:this.results,
         lands:this.landRecords
     };
     console.log('_results>>>',body.results);
