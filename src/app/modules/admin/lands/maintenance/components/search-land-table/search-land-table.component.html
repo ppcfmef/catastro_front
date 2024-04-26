@@ -23,10 +23,21 @@
             <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
           </button> -->
     </mat-form-field>
+
     <button
-    mat-button class=" rounded-md bg-[#e6edff] text-white hover:shadow-sm"
-    (click)="onCleanSearch()"> 
-    <mat-icon class="icon-size-4 text-[#1b2336]" svgIcon="mat_outline:cleaning_services"></mat-icon>
-    <span class="ml-1 text-[#1b2336]">Limpiar</span>
-</button>   
+      mat-button class=" rounded-md bg-[#4CAF50] text-white hover:shadow-sm"
+      (click)="onClickSearch()"> 
+      <mat-icon class="icon-size-4 text-white"
+      svgIcon="heroicons_outline:search"
+      >
+    </mat-icon>
+      <span class="ml-1">Buscar</span>
+    </button>   
+
+    <button
+      mat-button class=" rounded-md bg-[#F28500] text-white hover:shadow-sm"
+      (click)="onCleanSearch()"> 
+      <mat-icon class="icon-size-4 text-white" svgIcon="mat_outline:cleaning_services"></mat-icon>
+      <span class="ml-1">Limpiar</span>
+    </button>   
 </div>
