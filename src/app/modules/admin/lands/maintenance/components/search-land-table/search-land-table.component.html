@@ -1,43 +1,34 @@
-<div class="flex flex-row gap-4 justify-start"   [formGroup]="search">
-    <mat-form-field class="w-72">
-      <!-- <mat-label>Buscar por Código de predio municipal o Código de predio único</mat-label> -->
-      <input matInput
-             placeholder="Buscar por Código de predio único"
-             formControlName="search" 
-             (keyup.enter)="onClickSearch()">
-          <mat-icon 
-            [matTooltip]="'Buscar'"
-            class="icon-size-5" 
-            svgIcon="heroicons_outline:search"
-            (click)="onClickSearch()">
-          </mat-icon>
-          <!-- <mat-icon
+<div class="flex flex-col pb-4 md:flex-row md:gap-4 md:pb-0 justify-start" [formGroup]="search">
+  <mat-form-field class="w-full md:w-72">
+    <!-- <mat-label>Buscar por Código de predio municipal o Código de predio único</mat-label> -->
+    <input matInput placeholder="Buscar por Código de predio único" formControlName="search"
+      (keyup.enter)="onClickSearch()">
+    <mat-icon [matTooltip]="'Buscar'" class="icon-size-5" svgIcon="heroicons_outline:search" (click)="onClickSearch()">
+    </mat-icon>
+    <!-- <mat-icon
             [matTooltip]="'Limpiar buscador'"
             class="hidden sm:flex icon-size-5"
             [svgIcon]="'heroicons_solid:x'"
             (click)="onCleanSearch()"
           ></mat-icon> -->
-          <!-- <button mat-flat-button
+    <!-- <button mat-flat-button
           (click)="onClickSearch()"
           >
             <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
           </button> -->
-    </mat-form-field>
+  </mat-form-field>
 
-    <button
-      mat-button class=" rounded-md bg-[#4CAF50] text-white hover:shadow-sm"
-      (click)="onClickSearch()"> 
-      <mat-icon class="icon-size-4 text-white"
-      svgIcon="heroicons_outline:search"
-      >
-    </mat-icon>
+
+  <div class="w-full flex justify-end gap-4 md:justify-start md:w-max">
+    <button mat-button class="btn_search hover:shadow-sm" (click)="onClickSearch()">
+      <mat-icon class="icon-size-4 text-white" svgIcon="heroicons_outline:search">
+      </mat-icon>
       <span class="ml-1">Buscar</span>
-    </button>   
-
-    <button
-      mat-button class=" rounded-md bg-[#F28500] text-white hover:shadow-sm"
-      (click)="onCleanSearch()"> 
+    </button>
+    <button mat-button class="btn_clean hover:shadow-sm" (click)="onCleanSearch()">
       <mat-icon class="icon-size-4 text-white" svgIcon="mat_outline:cleaning_services"></mat-icon>
       <span class="ml-1">Limpiar</span>
-    </button>   
+    </button>
+  </div>
+
 </div>

@@ -1,21 +1,6 @@
 <div class="flex flex-col">
-    <button 
-        mat-button 
-        class="cursor-pointer w-max rounded-md bg-[#E0E9F4] text-c-secondary font-semibold text-base mb-6 shadow-sm" [routerLink]="'/land/maintenance'">
-        <mat-icon class="mr-1 text-c-secondary" svgIcon="mat_outline:arrow_back_ios_new"></mat-icon>
-        <span class="whitespace-nowrap ml-2">Volver a la Lista de Solicitudes</span>
-    </button>
 
-    <!-- <div class="flex flex-row space-x-4 ">
-        <div class="w-1/3">
-            <button  mat-raised-button  class="btn-green"
-            [routerLink]="'/land/maintenance'"
-            matTooltip="volver" [color]="'primary'">
-            Volver a solicitudes
-        <mat-icon svgIcon="heroicons_outline:chevron-left"></mat-icon>
-        </button>
-        </div>
-    </div> -->
+   <app-back-list-land class="mb-6 " [backLink] ="data"></app-back-list-land>
 
     <app-search-land-table (searchEvent)="onSearch($event)" (cleanSearchEvent)="onClearSearch()">
     </app-search-land-table>

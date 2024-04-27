@@ -1,14 +1,17 @@
-<div class="container shadow-sm">
+<div class="container shadow-sm" fuseScrollbar
+  [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollY: true}">
   <table mat-table [dataSource]="dataSource" class="table-base">
     <ng-container matColumnDef="nro">
-      <th mat-header-cell *matHeaderCellDef> 
-        <span class="pl-4"> Nro.</span></th>
-        <td mat-cell *matCellDef="let element; let i = index" class="text-center">
-            <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">{{ (pageIndex * pageSize) + i + 1 }}</span>
-        </td>
+      <th mat-header-cell *matHeaderCellDef>
+        <span class="pl-4"> Nro.</span>
+      </th>
+      <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+        <span class="pl-2 pr-6 font-medium text-sm text-secondary whitespace-nowrap">{{ (pageIndex * pageSize) + i + 1
+          }}</span>
+      </td>
     </ng-container>
 
-  <!-- 
+    <!-- 
     <ng-container matColumnDef="cpm">
       <th mat-header-cell *matHeaderCellDef> Codigo de Predio Municipal </th>
       <td mat-cell *matCellDef="let element" class="text-center"> {{element.cpm}} </td>
@@ -17,76 +20,72 @@
 
     <ng-container matColumnDef="cup">
 
-      <th mat-header-cell *matHeaderCellDef> Codigo de Predio Único(CPU) </th>
-      <td mat-cell *matCellDef="let element" class="text-center"> 
-        <span class="pr-6 font-medium whitespace-nowrap">{{element.cup}}</span></td>
+      <th mat-header-cell *matHeaderCellDef> Codigo de Predio Único (CPU) </th>
+      <td mat-cell *matCellDef="let element" class="text-center">
+        <span class="pr-6 font-medium whitespace-nowrap">{{element.cup}}</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="habilitacionName">
       <th mat-header-cell *matHeaderCellDef> Nombre de habilitación </th>
-      <td mat-cell *matCellDef="let element" ><span class="pr-6 whitespace-nowrap">{{element.habilitacionName | titlecase}}</span></td>
+      <td mat-cell *matCellDef="let element">
+        <span class="pr-6 whitespace-nowrap">{{element.habilitacionName |
+          titlecase}}</span></td>
     </ng-container>
 
 
     <ng-container matColumnDef="direccion">
       <th mat-header-cell *matHeaderCellDef> Dirección </th>
-      <td mat-cell *matCellDef="let element"  > 
-        <span class="pr-6 whitespace-nowrap">{{element?.streetTypeName | titlecase}} {{element?.streetName | lowercase}} {{element?.municipalNumber}}</span> </td>
+      <td mat-cell *matCellDef="let element">
+        <span class="pr-6 whitespace-nowrap">{{element?.streetTypeName | titlecase}} {{element?.streetName | lowercase}}
+          {{element?.municipalNumber}}</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="creationDate">
       <th mat-header-cell *matHeaderCellDef>Fecha de registro </th>
-      <td mat-cell *matCellDef="let element" class="text-center" > 
-        <span class="pr-6 whitespace-nowrap">{{element.creationDate| date: 'dd/MM/yyyy'}} </span></td>
+      <td mat-cell *matCellDef="let element" class="text-center">
+        <span class="pr-6 whitespace-nowrap">{{element.creationDate| date: 'dd/MM/yyyy'}} </span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="typeApplication">
-        <th mat-header-cell *matHeaderCellDef class="w-50"></th>
+      <th mat-header-cell *matHeaderCellDef class="w-50"></th>
 
-        <td mat-cell *matCellDef="let element; let i = index" class="w-56 pr-6 " >
-            <mat-form-field class="m-auto select-ui w-full" floatLabel="always" >
-                <mat-select [(value)]="element.typeApplication" placeholder="Tipo de mantenimiento"
-                (selectionChange)="onChangeSolicitud(i,element)">
-               <mat-option [value]=0 disabled>Selecionar tipo de mantenimiento</mat-option>
-               <mat-option  *ngFor="let type of typesMaintenance " [value]="type.id">{{type.text}}</mat-option>
-                </mat-select>
+      <td mat-cell *matCellDef="let element; let i = index" class="w-56 pr-6 ">
+        <mat-form-field class="m-auto select-ui w-full" floatLabel="always">
+          <mat-select [(value)]="element.typeApplication" placeholder="Tipo de mantenimiento"
+            (selectionChange)="onChangeSolicitud(i,element)">
+            <mat-option [value]=0 disabled>Selecionar tipo de mantenimiento</mat-option>
+            <mat-option *ngFor="let type of typesMaintenance " [value]="type.id">{{type.text}}</mat-option>
+          </mat-select>
 
-            </mat-form-field>
-
-
+        </mat-form-field>
 
 
-        </td>
+
+
+      </td>
     </ng-container>
     <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element; let i = index" class="text-center pr-6">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element; let i = index" class="text-center pr-6">
 
-            <button [disabled]="!(element.typeApplication>0)" class="button-success"
-                    (click)="landSelection(element)"
-                    matTooltip="iniciar">
-                Iniciar
-                <mat-icon  svgIcon="heroicons_outline:chevron-right"></mat-icon>
-            </button>
-        </td>
+        <button [disabled]="!(element.typeApplication>0)" class="button-success" (click)="landSelection(element)"
+          matTooltip="iniciar">
+          Iniciar
+          <mat-icon svgIcon="heroicons_outline:chevron-right"></mat-icon>
+        </button>
+      </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <div class="w-full">
 
-      ></tr>
-</table>
-<div class="w-full">
+    <mat-paginator [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      (page)="onPage($event)">
+    </mat-paginator>
 
-  <mat-paginator 
-          
-            [length]="length"
-            [pageIndex]="pageIndex"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="pageSizeOptions"
-            (page)="onPage($event)"
-            >
-  </mat-paginator>
-  
+  </div>
 </div>
-</div>
-

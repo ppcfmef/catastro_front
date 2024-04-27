@@ -1,49 +1,22 @@
-@import 'styles/mixins.scss';
+@import 'styles/mixins';
+
+.container {
+   @include container();
+}
 
 :host ::ng-deep {
-
+    table.table-base {
+        @include table_style(var(--mef-c-header));
+     }
     mat-form-field {
         margin: 8px !important;
     }
     mat-form-field .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
         height: 0 !important;
     }
-
-    table tbody td {
-        font-size: 13px;
-    }
-
-    table.table-base {
-       
-        thead tr th {
-            text-align: left !important;
-            padding: 4px !important;
-            background-color: #007bff  !important;
-            color: white !important;
-  
-        }
-
-        tbody tr td {
-            text-align: left !important;
-            color: #01121e !important;
-            margin-left: 16px !important;
-        }
-
-    }
 }
-
-
-.container {
-    padding: 16px;
-    background-color: white;
-    min-width: 518px !important;
-    // max-height: calc(100vh - 400px) !important;
-    overflow-x: auto;
-}
-
 
 :host {
-
     .button-success {
         padding: 8px 20px;
         background-color: #0bbde5;
@@ -57,17 +30,10 @@
         }
 
         &[disabled] {
-            background-color: #C0C0C0
-            ;
-            color: white;
-
+            background-color: #C0C0C0;
             mat-icon {
-                color: white !important;
-
                 ::ng-deep {
                     svg {
-                        color: white !important;
-
                         path {
                             color:white !important;
                         }

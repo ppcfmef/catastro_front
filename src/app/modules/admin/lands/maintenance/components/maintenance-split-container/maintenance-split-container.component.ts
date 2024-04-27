@@ -37,6 +37,11 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     disabled = false;
+
+    data = {
+      title: "Volver a la Lista de Predios",
+      routerLink: "/land/maintenance/list",
+    }
     constructor(
         private landMaintenanceService: LandMaintenanceService,
         private _userService: UserService,

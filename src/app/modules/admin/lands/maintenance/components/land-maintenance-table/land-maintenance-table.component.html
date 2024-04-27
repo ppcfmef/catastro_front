@@ -1,86 +1,104 @@
-
-
-<table mat-table [dataSource]="dataSource" class="shadow bg-card w-full">
+<div class="container"
+  fuseScrollbar
+  [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollY: true}">
+  <table mat-table [dataSource]="dataSource" class="w-full table-base">
     <ng-container matColumnDef="nro">
       <th mat-header-cell *matHeaderCellDef> Nro.</th>
         <td mat-cell *matCellDef="let element; let i = index">
-            {{  + i + 1 }}
+           <span class="pl-1 pr-4 font-medium text-sm text-secondary whitespace-nowrap">{{  + i + 1 }}</span> 
         </td>
     </ng-container>
 
     <ng-container matColumnDef="ubigeo">
         <th mat-header-cell *matHeaderCellDef> Ubigeo </th>
-        <td mat-cell *matCellDef="let element" > {{element.ubigeo}} </td>
+        <td mat-cell *matCellDef="let element" > 
+          <span class="pr-4 whitespace-nowrap"> {{element.ubigeo}}</span></td>
       </ng-container>
 
 
 
-    <ng-container matColumnDef="cpm">
+    <!-- <ng-container matColumnDef="cpm">
         <th mat-header-cell *matHeaderCellDef> Codigo de predio Municipal</th>
         <td mat-cell *matCellDef="let element" > {{element.cpm}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <ng-container matColumnDef="cup">
-        <th mat-header-cell *matHeaderCellDef> Codigo de predio Unico</th>
-        <td mat-cell *matCellDef="let element" > {{element.cup}} </td>
+        <th mat-header-cell *matHeaderCellDef> Codigo de predio único (CPU)</th>
+        <td mat-cell *matCellDef="let element" > 
+          <span class="pr-4 font-medium whitespace-nowrap">{{element.cup}} </span></td>
       </ng-container>
       <ng-container matColumnDef="idLote">
-        <th mat-header-cell *matHeaderCellDef> Id Lote </th>
-        <td mat-cell *matCellDef="let element" > {{element.idLote}} </td>
+        <th mat-header-cell *matHeaderCellDef> 
+          <span class="pr-4">Id Lote </span></th>
+        <td mat-cell *matCellDef="let element" >
+          <span class="pr-4 whitespace-nowrap min-w-10">{{element.idLote ? element.idLote : '-'}}</span></td>
       </ng-container>
 
     <ng-container matColumnDef="habilitacionName">
       <th mat-header-cell *matHeaderCellDef> Nombre de habilitación </th>
-      <td mat-cell *matCellDef="let element" > {{element.habilitacionName}} </td>
+      <td mat-cell *matCellDef="let element" >
+        <span class="pr-4 whitespace-nowrap"> {{element.habilitacionName | titlecase}}</span></td>
     </ng-container>
 
     <ng-container matColumnDef="streetName">
       <th mat-header-cell *matHeaderCellDef> Nombre de vía </th>
-      <td mat-cell *matCellDef="let element"  > {{element.streetName}} </td>
+      <td mat-cell *matCellDef="let element"  > 
+        <span class="pr-4 whitespace-nowrap">{{element.streetName | titlecase}} </span></td>
     </ng-container>
 
     <ng-container matColumnDef="urbanMza">
-        <th mat-header-cell *matHeaderCellDef> Mza. Urbana </th>
-        <td mat-cell *matCellDef="let element"  > {{element.urbanMza}} </td>
+        <th mat-header-cell *matHeaderCellDef> 
+          <span class="pr-4">Mza. Urbana </span></th>
+        <td mat-cell *matCellDef="let element"  >
+          <span class="pr-4 whitespace-nowrap">{{element.urbanMza}} </span></td>
       </ng-container>
 
       <ng-container matColumnDef="urbanLotNumber">
-        <th mat-header-cell *matHeaderCellDef> Lote Urbano </th>
-        <td mat-cell *matCellDef="let element"  > {{element.urbanLotNumber}} </td>
+        <th mat-header-cell *matHeaderCellDef> 
+          <span class="pr-4">Lote. Urbano</span></th>
+        <td mat-cell *matCellDef="let element"  > 
+          <span class="pr-4 whitespace-nowrap">{{element.urbanLotNumber}} </span></td>
       </ng-container>
 
     <ng-container matColumnDef="creationDate">
       <th mat-header-cell *matHeaderCellDef>Fecha de registro </th>
-      <td mat-cell *matCellDef="let element"  > {{element.creationDate| date: 'dd/MM/yyyy'}} </td>
+      <td mat-cell *matCellDef="let element"  > 
+        <span class="pr-4 whitespace-nowrap">{{element.creationDate| date: 'dd/MM/yyyy'}}</span></td>
     </ng-container>
 
 
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element; let i = index" >
+          <div class="flex">
             <ng-conteiner *ngIf="typeAction===leer; else edicion">
-                <button  mat-button
-                (click)="landSelection(element)"
-                >
-                <mat-icon svgIcon="heroicons_outline:eye" [ngClass]=" 'c-success'" ></mat-icon>
-                </button>
-            </ng-conteiner>
-            <ng-template #edicion>
-                <button  mat-button
-                (click)="landSelection(element)"
-                >
-                <mat-icon svgIcon="heroicons_outline:pencil" [ngClass]=" 'c-success'" ></mat-icon>
-                </button>
-            </ng-template>
-            <ng-conteiner *ngIf="(isRemove && typeMaintenace!=='Acumulacion') || (isRemove && typeMaintenace==='Acumulacion' && i>0) ">
+              <button  mat-icon-button
+              class="mr-2"
+              (click)="landSelection(element)"
+              >
+              <mat-icon svgIcon="heroicons_outline:eye" [ngClass]=" 'c-success'" ></mat-icon>
+              </button>
+          </ng-conteiner>
+          <ng-template #edicion>
+              <button  mat-icon-button
+              class="mr-2"
+              (click)="landSelection(element)"
+              >
+              <mat-icon svgIcon="heroicons_outline:pencil" [ngClass]=" 'c-success'" ></mat-icon>
+              </button>
+          </ng-template>
+          <ng-conteiner *ngIf="(isRemove && typeMaintenace!=='Acumulacion') || (isRemove && typeMaintenace==='Acumulacion' && i>0) ">
+              
+              <button  mat-icon-button
+              class="mr-2"
+              (click)="removeSelection(element)"
+              >
+              <mat-icon svgIcon="heroicons_outline:x" [ngClass]=" 'c-danger'" ></mat-icon>
+            </button>
 
-                <button  mat-button
-                (click)="removeSelection(element)"
-                >
-                <mat-icon svgIcon="heroicons_outline:x" [ngClass]=" 'c-danger'" ></mat-icon>
-        </button>
-
-            </ng-conteiner>
+          </ng-conteiner>
+          </div>
+        
 
         </td>
     </ng-container>
@@ -89,3 +107,5 @@
 
       ></tr>
   </table>
+
+</div>

@@ -13,3 +13,13 @@
   }
 
 }
+
+.container{
+  @include container();
+}
+
+:host ::ng-deep {
+  table.table-base {
+      @include table_style(var(--mef-c-header));
+   }
+}

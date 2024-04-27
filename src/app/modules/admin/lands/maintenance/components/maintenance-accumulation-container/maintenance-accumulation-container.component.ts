@@ -18,6 +18,8 @@ import { LandMaintenanceFormComponent } from '../land-maintenance-form/land-main
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { FormatUtils } from 'app/shared/utils/format.utils';
+import { title } from 'process';
+import { url } from 'inspector';
 
 @Component({
   selector: 'app-maintenance-accumulation-container',
@@ -36,6 +38,10 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     file: any;
     disabled =false;
     _unsubscribeAll: Subject<any> = new Subject<any>();
+    data = {
+      title: "Volver a la Lista de Predios",
+      routerLink: "/land/maintenance/list",
+    }
   constructor(
     private landMaintenanceService: LandMaintenanceService,
     private _userService: UserService,

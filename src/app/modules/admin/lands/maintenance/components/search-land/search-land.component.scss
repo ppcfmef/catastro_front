@@ -1,26 +1,53 @@
 @import 'styles/mixins';
 
-:host ::ng-deep{
+.btn_clean {
+ @include btn(var( --mef-c-clean));
+}
 
-    .input-icon-form{
-        input{
-            width: calc(100% - 63px) !important;
-            margin-right: 25px;
-        }
-        button{
-            border-radius: 0 5px 5px 0 !important;
-            margin-right: -16px;
-        }
+.btn_inactive {
+   @include btn(#d4d7db);
+}
 
+.btn_active {
+    @include btn(var(--mef-c-confirm));
+ }
+:host ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+        .mat-mdc-form-field-flex {
+            padding-right: 0 !important;
+        }
     }
 
-
-    .mat-select-panel mat-option.mat-mdc-option {
-        height: unset;
-      }
-     /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
-     .mat-option-text.mat-option-text {
-        white-space: normal;
-      }
-
+    .mat-mdc-unelevated-button {
+        &.mat-unthemed {
+            background-color: var(--mef-c-success) !important;
+            border-radius: 0 0px 5px !important;
+            color: white !important;
+        }
+    }
 }
+
+// :host ::ng-deep{
+
+//     // .input-icon-form{
+//     //     // input{
+//     //     //     width: calc(100% - 63px) !important;
+//     //     //     margin-right: 25px;
+//     //     // }
+//     //     button{
+//     //         border-radius: 0 5px 5px 0 !important;
+//     //         margin-right: -16px;
+//     //     }
+
+//     // }
+
+
+//     // .mat-select-panel mat-option.mat-mdc-option {
+//     //     height: unset;
+//     //   }
+//      /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
+//     //  .mat-option-text.mat-option-text {
+//     //     white-space: normal;
+//     //   }
+
+// }

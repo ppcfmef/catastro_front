@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchMapComponent } from './land-registry/components/search-map/searchMap.component';
 import { DetailComponent } from '../security/modules/user-monitoring/components/detail/detail.component';
 import { DetailObserverComponent } from './maintenance/components/detail-observer/detail-observer.component';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 
 
@@ -26,6 +27,7 @@ import { DetailObserverComponent } from './maintenance/components/detail-observe
     MatTooltipModule,
     SearchMapComponent,
     DetailObserverComponent,
+    FuseScrollbarModule,
   ],
   providers: [{
     provide: MAT_RADIO_DEFAULT_OPTIONS,
