@@ -48,6 +48,9 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private _fuseSplashScreenService: FuseSplashScreenService,
   ) { }
 
+  get f(): {[key: string]: AbstractControl} {
+    return this.formEdit.controls;
+  }
   ngOnInit(): void {
       this.landRegistryService.getMasterDomain()
       .pipe(takeUntil(this.unsubscribeAll))
@@ -124,9 +127,9 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
         this.formEdit.get(controlName).enable();
         });
         const data = this.formEdit.value;
-        console.log(data, 'data');
         data.owner = this.ownerId;
         data.status = this.toggleToStatus(data.status);
+        this.showFormEdit.emit(false);
         // ToDo: debe ser en el container
         if (data.idPlot && !data.cup) {
         this._fuseSplashScreenService.show();
@@ -187,9 +190,6 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       );
   }
 
-  get f(): {[key: string]: AbstractControl} {
-    return this.formEdit.controls;
-  }
 
   private resetForm(): void {
     this.formEdit.reset();
