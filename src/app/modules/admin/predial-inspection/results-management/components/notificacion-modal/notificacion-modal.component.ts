@@ -19,7 +19,7 @@ export class NotificacionModalComponent implements OnInit {
 
 
       save(): void{
-        this.dialogRef.close( this.dataDialog.texto_editar);
+        this.dialogRef.close( this.dataDialog.textoEditar);
       }
         ngOnInit(): void {
             //this.data =' las ventanillas Nro 7 a 9';

@@ -86,6 +86,7 @@ import { NotificacionModalComponent } from './components/notificacion-modal/noti
     MatDialogModule,
     FormsModule,
     MatInputModule,
+
   ]
 })
 export class ResultsManagementModule { }
