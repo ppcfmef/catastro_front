@@ -48,14 +48,12 @@ export class LandSummaryTableComponent implements OnInit {
     this.landSelected.clear();
     this.landSelected.add(landRecord);
     this.seledRecord.emit(landRecord);
-    console.log(this.landSelected, 'selec');
-    this.clickedRow = landRecord.cpm;
-    console.log(this.clickedRow, 'clicked');
+    this.clickedRow = landRecord.id.toString();
   }
 
 
-  isIconClicked(cpm: string): boolean {
-    return this.clickedRow === cpm;
+  isIconClicked(id: string): boolean {
+    return this.clickedRow === id;
   }
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
