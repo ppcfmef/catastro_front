@@ -4,17 +4,12 @@
         <select-ubigeo   (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
     </div>
 
-    <div #fotosElement id="fotosElement"  [ngStyle]="{'min-width':'450px',padding:'5px',  'background-color':'white' }"  >
-
-
-        <div class="flex flex-col gap-4" >
-
+    <div #fotosElement id="fotosElement"   >
+        <div class="" >
             <ng-container *ngFor="let img of fotos | slice:0:5">
-                <img class="object-contain h-50 rounded-md" src="{{img.foto}}" alt="">
+                <img class="object-contain h-auto max-w-full rounded-md my-2" src="{{img.foto}}" alt="">
             </ng-container>
         </div>
-
-
     </div>
 </div>
 
