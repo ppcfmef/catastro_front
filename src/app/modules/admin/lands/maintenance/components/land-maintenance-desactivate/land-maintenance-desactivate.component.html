@@ -1,16 +1,36 @@
-
 <div mat-dialog-content class="flex flex-col items-center space-y-4">
-    <div  class="relative">
-
-        <mat-icon  class="notranslate icon-size-20 c-danger" svgIcon="heroicons_outline:exclamation-circle"     ></mat-icon>
-
+    <div class="relative">
+        <mat-icon
+            class="notranslate icon-size-16 text-mef-alert"
+            svgIcon="heroicons_outline:exclamation-circle"
+        ></mat-icon>
     </div>
-        <div class="flex flex-row ">Esta seguro de inactivar el predio {{land.cpm}}?</div>
-        <div class="flex flex-row "> <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support></div>
-    <div mat-dialog-actions  class="flex flex-row justify-between space-x-4" >
-
-        <button mat-raised-button  color="primary" (click)="save()"  class="bg-success" [disabled]="disabled"  ><mat-icon svgIcon="heroicons_outline:check"  ></mat-icon>Confirmar</button>
-        <button mat-raised-button color="primary" class ="bg-danger"  (click)="close()"><mat-icon svgIcon="heroicons_outline:x"  ></mat-icon> Cancelar</button>
+    <div class="flex flex-row text-xl font-bold whitespace-nowrap">
+        Esta seguro de inactivar el predio {{ land.cpm }}?
+    </div>
+    <div class="flex flex-row">
+        <app-upload-support
+            (fileEventEmit)="fileUpload($event)"
+        ></app-upload-support>
+    </div>
+    <div mat-dialog-actions class="flex flex-row justify-between space-x-4">
+        <button
+            mat-raised-button
+            (click)="save()"
+            [disabled]="disabled"
+            [ngClass]="{ inactive: disabled, success: !disabled }"
+        >
+            <mat-icon svgIcon="heroicons_outline:check"></mat-icon>
+            <span class="text-white">Confirmar</span>
+        </button>
+        <button
+            mat-raised-button
+            color="primary"
+            class="cancel"
+            (click)="close()"
+        >
+            <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cancelar
+        </button>
     </div>
 </div>
 

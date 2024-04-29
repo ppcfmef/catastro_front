@@ -1,35 +1,52 @@
-<div class="flex flex-col space-y-4 ">
-    <div class="flex flex-row space-x-4 ">
-        <div class="w-1/2"> <app-back-list-land [backLink]="data" ></app-back-list-land> </div>
-        <div class="w-1/2" >
-            <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
+<div class="flex flex-col gap-4">
+    <app-back-list-land class="mb-3" [backLink]="data"></app-back-list-land>
 
-        </div>
+    <app-upload-support
+        class="w-max"
+        (fileEventEmit)="fileUpload($event)"
+    ></app-upload-support>
+
+    <div class="w-full my-2">
+        <div class="text-lg font-bold"><h1>Predio Original</h1></div>
+        <app-land-maintenance-table
+            [dataSource]="landRecords"
+            [typeAction]="leer"
+            [isRemove]="false"
+        ></app-land-maintenance-table>
     </div>
 
     <div class="w-full">
+        <div class="text-lg font-bold"><h1>Predios Divididos</h1></div>
 
-
-        <div class="text-xl font-extrabold "><h1>Predio Original</h1> </div>
-
-
-        <app-land-maintenance-table [dataSource]="landRecords" [typeAction]="leer" [isRemove]="false"></app-land-maintenance-table></div>
-    <div class="w-full">
-        <div class="text-xl font-extrabold "><h1>Predios divididos</h1> </div>
-
-        <app-land-maintenance-table [dataSource]="results" [typeAction]="editar" (dataSourceUpdateEvent)="ondataSourceUpdate($event)" [ubigeo]="ubigeo" [isRemove]="true"></app-land-maintenance-table>
+        <app-land-maintenance-table class="change-color-table"
+            [dataSource]="results"
+            [typeAction]="editar"
+            (dataSourceUpdateEvent)="ondataSourceUpdate($event)"
+            [ubigeo]="ubigeo"
+            [isRemove]="true"
+        ></app-land-maintenance-table>
     </div>
 
-    <div class="flex flex-row justify-center  space-x-4">
+    <div class="flex flex-row justify-start p-4 gap-4">
+        <button
+            mat-raised-button
+            class="btn_add"
+            (click)="onAgregarResult()"
+        >
+            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+            <span class="ml-2">Agregar Predio</span>
+        </button>
 
-        <button mat-raised-button class="mat-primary"   (click)="onAgregarResult()" ><mat-icon svgIcon="heroicons_outline:plus"></mat-icon>  Agregar Predio  </button>
-
-
-        <button  mat-raised-button  class="bg-success" *ngIf="results.length>1 && file"
-
-         [color]="'primary'" (click)="onGenerateSplit()" [disabled]="disabled" >
-        Generar Subdivisión
-
-    <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
-    </button>
+        <button
+            mat-raised-button
+            class="btn_acc"
+            *ngIf="results.length > 1 && file"
+            [color]="'primary'"
+            (click)="onGenerateSplit()"
+            [disabled]="disabled"
+        >
+           <span class="ml-2"> Generar Subdivisión </span>
+            <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
+        </button>
+    </div>
 </div>

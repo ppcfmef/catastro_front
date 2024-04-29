@@ -32,7 +32,6 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     this.landRegistryMapService.landIn$
     .pipe(takeUntil(this.unsubscribeInAll))
     .subscribe((result) => {
-        console.log(result, ' result landIn');
       if (result) {
         this.showEditForm = false;
       }
@@ -43,7 +42,6 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
       if(result) {
-        console.log(result , 'result is componet father');
         this.landRecordOut = result;
         this.showEditForm = true;
       }

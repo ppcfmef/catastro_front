@@ -39,9 +39,9 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     disabled = false;
 
     data = {
-      title: "Volver a la Lista de Predios",
-      routerLink: "/land/maintenance/list",
-    }
+      title: 'Volver a la Lista de Predios',
+      routerLink: '/land/maintenance/list',
+    };
     constructor(
         private landMaintenanceService: LandMaintenanceService,
         private _userService: UserService,
