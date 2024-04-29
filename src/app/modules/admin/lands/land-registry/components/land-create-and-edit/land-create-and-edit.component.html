@@ -70,7 +70,7 @@
 
                 <mat-form-field class="w-4/12">
                     <mat-label>Tipo Doc. Sustento</mat-label>
-                    <mat-select formControlName="resolutionType">
+                    <mat-select formControlName="resolutionType" class="text-sm">
                         <mat-option *ngFor="let domain of masterDomain.resolutionType" [value]="domain.id">
                             {{domain.name}}</mat-option>
                     </mat-select>

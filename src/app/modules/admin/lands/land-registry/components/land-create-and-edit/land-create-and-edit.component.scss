@@ -1,4 +1,4 @@
-@import "styles/mixins";
+ @import "styles/mixins";
 
 :host ::ng-deep{
     @include mat-form-field-style;
@@ -21,7 +21,7 @@
         width: calc(100% - 20px);
         max-height: calc(100% - 20px);
         bottom: 10px;
-        z-index: 99999;
+        z-index: 1;
         
     }
 

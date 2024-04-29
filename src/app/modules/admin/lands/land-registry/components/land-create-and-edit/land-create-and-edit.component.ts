@@ -46,12 +46,14 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
     private _fuseSplashScreenService: FuseSplashScreenService,
-  ) { }
+  ) {  
+    
+    this.landRegistryService.getMasterDomain()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(result => this.masterDomain = result);}
 
   ngOnInit(): void {
-      this.landRegistryService.getMasterDomain()
-      .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(result => this.masterDomain = result);
+     
   }
 
   emitShowFormEdit(): void{
@@ -89,7 +91,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       municipalNumberAlt: [{ value: this.landMergeRecord?.municipalNumberAlt, disabled}],
       apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled: (this.landMergeRecord?.apartmentNumber)?true:disabled }],
       resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled }],
-      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
+      resolutionType: [{ value: this.landMergeRecord?.resolutionType }],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled:(this.landMergeRecord?.latitude)? true:disabled}],
       longitude: [{ value: this.landMergeRecord?.longitude, disabled :(this.landMergeRecord?.longitude)? true:disabled }],
       rangCup:[{ value: this.landMergeRecord?.rangCup, disabled: (this.landMergeRecord?.rangCup)? true:disabled }]
