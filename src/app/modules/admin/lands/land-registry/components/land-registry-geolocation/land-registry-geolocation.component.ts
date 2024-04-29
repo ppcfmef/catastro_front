@@ -184,7 +184,7 @@ export class LandRegistryGeolocationComponent
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: 'ESTADO =1',
+            definitionExpression: 'ESTADO=1',
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -713,12 +713,39 @@ export class LandRegistryGeolocationComponent
                 };
 
                 if (l['renderer']) {
-                    console.log('renderer>>', l);
+
                     options['renderer'] = l['renderer'];
                 }
 
+                if (l['definitionExpression']) {
+                    options['definitionExpression'] = l['definitionExpression'];
+                }
+
+
+                if (this.idCargo === Role.DISTRITAL) {
+                    const where = `UBIGEO='${this.userUbigeo}'`;
+                    if (l['definitionExpression'].length>0){
+                        options['definitionExpression'] = `${l['definitionExpression']} and ${where}`;
+                    }
+                    else  {
+                        options['definitionExpression'] = `${where}`;
+                    }
+
+                }
+
+                //const where = `UBIGEO='${this.userUbigeo}'`;
+
+                /*this.layersInfo.forEach((l) => {
+                    if (l.featureLayer) {
+                        const featureLayer = l.featureLayer;
+                        console.log('where', where);
+                        featureLayer.definitionExpression = where;
+                    }
+                });*/
+
+
                 if (l['labelingInfo']) {
-                    console.log('renderer>>', l);
+
                     options['labelingInfo'] = l['labelingInfo'];
                 }
 
@@ -771,6 +798,7 @@ export class LandRegistryGeolocationComponent
                         this.estado === Estado.CREAR) &&
                     this.idCargo === Role.DISTRITAL
                 ) {
+                    /*this.zoomToUbigeo(this.userUbigeo);*/
                     this.buscar(this.userUbigeo);
                 }
 
@@ -1195,13 +1223,13 @@ export class LandRegistryGeolocationComponent
 
                 if (this.idCargo === Role.DISTRITAL) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
-                    this.layersInfo.forEach((l) => {
-                        if (l.featureLayer) {
+                    /*this.layersInfo.forEach((l) => {
+                        if (l.featureLayer) ${}{;
                             const featureLayer = l.featureLayer;
                             console.log('where', where);
                             featureLayer.definitionExpression = where;
                         }
-                    });
+                    });*/
 
                     const outSpatialReference = new SpatialReference(4326);
 
@@ -1559,13 +1587,13 @@ export class LandRegistryGeolocationComponent
     buscar(ubigeo: string): void {
         const where = `UBIGEO='${ubigeo}'`;
         console.log('where', this.layersInfo);
-        this.layersInfo.forEach((l) => {
+        /*this.layersInfo.forEach((l) => {
             if (l.featureLayer) {
                 const featureLayer = l.featureLayer;
                 console.log('where', where);
                 featureLayer.definitionExpression = where;
             }
-        });
+        });*/
         this.zoomToUbigeo(where);
     }
 
