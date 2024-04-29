@@ -1,11 +1,20 @@
-<div class="card shadow-md" [routerLink]="[cardComponent.path || '.' ]" >
-    <div class="card__title">{{cardComponent.title}}</div>
+<div class="card shadow-md">
+    <div class="card__title">{{ cardComponent.title }}</div>
     <ng-container *ngIf="cardComponent.svg">
-        <mat-icon [svgIcon]= cardComponent.svg class="h-14 w-14"></mat-icon>
+        <mat-icon [svgIcon]="cardComponent.svg" class="h-14 w-14"></mat-icon>
     </ng-container>
     <ng-container *ngIf="cardComponent.numb">
         <div class="card__number">
-            {{cardComponent.numb}}
+            {{ cardComponent.numb }}
         </div>
     </ng-container>
+
+    <button
+        mat-raised-button
+        class="go mt-4 w-11/12"
+        [routerLink]="[cardComponent.path || '.']"
+    >
+        <mat-icon class="order-2" svgIcon="mat_solid:arrow_forward"></mat-icon>
+        <span class="mr-2 text-xl">Ir</span>
+    </button>
 </div>
