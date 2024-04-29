@@ -38,6 +38,10 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
     file: any;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     disabled = false;
+    data = {
+        title: 'Volver a la Lista de Predios',
+        routerLink: '/land/maintenance/list',
+      };
     constructor(
         private landMaintenanceService: LandMaintenanceService,
         private _userService: UserService,

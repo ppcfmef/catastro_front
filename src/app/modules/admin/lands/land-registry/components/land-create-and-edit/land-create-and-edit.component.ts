@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
@@ -30,7 +30,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   @Output() showFormEdit = new EventEmitter<boolean>();
   @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
-  formEdit: UntypedFormGroup;
+  formEdit: FormGroup;
   title: any;
   isEdit = false; //evalua si es para editar o añadir predio
   showCartographicImg = false;
@@ -48,15 +48,20 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private _fuseSplashScreenService: FuseSplashScreenService,
   ) { }
 
+  get f(): {[key: string]: AbstractControl} {
+    return this.formEdit.controls;
+  }
   ngOnInit(): void {
       this.landRegistryService.getMasterDomain()
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(result => this.masterDomain = result);
+      .subscribe((result) => {
+        this.masterDomain = result;
+    });
   }
 
   emitShowFormEdit(): void{
     this.formEdit.reset();
-    setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
+    this.showFormEdit.emit(false);
   }
 
   createFormEdit(): void{
@@ -89,7 +94,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       municipalNumberAlt: [{ value: this.landMergeRecord?.municipalNumberAlt, disabled}],
       apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled: (this.landMergeRecord?.apartmentNumber)?true:disabled }],
       resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled }],
-      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
+    //   resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
+      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled: !!this.landMergeRecord?.resolutionType }],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled:(this.landMergeRecord?.latitude)? true:disabled}],
       longitude: [{ value: this.landMergeRecord?.longitude, disabled :(this.landMergeRecord?.longitude)? true:disabled }],
       rangCup:[{ value: this.landMergeRecord?.rangCup, disabled: (this.landMergeRecord?.rangCup)? true:disabled }]
@@ -124,14 +130,16 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
         this.formEdit.get(controlName).enable();
         });
         const data = this.formEdit.value;
-        console.log(data, 'data');
         data.owner = this.ownerId;
         data.status = this.toggleToStatus(data.status);
+        // this.showFormEdit.emit(false);
         // ToDo: debe ser en el container
         if (data.idPlot && !data.cup) {
         this._fuseSplashScreenService.show();
         this.landRegistryMapService.createCpu(data).toPromise()
-        .then(result => this.saveLandApi(result));
+        .then((result) => {
+            this.saveLandApi(result);
+        });
         }else {
         this._fuseSplashScreenService.show();
         this.saveLandApi(data);
@@ -187,9 +195,6 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       );
   }
 
-  get f(): {[key: string]: AbstractControl} {
-    return this.formEdit.controls;
-  }
 
   private resetForm(): void {
     this.formEdit.reset();
@@ -202,6 +207,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     this.landRegistryService.saveLand(data).toPromise()
       .then(
         (result) => {
+           this.landRegistryMapService.landIn = result;
             this._fuseSplashScreenService.hide();
           this.confirmationService.success(
             'Registro de predio',

@@ -1,7 +1,5 @@
-<button  mat-raised-button  class="btn-green"
-    [routerLink]="'/land/maintenance/list'"
-    matTooltip="volver" [color]="'primary'">
-    Volver al listado
-
-<mat-icon svgIcon="heroicons_outline:chevron-left"></mat-icon>
+<button  mat-button  class="back_btn"
+    [routerLink]="backLink.routerLink">
+    <mat-icon svgIcon="mat_outline:arrow_back_ios_new"></mat-icon>
+    <span class="whitespace-nowrap ml-2">{{backLink.title}}</span>
 </button>

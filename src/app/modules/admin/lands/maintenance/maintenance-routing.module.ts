@@ -12,7 +12,7 @@ import { DetailObserverComponent } from './components/detail-observer/detail-obs
 
 
 const routes: Routes = [
- 
+
 
     {
         path: 'list',

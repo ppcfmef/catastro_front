@@ -1,0 +1,26 @@
+@import 'styles/mixins';
+
+.cancel {
+    @include btn(var( --mef-cancel-btn-secondary))
+}
+
+.success {
+    @include btn(var( --mef-c-accept))
+}
+
+.inactive {
+    @include btn(var(--mef-c-inactive));
+    color: white !important;
+    &[disabled] {
+        color: white;
+        mat-icon {
+            ::ng-deep {
+                svg {
+                    path {
+                        color:white !important;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,216 +1,297 @@
-@mixin btn-styles(){
-  button.btn-green{
-    background-color: var(--mef-c-success) !important;  
-  }
+@mixin back_btn() {
+  cursor: pointer;
+  width: max-content;
+  border-radius: 6px !important;
+  background-color: var(--mef-c-blue-100);
+  color: var(--mef-text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / .05) !important;
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 
-  button.btn-confirm{
-    background-color: var(--mef-c-confirm) !important;  
+  mat-icon {
+    color: var(--mef-text-secondary);
   }
-
-  
 }
 
-@mixin mat-toggle-styles(){
+@mixin btn($bgColor) {
+  cursor: pointer;
+  width: max-content;
+  border-radius: 6px !important;
+  background-color: $bgColor;
+  color: white;
+}
+
+@mixin table_style($bgHeader) {
+  thead tr th {
+    background-color: $bgHeader !important;
+    font-size: 14px !important;
+    font-weight: 500;
+  }
+
+  thead tr th:first-child {
+    padding: 4px !important;
+  }
+
+  tbody tr td {
+    text-align: left !important;
+    color: #01121e !important;
+    font-size: 13px;
+  }
+}
+
+@mixin container() {
+    padding: 16px;
+    background-color: white;
+    min-width: 300px !important;
+    overflow-x: auto;
+}
+
+@mixin btn-styles() {
+  button.btn-green {
+    background-color: var(--mef-c-success) !important;
+  }
+
+  button.btn-confirm {
+    background-color: var(--mef-c-confirm) !important;
+  }
+
+
+}
+
+@mixin mat-toggle-styles() {
+
   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-  mat-slide-toggle.mat-toggle-green.mat-mdc-slide-toggle.mat-checked{
+  mat-slide-toggle.mat-toggle-green.mat-mdc-slide-toggle.mat-checked {
+
     /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-    .mat-slide-toggle-bar{ 
+    .mat-slide-toggle-bar {
       background-color: #66bb6a87 !important;
     }
-   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-   .mat-slide-toggle-thumb{
+
+    /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+    .mat-slide-toggle-thumb {
       background-color: var(--mef-c-success) !important;
     }
   }
+
   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-  mat-slide-toggle.mat-toggle-confirm.mat-mdc-slide-toggle.mat-checked{
+  mat-slide-toggle.mat-toggle-confirm.mat-mdc-slide-toggle.mat-checked {
+
     /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-    .mat-slide-toggle-bar{ 
+    .mat-slide-toggle-bar {
       background-color: #45b2ff7a !important;
     }
-   /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-   .mat-slide-toggle-thumb{
+
+    /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+    .mat-slide-toggle-thumb {
       background-color: var(--mef-c-confirm) !important;
     }
   }
-  
+
 }
 
 
-@mixin  titlePanel(){
-    font-size: 20px;
-    font-family: "Inter var";
+@mixin titlePanel() {
+  font-size: 20px;
+  font-family: "Inter var";
+  color: #666699;
+  margin-bottom: 10px;
+  font-weight: bold;
+  margin-top: 3px;
+}
+
+
+@mixin table-border-radius() {
+  table {
+    border-radius: 8px 8px 0 0;
+
+  }
+
+  table thead tr {
+    th:nth-child(1) {
+      border-radius: 8px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+  }
+
+  table tbody tr:last-child {
+    td:nth-child(1) {
+      border-radius: 0 0 0 8px;
+    }
+
+    td:last-child {
+      border-radius: 0 0 8px 0;
+    }
+  }
+
+  /* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
+  mat-paginator {
+    .mat-mdc-paginator-container {
+      border-radius: 0 0 8px 8px;
+      border-color: 2px solid #666699 !important;
+    }
+
+  }
+}
+
+
+@mixin tavStyleActive() {
+
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+  nav .mat-tab-list .mat-mdc-tab-links a.mat-tab-label-active {
+    opacity: 1;
     color: #666699;
-    margin-bottom: 10px;
-    font-weight: bold;
-    margin-top: 3px;
+    font-size: 16px;
+  }
+
+  mat-ink-bar {
+    background-color: #666699 !important;
+  }
 }
 
+@mixin button-style-icons-2() {
+  .button-style-icons-2 {
+    color: #666699;
 
-@mixin table-border-radius(){
-    table{
-        border-radius:8px 8px 0 0;
-        
+    mat-icon:nth-of-type(1) {
+      color: #666699;
     }
-    table thead tr{
-        th:nth-child(1){
-            border-radius: 8px 0 0 0;
-        }
-        th:last-child{
-            border-radius: 0 8px 0 0;
-        }
-        
+
+    mat-icon:nth-last-of-type(1) {
+      color: #39daff;
     }
-    table tbody tr:last-child{
-        td:nth-child(1){
-            border-radius: 0 0 0 8px;
-        }
-        td:last-child{
-            border-radius:0 0  8px 0;
-        }
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
-    mat-paginator{
-      .mat-mdc-paginator-container{
-        border-radius: 0 0 8px 8px;
-        border-color: 2px solid #666699 !important;
-      }
- 
-    }
+  }
 }
 
+@mixin block-icon() {
+  .block-icon {
+    display: flex;
+    padding: 16px;
+    border-radius: 7px;
+    background-color: white;
+    margin-bottom: 20px;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    margin: 0 20px;
 
-@mixin tavStyleActive(){
-    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-    nav .mat-tab-list .mat-mdc-tab-links a.mat-tab-label-active{
-        opacity: 1;
+    .bgIcon {
+      background-color: #e2e2f9;
+      color: #666699,
+    }
+
+    .block-text {
+      margin-left: 16px;
+      display: flex;
+      flex-direction: column;
+
+      p {
         color: #666699;
-        font-size: 16px;
-    }
-    mat-ink-bar{
-        background-color: #666699 !important;
-    }
-}
-
-@mixin button-style-icons-2(){
-    .button-style-icons-2{
-        color: #666699;
-        mat-icon:nth-of-type(1){
-            color:#666699;
-        }
-        mat-icon:nth-last-of-type(1){
-            color:#39daff;
-        }
-    }
-}
-
-@mixin block-icon(){
-    .block-icon{
-        display: flex;
-        padding: 16px;
-        border-radius: 7px;
-        background-color: white;
-        margin-bottom: 20px;
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
-        margin: 0 20px;
-    
-        .bgIcon{
-          background-color: #e2e2f9;
-          color: #666699,
-        }
-    
-        .block-text{
-          margin-left: 16px;
-          display: flex;
-          flex-direction: column;
-          p{
-            color: #666699;
-          }
-          h5{
-            font-size: 24px;
-            text-align: center;
-            color: var(--mef-c-purple);
-            font-weight: bold;
-          }
-    
-        }
-    
-        &.green{
-          .bgIcon{
-            background-color: #e6f9e2;
-            mat-icon{
-              color: #779966;
-            }
-            
-          }
-          .block-text{
-            p,h5{
-              color: #779966;
-            }
-          
-        }
-      }
-    
-      &.blue{
-        .bgIcon{
-          background-color: #e2eef9;
-          mat-icon{
-            color: #668199;
-          }
-          
-        }
-        .block-text{
-          p,h5{
-            color: #668199;
-          }
-          
-        }
       }
 
-      &.red{
-        .bgIcon{
-          background-color: #f9ebe2;
-          mat-icon{
-            color: #997466;
-          }
-          
+      h5 {
+        font-size: 24px;
+        text-align: center;
+        color: var(--mef-c-purple);
+        font-weight: bold;
+      }
+
+    }
+
+    &.green {
+      .bgIcon {
+        background-color: #e6f9e2;
+
+        mat-icon {
+          color: #779966;
         }
-        .block-text{
-          p,h5{
-            color: #997d66;
-          }
-          
+
+      }
+
+      .block-text {
+
+        p,
+        h5 {
+          color: #779966;
         }
+
       }
     }
+
+    &.blue {
+      .bgIcon {
+        background-color: #e2eef9;
+
+        mat-icon {
+          color: #668199;
+        }
+
+      }
+
+      .block-text {
+
+        p,
+        h5 {
+          color: #668199;
+        }
+
+      }
+    }
+
+    &.red {
+      .bgIcon {
+        background-color: #f9ebe2;
+
+        mat-icon {
+          color: #997466;
+        }
+
+      }
+
+      .block-text {
+
+        p,
+        h5 {
+          color: #997d66;
+        }
+
+      }
+    }
+  }
 }
 
-@mixin box-shadow-z1{
-  .box-shadow-z1{
+@mixin box-shadow-z1 {
+  .box-shadow-z1 {
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   }
-  
+
 }
 
-@mixin btn-basic-icon(){
+@mixin btn-basic-icon() {
+  color: white;
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+
+  mat-icon {
     color: white;
-    font-size: 14px;
-    border-radius:8px;
-    padding: 8px 16px;
-    display: flex;
-    mat-icon{
-      color:white;
-      margin-left: 10px;
-    }
-    mat-icon.right{
-      color:white;
-      margin-left: 0;
-      margin-right: 10px;
-    }
+    margin-left: 10px;
+  }
+
+  mat-icon.right {
+    color: white;
+    margin-left: 0;
+    margin-right: 10px;
+  }
 }
 
 @mixin btn-success() {
-  .btn-success{
+  .btn-success {
     background-color: #90D05D;
     @include btn-basic-icon;
   }
@@ -218,50 +299,51 @@
 
 
 @mixin btn-success() {
-  .btn-success{
+  .btn-success {
     background-color: #90D05D;
     @include btn-basic-icon;
   }
 }
 
 @mixin btn-confirm() {
-  .btn-confirm{
+  .btn-confirm {
     background-color: #54C8FA;
     @include btn-basic-icon;
   }
 }
 
 @mixin btn-danger() {
-  .btn-danger{
+  .btn-danger {
     background-color: #D77676;
     @include btn-basic-icon;
   }
 }
 
-@mixin input-btn-icon(){
-  .input-btn-icon{
+@mixin input-btn-icon() {
+  .input-btn-icon {
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     display: flex;
 
-    input{
+    input {
       padding: 8px 14px;
       font-size: 13px;
       color: #4E4E4E;
     }
-    button{
+
+    button {
       background-color: var(--mef-c-purple);
       color: white;
       font-size: 14px;
-      border-radius:0 5px 5px 0;
+      border-radius: 0 5px 5px 0;
       padding: 8px 16px;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
 
-      mat-icon{
+      mat-icon {
         margin-left: 10px;
         color: white;
       }
@@ -272,27 +354,31 @@
 /* ***  FORMS *** */
 
 /* Reducir alto de inputs y aplicar focus */
-@mixin mat-form-field-style(){
-  mat-form-field.mat-form-field-style{
+@mixin mat-form-field-style() {
+  mat-form-field.mat-form-field-style {
+
     /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-wrapper {
+
       /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-      .mat-form-field-flex{
+      .mat-form-field-flex {
         min-height: 36px !important;
         padding: 0 10px !important;
       }
     }
-    input{
+
+    input {
       padding: 8px 0 !important;
     }
-    mat-label{
+
+    mat-label {
       font-size: 13px !important;
     }
   }
 
-  mat-form-field.mat-focused{
-    mat-label{
+  mat-form-field.mat-focused {
+    mat-label {
       color: #666699 !important;
     }
   }
@@ -301,64 +387,77 @@
 
 /* ***  TABLES *** */
 
-@mixin table-padding-4(){
-  table tbody tr td, table thead tr th {
-      padding:4px;
+@mixin table-padding-4() {
+
+  table tbody tr td,
+  table thead tr th {
+    padding: 4px;
   }
 }
 
 
 
-@mixin table-hover(){
-  table tbody tr:hover td{
-      background-color: #6666991a;
+@mixin table-hover() {
+  table tbody tr:hover td {
+    background-color: #6666991a;
   }
 }
 
 
-@mixin table-base(){
-  table.table-base{
+@mixin table-base() {
+  table.table-base {
     width: 100%;
+
     thead tr {
-      box-shadow: 0px 4px 4px rgb(145 143 143 / 42%);      
+      box-shadow: 0px 4px 4px rgb(145 143 143 / 42%);
       position: relative;
     }
-    thead tr th{    
+
+    thead tr th {
       position: relative;
     }
-    thead tr th, tbody tr td{
+
+    thead tr th,
+    tbody tr td {
       padding: 5px;
     }
-    thead tr th{
+
+    thead tr th {
       text-align: center;
     }
-    
+
   }
 }
 
-@mixin table-line-divider(){
-  table.table-line-divider{
-    thead tr th, tbody tr td{
+@mixin table-line-divider() {
+  table.table-line-divider {
+
+    thead tr th,
+    tbody tr td {
       border-right: solid 3px #F0F0F0;
     }
-    thead tr th:last-child, tbody tr td:last-child{
-      border-right:none;
+
+    thead tr th:last-child,
+    tbody tr td:last-child {
+      border-right: none;
     }
-    tbody tr td{
+
+    tbody tr td {
       border-top: solid 6px #F0F0F0;
     }
+
     // tbody tr:last-child td{
     //   border-top: none;
     // }
   }
 }
 
-@mixin triangle-call-popup(){
-  .triangle-popup-right-top{
+@mixin triangle-call-popup() {
+  .triangle-popup-right-top {
     content: '';
     position: absolute;
     top: -20px;
-    right:20%;
+    right: 20%;
     width: 0;
     height: 0;
     border: 0 solid transparent;
@@ -366,11 +465,12 @@
     border-left-width: 65px;
     border-bottom: 21px solid black;
   }
-  .triangle-popup-left-top::after{
+
+  .triangle-popup-left-top::after {
     content: '';
     position: absolute;
     top: -20px;
-    left:20%;
+    left: 20%;
     width: 0;
     height: 0;
     border: 0 solid transparent;

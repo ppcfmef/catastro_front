@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -24,29 +24,28 @@ import { ResultObservation } from '../../interfaces/observation.interface';
     templateUrl: './detail-observer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailObserverComponent implements OnInit {
-    
+export class DetailObserverComponent implements OnInit, OnDestroy{
+
     #unsubscribeAll: Subject<any> = new Subject<any>();
     observation: ResultObservation = {
-        id: null, 
+        id: null,
         img: '',
-        application: null, 
+        application: null,
         description: ''
-      };
+    };
 
     isLoading: boolean = true;
     //inject services
     #listApplicationMaintenancePage = inject(ListApplicationMaintenancePage);
     #activeRouter = inject(ActivatedRoute);
     #detailObservedService = inject(DetailObservedService);
-    #changeDetectorRef = inject(ChangeDetectorRef)
+    #changeDetectorRef = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
-            // Open the drawer 
-            this.#listApplicationMaintenancePage.matDrawer.open();
+            // Open the drawer MaintenancePage.matDrawer.open();
             this.#activeRouter.params
                 .pipe(takeUntil(this.#unsubscribeAll),
-                 switchMap(({id}) => {
+                switchMap(({id}) => {
                         this.isLoading = true;
                         this.#changeDetectorRef.markForCheck();
                         return this.#detailObservedService.getObservation(id);
@@ -63,13 +62,13 @@ export class DetailObserverComponent implements OnInit {
         // Unsubscribe from all subscriptions
         this.#unsubscribeAll.next(null);
         this.#unsubscribeAll.complete();
-        this.closeDrawer(); 
+        this.closeDrawer();
     }
- 
+
     /**
      * Close the drawer
      */
     closeDrawer(): Promise<MatDrawerToggleResult> {
         return this.#listApplicationMaintenancePage.matDrawer.close();
     }
- }
+}

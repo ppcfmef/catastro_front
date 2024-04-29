@@ -21,6 +21,11 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
     private defaultTableLimit = 5;
+
+    data = {
+      title: "Volver a la Lista de Solicitudes",
+      routerLink: "/land/maintenance",
+    }
   constructor(  private landMaintenanceService: LandMaintenanceService,
 
     public dialog: MatDialog

@@ -1,0 +1,17 @@
+@import "styles/mixins";
+
+:host ::ng-deep app-land-maintenance-table.change-color-table {
+    table.table-base {
+        @include table_style(#7e9098);
+    }
+}
+
+
+.btn_add {
+    @include btn(var(--mef-c-btn-secondary));
+}
+
+
+.btn_acc {
+    @include btn(var(--mef-c-btn-accion))
+}

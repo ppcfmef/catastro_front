@@ -9,18 +9,19 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './list-application-maintenance.page.html',
   styleUrls: ['./list-application-maintenance.page.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class ListApplicationMaintenancePage implements OnInit {
 
   @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
   #unsubscribeAll: Subject<any> = new Subject<any>();
   mode: 'side' | 'over';
-  
+
   //inject services
   #changeDetectorRef = inject(ChangeDetectorRef);
   #activatedRoute = inject(ActivatedRoute);
   #router = inject(Router);
-  #fuseMediaWatcherService = inject(FuseMediaWatcherService)
-  
+  #fuseMediaWatcherService = inject(FuseMediaWatcherService);
+
   constructor() { }
 
   ngOnInit(): void {
@@ -45,7 +46,7 @@ export class ListApplicationMaintenancePage implements OnInit {
         this.#changeDetectorRef.markForCheck();
       });
   }
-  
+
   onBackdropClicked(): void {
     // Go back to the list
     this.#router.navigate(['./'], { relativeTo: this.#activatedRoute });

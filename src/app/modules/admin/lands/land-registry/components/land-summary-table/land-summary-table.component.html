@@ -48,7 +48,7 @@
                           <mat-icon class="mr-2 text-blue-600 icon-size-4 self-center" svgIcon="feather:map-pin"></mat-icon>
                           <b>Con cartografía asignada (Punto Imagen)</b>
                         </div>
-    
+
                       </ng-container>
                       <ng-container *ngSwitchCase="3">
                         <div class="text-gray-600 bg-gray-50 p-1 w-full rounded-sm flex items-end justify-center">
@@ -74,7 +74,7 @@
                         (click)="landSelection(element)"
                         class="btn-detail"
                      >
-                        <mat-icon  [class.item-selected]="isIconClicked(element.cpm)" svgIcon="double_arrow"></mat-icon>
+                        <mat-icon  [class.item-selected]="isIconClicked(element.id)" svgIcon="double_arrow"></mat-icon>
                     </button>
                 </section>
             </article>
@@ -84,7 +84,6 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-
         [class.predioSelected]="landSelected.has(row)"></tr>
   </table>
 </div>

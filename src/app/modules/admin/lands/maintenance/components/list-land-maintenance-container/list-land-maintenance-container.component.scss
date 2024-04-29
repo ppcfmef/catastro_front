@@ -1,23 +1,7 @@
-:host {
-    .subtitle-text{
-        font-weight: bold;
-        font-size: 18px;
-    }
+@import 'styles/mixins';
 
-    .btn-success{
-        display: flex;
-        align-items: center;
-        padding: 8px 16px;
-        border-radius: 6px;
-        color: white;
-        mat-icon{
-            color: white;
-        }
-    }
+.back_btn {
+    @include back_btn();
 }
-:host ::ng-deep{
-    .mat-mdc-outlined-button:not([disabled=true]){
-        border-color: #2980B9  !important;
-    }
 
-}
+

@@ -1,5 +1,14 @@
-<div class="flex flex-col  my-4" >
-<mat-label> Adjuntar Resolución Municipal del proceso administrativo(*)</mat-label>
+<div class="flex flex-col" >
+
+<label class="block mb-2 text-base font-semibold text-gray-900 dark:text-white" for="uploadfile">Adjuntar Resolución Municipal del proceso administrativo(*)</label>
+<input
+    type="file"
+    (change)="uploadFile($event)"
+    class="block w-full  text-gray-900 border border-gray-300 rounded-sm cursor-pointer bg-gray-50 focus:outline-none text-base"
+    id="uploadfile"
+    name="uploadfile"
+>
+<!-- <mat-label> Adjuntar Resolución Municipal del proceso administrativo(*)</mat-label>
 
 <input type="file" (change)="uploadFile($event)" hidden name="uploadfile"
 id="uploadfile"  #uploadfile>
@@ -11,4 +20,6 @@ id="uploadfile"  #uploadfile>
 <mat-icon svgIcon="heroicons_outline:document-text"></mat-icon>
 <h1 *ngIf="fileName">{{fileName}}</h1>
 </button>
-</div>
+</div> -->
+
+

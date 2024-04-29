@@ -117,7 +117,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     //const queryParams = { limit, offset, ...ownerFilter };
-   
+
 
     const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit });
     console.log(queryParams, 'queryParams');

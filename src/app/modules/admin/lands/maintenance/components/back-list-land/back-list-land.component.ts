@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-back-list-land',
@@ -7,6 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BackListLandComponent implements OnInit {
 
+  @Input() backLink: {
+    title: string;
+    routerLink: string;
+  };
+  
   constructor() { }
 
   ngOnInit(): void {

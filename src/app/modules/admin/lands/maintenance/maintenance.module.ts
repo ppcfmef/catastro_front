@@ -45,6 +45,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 @NgModule({
   declarations: [
 
@@ -93,7 +94,8 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
     MatTooltipModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    FuseScrollbarModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' } // Configura el idioma español
