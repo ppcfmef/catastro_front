@@ -184,7 +184,7 @@ export class LandRegistryGeolocationComponent
                 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
             order: 0,
             featureLayer: null,
-            definitionExpression: '1=1',
+            definitionExpression: 'ESTADO =1',
             featureTable: null,
             popupTemplate: null,
             utm: null,
@@ -208,7 +208,7 @@ export class LandRegistryGeolocationComponent
             visible: true,
         },
         {
-            title: 'Lotes Poligono Zona',
+            title: 'Polígono de Lotes',
             id: 1,
             idServer: 5,
             urlBase:
@@ -224,12 +224,15 @@ export class LandRegistryGeolocationComponent
             renderer: {
                 type: 'class-breaks', // autocasts as new UniqueValueRenderer()
                 field: 'ESTADO_INS',
+                legendOptions: {
+                    title: 'Estado',
+                  },
 
                 classBreakInfos: [
                     {
                         minValue: 0, // 0 acres
                         maxValue: 0, // 200,000 acres,
-                        label: 'Lotes sin predios',
+                        label: 'Sin predios registrados',
                         symbol: {
                             type: 'simple-fill',
                             color: [205, 102, 102, 0.5],
@@ -243,7 +246,7 @@ export class LandRegistryGeolocationComponent
                     {
                         minValue: 1, // 200,001 acres
                         maxValue: 162, // 500,000 acres
-                        label: 'Lotes con predios',
+                        label: 'Con predios registrados',
                         symbol: {
                             type: 'simple-fill',
                             color: [68, 101, 137, 0.5],

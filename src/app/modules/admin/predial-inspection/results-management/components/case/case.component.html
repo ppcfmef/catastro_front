@@ -18,7 +18,7 @@
         </ng-container>
 
         <ng-container *ngIf="!this.registro?.predioPadron">
-            Predio - {{ item.codCase  }}  no encontrado
+            Predio no encontrado
             en el padron de predios
             <mat-icon
                svgIcon="{{
@@ -38,7 +38,7 @@
 
                     <div class="flex flex-col">
                         <strong><span>Direccion declarada</span></strong>
-                        <span>{{ (item?.landStatus===1)? registro?.predioPadron?.address:(item?.landStatus===0)?registro?.predioPadron?.municipalAddress:''}}
+                        <span>{{ (item?.landStatus===1)? registro?.c?.address:(item?.landStatus===0)?registro?.predioPadron?.municipalAddress:''}}
                         </span>
                     </div>
 

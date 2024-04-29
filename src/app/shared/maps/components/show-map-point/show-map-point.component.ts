@@ -184,6 +184,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                     id: 0,
                     visible: true,
                     title: 'CF_PREDIO',
+                    definitionExpression: 'ESTADO =1',
                     labelingInfo: {
                         symbol: {
                             type: 'text', // autocasts as new TextSymbol()
