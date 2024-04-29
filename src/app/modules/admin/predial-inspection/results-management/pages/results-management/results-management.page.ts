@@ -38,60 +38,12 @@ export class ResultsManagementPage implements OnInit {
             this.isAdmin = false;
         }
 
-
-        //parseString(this.isAdmin);
         localStorage.setItem('isAdmin', this.isAdmin.toString());
-
-        /*const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));*/
-
-
-/*
-
-
-            const permissionsNavigation: any[]=this.user?.permissionsNavigation;
-            const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
-            console.log('readAll>>',readAll);
-
-            if(!(readAll.length>0 || this.user.isSuperuser === true)){
-
-            this.isAdmin = false;
-            }
-
-            const ubigeo = localStorage.getItem('ubigeoBrechas');
-
-            if (this.isAdmin){
-                if (ubigeo){
-                    this.ubigeo = ubigeo;
-                }else{
-                    this.ubigeo =
-                    this.user && this.user.ubigeo
-                        ? this.user.ubigeo
-                        : this.ubigeo;
-                        localStorage.setItem('ubigeoBrechas',this.ubigeo);
-                }
-
-            }
-
-            else
-                {
-                    this.ubigeo =
-                    this.user && this.user.ubigeo
-                        ? this.user.ubigeo
-                        : this.ubigeo;
-                    localStorage.setItem('ubigeoBrechas',this.ubigeo);
-            }
-
-
-*/
-
         localStorage.setItem('user',JSON.stringify(this.user));
-        //console.log('this.user',this.user);
         this.ubigeo =
         this.user && this.user.ubigeo
             ? this.user.ubigeo
             : null;
-           /* console.log('this.ubigeo',this.ubigeo);*/
-        /*localStorage.setItem('ubigeo',this.ubigeo);*/
         if(this.ubigeo){
             this._resultsService.setUbigeo(this.ubigeo);
             this._commonService
@@ -101,14 +53,6 @@ export class ResultsManagementPage implements OnInit {
             });
 
         }
-
-        /*const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
-        console.log('readAll>>',readAll);
-
-        if(!(readAll.length>0 || this.user.isSuperuser === true)){
-            this.isAdmin = false;
-        }*/
-
     });
 
   }

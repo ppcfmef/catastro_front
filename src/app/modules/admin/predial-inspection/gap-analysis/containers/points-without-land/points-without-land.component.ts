@@ -113,7 +113,7 @@ export class PointsWithoutLandComponent implements OnInit {
         },*/
 
         {
-            title: 'Lotes Poligono Zona',
+            title: 'Polígono de Lotes',
             id: 3,
             layerId: 5,
             urlBase: `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
@@ -127,7 +127,60 @@ export class PointsWithoutLandComponent implements OnInit {
             projection: null,
             visible: true,
             selected: false,
-            renderer:null
+            renderer: {
+                type: 'class-breaks', // autocasts as new UniqueValueRenderer()
+                field: 'ESTADO_INS',
+                legendOptions: {
+                    title: 'Estado',
+                  },
+
+                classBreakInfos: [
+                    {
+                        minValue: 0, // 0 acres
+                        maxValue: 0, // 200,000 acres,
+                        label: 'Sin predios registrados',
+                        symbol: {
+                            type: 'simple-fill',
+                            color: [205, 102, 102, 0.5],
+                            style: 'solid',
+                            outline: {
+                                color: [205, 102, 102, 0.8],
+                                width: 0.5,
+                            },
+                        }, // will be assigned sym1
+                    },
+                    {
+                        minValue: 1, // 200,001 acres
+                        maxValue: 162, // 500,000 acres
+                        label: 'Con predios registrados',
+                        symbol: {
+                            type: 'simple-fill',
+                            color: [68, 101, 137, 0.5],
+                            style: 'solid',
+                            outline: {
+                                color: [68, 101, 137, 0.8],
+                                width: 0.5,
+                            },
+                        },
+                    },
+                ],
+            },
+            labelClass: {
+                symbol: {
+                    type: 'text', // autocasts as new TextSymbol()
+                    color: 'black',
+                    font: {
+                        // autocast as new Font()
+                        family: 'arial',
+                        size: 10,
+                        weight: 'bold',
+                    },
+                },
+                labelPlacement: 'above-center',
+                labelExpressionInfo: {
+                    expression: '$feature.LOT_URB',
+                },
+            },
         },
 
         {

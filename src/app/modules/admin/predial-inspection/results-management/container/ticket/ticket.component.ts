@@ -13,6 +13,8 @@ import { UbicacionService } from '../../services/ubicacion.service';
 import { User } from 'app/core/user/user.types';
 import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import { CFTicketService } from '../../services/cfticket.service';
+import { CommonService } from 'app/core/common/services/common.service';
+import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 
 @Component({
   selector: 'app-ticket',
@@ -31,13 +33,15 @@ export class TicketComponent implements OnInit, OnDestroy {
   ubicaciones: any[];
   openLocation: boolean = true;
   ubicacion: IUbicacion;
+  distrito: DistrictResource;
 constructor(
   private _router: Router,
   private _activatedRoute: ActivatedRoute,
   private _ticketService: TicketService,
   private _resultsService: ResultsService,
   private _ubicacionService: UbicacionService,
-  private _cfTicketService: CFTicketService
+  private _cfTicketService: CFTicketService,
+  private _commonService: CommonService,
 ) {
 }
 
@@ -48,16 +52,26 @@ ngOnInit(): void {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params) => {
           this.getDataTicket(params.id);
+
+    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+
       });
 
-      this.ubigeo=localStorage.getItem('ubigeo')?localStorage.getItem('ubigeo'):null;
-      this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+
 }
 
 getDataTicket(idTicket: string): void{
   this._ticketService.get2(idTicket).subscribe( (res: ITicket) =>{
       this.ticket=res;
       this.ubigeo=this.ticket.codTicket.substring(1,7);
+
+      this._commonService
+      .getDistrictResource(this.ubigeo)
+      .subscribe((data) => {
+          this.distrito = data;
+      });
+
+
       console.log('module ticket this.ticket>>>', this.ticket);
       this.totalUbicaciones =res.ubicaciones.length;
       this.ubicaciones = res.ubicaciones.map((data: IUbicacion,index: number)=> {

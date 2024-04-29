@@ -50,11 +50,12 @@ export class LocationComponent implements OnInit , OnChanges {
   @Input() ubigeo: string;
   @Input() ticket: ITicket;
   @Input() user: User;
-
+  @Input() distrito: DistrictResource;
   /*@Output() eventResetMap: EventEmitter<any> = new EventEmitter();*/
   @Input() ubicacion: IUbicacion;
   @Output() eventUpdateLocation: EventEmitter<any> = new EventEmitter();
   @Output() eventCloseLocation: EventEmitter<any> = new EventEmitter();
+
     items =[
         {
             tipo:0,
@@ -100,7 +101,7 @@ export class LocationComponent implements OnInit , OnChanges {
     dialogRef: any;
     predio: IPredioInspeccion;
     codTipoTicket =0;
-    distrito: DistrictResource;
+    /*distrito: DistrictResource;*/
 
   constructor(
     private _messageProviderService: MessageProviderService,
@@ -120,23 +121,10 @@ export class LocationComponent implements OnInit , OnChanges {
     private _predioPadronService: PredioPadronService,
     ) { }
     ngOnChanges(changes: SimpleChanges): void {
-        this.distrito=localStorage.getItem('distrito')?JSON.parse(localStorage.getItem('distrito')):{};
-        console.log('module location this.ticket >>',this.ticket);
+
         if (this.ticket && this.ubicacion){
             this.codTipoTicket=this.ticket.codTipoTicket?this.ticket.codTipoTicket:0;
-            /* this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
 
-                 this.ubicacion =data;
-                 this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
-               });*/
-
-             /*
-             this._ubicacionService.get(parseInt(idUbicacion,10)).subscribe( (data: IUbicacion) =>{
-
-               this.ubicacion =data;
-               this._resultsService.setUbicacionData({ubicacion:this.ubicacion,ticket:this.ticket});
-             });
-             */
 
              this._resultsService.getPoint().subscribe( (res: any)=>{
                  this.dataPoint = res;
@@ -146,11 +134,7 @@ export class LocationComponent implements OnInit , OnChanges {
                        this.puntoImagenDisabled= false;
                        this.predioButtonDisabled = true;
                      }
-                    /* else if (this.ticket.codTipoTicket ===  TypeGap.PUNTO_IMAGEN)
-                     {
-                       this.puntoImagenDisabled= false;
-                       this.predioButtonDisabled = false;
-                     }*/
+
 
                  }
 
@@ -168,10 +152,6 @@ export class LocationComponent implements OnInit , OnChanges {
 
              this.getStatusButton();
 
-            /* if (this.ticket.codEstTrabajoTicket === String(TicketStatus.PENDIENTE_GESTION_RESULTADOS)){
-                this.updateIicket(this.ticket);
-            }*/
-
 
         }
 
@@ -180,9 +160,9 @@ export class LocationComponent implements OnInit , OnChanges {
 
 
   ngOnInit(): void {
-    /*const codUbicacion=localStorage.getItem('codUbicacion')?localStorage.getItem('codUbicacion'):'0';*/
 
-
+    this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
+    console.log('this.user>>',this.user);
   }
 
   onClickAprTicket(): void {
@@ -981,10 +961,10 @@ eventIniciarItem(registro: IRegistroTitularidad): void{
         }
 
   });
-  console.log('this.ubicacion.status>>>',this.ubicacion.status);
+  /*console.log('this.ubicacion.status>>>',this.ubicacion.status);
   console.log('registro.codTipoTit>>>',registro.codTipoTit);
 
-  console.log('this.ticket.codTipoTicket>>>',this.ticket.codTipoTicket);
+  console.log('this.ticket.codTipoTicket>>>',this.ticket.codTipoTicket);*/
 
   if(this.ubicacion.status=== 0 && registro.codTipoTit ===1 &&  this.ticket.codTipoTicket !== TypeGap.MANZANA_SIN_LOTES){
     this.resetMap(2);
@@ -1019,96 +999,10 @@ descargarNotificacionPredio(data: IRegistroTitularidad): void{
 }
 
 generarNotificacion(r: IRegistroTitularidad): void{
-    /*const contribuyente=
-    (data.suministro?.contribuyente)? `${data.suministro?.contribuyente?.nombre} ${data.suministro?.contribuyente?.apPat} ${data.suministro?.contribuyente?.apMat}`:
-    (data.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
-    (data.predioPadron?.predioContribuyente[0]?.contribuyente)? `${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
-    '';
 
-  this.dialogRef = this._confirmationService.info(
-        'Notificar',
-        'Esta seguro de generar la notificacion?'
-    );
+    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad.`;
 
 
-    this.dialogRef
-    .afterClosed()
-    .toPromise()
-    .then( (option) => {
-        if (option === 'confirmed') {
-          this.generarPdf(data);
-
-          this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
-              const form = { codContr: data.suministro?.codContr};
-              const dataForm = FormUtils.deleteKeysNullInObject(form);
-
-              if(data?.suministro?.codSuministro){
-                  this._suministroService.update(data.suministro.codSuministro,dataForm).subscribe((s)=>{
-                      this._confirmationService.success(
-                          'Notificar',
-                          'Notificacion generada'
-                      ).afterClosed().toPromise().then(()=>{
-                          this.resolverPredio();
-                          this.getStatusButton();
-                          this._resultsService.setResetMap(2);
-                          this._resultsService.setEstado(Estado.LEER);
-                      });
-
-                  });
-              }
-
-          });
-        }
-    });*/
-
-    /*
-    this.dialogRef
-          .afterClosed()
-          .toPromise()
-          .then( (option) => {
-              if (option === 'confirmed') {
-                this.generarPdf(data);
-
-                this._registroTitularidadService.update(data.codTit,{status:6}).subscribe((r2)=>{
-                    const form = { codContr: data.suministro?.codContr};
-                    const dataForm = FormUtils.deleteKeysNullInObject(form);
-
-                    if(data?.suministro?.codSuministro){
-                        this._suministroService.update(data.suministro.codSuministro,dataForm).subscribe((s)=>{
-                            this._confirmationService.success(
-                                'Notificar',
-                                'Notificacion generada'
-                            ).afterClosed().toPromise().then(()=>{
-                                this.resolverPredio();
-                                this.getStatusButton();
-                                this._resultsService.setResetMap(2);
-                                this._resultsService.setEstado(Estado.LEER);
-                            });
-
-                        });
-                    }
-
-                });
-              }
-          });
-*/
-
-
-const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en ${this.ubicacion.address}, por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`;
-
-
-/*{street_type} {street_name} {municipal_number} {urban_mza} {urban_lot_number}*/
-
-/*
-this.ubicacion.nomUU;
-this.datosPredio.mz = this.ubicacion.mznUrb;
-this.datosPredio.lote = this.ubicacion.lotUrb;
-this.datosPredio.type = this.ubicacion.codTipVia;
-this.datosPredio.name = this.ubicacion.nomVia;
-this.datosPredio.numdoor = this.ubicacion.numMun;
-this.datosPredio.address = this.ubicacion.nomVia;
-
-*/
 
     this.dialogRef = this._confirmationService.info(
         'Notificar',
@@ -1123,7 +1017,7 @@ this.datosPredio.address = this.ubicacion.nomVia;
 
                 const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
                     {width:'650px',
-                    data: {registrosTitularidad: r,texto_editar: texto,texto_fijo:''},
+                    data: {registrosTitularidad: r,textoEditar: texto,textoFijo:''},
                 });
 
                 dialogRef2
@@ -1138,15 +1032,18 @@ this.datosPredio.address = this.ubicacion.nomVia;
                         (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
                         (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
                         '';
-
+                        console.log('this.user>>',this.user);
                         const payload = {
-                            "codTicket":this.ticket.codTicket,
+                            'codTicket':this.ticket.codTicket,
                             'contribuyente':contribuyente,
                             'codTit' :r.codTit,
                             'texto':text2,
-                            //'direccion' : ''
-                        }
+                            'usuario': this.user.name,
+                            'rol': this.user.role?.name?this.user.role?.name:'',
+                        };
 
+                        console.log('payload>>',payload);
+                        /*this.user.fullName;*/
                         this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
 
                             const blob = new Blob([response], { type: 'application/pdf' });
@@ -1197,21 +1094,8 @@ this.datosPredio.address = this.ubicacion.nomVia;
 
 generarNotificacionPredio(r: IRegistroTitularidad): void{
     //const  direccion = `${this.ubicacion.address}`;
-    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en ${this.ubicacion.address}, por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`;
+    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad.`;
 
-
-    /*{street_type} {street_name} {municipal_number} {urban_mza} {urban_lot_number}*/
-
-/*
-this.ubicacion.nomUU;
-    this.datosPredio.mz = this.ubicacion.mznUrb;
-    this.datosPredio.lote = this.ubicacion.lotUrb;
-    this.datosPredio.type = this.ubicacion.codTipVia;
-    this.datosPredio.name = this.ubicacion.nomVia;
-    this.datosPredio.numdoor = this.ubicacion.numMun;
-    this.datosPredio.address = this.ubicacion.nomVia;
-
-*/
 
         this.dialogRef = this._confirmationService.info(
             'Notificar',
@@ -1226,7 +1110,7 @@ this.ubicacion.nomUU;
 
                     const dialogRef2= this._messageProviderService.showModal(NotificacionModalComponent,
                         {width:'650px',
-                        data: {registrosTitularidad: r,texto_editar: texto,texto_fijo:''},
+                        data: {registrosTitularidad: r,textoEditar: texto,textoFijo:''},
                     });
 
                     dialogRef2
@@ -1234,22 +1118,21 @@ this.ubicacion.nomUU;
                     .toPromise()
                         .then((text2) => {
 
-
-
                             const contribuyente=
                             (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
                             (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
                             (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
                             '';
-
                             const payload = {
-                                "codTicket":this.ticket.codTicket,
+                                'codTicket':this.ticket.codTicket,
                                 'contribuyente':contribuyente,
                                 'codTit' :r.codTit,
                                 'texto':text2,
-                                //'direccion' : ''
-                            }
-
+                                'usuario': this.user.name,
+                                'rol': this.user.role?.name?this.user.role?.name:'',
+                                'idLand':r.predioInspeccion.id
+                            };
+                            console.log('payload>>',payload);
                             this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
 
                                 const blob = new Blob([response], { type: 'application/pdf' });
@@ -1432,17 +1315,6 @@ previsualizacion(registroTitularidad: IRegistroTitularidad): void {
                 this._registroTitularidadService.update(registroTitularidad.codTit,{status:6}).subscribe((r2)=>{
 
                     this.resolverPredio();
-                    /*this._ubicacionService.update(this.ubicacion.codUbicacion,{status:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe( (res) =>{
-                        this.updateLocation(this.ubicacion);
-                        this._ticketService.update(this.ticket.codTicket,{codEstTrabajoTicket:TicketStatus.RESUELTO_GESTION_RESULTADOS}).subscribe(r=>{
-
-                            this._router.navigate([
-                            './land-inspection/results-management',
-                            ]);
-
-                        });
-
-                    });*/
 
                 });
 
@@ -1478,11 +1350,11 @@ generarNotificacionSubvaluado(data: IRegistroTitularidad,text): void{
 
     //const notificacionBlob = this.generarPdfPredioSubvaluado(data,text);
     const payload = {
-        "codTicket":this.ticket.codTicket,
+        'codTicket':this.ticket.codTicket,
         'contribuyente':`${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`,
         'codTit' :data.codTit,
         'texto':text
-    }
+    };
 
     this._registroTitularidadService.generarNotificacionSubvaluado(payload).subscribe((response)=>{
 

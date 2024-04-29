@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUbicacion } from '../../interfaces/ubicacion.interface';
 import { ResultsService } from '../../services/results.service';
+import { LandRegistryService } from 'app/modules/admin/lands/land-registry/services/land-registry.service';
+import { Subject, takeUntil } from 'rxjs';
+import { MasterDomain } from 'app/modules/admin/lands/land-registry/interfaces/master-domain.interface';
 
 @Component({
   selector: 'app-dataland',
@@ -22,7 +25,17 @@ export class DatalandComponent implements OnInit {
         numdoor: '158',
         address:'Avenida Larco'
     };
-  constructor(  private _resultsService: ResultsService) { }
+    masterDomain: MasterDomain;
+    private unsubscribeAll: Subject<any> = new Subject<any>();
+  constructor(  private _resultsService: ResultsService,
+    private landRegistryService: LandRegistryService,
+
+  ) {
+    this.landRegistryService.getMasterDomain()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(result => this.masterDomain = result);
+
+   }
 
   ngOnInit(): void {
     //console.log('this.ubicacion>>',this.ubicacion);
@@ -30,7 +43,7 @@ export class DatalandComponent implements OnInit {
     this.datosPredio.hab = this.ubicacion.nomUU;
     this.datosPredio.mz = this.ubicacion.mznUrb;
     this.datosPredio.lote = this.ubicacion.lotUrb;
-    this.datosPredio.type = this.ubicacion.codTipVia;
+    this.datosPredio.type = this.masterDomain.codStreet.find(e=> e.id ===this.ubicacion.codTipVia)?.description;
     this.datosPredio.name = this.ubicacion.nomVia;
     this.datosPredio.numdoor = this.ubicacion.numMun;
     this.datosPredio.address = this.ubicacion.address;

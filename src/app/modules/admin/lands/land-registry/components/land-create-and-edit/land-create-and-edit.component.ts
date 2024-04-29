@@ -46,7 +46,11 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
     private _fuseSplashScreenService: FuseSplashScreenService,
-  ) { }
+  ) {
+
+    this.landRegistryService.getMasterDomain()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe(result => this.masterDomain = result);}
 
   get f(): {[key: string]: AbstractControl} {
     return this.formEdit.controls;
