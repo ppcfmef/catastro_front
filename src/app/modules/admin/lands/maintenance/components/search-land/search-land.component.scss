@@ -9,7 +9,7 @@
 }
 
 .btn_active {
-    @include btn(var(--mef-c-confirm));
+    @include btn(var(--mef-c-btn-secondary));
  }
 :host ::ng-deep {
     .mat-mdc-text-field-wrapper {

@@ -2,14 +2,13 @@
     <app-back-list-land class="mb-6" [backLink]="data"></app-back-list-land>
     <app-search-land (agregarPredioEvent)="onAgregarPredio($event)"></app-search-land>
 
-    <div class="flex">
+    <div class="flex items-end gap-4 my-4">
         <app-upload-support (fileEventEmit)="fileUpload($event)"></app-upload-support>
-        <div class="flex justify-center">
+        <div class="flex p-1">
 
-            <button mat-raised-button class="bg-success" [color]="'primary'" (click)="onGenerateAccumulation()"
+            <button mat-raised-button class="btn_acc"  (click)="onGenerateAccumulation()"
                 *ngIf="landRecords.length>1 && file" [disabled]="disabled">
-                Generar Acumulación
-    
+                    <span class="mr-2"></span>Generar Acumulación
                 <mat-icon svgIcon="heroicons_outline:refresh"></mat-icon>
             </button>
         </div>
@@ -18,5 +17,4 @@
     <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"
         [isRemove]="true" [typeAction]="'leer'" [typeMaintenace]="'Acumulacion'"></app-land-maintenance-table>
 
- 
 </div>

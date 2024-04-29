@@ -1,0 +1,12 @@
+input#file-upload-button {
+    height: 40px !important;
+}
+
+:host ::ng-deep input {
+    input#file-upload-button{
+        height: 40px !important;
+    }
+
+
+
+}

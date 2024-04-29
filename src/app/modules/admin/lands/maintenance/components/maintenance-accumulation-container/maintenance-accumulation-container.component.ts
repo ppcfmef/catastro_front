@@ -39,9 +39,9 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     disabled =false;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     data = {
-      title: "Volver a la Lista de Predios",
-      routerLink: "/land/maintenance/list",
-    }
+      title: 'Volver a la Lista de Predios',
+      routerLink: '/land/maintenance/list',
+    };
   constructor(
     private landMaintenanceService: LandMaintenanceService,
     private _userService: UserService,
