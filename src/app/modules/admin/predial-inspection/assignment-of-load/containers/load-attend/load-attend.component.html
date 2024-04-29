@@ -25,7 +25,7 @@
 
     </div>
     <div class=" mt-2" *ngIf="_fecha">
-        <h2 ><strong>Fecha de de entrega:</strong>  {{_fecha}}</h2>
+        <h2 ><strong>Fecha de de entrega:</strong>  {{_fecha |  date : 'dd/MM/yyyy'}}</h2>
     </div>
 
     <div class="flex w-full pt-4 gap-4 py-3 justify-between mt-4">
