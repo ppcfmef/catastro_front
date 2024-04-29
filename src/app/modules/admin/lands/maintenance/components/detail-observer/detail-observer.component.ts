@@ -9,6 +9,7 @@ import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, pipe, switchMap, takeUntil } from 'rxjs';
 import { DetailObservedService } from '../../services/detail-observed.service';
 import { ResultObservation } from '../../interfaces/observation.interface';
+import { Console } from 'console';
 
 @Component({
     selector: 'detail-observer',
@@ -43,15 +44,17 @@ export class DetailObserverComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
             // Open the drawer MaintenancePage.matDrawer.open();
+            this.#listApplicationMaintenancePage.matDrawer.open();
             this.#activeRouter.params
                 .pipe(takeUntil(this.#unsubscribeAll),
-                switchMap(({id}) => {
+                 switchMap(({id}) => {
                         this.isLoading = true;
                         this.#changeDetectorRef.markForCheck();
                         return this.#detailObservedService.getObservation(id);
                     }))
                     .subscribe(
                     (response) => {
+                        console.log(response, 'detail response');
                         this.observation = response[0];
                         this.isLoading = false;
                         this.#changeDetectorRef.markForCheck();

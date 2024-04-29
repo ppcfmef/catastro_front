@@ -60,7 +60,8 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
     this.changePage.emit( {paginator:this.paginator, sort: this.sort});
   }
 
-  detailObserved(element){
+  detailObserved(element): void {
+    console.log(element, 'elemen');
     this.#router.navigate([`./${element.id}`], {relativeTo: this.#activatedRoute});
     this.selectedRowIndex = element.id;
   }

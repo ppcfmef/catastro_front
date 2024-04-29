@@ -46,6 +46,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { DetailComponent } from '../../security/modules/user-monitoring/components/detail/detail.component';
+import { DetailObserverComponent } from './components/detail-observer/detail-observer.component';
 @NgModule({
   declarations: [
 
@@ -96,6 +98,7 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
     MatDatepickerModule,
     MatNativeDateModule,
     FuseScrollbarModule,
+    DetailObserverComponent,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' } // Configura el idioma español

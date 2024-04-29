@@ -64,7 +64,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       cod:'3',
       option:'Predios Inactivos'
     }
-  ]
+  ];
   constructor(
     private router: Router,
     private cdRef: ChangeDetectorRef,
@@ -96,11 +96,11 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   ngAfterViewInit(): void {
     const queryParams = this.makeQueryParams();
     this.getLandRecords({limit: 10, ...queryParams});
-    this.landRecordService.filtersOptions$.subscribe(option => {
+    this.landRecordService.filtersOptions$.subscribe((option) => {
       if(FuseValidators.isEmptyInputValue(option)){
         this.formFilters.controls.status.setValue('');
       }else{
-        this.formFilters.controls.status.setValue(option);   
+        this.formFilters.controls.status.setValue(option);
       }
       this.onFilterStatus();
     });
@@ -129,12 +129,18 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
         this.lengthOwner = response.count;
         this.landOwner = response.results[0];
         this.landRecord = landRecord;
-        this.showOwnerTable = true;
+        if(this.landOwner){
+            this.showOwnerTable = true;
+        } else {
+            this.showOwnerTable = false;
+        }
+
         this.showLandsMap = true;
         console.log(this.landRecord , 'this.landRecord ');
         console.log(this.landOwner , 'this.landOwner ');
         setTimeout(() => {
-          document.getElementById('dowloandCroquis').scrollIntoView()}, 0.010);
+            document.getElementById('dowloandCroquis').scrollIntoView();
+        }, 0.010);
       }
     );
   }
@@ -169,12 +175,11 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   onFilterStatus(): void {
-    let status = this.formFilters.get('status').value;
+    const status = this.formFilters.get('status').value;
     this.showOwnerTable = false;
     this.showLandsMap = false;
     this.landRecordService.filtersOptionsSelect$.next(status);
-    this.onClickSearch()
-    
+    this.onClickSearch();
     // if (status !== undefined) {
     //   console.log(status, 'status2');
     //   this.onClickSearch(); // Todo: se debe unificar en un solo metodo
@@ -201,8 +206,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onShowLandOwner(landOwner: LandOwner): void{
     this.landOwner = landOwner;
-    setTimeout(() => {document.getElementById('dowloandCroquis').scrollIntoView()}, 0.001);
-    
+    setTimeout(() => document.getElementById('dowloandCroquis').scrollIntoView(), 0.001);
   }
 
   private makeQueryParams(): {[key: string]: string | number} {

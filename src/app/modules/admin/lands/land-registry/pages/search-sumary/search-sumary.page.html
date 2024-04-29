@@ -11,12 +11,12 @@
       <!-- Actions -->
       <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
         <button
-            class="ml-4"
-            mat-flat-button
-            [color]="'primary'"
+            class="ml-4 bg-mef-btn-success rounded-md"
+            mat-raised-button
+            [color]="'accent'"
             (click)="onGoToNewRecord()">
             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-            <span class="ml-2 mr-1">Nuevo registro</span>
+            <span class="ml-2">Nuevo registro</span>
         </button>
       </div>
   </div>
@@ -25,7 +25,7 @@
   <div class="flex flex-col flex-auto p-6 sm:p-10">
     <ng-container *ngIf="renderOption; else owners">
         <div class="flex justify-center pb-10" *ngIf="summary">
-            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
+            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md"
                 *ngFor = "let option of optionsLands"
                 [ngClass]="[option.class, selectedCardId === option.id ? 'itemSelected' : '']"
                 (click)="onSelect(option)">
@@ -39,10 +39,10 @@
             </div>
         </div>
     </ng-container>
-   
+
     <ng-template #owners>
         <div class="flex justify-center pb-10">
-            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md" 
+            <div class="block-icon shadow-sm cursor-pointer select-none hover:shadow-md"
                 *ngFor = "let option of optionOwner"
                 [ngClass]="option.class"
                 (click)="onSelectOwner(option)">

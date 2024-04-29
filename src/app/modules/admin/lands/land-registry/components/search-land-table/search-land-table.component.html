@@ -1,119 +1,125 @@
 <div *ngIf="dataSource" class="mb-8">
-  <h2 class="mb-4 text-2xl font-semibold tracking-tight leading-6">Predios del contribuyente</h2>
-  <table mat-table [dataSource]="dataTable" 
-  matSort matSortStart="desc" matSortActive="creationDate" matSortDirection="desc" matSortDisableClear #landTableSort="matSort" matSortDisableClear
-  class="shadow bg-card w-full">
-    <ng-container matColumnDef="nro">
-        <th mat-header-cell *matHeaderCellDef> Nro.</th>
-        <td mat-cell *matCellDef="let element; let i = index">
-            {{ (pageIndex * pageSize) + i + 1 }}
-        </td>
-    </ng-container>
+  <h2 class="mb-4 text-xl font-semibold tracking-tight leading-6">Predios del Contribuyente</h2>
+  <div
+    class="container"
+    fuseScrollbar
+    [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollY: true}">
+    <table mat-table [dataSource]="dataTable"
+    matSort matSortStart="desc" matSortActive="creationDate" matSortDirection="desc" matSortDisableClear #landTableSort="matSort" matSortDisableClear
+    class="table-base w-full">
+      <ng-container matColumnDef="nro">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="ml-2">Nro.</span></th>
+          <td mat-cell *matCellDef="let element; let i = index">
+              {{ (pageIndex * pageSize) + i + 1 }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="ubigeo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Ubigeo</th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.ubigeo }}
-        </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="landCode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio único (CPU) </th>
-        <td mat-cell *matCellDef="let element" class="font-semibold">
-            {{ element.cup }}
-        </td>
-    </ng-container>
-    
-    <!-- <ng-container class="" matColumnDef="municipalLandCode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio municipal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.cpm }}
-        </td>
-    </ng-container> -->
+      <ng-container matColumnDef="ubigeo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Ubigeo</th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.ubigeo }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="idPlot">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Lote</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.idPlot }}
-        </td>
-    </ng-container>
+      <ng-container matColumnDef="landCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio único (CPU) </th>
+          <td mat-cell *matCellDef="let element" class="font-semibold">
+              {{ element.cup }}
+          </td>
+      </ng-container>
+
+      <!-- <ng-container class="" matColumnDef="municipalLandCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Código de predio municipal</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.cpm }}
+          </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="idPlot">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Lote</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.idPlot }}
+          </td>
+      </ng-container>
 
 
-    <ng-container matColumnDef="idCartographicImg">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Imagen</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.idCartographicImg }}
-        </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="habilitacionName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre habilitacion</th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.habilitacionName }}
-        </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="streetName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre de via </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.streetName }}
-        </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="urbanMza">
-        <th mat-header-cell *matHeaderCellDef> MZA urbana </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.urbanMza }}
-        </td>
-    </ng-container>
+      <ng-container matColumnDef="idCartographicImg">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> ID Imagen</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.idCartographicImg }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="urbanLotNumber">
-        <th mat-header-cell *matHeaderCellDef> Lote urbano </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.urbanLotNumber }}
-        </td>
-    </ng-container>
+      <ng-container matColumnDef="habilitacionName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre habilitacion</th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.habilitacionName }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="roadBlockNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro cuadra </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.roadBlockNumber ?? '-' }}
-        </td>
-    </ng-container>
+      <ng-container matColumnDef="streetName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Nombre de via </th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.streetName }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="municipalNumber">
-        <th mat-header-cell *matHeaderCellDef> Nro Puerta</th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.municipalNumber ?? element.municipalNumberAlt ?? '-'}}        
-        </td>
-    </ng-container>
+      <ng-container matColumnDef="urbanMza">
+          <th mat-header-cell *matHeaderCellDef> MZA urbana </th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.urbanMza }}
+          </td>
+      </ng-container>
 
-    <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Fecha Registro </th>
-        <td mat-cell *matCellDef="let element">
-            {{ element.creationDate | date: 'dd/MM/yyyy' }}
-        </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="map">
-        <th mat-header-cell *matHeaderCellDef>Predios</th>
-        <td mat-cell *matCellDef="let element; let i = index">
-            <ng-container *ngIf="element.hasOwners; else noLandOwner">
-                <button mat-button class="button-style-icons-2"
-                    (click)="onshowLandMap(element)"
-                    matTooltip="ver detalle">
-                    <mat-icon class="mr-2" svgIcon="feather:map-pin"></mat-icon>
-                    Ver detalle
-                    <mat-icon class="ml-4" svgIcon="mat_solid:arrow_forward_ios"></mat-icon>
-                </button>
-            </ng-container>
-            
-        </td>
-    </ng-container>
-    
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <ng-container matColumnDef="urbanLotNumber">
+          <th mat-header-cell *matHeaderCellDef> Lote urbano </th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.urbanLotNumber }}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="roadBlockNumber">
+          <th mat-header-cell *matHeaderCellDef> Nro cuadra </th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.roadBlockNumber ?? '-' }}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="municipalNumber">
+          <th mat-header-cell *matHeaderCellDef> Nro Puerta</th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.municipalNumber ?? element.municipalNumberAlt ?? '-'}}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="creationDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-hide-arrow"> Fecha Registro </th>
+          <td mat-cell *matCellDef="let element">
+              {{ element.creationDate | date: 'dd/MM/yyyy' }}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="map">
+          <th mat-header-cell *matHeaderCellDef>Predios</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+              <!-- <ng-container *ngIf="element.hasOwners; else noLandOwner"> -->
+                  <button mat-button class="button-style-icons-2"
+                      (click)="onshowLandMap(element)"
+                      matTooltip="ver detalle">
+                      <mat-icon class="mr-2" svgIcon="feather:map-pin"></mat-icon>
+                      Ver detalle
+                      <mat-icon class="ml-4" svgIcon="mat_solid:arrow_forward_ios"></mat-icon>
+                  </button>
+              <!-- </ng-container> -->
+
+          </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
   <mat-paginator [length]="length"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
