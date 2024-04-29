@@ -5,3 +5,13 @@
 ::ng-deep .no-hide-arrow .mat-sort-header-arrow {
   color: #fff !important;
 }
+
+.container{
+    @include container();
+  }
+
+:host ::ng-deep {
+    table.table-base {
+        @include table_style(var(--mef-c-header-secondary));
+     }
+  }

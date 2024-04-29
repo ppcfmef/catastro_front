@@ -8,27 +8,31 @@
             <span class="leading-none font-medium text-base mr-2">CPU: </span>
             <span class="leading-none text-base"> {{ landRecord?.cup }}</span>
         </div>
-        <div class="flex items-center">
+        <!-- <div class="flex items-center">
             <mat-icon
                 class="icon-size-5 mr-2"
                 [svgIcon]="'mat_solid:holiday_village'"></mat-icon>
             <span class="leading-none font-medium text-base mr-2">CPM: </span>
             <span class="leading-none text-base">{{ landRecord?.cpm }}</span>
-        </div>
-        <div class="flex items-center">
-            <mat-icon
-                class="icon-size-5 mr-2"
-                [svgIcon]="'mat_solid:person'"></mat-icon>
-            <span class="leading-none font-medium text-lg mr-2">Propietario: </span>
-            <span class="leading-none text-base">{{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname | titlecase }}</span>
-        </div>
-        <div class="flex items-center">
-            <mat-icon
-                class="icon-size-5 mr-2"
-                [svgIcon]="'heroicons_outline:identification'"></mat-icon>
-            <span class="leading-none font-medium text-lg mr-2">DNI: </span>
-            <span class="leading-none text-base">{{ landOwner?.dni }}</span>
-        </div>
+        </div> -->
+        <ng-container *ngIf="landOwner?.dni">
+            <div class="flex items-center">
+                <mat-icon
+                    class="icon-size-5 mr-2"
+                    [svgIcon]="'mat_solid:person'"></mat-icon>
+                <span class="leading-none font-medium text-lg mr-2">Propietario: </span>
+                <span class="leading-none text-base">{{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname | titlecase }}</span>
+            </div>
+
+            <div class="flex items-center">
+                    <mat-icon
+                        class="icon-size-5 mr-2"
+                        [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+                    <span class="leading-none font-medium text-lg mr-2">DNI: </span>
+                    <span class="leading-none text-base">{{ landOwner?.dni }}</span>
+            </div>
+        </ng-container>
+
         <div class="flex items-center">
             <mat-icon
                 class="icon-size-5 mr-2"

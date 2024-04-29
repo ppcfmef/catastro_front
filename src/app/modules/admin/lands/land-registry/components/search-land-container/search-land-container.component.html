@@ -1,7 +1,7 @@
 <div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
   <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-5/12 input-icon-form">
     <mat-label class=" font-semibold">Buscar</mat-label>
-    <input type="text" matInput formControlName="search" 
+    <input type="text" matInput formControlName="search"
            placeholder=" Buscar por CPU -Codigo de predio municipal- ID lote o ID Imagen"
            autocomplete="off">
     <mat-select formControlName="view" matPrefix
@@ -64,10 +64,10 @@
     <app-show-map-point *ngIf="showLandsMap" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner"  ></app-show-map-point>
   </div>
 
-  <div id="dowloandCroquis" class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
+  <div id="dowloandCroquis" class="flex flex-col px-4 w-2/5" *ngIf="landRecord" style="min-height: 400px;">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" class="h-full" ></app-detail-predio>
     <ng-container *ngIf="landRecord.longitude || landRecord.latitude">
-        <button mat-flat-button [color]="'primary'" class="m-8 rounded-md" 
+        <button mat-flat-button [color]="'primary'" class="m-8 rounded-md"
         (click)="onDowloandCroquis()" >
           <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
           <span class="ml-4">CROQUIS</span>

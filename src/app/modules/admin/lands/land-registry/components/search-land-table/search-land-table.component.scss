@@ -2,9 +2,9 @@
 
 @include button-style-icons-2();
 
-.mat-mdc-header-cell {
-  background: #e55e47 !important;
-}
+// .mat-mdc-header-cell {
+//   background: #e55e47 !important;
+// }
 
 .active-tr{
   table tbody tr:hover td{
@@ -16,3 +16,14 @@
 ::ng-deep .no-hide-arrow .mat-sort-header-arrow {
   color: #fff !important;
 }
+
+
+.container{
+    @include container();
+  }
+
+:host ::ng-deep {
+    table.table-base {
+        @include table_style(var(--mef-c-header));
+     }
+  }

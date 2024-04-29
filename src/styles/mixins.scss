@@ -104,31 +104,31 @@
 
 
 @mixin table-border-radius() {
-  table {
-    border-radius: 8px 8px 0 0;
+//   table {
+//     border-radius: 8px 8px 0 0;
 
-  }
+//   }
 
-  table thead tr {
-    th:nth-child(1) {
-      border-radius: 8px 0 0 0;
-    }
+//   table thead tr {
+//     th:nth-child(1) {
+//       border-radius: 8px 0 0 0;
+//     }
 
-    th:last-child {
-      border-radius: 0 8px 0 0;
-    }
+//     th:last-child {
+//       border-radius: 0 8px 0 0;
+//     }
 
-  }
+//   }
 
-  table tbody tr:last-child {
-    td:nth-child(1) {
-      border-radius: 0 0 0 8px;
-    }
+//   table tbody tr:last-child {
+//     td:nth-child(1) {
+//       border-radius: 0 0 0 8px;
+//     }
 
-    td:last-child {
-      border-radius: 0 0 8px 0;
-    }
-  }
+//     td:last-child {
+//       border-radius: 0 0 8px 0;
+//     }
+//   }
 
   /* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
   mat-paginator {

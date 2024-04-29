@@ -20,12 +20,12 @@
     <span class="ml-1">Limpiar</span>
   </button>
 
-  <button mat-button 
+  <button mat-button
         [ngClass]="{'btn_active': cupSelect, 'btn_inactive': !cupSelect}"
-        [disabled]="!cupSelect" 
+        [disabled]="!cupSelect"
         (click)="onClickAgregarPredio()"
     >
-    <mat-icon class="text-white" svgIcon="heroicons_solid:plus-small"></mat-icon>
+    <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
     Agregar Predio
   </button>
 

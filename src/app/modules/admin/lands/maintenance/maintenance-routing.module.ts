@@ -65,7 +65,7 @@ const routes: Routes = [
                 path:':id',
                 component: DetailObserverComponent,
                 canActivate: [NavigationAuthorizationGuard],
-                data: { id: 'gprmain', permissionType: 'read' },
+                // data: { id: 'gprmain', permissionType: 'read' },
             }
         ]
     },

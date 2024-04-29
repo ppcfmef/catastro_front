@@ -73,6 +73,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   onshowLandMap(landRecord: LandRecord): void {
+    console.log(landRecord , 'table land record');
     this.showLandMap.emit(landRecord);
   }
 }
