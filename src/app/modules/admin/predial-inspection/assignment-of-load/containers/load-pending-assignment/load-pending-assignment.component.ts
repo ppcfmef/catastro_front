@@ -174,34 +174,41 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
     }
 
     async assigment(): Promise<void> {
-        this._fuseSplashScreenService.show();
         const rawValue = this.form.getRawValue();
         if (!rawValue.fEntrega) {
-            this._messageProviderService.showSnackError('debe seleccionar fecha de entrega');
+            this._fuseSplashScreenService.show();
+            this._messageProviderService.showSnackError('Dato requerido: Debe seleccionar fecha de entrega');
             this._fuseSplashScreenService.hide();
             return;
         }
         const date = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
-        console.log(date, 'fecha');
         const operator = this.operator.id;
         const nameOperator = `${this.operator.firstName} ${this.operator.lastName}`;
         const workload = this.codLoad;
         const dateLimit = moment(this.form.controls.fEntrega.value).format('DD-MM-YYYY');
         const ubigeo = this._currentUserUbigeo;
-        await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
-            .then(async (result) => {
-                console.log(result, 'result');
-                //this._tableService._updateTable.next(true);
-                await this._messageProviderService.showSnack('Asignado correctamente');
-                this.form.reset();
-                this.redirecto();
-                //window.location.reload();
+        this._messageProviderService.showConfirm('Esta seguro de asignar la carga al operador ' + nameOperator)
+            .afterClosed()
+            .subscribe(async (confirm) => {
+                this._fuseSplashScreenService.show();
+                if (confirm){
+                    await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
+                    .then(async (result) => {
+                        console.log(result, 'result');
+                        //this._tableService._updateTable.next(true);
+                        await this._messageProviderService.showAlert('Asignado correctamente');
+                        this.form.reset();
+                        this.redirecto();
+                        //window.location.reload();
+                        this._fuseSplashScreenService.hide();
+                    })
+                    .catch((error) => {
+                        console.log(error, 'errr');
+                        this._messageProviderService.showSnackError('Error al asignar carga');
+                        window.location.reload();
+                    });
+                }
                 this._fuseSplashScreenService.hide();
-            })
-            .catch((error) => {
-                console.log(error, 'errr');
-                this._messageProviderService.showSnackError('Error al asignar carga');
-                window.location.reload();
             });
 
     }

@@ -25,6 +25,7 @@ import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.com
 import { SelectUbigeoComponent } from './components/select-ubigeo/select-ubigeo.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { FuseAlertModule } from '@fuse/components/alert';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
         MatTabsModule,
         MatSelectModule,
         FuseConfirmationModule,
+        FuseAlertModule
     ],
     exports: [
         CommonModule,

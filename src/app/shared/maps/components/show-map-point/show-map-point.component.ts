@@ -288,7 +288,6 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                         : '150101';
             });
 
-           
             this._changeDetectorRef.markForCheck();
     }
 
@@ -302,18 +301,24 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             }, 0.0010);
         }
         //this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
-   
     }
 
     ngOnChanges(): void {
         if (this.view) {
+            console.log(this.view,'this.view');
             this.addPoints(this.points);
         }
         this.renderMap = this.points.every(point => point.latitude != null || point.longitude != null);
         this._changeDetectorRef.markForCheck();
+        if(this.renderMap) {
+            console.log(this.renderMap, ' volver a reiniciar mapa');
+            setTimeout(() => {
+                this.initializeMap();
+            }, 0.0010);
+        }
         console.log(this.renderMap, 'renderMap onchange');
-        console.log(this.landRecord, 'landRecord onchange')
-        console.log(this.points, 'points onchange')
+        console.log(this.landRecord, 'landRecord onchange');
+        console.log(this.points, 'points onchange');
 
 
     }
@@ -393,7 +398,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
             const basemapGallery = new BasemapGallery({
                 view: this.view,
             });
-            
+
             const baseMapGalleryExpand = new Expand({
                 view: this.view,
                 content: basemapGallery,
@@ -502,7 +507,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                 lineWidth: 0,
                 cellPadding: 2,
             },
-        
+
             body: [
                 [
                     {
@@ -526,19 +531,19 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                     },
                 ],
 
-            
+
                 [
                     { content: `Datos del predio`,
                          styles: { halign: 'left', fontSize: 11,cellPadding: [1,4,4,8] , fontStyle: 'bold'}
-                        
+
                     },
 
                     {
                         content: `Datos del contribuyente`,
                         styles: { halign: 'left', fontSize: 10,cellPadding:[1,4,4,8], fontStyle: 'bold'},
-                      
+
                     },
-                    
+
                 ],
 
                 [
@@ -563,7 +568,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                         styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
                     }
                 ],
-                
+
                 [
                     {
                         content: `Latitud: ${this.landRecord.latitude ? this.landRecord.latitude : ''}`,
@@ -587,7 +592,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
                       styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
                     },
                 ],
-            
+
                 [
                     {
                         content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `,
@@ -650,7 +655,7 @@ export class ShowMapPointComponent implements OnInit, AfterViewInit, OnChanges, 
 
             styles: {
                 overflow: 'hidden',
-                lineWidth: 0,  
+                lineWidth: 0,
                 //lineColor: [217, 216, 216]
             },
             // eslint-disable-next-line @typescript-eslint/no-shadow
