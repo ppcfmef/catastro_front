@@ -100,9 +100,9 @@ img {
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.975);
     width: max-content;
-    height: 750px !important;
+    height:calc(100vh - 250px) !important;
     border-radius: 6px;
-    overflow-y: auto
+    overflow-y: scroll
   }
 //   #fotosElement div {
 //     height: 650px !important;

@@ -126,7 +126,7 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
 
     {
       'id': 'gapsubland',
-      'title': 'Predios Subvaluados',
+      'title': 'Posibles predios subvaluados',
       'subtitle': null,
       'type': 'basic',
       'icon': '',
@@ -138,7 +138,7 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
 
     {
       'id': 'gappointswithoutland',
-      'title': 'Puntos lotes sin predio',
+      'title': 'Posibles predios omisos',
       'subtitle': null,
       'type': 'basic',
       'icon': '',
