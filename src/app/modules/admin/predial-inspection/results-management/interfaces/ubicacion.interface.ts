@@ -6,9 +6,9 @@ export interface IUbicacion{
     codTipVia: string;
     numAlt: string;
     nomAlt: string;
-    codTipoUU: string;
+    codTipoUu: string;
     codUsuario: string;
-    nomUU: string;
+    nomUu: string;
     obsUbicacion: string;
     nomRef: string;
     referencia: string;

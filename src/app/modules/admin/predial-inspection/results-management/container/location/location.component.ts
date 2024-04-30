@@ -355,9 +355,9 @@ resolverPredio(): void{
                     puntoImagen.MZN_URB = this.ubicacion.mznUrb;
                     puntoImagen.LOT_URB = this.ubicacion.lotUrb;
                     puntoImagen.COD_UU = this.ubicacion.codUU;
-                    puntoImagen.TIPO_UU = this.ubicacion.codTipoUU;
+                    puntoImagen.TIPO_UU = this.ubicacion.codTipoUu;
                     puntoImagen.KM = this.ubicacion.km;
-                    puntoImagen.NOM_UU = this.ubicacion.nomUU;
+                    puntoImagen.NOM_UU = this.ubicacion.nomUu;
                     puntoImagen.NOM_VIA = this.ubicacion.nomVia;
                     puntoImagen.COD_PRE = this.predio.codPre;
                     puntoImagen.PISO=this.predio.piso;
@@ -658,9 +658,9 @@ generarNuevaDireccionPuntoImagen(data: IRegistroTitularidad): void {
                   puntoImagen.MZN_URB = this.ubicacion.mznUrb;
                   puntoImagen.LOT_URB = this.ubicacion.lotUrb;
                   puntoImagen.COD_UU = this.ubicacion.codUU;
-                  puntoImagen.TIPO_UU = this.ubicacion.codTipoUU;
+                  puntoImagen.TIPO_UU = this.ubicacion.codTipoUu;
                   puntoImagen.KM = this.ubicacion.km;
-                  puntoImagen.NOM_UU = this.ubicacion.nomUU;
+                  puntoImagen.NOM_UU = this.ubicacion.nomUu;
                   puntoImagen.NOM_VIA = this.ubicacion.nomVia;
                   puntoImagen.COD_PRE = data.predioPadron.cpm;
                   puntoImagen.PISO=     data.predioPadron.floor;
