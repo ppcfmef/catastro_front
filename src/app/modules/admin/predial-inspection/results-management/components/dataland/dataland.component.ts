@@ -38,15 +38,23 @@ export class DatalandComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    //console.log('this.ubicacion>>',this.ubicacion);
-    this.datosPredio.ubigeo = this.ubigeo;
-    this.datosPredio.hab = this.ubicacion.nomUU;
-    this.datosPredio.mz = this.ubicacion.mznUrb;
-    this.datosPredio.lote = this.ubicacion.lotUrb;
-    this.datosPredio.type = this.masterDomain.codStreet.find(e=> e.id ===this.ubicacion.codTipVia)?.description;
-    this.datosPredio.name = this.ubicacion.nomVia;
-    this.datosPredio.numdoor = this.ubicacion.numMun;
-    this.datosPredio.address = this.ubicacion.address;
+    this.landRegistryService.getMasterDomain()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) => {
+        console.log('this.ubicacion>>',this.ubicacion);
+        this.masterDomain = result;
+        this.datosPredio.ubigeo = this.ubigeo;
+        this.datosPredio.hab = `${this.masterDomain.uuType.find(e=> e.id ===this.ubicacion.codTipoUu)?.name} ${this.ubicacion.nomUu}`;
+        this.datosPredio.mz = this.ubicacion.mznUrb;
+        this.datosPredio.lote = this.ubicacion.lotUrb;
+        this.datosPredio.type = this.masterDomain.codStreet.find(e=> e.id ===this.ubicacion.codTipVia)?.name;
+        this.datosPredio.name = this.ubicacion.nomVia;
+        this.datosPredio.numdoor = this.ubicacion.numMun;
+        this.datosPredio.address = this.ubicacion.address;
+
+    });
+
+
     //this._resultsService.setUbicacionData(this.ubicacion);
   }
 
