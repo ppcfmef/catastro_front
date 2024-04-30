@@ -45,7 +45,7 @@
                 </mat-form-field>
             </div>
 
-            <section [hidden]="!user">
+            <section [hidden]="!user ">
                 <app-detail-operador [data]="operator"></app-detail-operador>
                 <div class="flex w-full justify-between my-3">
                     <app-widget *ngFor="let card of cards" [card]="card"></app-widget>
