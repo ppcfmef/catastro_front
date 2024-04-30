@@ -20,7 +20,7 @@ import { ExportUtils } from 'app/shared/utils/export.util';
 })
 export class SubLandComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title='Predios para verificacion';
+    title='Posibles predios subvaluados';
     ubigeo = '040703';
     rowZoom: any;
     typeGapAnalisys = TypeGap.PREDIO_SUBVALUADO;

@@ -21,7 +21,7 @@ import { ManzanaLotesSinPredioService } from '../../services/lotes-sin-predio.se
 })
 export class PointsWithoutLandComponent implements OnInit {
     _unsubscribeAll: Subject<any> = new Subject<any>();
-    title ='Puntos lotes sin predio';
+    title ='Posibles predios omisos';
     ubigeo = '040703';
     rowZoom: any;
     typeGapAnalisys = TypeGap.PUNTOS_LOTE_SIN_PREDIO;
