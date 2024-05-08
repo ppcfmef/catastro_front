@@ -97,9 +97,9 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       municipalNumber: [{ value: this.landMergeRecord?.municipalNumber, disabled:  (this.landMergeRecord?.municipalNumber)?true:disabled }],
       municipalNumberAlt: [{ value: this.landMergeRecord?.municipalNumberAlt, disabled}],
       apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled: (this.landMergeRecord?.apartmentNumber)?true:disabled }],
-      resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled }],
+      resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled },Validators.required],
     //   resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
-      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled: !!this.landMergeRecord?.resolutionType }],
+      resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled: !!this.landMergeRecord?.resolutionType }, Validators.required],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled:(this.landMergeRecord?.latitude)? true:disabled}],
       longitude: [{ value: this.landMergeRecord?.longitude, disabled :(this.landMergeRecord?.longitude)? true:disabled }],
       rangCup:[{ value: this.landMergeRecord?.rangCup, disabled: (this.landMergeRecord?.rangCup)? true:disabled }]
