@@ -90,7 +90,7 @@
 
                 <mat-form-field class="w-[30%]">
                     <mat-label>Tipo de Habilitación</mat-label>
-                    <input matInput type="text" readonly [value]="formEdit.value?.uuType">
+                    <input matInput type="text"  [formControl]="formEdit.get('uuType')">
                     <mat-select formControlName="uuType" class="text-sm">
                         <mat-option *ngFor="let domain of masterDomain.uuType" [value]="domain.id">
                             {{domain.name}}</mat-option>
