@@ -62,5 +62,6 @@ export class LandSummaryTableComponent implements OnInit {
 
   onDownloadDeclaration(landRecord: LandRegistryMap): void {
     this.downloadDeclaration.emit(landRecord);
+    console.log(landRecord, 'download declaration');
   }
 }
