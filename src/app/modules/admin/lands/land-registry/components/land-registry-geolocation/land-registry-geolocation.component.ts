@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable space-before-function-paren */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
     AfterViewInit,
     Component,
@@ -50,6 +54,9 @@ import { LandRecord } from '../../interfaces/land-record.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertLandOwnerComponent } from '../alert-land-owner/alert-land-owner.component';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+moment.locale('es');
 @Component({
     selector: 'app-land-registry-geolocation',
     templateUrl: './land-registry-geolocation.component.html',
@@ -71,7 +78,7 @@ export class LandRegistryGeolocationComponent
     user: User;
     _unsubscribeAll: Subject<any> = new Subject<any>();
     estado = Estado.INICIAR;
-
+    dataUrl: string;
     userUbigeo: string = '010101';
     /*projection: number=32717;*/
     proj4Catalog = 'EPSG';
@@ -450,7 +457,9 @@ export class LandRegistryGeolocationComponent
         private _landRecordService: LandRecordService,
         private _landOwnerService: LandOwnerService,
         public dialog: MatDialog
-    ) {}
+    ) {
+        pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    }
 
     ngOnDestroy(): void {
         this._messageProviderService = null;
@@ -459,9 +468,10 @@ export class LandRegistryGeolocationComponent
     }
 
     ngOnInit(): void {
+        this.loadImage();
         this._landRegistryService
             .getMasterDomain()
-            .subscribe((result) => (this.masterDomain = result));
+            .subscribe(result => this.masterDomain = result);
 
         this._landRegistryMapService.setEstado(Estado.INICIAR);
         this._landRegistryMapService
@@ -579,7 +589,9 @@ export class LandRegistryGeolocationComponent
             });
     }
 
-    ngAfterViewInit(): void {}
+    ngAfterViewInit(): void {
+
+    }
 
     async initializeMap(inputPoints: any[] = []): Promise<void> {
         try {
@@ -753,13 +765,13 @@ export class LandRegistryGeolocationComponent
             });
 
             const layerTematico = this.layersInfo.find(
-                (l) => l.id === 1
+                l => l.id === 1
             )?.featureLayer;
             this.map.add(layerTematico);
 
             this.groupLayers.reverse().map((g) => {
                 const fs = g.children.map(
-                    (c) => this.layersInfo.find((l) => l.id === c)?.featureLayer
+                    c => this.layersInfo.find(l => l.id === c)?.featureLayer
                 );
 
                 const demographicGroupLayer = new GroupLayer({
@@ -821,8 +833,8 @@ export class LandRegistryGeolocationComponent
                                     title: 'Predio',
                                     //container: this.popupDiv,
                                     location: event.mapPoint,
-                                   content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
-                                  });*/
+                                content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
+                                });*/
                             }
                         });
                     }
@@ -947,19 +959,23 @@ export class LandRegistryGeolocationComponent
                                                     resultsLote[0].graphic;
                                                 const layerPredio =
                                                     this.layersInfo.find(
-                                                        (l) => l.id === -1
+                                                        l => l.id === -1
                                                     )?.featureLayer;
                                                 const params = {
+                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     UBIGEO: graphic.attributes[
                                                         'UBIGEO'
                                                     ],
+                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     COD_UU: graphic.attributes[
                                                         'COD_UU'
                                                     ],
+                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     MZN_URB:
                                                         graphic.attributes[
                                                             'MZN_URB'
                                                         ],
+                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     LOT_URB:
                                                         graphic.attributes[
                                                             'LOT_URB'
@@ -1046,7 +1062,7 @@ export class LandRegistryGeolocationComponent
                                                                         data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
                                                                         width: '600px',
                                                                         height:'100%'
-                                                                      });*/
+                                                                    });*/
 
                                                                                 /*dialogRef = this.confirmationService.info(
                                                                         'Ya existe un Titular/Contribuyente, asignado',
@@ -1697,7 +1713,7 @@ export class LandRegistryGeolocationComponent
                     id: "edit",
                     // Sets the icon font used to style the action button
                     className: "esri-icon-zoom-out-magnifying-glass"
-                   };*/
+                };*/
 
                 /*
                 this.view?.popup?.open({
@@ -1706,7 +1722,7 @@ export class LandRegistryGeolocationComponent
                     location: pointGraphic.geometry,
                     content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
                     //actions:[actionEdit]
-                  });*/
+                });*/
 
                 // this.view.popup.alignment = 'top-right';
                 // this.view.popup.collapseEnabled= false;
@@ -1719,7 +1735,7 @@ export class LandRegistryGeolocationComponent
                     id: "zoom-out",
                     // Sets the icon font used to style the action button
                     className: "esri-icon-zoom-out-magnifying-glass"
-                   };
+                };
 */
             }
         } catch (error) {
@@ -1800,6 +1816,11 @@ export class LandRegistryGeolocationComponent
         return resp;
     }
 
+    toTitleCase(text) {
+        return text.replace(/\w\S*/g, function(word) {
+            return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+        });
+    }
     async generatePDF(
         view: any,
         land: LandRegistryMap,
@@ -1812,10 +1833,10 @@ export class LandRegistryGeolocationComponent
             .getDistrictResource(land.ubigeo)
             .toPromise();
         const uuType = land.uuType
-            ? this.masterDomain.uuType.find((e) => e.id === land?.uuType)
+            ? this.masterDomain.uuType.find(e => e.id === land?.uuType)
             : null;
         const streetType = land.uuType
-            ? this.masterDomain.codStreet.find((e) => e.id === land?.streetType)
+            ? this.masterDomain.codStreet.find(e => e.id === land?.streetType)
             : null;
         //console.log('type;;',uuType)
 
@@ -1830,287 +1851,568 @@ export class LandRegistryGeolocationComponent
             );
         }
         setTimeout(async () => {
+
             const screenshot = await view.takeScreenshot({
                 format: 'jpg',
                 quality: 100,
             });
+            // eslint-disable-next-line max-len
+            const name = `${landOwner?.name ? landOwner?.name : ''} ${landOwner?.paternalSurname ? landOwner?.paternalSurname : ''} ${landOwner?.maternalSurname ? landOwner?.maternalSurname : ''} `;
+            const newName = name === '' ? '-' : this.toTitleCase(name);
+            const documentType = {
+                '0': 'S/N',
+                '01': 'DNI',
+                '04': 'CARNET DE EXTRANGERIA',
+                '06': 'RUC',
+                '08': 'SUCESION INTESTADA',
+                '09': 'PASAPORTE'
+            };
 
-            autoTable(doc, {
-                theme: 'grid',
-                styles: {
-                    lineWidth: 0,
-                    overflow: 'linebreak',
+            const originalWidth = 3300; // por ejemplo, 600px
+            const originalHeight = 697; // por ejemplo, 400px
+            // Nuevo ancho deseado
+            const desiredWidth = 150; // Nuevo ancho, por ejemplo, 250px
+            // Calcular el nuevo alto para mantener la proporción
+            const desiredHeight = (desiredWidth / originalWidth) * originalHeight;
+
+            // autoTable(doc, {
+            //     theme: 'grid',
+            //     styles: {
+            //         lineWidth: 0,
+            //         overflow: 'linebreak',
+            //     },
+            //     body: [
+            //         [
+            //             {
+            //                 content:
+            //                     'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO - CATASTRO FISCAL',
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'center',
+            //                     fontStyle: 'bold',
+            //                     fontSize: 16,
+            //                 },
+            //             },
+
+            //             {
+            //                 content: '',
+            //             },
+            //         ],
+            //         [
+            //             {
+            //                 content: `MUNICIPALIDAD DE ${district?.name}  UBIGEO ${land?.ubigeo}`,
+            //                 colSpan: 2,
+            //                 styles: { halign: 'center', fontSize: 14 },
+            //             },
+            //             {
+            //                 content: '',
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content:
+            //                     // eslint-disable-next-line max-len
+            //                     `Yo,${landOwner.name} ${
+            //                         landOwner.paternalSurname
+            //                     } ${landOwner.maternalSurname} ${
+            //                         landOwner.dni
+            //                             ? ', identificado(a) con DNI/RUC Nº' +
+            //                               landOwner.dni
+            //                             : ''
+            //                     } ${
+            //                         landOwner.phone || landOwner.email
+            //                             ? ', con datos de contacto: '
+            //                             : ''
+            //                     }   ${landOwner.phone ? landOwner.phone : ''}${
+            //                         landOwner.email ? ',' + landOwner.email : ''
+            //                     }; en pleno ejercicio de mis derechos ciudadanos `,
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'justify',
+            //                 },
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content:
+            //                     // eslint-disable-next-line max-len
+            //                     `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${
+            //                         uuType ? uuType.name : ''
+            //                     } ${this.getFrase(land.habilitacionName, '')} ${
+            //                         streetType ? ', ' + streetType.name : ' '
+            //                     } ${
+            //                         streetType && land.streetName
+            //                             ? ' ' + land.streetName
+            //                             : ''
+            //                     }  ${this.getFrase(
+            //                         land.urbanMza,
+            //                         ',Manzana '
+            //                     )} ${this.getFrase(
+            //                         land.urbanLotNumber,
+            //                         ',Lote '
+            //                     )} ${this.getFrase(
+            //                         land.block,
+            //                         ',Bloque '
+            //                     )} ${this.getFrase(
+            //                         land.municipalNumber,
+            //                         ',Nro Puerta '
+            //                     )} ${this.getFrase(
+            //                         land.apartmentNumber,
+            //                         ',Nro Dpto '
+            //                     )} ${this.getFrase(
+            //                         land.km,
+            //                         ',Kilometro '
+            //                     )}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'justify',
+            //                 },
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: 'CROQUIS DE UBICACIÓN',
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'center',
+            //                     fontStyle: 'bold',
+            //                     fontSize: 14,
+            //                 },
+            //             },
+            //             {
+            //                 content: '',
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: '',
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'center',
+            //                     minCellHeight: 105,
+            //                 },
+            //             },
+            //             {
+            //                 content: '',
+            //             },
+            //         ],
+
+            //         [
+            //             // eslint-disable-next-line max-len
+            //             {
+            //                 content: ` UBICACIÓN GEOGRÁFIA: ${land.latitude}/${land.longitude}`,
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'center',
+            //                     fontStyle: 'bold',
+            //                     //fontSize: 14,
+            //                 },
+            //             },
+            //         ],
+            //         [
+            //             // eslint-disable-next-line max-len
+            //             {
+            //                 content: land.cup
+            //                     ? `${this.getFrase(land.cup, 'Codigo CPU: ')}`
+            //                     : `  ${this.getFrase(
+            //                           land.idCartographicImg,
+            //                           'Codigo Imagen: '
+            //                       )}`,
+            //                 colSpan: 2,
+            //                 styles: {
+            //                     halign: 'center',
+            //                     fontStyle: 'bold',
+            //                     //fontSize: 14,
+            //                 },
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 // eslint-disable-next-line max-len
+            //                 content:
+            //                     'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedaden la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).',
+            //                 colSpan: 2,
+
+            //                 styles: {
+            //                     halign: 'justify',
+            //                 },
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content:
+            //                     'En señal de conformidad firmo el presente documento.',
+            //                 colSpan: 2,
+            //             },
+
+            //             {
+            //                 content: '',
+            //             },
+            //         ],
+            //         [
+            //             {
+            //                 content: '',
+            //                 styles: {
+            //                     minCellWidth: 100,
+            //                 },
+            //             },
+
+            //             {
+            //                 content: `${this.district?.name},${moment(
+            //                     new Date()
+            //                 ).format('DD/MM/YYYY')}`,
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: '',
+            //                 styles: {
+            //                     minCellWidth: 100,
+            //                 },
+            //             },
+
+            //             {
+            //                 content: 'Firma : ____________________',
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: '',
+            //                 styles: {
+            //                     minCellWidth: 100,
+            //                 },
+            //             },
+
+            //             {
+            //                 content: 'Huella : ',
+            //                 styles: {
+            //                     minCellHeight: 20,
+            //                 },
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: `Operador Plataforma: ${this.user.name}`,
+            //                 colSpan: 2,
+            //             },
+            //         ],
+
+            //         [
+            //             {
+            //                 content: `DNI: ${this.user.dni}`,
+            //                 colSpan: 2,
+            //             },
+            //         ],
+            //         [
+            //             {
+            //                 content: `Cargo: ${this.user.role?.name}`,
+            //                 colSpan: 2,
+            //             },
+            //         ],
+            //     ],
+
+            //     didDrawCell: (data: any) => {
+            //         if (
+            //             data.section === 'body' &&
+            //             data.column.index === 0 &&
+            //             data.row.index === 5
+            //         ) {
+            //             //console.log('data>>',data);
+            //             /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
+            //             doc.addImage(
+            //                 screenshot.dataUrl,
+            //                 'JPEG',
+            //                 data.cell.x + 40,
+            //                 data.cell.y,
+            //                 120,
+            //                 100
+            //             );
+            //         }
+
+            //         if (
+            //             data.section === 'body' &&
+            //             data.column.index === 1 &&
+            //             data.row.index === 11
+            //         ) {
+            //             //console.log('data>>',data);
+            //             doc.rect(data.cell.x + 15, data.cell.y + 5, 30, 30);
+            //         }
+            //     },
+            // });
+
+            // doc.save('Declaración Jurada de Ubicación de Predio.pdf');
+
+            // playground requires you to assign document definition to a variable called dd
+
+        const pdf = {
+            pageMargins: [ 55, 25],
+            pageSize: 'A4',
+            content: [
+
+                {
+                    columns: [
+                        {
+                            width: '30%',
+                            margin: [ 0, 5, 0, 5 ],
+                            image: this.dataUrl,
+                            cover: {
+                                width: desiredWidth,
+                                height: desiredHeight,
+                                valign: 'bottom',
+                                align: 'right',
+                            },
+                        },
+                        {
+                            width: '70%',
+                            stack: [
+                                'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
+                                {text: `MUNICIPALIDAD DE ${ district?.name ? district?.name:''}`, style: 'subheader'},
+                            ],
+                            style: 'title'
+                        },
+                    ]
                 },
-                body: [
-                    [
+                {
+                    columns: [
                         {
-                            content:
-                                'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO - CATASTRO FISCAL',
-                            colSpan: 2,
-                            styles: {
-                                halign: 'center',
-                                fontStyle: 'bold',
-                                fontSize: 16,
-                            },
+                            style: 'p1',
+                            width: '100%',
+                            text: [ 'Yo, ',
+                                    { text: newName , style:'textR'},
+                                    'identificado(a) con DNI/RUC,' ,
+                                    {text:` Nº ${this.landOwner.dni?this.landOwner.dni:'-'}` , style:'textR'} ,
+                                    // eslint-disable-next-line max-len
+                                    landOwner.phone || landOwner.email ? {text:['con datos de contacto:', {text:`Telefono: ${landOwner.phone ? landOwner.phone : '-'} , Email: ${landOwner.email ? landOwner.email : '-'}` , style:'textR'} || ''] , style:'textR'}:''
+                                    // eslint-disable-next-line max-len
+                                    ,
+                                    '; en pleno ejercicio de mis derechos ciudadanos. \n',
+                                ]
+                        }
+                    ]
+                },
+
+                {
+                    columns: [
+                        {
+                            style: 'p2',
+                            width: '100%',
+                            text: [ 'DECLARO BAJO JURAMENTO : Que el predio con dirección ',
+                                    // eslint-disable-next-line max-len
+                                    { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )} ${this.getFrase(land.block,',Bloque ')} ${this.getFrase(land.municipalNumber ,',Nro Puerta ')} ${this.getFrase(land.apartmentNumber,',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}` , style:'textR'} ,
+                                    'se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+                                ]
+                        }
+
+                    ]
+                },
+                {
+                    columns: [
+                        {
+                            style: 'p3',
+                            width: '100%',
+                            text: 'CROQUIS DE UBICACIÓN ' ,
                         },
 
-                        {
-                            content: '',
-                        },
                     ],
-                    [
-                        {
-                            content: `MUNICIPALIDAD DE ${district?.name}  UBIGEO ${land?.ubigeo}`,
-                            colSpan: 2,
-                            styles: { halign: 'center', fontSize: 14 },
-                        },
-                        {
-                            content: '',
-                        },
-                    ],
+                },
+                {
+                    layout: {
+                            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                            hLineWidth: function (i, node) { return  1;},
+                            hLineColor: function (i, node) {return '#94a3b8';},
+                            vLineColor: function (i, node) { return '#94a3b8';},
+                    },
+                    table: {
+                        widths:['30%', '70%'],
+                        body: [
+                                [
+                                    {
+                                        border: [false, false, false, false],
 
-                    [
+                                        table: {
+                                            widths:['100%'],
+                                            heights: [40, 40, 40],
+                                            body: [
+                                                [{
+                                                    border: [false, false, false, true],
+                                                    stack:['Ubigeo \n', {text:`${land?.ubigeo ? land?.ubigeo : '-'}` , style:'cellSub'}], style:'cell'
+                                                }],
+                                                [{
+                                                    border: [false, false, false, true],
+                                                    // eslint-disable-next-line max-len
+                                                    stack:[{text:`${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}`}, {text: ` ${ land.cup ? land.cup : land.idCartographicImg}`, style:'cellSub'}] , style:'cell'
+                                                }],
+                                                [{
+                                                    border: [false, false, false, true],
+                                                    stack:['Latitud \n', {text:`${land.latitude ? land.latitude : '-'}` , style:'cellSub'}], style:'cell'
+                                                }],
+                                                [{
+                                                    border: [false, false, false, true],
+                                                    stack:['Longitud \n', {text:`${land.longitude ? land.longitude : '-'}` , style:'cellSub'}], style:'cell'
+                                                }],
+                                            ]
+                                        },
+                                        layout: {
+                                                hLineWidth: function (i, node) { return  1 ;},
+                                                hLineColor: function (i, node) {
+                                                    return '#94a3b8';
+                                                },
+                                        }
+                                    },
+                                    {
+                                        alignment:'center',
+                                        border: [true, true, true, true],
+                                        image: screenshot.dataUrl,
+                                        cover: { width: 330, height: 300, valign: 'bottom', align: 'right' },
+                                    },
+                                ],
+                            ]
+                    },
+                },
+                {
+                        columns: [
                         {
-                            content:
-                                // eslint-disable-next-line max-len
-                                `Yo,${landOwner.name} ${
-                                    landOwner.paternalSurname
-                                } ${landOwner.maternalSurname} ${
-                                    landOwner.dni
-                                        ? ', identificado(a) con DNI/RUC Nº' +
-                                          landOwner.dni
-                                        : ''
-                                } ${
-                                    landOwner.phone || landOwner.email
-                                        ? ', con datos de contacto: '
-                                        : ''
-                                }   ${landOwner.phone ? landOwner.phone : ''}${
-                                    landOwner.email ? ',' + landOwner.email : ''
-                                }; en pleno ejercicio de mis derechos ciudadanos `,
-                            colSpan: 2,
-                            styles: {
-                                halign: 'justify',
-                            },
-                        },
-                    ],
-
-                    [
-                        {
-                            content:
-                                // eslint-disable-next-line max-len
-                                `DECLARO BAJO JURAMENTO: Que el predio con dirección: ${
-                                    uuType ? uuType.name : ''
-                                } ${this.getFrase(land.habilitacionName, '')} ${
-                                    streetType ? ', ' + streetType.name : ' '
-                                } ${
-                                    streetType && land.streetName
-                                        ? ' ' + land.streetName
-                                        : ''
-                                }  ${this.getFrase(
-                                    land.urbanMza,
-                                    ',Manzana '
-                                )} ${this.getFrase(
-                                    land.urbanLotNumber,
-                                    ',Lote '
-                                )} ${this.getFrase(
-                                    land.block,
-                                    ',Bloque '
-                                )} ${this.getFrase(
-                                    land.municipalNumber,
-                                    ',Nro Puerta '
-                                )} ${this.getFrase(
-                                    land.apartmentNumber,
-                                    ',Nro Dpto '
-                                )} ${this.getFrase(
-                                    land.km,
-                                    ',Kilometro '
-                                )}, se encuentra ubicado tal cual se muestra en el siguiente croquis:`,
-                            colSpan: 2,
-                            styles: {
-                                halign: 'justify',
-                            },
-                        },
-                    ],
-
-                    [
-                        {
-                            content: 'CROQUIS DE UBICACIÓN',
-                            colSpan: 2,
-                            styles: {
-                                halign: 'center',
-                                fontStyle: 'bold',
-                                fontSize: 14,
-                            },
-                        },
-                        {
-                            content: '',
-                        },
-                    ],
-
-                    [
-                        {
-                            content: '',
-                            colSpan: 2,
-                            styles: {
-                                halign: 'center',
-                                minCellHeight: 105,
-                            },
-                        },
-                        {
-                            content: '',
-                        },
-                    ],
-
-                    [
-                        // eslint-disable-next-line max-len
-                        {
-                            content: ` UBICACIÓN GEOGRÁFIA: ${land.latitude}/${land.longitude}`,
-                            colSpan: 2,
-                            styles: {
-                                halign: 'center',
-                                fontStyle: 'bold',
-                                //fontSize: 14,
-                            },
-                        },
-                    ],
-                    [
-                        // eslint-disable-next-line max-len
-                        {
-                            content: land.cup
-                                ? `${this.getFrase(land.cup, 'Codigo CPU: ')}`
-                                : `  ${this.getFrase(
-                                      land.idCartographicImg,
-                                      'Codigo Imagen: '
-                                  )}`,
-                            colSpan: 2,
-                            styles: {
-                                halign: 'center',
-                                fontStyle: 'bold',
-                                //fontSize: 14,
-                            },
-                        },
-                    ],
-
-                    [
-                        {
+                            style: 'p5',
+                            width: '100%',
                             // eslint-disable-next-line max-len
-                            content:
-                                'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedaden la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).',
-                            colSpan: 2,
-
-                            styles: {
-                                halign: 'justify',
-                            },
+                            text: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedad en la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).' ,
                         },
                     ],
-
-                    [
-                        {
-                            content:
-                                'En señal de conformidad firmo el presente documento.',
-                            colSpan: 2,
-                        },
-
-                        {
-                            content: '',
-                        },
-                    ],
-                    [
-                        {
-                            content: '',
-                            styles: {
-                                minCellWidth: 100,
-                            },
-                        },
-
-                        {
-                            content: `${this.district?.name},${moment(
-                                new Date()
-                            ).format('DD/MM/YYYY')}`,
-                        },
-                    ],
-
-                    [
-                        {
-                            content: '',
-                            styles: {
-                                minCellWidth: 100,
-                            },
-                        },
-
-                        {
-                            content: 'Firma : ____________________',
-                        },
-                    ],
-
-                    [
-                        {
-                            content: '',
-                            styles: {
-                                minCellWidth: 100,
-                            },
-                        },
-
-                        {
-                            content: 'Huella : ',
-                            styles: {
-                                minCellHeight: 20,
-                            },
-                        },
-                    ],
-
-                    [
-                        {
-                            content: `Operador Plataforma: ${this.user.name}`,
-                            colSpan: 2,
-                        },
-                    ],
-
-                    [
-                        {
-                            content: `DNI: ${this.user.dni}`,
-                            colSpan: 2,
-                        },
-                    ],
-                    [
-                        {
-                            content: `Cargo: ${this.user.role.name} `,
-                            colSpan: 2,
-                        },
-                    ],
-                ],
-
-                didDrawCell: (data: any) => {
-                    if (
-                        data.section === 'body' &&
-                        data.column.index === 0 &&
-                        data.row.index === 5
-                    ) {
-                        //console.log('data>>',data);
-                        /*console.log('screenshot.dataUrl>>',screenshot.dataUrl);*/
-                        doc.addImage(
-                            screenshot.dataUrl,
-                            'JPEG',
-                            data.cell.x + 40,
-                            data.cell.y,
-                            120,
-                            100
-                        );
-                    }
-
-                    if (
-                        data.section === 'body' &&
-                        data.column.index === 1 &&
-                        data.row.index === 11
-                    ) {
-                        //console.log('data>>',data);
-                        doc.rect(data.cell.x + 15, data.cell.y + 5, 30, 30);
-                    }
                 },
-            });
+                {
+                        columns: [
+                        {
+                            style: 'p3',
+                            bold: false,
+                            width: '100%',
+                            text: 'En señal de conformidad firmo el presente documento.' ,
+                        },
+                    ],
+                },
+                {
+                        columns: [
+                        {
+                            margin: [ 0, 15, 0, 10 ],
+                            bold: false,
+                            width: '100%',
+                            text: `${this.toTitleCase(this.district?.name)}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
+                        },
+                    ],
+                },
+                {
+                        columns: [
+                        {
 
-            doc.save('Declaración Jurada de Ubicación de Predio.pdf');
-        }, 2000);
+                        margin: [ 0, 5, 0, 10 ],
+                        width: '50%',
+                        alignment:'center',
+                        table: {
+                                    heights:[80],
+                                    widths:[150,5, 70],
+                                    body: [
+                                            [{text:'', border: [false, false, false, false]}, {text:'', border: [false, false, false, false]}, ''],
+                                            // eslint-disable-next-line max-len
+                                            [{text:'Firma', border: [false, true, false, false], style:'textF'},{text:'', border: [false, false, false, false]}, {text:'Huella', border: [false, true, false, false],style:'textF'}],
+                                        ]
+                                },
+                        },
+                        {
+                        layout:'noBorders',
+                        margin: [ 55, 75, 0, 0],
+                        style:'tableU',
+                        width: '*',
+                        table: {
+                                    widths:[32,1, '*'],
+                                    body: [
+                                            [ {text:'Usuario'}, ':', {text:`${this.user.name ? this.user.name : '-'}`,}],
+                                            [ {text:'DNI',},':', {text:`${this.user.dni ? this.user.dni : '-'}`,}],
+                                            [ {text:'Cargo',}, ':' , {text:`${this.user.role?.name ? this.user.role?.name : '-'}`,}],
+                                        ]
+                                },
+                        },
+                    ],
+                },
+
+            ],
+            styles: {
+                title: {
+                    fontSize: 13,
+                    bold: true,
+                    alignment:'center',
+                },
+                subheader: {
+                    bold: false,
+                    margin: [ 0, 8, 0, 0 ],
+                    fontSize: 11,
+                },
+
+                p1: {
+
+                margin: [ 0, 25, 0, 10 ],
+                alignment:'justify',
+                lineHeight:1.3
+                },
+                textR: {
+                bold: true,
+                },
+
+                p2: {
+                    lineHeight:1.3,
+                    alignment:'justify',
+                    margin: [ 0, 0, 0, 10 ],
+                },
+
+                p3: {
+                    bold: true,
+                    margin: [ 0, 4, 0,5],
+                },
+                p4:{
+                    margin: [ 0, 40, 0, 20 ],
+                },
+
+                p5:{
+
+                margin: [ 0, 15, 0, 10 ],
+                alignment:'justify',
+                lineHeight:1.3
+                },
+
+                cell : {
+                margin: [ 0, 20, 0, 20 ],
+                },
+
+                cellSub: {
+                margin: [ 0, 3, 0,0 ],
+                bold: true,
+                },
+                tableU:{
+                    fontSize: 9,
+                    alignment:'rigth',
+                },
+                textF: {
+                margin: [ 0, 5, 0, 0 ],
+                },
+
+            },
+            defaultStyle: {
+                columnGap: 10,
+                fontSize: 11,
+                color:'#1e293b'
+            }
+
+        };
+        pdfMake.createPdf(pdf).download('Declaración Jurada de Ubicación de Predio.pdf');
+
+    }, 2000);
     }
 
     async saveNewPointGestionPredio(): Promise<void> {
@@ -2205,7 +2507,7 @@ export class LandRegistryGeolocationComponent
             const responseJson = await response.json();
             console.log('responseJson>>', responseJson);
             const layerTematico = this.layersInfo.find(
-                (l) => l.id === 1
+                l => l.id === 1
             )?.featureLayer;
             const query = layerTematico.createQuery();
             query.where = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  AND LOT_URB = '${this.lote.LOT_URB}' and COD_UU = '${this.lote.COD_UU}'`;
@@ -2392,6 +2694,31 @@ export class LandRegistryGeolocationComponent
             } else {
                 this.view.goTo({ target: r.geometry }); //= r.geometry.extent.center;
             }
+        }
+    }
+
+    getImageDataURL(path): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = (): any => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                const dataURL = canvas.toDataURL('image/png');
+                resolve(dataURL);
+            };
+            img.onerror = reject;
+            img.src = path;
+        });
+    }
+
+    async loadImage(): Promise<void> {
+        try {
+            this.dataUrl = await this.getImageDataURL('assets/images/logo/logo_mef.jpg');
+        } catch (error) {
+            console.error('Error loading the image:', error);
         }
     }
 }
