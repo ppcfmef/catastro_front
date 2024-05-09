@@ -232,7 +232,7 @@ export class LandRegistryGeolocationComponent
                 type: 'class-breaks', // autocasts as new UniqueValueRenderer()
                 field: 'ESTADO_INS',
                 legendOptions: {
-                    title: 'Estado',
+                    title: " ",
                   },
 
                 classBreakInfos: [
