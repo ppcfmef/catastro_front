@@ -127,8 +127,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   saveLand(): void {
-    if(this.formEdit.valid) {
 
+    if(this.formEdit.valid) {
         // Habilitar todos los campos deshabilitados en el formulario
         Object.keys(this.formEdit.controls).forEach((controlName) => {
         this.formEdit.get(controlName).enable();
@@ -150,9 +150,14 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
         }
 
     }else {
+        // eslint-disable-next-line max-len
+        const message = !this.formEdit.get('resolutionType').value && !this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento y Nro. Doc. Sustento.'
+        :!this.formEdit.get('resolutionType').value ? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento'
+        :!this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Nro. Doc. Sustento' : '';
+
         this.confirmationService.error(
         'Registro de predio',
-        'Error al registrar el predio, intente nuevamente'
+        `${message}.`
         );
     }
     }
