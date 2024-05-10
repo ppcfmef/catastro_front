@@ -2,9 +2,9 @@
   <mat-form-field class="w-100">
     <input matInput placeholder=" Buscar por Código de predio único (*) " [matAutocomplete]="auto"
       formControlName="search" (keyup)="onChangeSearchPredio($event)">
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)='onSelectedPredio($event)'>
-      <mat-option *ngFor="let option of landRecords " [value]="option.cpm">
-        <b><small>{{option.cpm}}|{{option.department}} - {{option.habilitacionName}}</small></b>
+    <mat-autocomplete  [displayWith]="displayFn" #auto="matAutocomplete" (optionSelected)='onSelectedPredio($event)' >
+      <mat-option *ngFor="let option of landRecords " [value]="option">
+        <b><small>{{option.cup}}|{{option.department}} - {{option.habilitacionName}}</small></b>
         <small> {{option.streetName}}</small>
       </mat-option>
     </mat-autocomplete>

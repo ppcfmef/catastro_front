@@ -31,7 +31,7 @@ import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandMapInModel } from '../../models/land-map-in.model';
 import { LandRegistryMapModel } from '../../models/land-registry-map.model';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
-
+import { environment } from 'environments/environment';
 import { arcgisToGeoJSON } from '@esri/arcgis-to-geojson-utils';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { FormUtils } from 'app/shared/utils/form.utils';
@@ -56,6 +56,7 @@ import { AlertLandOwnerComponent } from '../alert-land-owner/alert-land-owner.co
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
 moment.locale('es');
 @Component({
     selector: 'app-land-registry-geolocation',
@@ -68,6 +69,7 @@ export class LandRegistryGeolocationComponent
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+
     apiKey =
         'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9';
     masterDomain: MasterDomain;
@@ -188,7 +190,7 @@ export class LandRegistryGeolocationComponent
             id: -1,
             idServer: 0,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: 'ESTADO=1',
@@ -204,7 +206,7 @@ export class LandRegistryGeolocationComponent
             id: 0,
             idServer: 1,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 1,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -219,7 +221,7 @@ export class LandRegistryGeolocationComponent
             id: 1,
             idServer: 5,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer',
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -290,7 +292,7 @@ export class LandRegistryGeolocationComponent
             idServer: 2,
 
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -322,7 +324,7 @@ export class LandRegistryGeolocationComponent
             id: 3,
             idServer: 9,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -356,7 +358,7 @@ export class LandRegistryGeolocationComponent
             id: 4,
             idServer: 6,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -372,7 +374,8 @@ export class LandRegistryGeolocationComponent
             id: 9,
             idServer: 0,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
+            `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
+
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -388,7 +391,9 @@ export class LandRegistryGeolocationComponent
             id: 10,
             idServer: 1,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/CARTO_ACT/MapServer',
+            `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
+
+
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -404,7 +409,7 @@ export class LandRegistryGeolocationComponent
             id: 11,
             idServer: 0,
             urlBase:
-                'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer',
+            `${environment.apiUrlArcGisServer}/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -418,6 +423,7 @@ export class LandRegistryGeolocationComponent
 
     //urlSearchDistrito = 'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/5';
     urlSearchZonaUrbana =
+
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/2';
     urlSearchDirecciones =
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/0';
@@ -432,6 +438,7 @@ export class LandRegistryGeolocationComponent
         'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer';
 
     urlSearchDistrito =
+
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_TEMATICA_INEI/MapServer/7';
     featureZonaUrbana: any;
     featureDistrito: any;
