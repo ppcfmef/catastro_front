@@ -60,6 +60,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((result) => {
         this.masterDomain = result;
+        console.log(result , 'resultDomian ');
     });
   }
 
