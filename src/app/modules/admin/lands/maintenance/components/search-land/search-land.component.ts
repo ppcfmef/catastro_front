@@ -55,14 +55,20 @@ export class SearchLandComponent implements OnInit {
     }
     onSelectedPredio(event: any): void{
         console.log('event>>',event);
-        this.cupSelect=event.option.value;
+        this.cupSelect=event.option.value.id;
+    }
+
+    displayFn(option: any): string {
+        console.log(option, 'opt')
+        return option && option.cup ? option.cup : '';
+
     }
 
 
     onClickAgregarPredio(): void{
 
         if(this.cupSelect){
-            const filterRawValue={cpm:this.cupSelect,ubigeo:this.ubigeo};
+            const filterRawValue={id:this.cupSelect,ubigeo:this.ubigeo};
             const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
             this._landMaintenanceService.getList(queryParams)
                .toPromise()

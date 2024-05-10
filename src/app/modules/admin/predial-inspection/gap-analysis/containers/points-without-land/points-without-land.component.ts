@@ -131,7 +131,7 @@ export class PointsWithoutLandComponent implements OnInit {
                 type: 'class-breaks', // autocasts as new UniqueValueRenderer()
                 field: 'ESTADO_INS',
                 legendOptions: {
-                    title: 'Estado',
+                    title: " ",
                   },
 
                 classBreakInfos: [
