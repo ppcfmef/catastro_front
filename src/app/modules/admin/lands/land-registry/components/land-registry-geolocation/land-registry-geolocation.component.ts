@@ -221,7 +221,7 @@ export class LandRegistryGeolocationComponent
             id: 1,
             idServer: 5,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -544,13 +544,19 @@ export class LandRegistryGeolocationComponent
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: LandRegistryMap) => {
                 const _landRegistryMapModel = new LandRegistryMapModel(result);
+                console.log('_landRegistryMapModel>>>',_landRegistryMapModel);
 
-                if (_landRegistryMapModel.idPlot) {
+                /*if (_landRegistryMapModel.idPlot) {
                     this.saveLandRegistryMap(_landRegistryMapModel);
                 } else if (_landRegistryMapModel.idCartographicImg) {
                     this.updateLandRegistryMap(_landRegistryMapModel);
-                }
+                }*/
 
+                if (_landRegistryMapModel.idCartographicImg) {
+                    this.updateLandRegistryMap(_landRegistryMapModel);}
+                else if (_landRegistryMapModel){
+                    this.saveLandRegistryMap(_landRegistryMapModel);
+                }
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
             });
 
@@ -1087,6 +1093,10 @@ export class LandRegistryGeolocationComponent
                                                                                                 option ===
                                                                                                 'confirmed'
                                                                                             ) {
+
+                                                                                                graphic =
+                                                                                                results[0].graphic;
+
                                                                                                 graphic.attributes[
                                                                                                     'COORD_X'
                                                                                                 ] =
@@ -2516,6 +2526,7 @@ export class LandRegistryGeolocationComponent
             const layerTematico = this.layersInfo.find(
                 l => l.id === 1
             )?.featureLayer;
+
             const query = layerTematico.createQuery();
             query.where = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  AND LOT_URB = '${this.lote.LOT_URB}' and COD_UU = '${this.lote.COD_UU}'`;
 
