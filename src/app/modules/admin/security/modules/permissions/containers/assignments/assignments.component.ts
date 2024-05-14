@@ -81,7 +81,13 @@ export class AssignmentsComponent implements OnInit {
             this.confirmationService.success(
                 'Registro de Role y Permiso',
                 'Se guardo el registro correctamente'
-            );
+            )
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'confirmed') {
+                    this._router.navigate(['../'], {relativeTo: this._activatedRoute});
+                }
+            });
         } else {
             this.editForm.markAllAsTouched();
             this.confirmationService.error(
@@ -101,6 +107,7 @@ export class AssignmentsComponent implements OnInit {
 
     executeTransactionByPermission(payload): Observable<any> {
         if (payload?.id) {
+            console.log('here');
             return this._permissionService.updatePermissionById(payload.id, payload);
         }
         return this._permissionService.createPermission(payload);
