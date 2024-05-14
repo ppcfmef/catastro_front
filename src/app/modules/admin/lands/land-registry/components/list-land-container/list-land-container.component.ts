@@ -60,7 +60,6 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe(
       (result) => {
-        console.log('result CombinaLatest>>',result);
         const ownerResult = result[0];
         const registerLand = result[1];
         if (ownerResult === null) {
@@ -73,11 +72,9 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
           this.landOwnerId = ownerResult?.id;
         }
         else {
-            console.log('ownerResult>>',ownerResult);
           this.landOwnerId = registerLand?.owner;
         }
         if (this.landOwnerId && ownerResult) {
-          console.log('landOwnerId>>',this.landOwnerId);
           const queryParams = CommonUtils.deleteKeysNullInObject( { limit: this.defaultTableLimit , ubigeo:this.ubigeo });
 
           if (this.landId) {
@@ -113,14 +110,11 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
 
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     const ownerFilter = { owner: this.landOwnerId };
-    console.log('ownerFilter',ownerFilter);
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
     //const queryParams = { limit, offset, ...ownerFilter };
 
-
-    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit });
-    console.log(queryParams, 'queryParams');
+    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset });
     this.landRegistryService
     .getLandbyOwner(ownerFilter.owner, queryParams)
     .toPromise()
