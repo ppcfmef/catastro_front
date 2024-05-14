@@ -2456,6 +2456,8 @@ export class LandRegistryGeolocationComponent
         });
     }
 
+
+
     async loadImage(): Promise<void> {
         try {
             this.dataUrl = await this.getImageDataURL('assets/images/logo/logo_mef.jpg');
