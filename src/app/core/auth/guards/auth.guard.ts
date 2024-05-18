@@ -49,8 +49,15 @@ export class AuthGuard implements CanMatch
         return this._authService.check().pipe(
             switchMap((authenticated) => {
 
+                // If the user is authenticated and trying to access 'sign-in'...
+                if (authenticated && segments.length > 0 && segments[0].path === 'sign-in') {
+                    // Redirect to 'home'
+                    return of(this._router.createUrlTree(['/home']));
+                }
+
+
                 // If the user is not authenticated...
-                if ( !authenticated )
+                else if ( !authenticated )
                 {
                     // Redirect to the sign-in page with a redirectUrl param
                     const redirectURL = `/${segments.join('/')}`;
