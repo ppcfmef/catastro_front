@@ -20,48 +20,47 @@ export class ResultsComponent implements OnInit {
     tabIndex=0;
   displayedColumns: string[] = ['nro', 'codTicket', 'tipoBrecha', 'fecha', 'actions'];
   user: User;
-  dataSource = [
-    {
-      nro: 1,
-      ticket: 125,
-      tipoBrecha: 'Punto image',
-      fechaBrecha: '30/05/2023',
-      direccion: 'Calle San Juan de Miraflores 123',
-      fecha: 'Fecha 1',
-    },
-    {
-      nro: 2,
-      ticket: 126,
-      tipoBrecha: 'Punto image',
-      fechaBrecha: '30/05/2023',
-      direccion: 'Calle San Juan de Miraflores 124',
-      fecha: 'Fecha 2',
-    },
-    {
-      nro: 3,
-      ticket: 127,
-      tipoBrecha: 'Punto image',
-      fechaBrecha: '30/05/2023',
-      direccion: 'Calle San Juan de Miraflores 125',
-      fecha: 'Fecha 3',
-    },
-    {
-      nro: 4,
-      ticket: 128,
-      tipoBrecha: 'Punto image',
-      fechaBrecha: '30/05/2023',
-      direccion: 'Calle San Juan de Miraflores 126',
-      fecha: 'Fecha 4',
-    },
-    {
-      nro: 5,
-      ticket: 129,
-      tipoBrecha: 'Punto image',
-      fechaBrecha: '30/05/2023',
-      direccion: 'Calle San Juan de Miraflores 127',
-      fecha: 'Fecha 5',
-    },
-  ];
+
+//       nro: 1,
+//       ticket: 125,
+//       tipoBrecha: 'Punto image',
+//       fechaBrecha: '30/05/2023',
+//       direccion: 'Calle San Juan de Miraflores 123',
+//       fecha: 'Fecha 1',
+//     },
+//     {
+//       nro: 2,
+//       ticket: 126,
+//       tipoBrecha: 'Punto image',
+//       fechaBrecha: '30/05/2023',
+//       direccion: 'Calle San Juan de Miraflores 124',
+//       fecha: 'Fecha 2',
+//     },
+//     {
+//       nro: 3,
+//       ticket: 127,
+//       tipoBrecha: 'Punto image',
+//       fechaBrecha: '30/05/2023',
+//       direccion: 'Calle San Juan de Miraflores 125',
+//       fecha: 'Fecha 3',
+//     },
+//     {
+//       nro: 4,
+//       ticket: 128,
+//       tipoBrecha: 'Punto image',
+//       fechaBrecha: '30/05/2023',
+//       direccion: 'Calle San Juan de Miraflores 126',
+//       fecha: 'Fecha 4',
+//     },
+//     {
+//       nro: 5,
+//       ticket: 129,
+//       tipoBrecha: 'Punto image',
+//       fechaBrecha: '30/05/2023',
+//       direccion: 'Calle San Juan de Miraflores 127',
+//       fecha: 'Fecha 5',
+//     },
+//   ];
 
   dataSourcePendiente=[];
   dataSourceObservado=[];
@@ -73,6 +72,8 @@ export class ResultsComponent implements OnInit {
   queryParams: any;
   ubigeo: string;
   pageSize = 5;
+  pageIndex = 0;
+
 
   constructor(
     private _route: Router,
@@ -86,7 +87,6 @@ export class ResultsComponent implements OnInit {
         const isAdmin =localStorage.getItem('isAdmin') ==='true'? true: false;
 
             this._resultService.getUbigeo().subscribe((ubigeo)=>{
-                console.log('results ubigeo>>>',ubigeo);
                 if (ubigeo){
 
                     this.ubigeo= ubigeo;
@@ -172,7 +172,7 @@ export class ResultsComponent implements OnInit {
     const filterRawValue = {
         codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS, ...this.queryParams
     };
-    console.log('filterRawValue',filterRawValue);
+
     /*this.getData(filterRawValue,this.dataSourcePendiente,this.tablePendienteLength);*/
     const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
 
@@ -282,18 +282,13 @@ export class ResultsComponent implements OnInit {
 onChangePagePendiente(
     paginator: MatPaginator | { pageSize: number; pageIndex: number }
 ): void {
-    //console.log('paginator', paginator);
-    const limit = paginator.pageSize;
-    const offset = limit * paginator.pageIndex;
+    this.queryParams.limit = paginator.pageSize;
+    this.queryParams.offset = (paginator.pageIndex * paginator.pageSize);
     const filterRawValue = {
-        limit,
-        offset,
         codEstTrabajoTicket: TicketStatus.PENDIENTE_GESTION_RESULTADOS,
         ...this.queryParams
     };
-
     const queryParams = CommonUtils.deleteKeysNullInObject(filterRawValue);
-
     this._tickerService.getList2(queryParams).subscribe( (res: any)=>{
 
       this.dataSourcePendiente =res.results.map((r: ITicket)=>({
@@ -313,12 +308,9 @@ onChangePagePendiente(
  onChangePageAceptado(
     paginator: MatPaginator | { pageSize: number; pageIndex: number }
 ): void {
-    console.log('paginator', paginator);
-    const limit = paginator.pageSize;
-    const offset = limit * paginator.pageIndex;
+    this.queryParams.limit = paginator.pageSize;
+    this.queryParams.offset = (paginator.pageIndex * paginator.pageSize);
     const filterRawValue = {
-        limit,
-        offset,
         codEstTrabajoTicket: TicketStatus.RESUELTO_GESTION_RESULTADOS,
         ...this.queryParams
     };
@@ -344,11 +336,9 @@ onChangePagePendiente(
     paginator: MatPaginator | { pageSize: number; pageIndex: number }
 ): void {
 
-    const limit = paginator.pageSize;
-    const offset = limit * paginator.pageIndex;
+    this.queryParams.limit = paginator.pageSize;
+    this.queryParams.offset = (paginator.pageIndex * paginator.pageSize);
     const filterRawValue = {
-        limit,
-        offset,
         codEstTrabajoTicket: TicketStatus.OBSERVADO_GESTION_RESULTADOS,
         ...this.queryParams
     };

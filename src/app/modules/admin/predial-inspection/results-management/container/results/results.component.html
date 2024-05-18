@@ -15,11 +15,6 @@
 
 
         </div>
-
-
-
-
-
         <button mat-button (click)="exportDataToExcel()">
             <mat-icon class="text-white height mr-2" svgIcon="mat_solid:download"></mat-icon>
             Descargar Excel
@@ -31,19 +26,19 @@
             <mat-tab label="Pendiente">
                 <app-table-manageresult [dataTable]="dataSourcePendiente" [colums]="displayedColumns"
                     (action)="onZoom($event)" [length]="tablePendienteLength"
-                    (changePage)="onChangePagePendiente($event)" [pageSize]="pageSize">
+                    (changePage)="onChangePagePendiente($event)">
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Observado">
                 <app-table-manageresult [dataTable]="dataSourceObservado" [colums]="displayedColumns"
                     (action)="onZoom($event)" [length]="tableObservadoLength"
-                    (changePage)="onChangePageObservado($event)" [pageSize]="pageSize">
+                    (changePage)="onChangePageObservado($event)" >
                 </app-table-manageresult>
             </mat-tab>
             <mat-tab label="Terminado">
                 <app-table-manageresult [dataTable]="dataSourceAceptado" [colums]="displayedColumns"
                     (action)="onZoom($event)" [length]="tableAceptadoLength" (changePage)="onChangePageAceptado($event)"
-                    [pageSize]="pageSize">
+                    >
                 </app-table-manageresult>
             </mat-tab>
         </mat-tab-group>
