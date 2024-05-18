@@ -10,8 +10,6 @@ import { MatPaginator } from '@angular/material/paginator';
 
 @Component({selector: 'app-table-manageresult', templateUrl: './table.component.html', styleUrls: ['./table.component.scss']})
 export class TableComponent implements OnInit {
-    @Input()pageIndex = 0;
-    @Input()pageSize = 5;
     @Input() length: number=0;
     @Output()
     public action: EventEmitter < TableActions > = new EventEmitter();
@@ -19,7 +17,8 @@ export class TableComponent implements OnInit {
     @Output() refreshPage: EventEmitter<any> = new EventEmitter();
     dataSource;
     displayedColumns;
-    pageSizeOptions = [1, 5, 10, 25, 50, 100, 250, 500];
+    pageIndex = 0;
+    pageSize = 5;
     @Input()set dataTable(data: any) {
         this.dataSource = data;
     }
@@ -29,6 +28,7 @@ export class TableComponent implements OnInit {
     }
 
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     constructor() {}
 
     ngOnInit(): void {}
@@ -40,8 +40,9 @@ export class TableComponent implements OnInit {
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
         this.changePage.emit(paginator);
-      }
-      onRefreshPage(): void {
+        console.log(paginator, 'paginator2');
+    }
+    onRefreshPage(): void {
         this.refreshPage.emit();
-      }
+    }
 }

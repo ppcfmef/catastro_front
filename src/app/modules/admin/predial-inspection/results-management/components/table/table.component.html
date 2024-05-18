@@ -1,62 +1,65 @@
-<table mat-table [dataSource]="dataSource" class="table-list w-full">
-    <!-- Cabecera de la tabla -->
-    <!--<ng-container matColumnDef="nro">
-      <th mat-header-cell *matHeaderCellDef > Nro. </th>
-      <td mat-cell *matCellDef="let element"  > {{ element.nro }} </td>
-    </ng-container>
-  -->
-    <ng-container matColumnDef="nro">
-      <th mat-header-cell *matHeaderCellDef>Nro.</th>
-        <td mat-cell *matCellDef="let element; let i = index" class="text-center">
-            {{ (pageIndex * pageSize) + i + 1 }}
-        </td>
-  </ng-container>
-
-    <ng-container matColumnDef="codTicket">
-      <th mat-header-cell *matHeaderCellDef > Ticket </th>
-      <td mat-cell *matCellDef="let element"  > {{ element.codTicket }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="tipoBrecha">
-      <th mat-header-cell *matHeaderCellDef  > Tipo Brecha </th>
-      <td mat-cell *matCellDef="let element" colspan="2"  >
-        <!-- Tabla anidada -->
-        <table  class="w-full">
-          <tr>
-            <td>{{ element.tipoBrecha }}</td>
-            <td>{{ element.fechaBrecha | date:'dd/MM/yyyy' }}</td>
-          </tr>
-          <tr>
-            <td colspan="2"> <div class="text-domicilio">
-                {{ element.direccion }}
-            </div></td>
-          </tr>
-        </table>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="fecha">
-      <th mat-header-cell *matHeaderCellDef  > Fecha </th>
-      <td mat-cell *matCellDef="let element" style="display: none;"></td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element"  >
-            <button matTooltip="Ver" (click)="rowTicket(element)">
-                <mat-icon svgIcon="zoom_in" class="blue-icon"></mat-icon>
-            </button>
-        </td>
+<div class="container">
+    <table mat-table [dataSource]="dataSource" class="table-list w-full">
+        <!-- Cabecera de la tabla -->
+        <!--<ng-container matColumnDef="nro">
+          <th mat-header-cell *matHeaderCellDef > Nro. </th>
+          <td mat-cell *matCellDef="let element"  > {{ element.nro }} </td>
+        </ng-container>
+      -->
+        <ng-container matColumnDef="nro">
+          <th mat-header-cell *matHeaderCellDef>Nro.</th>
+            <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+                {{ (pageIndex * pageSize) + i + 1 }}
+            </td>
       </ng-container>
 
-    <!-- Filas de la tabla -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+        <ng-container matColumnDef="codTicket">
+          <th mat-header-cell *matHeaderCellDef > Ticket </th>
+          <td mat-cell *matCellDef="let element"  > {{ element.codTicket }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoBrecha">
+          <th mat-header-cell *matHeaderCellDef  > Tipo Brecha </th>
+          <td mat-cell *matCellDef="let element" colspan="2"  >
+            <!-- Tabla anidada -->
+            <table  class="w-full">
+              <tr>
+                <td>{{ element.tipoBrecha }}</td>
+                <td>{{ element.fechaBrecha | date:'dd/MM/yyyy' }}</td>
+              </tr>
+              <tr>
+                <td colspan="2"> <div class="text-domicilio">
+                    {{ element.direccion }}
+                </div></td>
+              </tr>
+            </table>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef  > Fecha </th>
+          <td mat-cell *matCellDef="let element" style="display: none;"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element"  >
+                <button matTooltip="Ver" (click)="rowTicket(element)">
+                    <mat-icon svgIcon="zoom_in" class="blue-icon"></mat-icon>
+                </button>
+            </td>
+          </ng-container>
+
+        <!-- Filas de la tabla -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>
+
   <mat-paginator  [length]="length"
   [pageIndex]="pageIndex"
   [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions"
+  [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"
   (page)="onPage($event)"
   >
   </mat-paginator>

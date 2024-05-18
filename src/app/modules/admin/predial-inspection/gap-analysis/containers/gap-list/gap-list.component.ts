@@ -26,7 +26,7 @@ export class GapListComponent implements OnInit , OnDestroy{
         {
             type: TypeGap.PUNTOS_LOTE_SIN_PREDIO,
             title: 'POSIBLES PREDIOS OMISOS',
-            numb: '120',
+            numb: '0',
             color: '#DE3F43',
             pathBase: './points-without-land',
             path: `./points-without-land/${this.ubigeo}`,
