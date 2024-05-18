@@ -1026,7 +1026,6 @@ generarNotificacion(r: IRegistroTitularidad): void{
                     .then((text2) => {
 
 
-
                         const contribuyente=
                         (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
                         (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
@@ -1042,8 +1041,10 @@ generarNotificacion(r: IRegistroTitularidad): void{
                             'rol': this.user.role?.name?this.user.role?.name:'',
                         };
 
-                        console.log('payload>>',payload);
+                        /*console.log('payload>>',payload);*/
                         /*this.user.fullName;*/
+
+
                         this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
 
                             const blob = new Blob([response], { type: 'application/pdf' });
@@ -1179,6 +1180,10 @@ generarPdf(data: IRegistroTitularidad): void{
     '';
 
     const doc = new jsPDF();
+
+
+
+
 
     autoTable(doc, {
       theme: 'grid',

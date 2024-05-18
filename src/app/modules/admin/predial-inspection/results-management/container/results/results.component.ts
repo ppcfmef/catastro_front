@@ -107,7 +107,9 @@ export class ResultsComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    this.queryParams={limit: this.pageSize};
+    this.queryParams={
+      /*limit: this.pageSize*/
+    };
     this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
 
     /*localStorage.setItem('user',JSON.stringify(this.user));*/
