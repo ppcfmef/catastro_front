@@ -108,7 +108,7 @@ export class ResultsComponent implements OnInit {
     this.initForm();
 
     this.queryParams={
-      /*limit: this.pageSize*/
+      limit: this.pageSize
     };
     this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
 

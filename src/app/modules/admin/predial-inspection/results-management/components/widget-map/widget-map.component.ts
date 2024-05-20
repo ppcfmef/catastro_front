@@ -146,6 +146,10 @@ hideSelectUbigeo = false;
     ) {
 
       this.isAdmin=(localStorage.getItem('isAdmin') ==='true')?true:false;
+
+      this._resultsService.getGenerarNotificacion().subscribe((ubicacion)=>{
+        this.addUbicacion(ubicacion);
+      });
     }
 
     ngAfterViewInit(): void {
@@ -496,6 +500,8 @@ hideSelectUbigeo = false;
 
         this.view.when(() => {
             this._fuseSplashScreenService.hide();
+
+
             console.log('ubigeo>>',this.ubigeo);
             if(this.ubicacion){
               this.onChangeUbicacion(this.ubicacion);
@@ -504,8 +510,6 @@ hideSelectUbigeo = false;
             else if (this.ubigeo) {
               this.filterUbigeo(this.ubigeo);
             }
-
-
 
             const verificarAction = { // This text is displayed as a tooltip
                 title: 'Verificar',
@@ -848,6 +852,7 @@ if(this.view){
   }*/
   this.view?.graphics?.add(this.ubicacionGraphic);
   this.view?.graphics?.add(graphic2);
+  this._resultsService.setView(this.view);
 
 
 }
@@ -889,6 +894,7 @@ async addUbicacion(ubicacion: IUbicacion):  Promise <void>{
 
         this.view?.graphics?.add(ubicacionGraphic);
         this.graphics.push(ubicacionGraphic);
+        this._resultsService.setView(this.view);
   }
   }
 
