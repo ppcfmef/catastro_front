@@ -16,6 +16,7 @@ export class ResultsService {
     public resetMapSubject: Subject<any> = new Subject();
     public ubigeoSubject: Subject<any> = new Subject();
     public generarNotificacionSubject: Subject<any> = new Subject();
+    public viewSubject: Subject<any> = new Subject();
     constructor() { }
 
     setUbigeo(data: string): void{
@@ -74,6 +75,14 @@ export class ResultsService {
 
     getGenerarNotificacion(): Observable<any>{
         return this.generarNotificacionSubject;
+    }
+
+    setView(view: any): void{
+        this.viewSubject.next(view);
+    }
+
+    getView(): Observable<any>{
+        return this.viewSubject;
     }
 }
 
