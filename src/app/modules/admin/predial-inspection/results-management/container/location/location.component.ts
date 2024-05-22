@@ -39,6 +39,9 @@ import { forkJoin } from 'rxjs';
 import { PredioPadronService } from '../../services/predio-padron.service';
 import { NotificacionModalComponent } from '../../components/notificacion-modal/notificacion-modal.component';
 import { saveAs } from 'file-saver';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/splash-screen';
 moment.locale('es');
 
 @Component({
@@ -101,6 +104,7 @@ export class LocationComponent implements OnInit , OnChanges {
     dialogRef: any;
     predio: IPredioInspeccion;
     codTipoTicket =0;
+    view: any;
     /*distrito: DistrictResource;*/
 
   constructor(
@@ -119,7 +123,12 @@ export class LocationComponent implements OnInit , OnChanges {
     private _suministroService: SuministroService,
     private _cfTicketService: CFTicketService,
     private _predioPadronService: PredioPadronService,
-    ) { }
+    private _fuseSplashScreenService: FuseSplashScreenService
+    ) {
+        pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+    }
     ngOnChanges(changes: SimpleChanges): void {
 
         if (this.ticket && this.ubicacion){
@@ -163,6 +172,11 @@ export class LocationComponent implements OnInit , OnChanges {
 
     this.user=localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')):null;
     console.log('this.user>>',this.user);
+
+    this._resultsService.getView().subscribe((view) =>{
+        console.log('view subscribe>>',view);
+        this.view = view;
+    });
   }
 
   onClickAprTicket(): void {
@@ -1026,7 +1040,6 @@ generarNotificacion(r: IRegistroTitularidad): void{
                     .then((text2) => {
 
 
-
                         const contribuyente=
                         (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
                         (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
@@ -1042,8 +1055,10 @@ generarNotificacion(r: IRegistroTitularidad): void{
                             'rol': this.user.role?.name?this.user.role?.name:'',
                         };
 
-                        console.log('payload>>',payload);
+                        /*console.log('payload>>',payload);*/
                         /*this.user.fullName;*/
+
+
                         this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
 
                             const blob = new Blob([response], { type: 'application/pdf' });
@@ -1118,40 +1133,62 @@ generarNotificacionPredio(r: IRegistroTitularidad): void{
                     .toPromise()
                         .then((text2) => {
 
-                            const contribuyente=
-                            (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
-                            (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
-                            (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
-                            '';
-                            const payload = {
-                                'codTicket':this.ticket.codTicket,
-                                'contribuyente':contribuyente,
-                                'codTit' :r.codTit,
-                                'texto':text2,
-                                'usuario': this.user.name,
-                                'rol': this.user.role?.name?this.user.role?.name:'',
-                                'idLand':r.predioInspeccion.id
-                            };
-                            console.log('payload>>',payload);
-                            this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
-
-                                const blob = new Blob([response], { type: 'application/pdf' });
-                                saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');
-
-                                this._confirmationService.success(
-                                    'Notificar',
-                                    'Notificacion generada'
-                                ).afterClosed().toPromise().then((res)=>{
-
-                                    this._registroTitularidadService.update(r.codTit,{'status':6,'fileNotificacion':blob}).subscribe((res)=>{
-                                        this.resolverPredio();
-                                        this.getStatusButton();
-                                        this._resultsService.setResetMap(2);
-                                        this._resultsService.setEstado(Estado.LEER);
-                                    });
-
+                            this._resultsService.setGenerarNotificacion(this.ubicacion);
+                            this._fuseSplashScreenService.show();
+                            setTimeout(async () => {
+                                console.log('this.view>>',this.view);
+                                const screenshot = await this.view.takeScreenshot({
+                                    format: 'jpg',
+                                    quality: 100,
                                 });
-                            });
+
+
+
+                                const contribuyente=
+                                (r.suministro?.contribuyente)? `${r.suministro?.contribuyente?.nombre} ${r.suministro?.contribuyente?.apPat} ${r.suministro?.contribuyente?.apMat}`:
+                                (r.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                                (r.predioPadron?.predioContribuyente[0]?.contribuyente)? `${r.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${r.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
+                                '';
+                                const payload = {
+                                    'codTicket':this.ticket.codTicket,
+                                    'contribuyente':contribuyente,
+                                    'codTit' :r.codTit,
+                                    'texto':text2,
+                                    'usuario': this.user.name,
+                                    'rol': this.user.role?.name?this.user.role?.name:'',
+                                    'idLand':r.predioInspeccion.id,
+                                    /*'screenshot':screenshot*/
+                                };
+                               /* console.log('payload>>',payload);*/
+
+                               this._fuseSplashScreenService.hide();
+
+
+                                /*const pdf=this.generarPdf(payload);*/
+
+                                this._registroTitularidadService.generarNotificacion(payload).subscribe((response)=>{
+
+                                    const blob = new Blob([response], { type: 'application/pdf' });
+                                    saveAs(blob, 'CARTA DE INVITACION INSCRIPCION.pdf');
+
+                                    this._confirmationService.success(
+                                        'Notificar',
+                                        'Notificacion generada'
+                                    ).afterClosed().toPromise().then((res)=>{
+
+                                        this._registroTitularidadService.update(r.codTit,{'status':6,'fileNotificacion':blob}).subscribe((res)=>{
+                                            this.resolverPredio();
+                                            this.getStatusButton();
+                                            this._resultsService.setResetMap(2);
+                                            this._resultsService.setEstado(Estado.LEER);
+                                        });
+
+                                    });
+                                });
+
+
+                            },2000);
+
 
 
 
@@ -1169,127 +1206,516 @@ generarNotificacionPredio(r: IRegistroTitularidad): void{
 
   }
 
+/*
+async generatePDF(
+    view: any,
+    land: LandRegistryMap,
+    landOwner: LandOwner
+): Promise<void> {
 
-generarPdf(data: IRegistroTitularidad): void{
+    setTimeout(async () => {
 
-    const persona=
-    (data.suministro?.contribuyente)? `SR(a). ${data.suministro?.contribuyente?.nombre} ${data.suministro?.contribuyente?.apPat} ${data.suministro?.contribuyente?.apMat}`:
-    (data.predioInspeccion?.predioContribuyente[0]?.contribuyente)? `SR(a). ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioInspeccion?.predioContribuyente[0]?.contribuyente?.apMat}`:
-    (data.predioPadron?.predioContribuyente[0]?.contribuyente)? `SR(a). ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat} ${data.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat}`:
-    '';
+        const screenshot = await view.takeScreenshot({
+            format: 'jpg',
+            quality: 100,
+        });
+        // eslint-disable-next-line max-len
+        const name = `${landOwner?.name ? landOwner?.name : ''} ${landOwner?.paternalSurname ? landOwner?.paternalSurname : ''} ${landOwner?.maternalSurname ? landOwner?.maternalSurname : ''} `;
+        const newName = name === '' ? '-' : this.toTitleCase(name);
+        const documentType = {
+            '0': 'S/N',
+            '01': 'DNI',
+            '04': 'CARNET DE EXTRANGERIA',
+            '06': 'RUC',
+            '08': 'SUCESION INTESTADA',
+            '09': 'PASAPORTE'
+        };
 
-    const doc = new jsPDF();
+        const originalWidth = 3300; // por ejemplo, 600px
+        const originalHeight = 697; // por ejemplo, 400px
+        // Nuevo ancho deseado
+        const desiredWidth = 150; // Nuevo ancho, por ejemplo, 250px
+        // Calcular el nuevo alto para mantener la proporción
+        const desiredHeight = (desiredWidth / originalWidth) * originalHeight;
 
-    autoTable(doc, {
-      theme: 'grid',
-      styles: {
-          overflow: 'linebreak',
-          lineWidth: 0,
-      },
-      body: [
-          [
-              {
-                  content: 'GERENCIA DE ADMINISTRACION TRIBUTARIA',
-                  styles: { halign: 'center' },
-              },
-          ],
 
-          [
-              {
-                  content: `CARTA DE INVITACION N${this.ticket.codTicket}-${data.id}-2023`,
-                  styles: { halign: 'center' },
-              },
-          ],
 
-          [
-
-            {
-              content: `Mes ${moment().format('MMMM')} ${moment().format('YYYY')}`,
-              styles: { halign: 'right' },
-          },
-
-          ],
-
-          [
+    const pdf = {
+        pageMargins: [ 55, 25],
+        pageSize: 'A4',
+        content: [
 
             {
-              content:  'Estimado vecino(a)',
-              styles: { halign: 'left' },
-          },
-
-          ],
-
-          [
+                columns: [
+                    {
+                        width: '30%',
+                        margin: [ 0, 5, 0, 5 ],
+                        image: this.dataUrl,
+                        cover: {
+                            width: desiredWidth,
+                            height: desiredHeight,
+                            valign: 'bottom',
+                            align: 'right',
+                        },
+                    },
+                    {
+                        width: '70%',
+                        stack: [
+                            'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
+                            {text: `MUNICIPALIDAD DE ${ district?.name ? district?.name:''}`, style: 'subheader'},
+                        ],
+                        style: 'title'
+                    },
+                ]
+            },
+            {
+                columns: [
+                    {
+                        style: 'p1',
+                        width: '100%',
+                        text: [ 'Yo, ',
+                                { text: newName , style:'textR'},
+                                'identificado(a) con DNI/RUC,' ,
+                                {text:` Nº ${this.landOwner.dni?this.landOwner.dni:'-'}` , style:'textR'} ,
+                                // eslint-disable-next-line max-len
+                                landOwner.phone || landOwner.email ? {text:['con datos de contacto:', {text:`Telefono: ${landOwner.phone ? landOwner.phone : '-'} , Email: ${landOwner.email ? landOwner.email : '-'}` , style:'textR'} || ''] , style:'textR'}:''
+                                // eslint-disable-next-line max-len
+                                ,
+                                '; en pleno ejercicio de mis derechos ciudadanos. \n',
+                            ]
+                    }
+                ]
+            },
 
             {
-              content:  persona,
-              styles: { halign: 'left' },
-          },
+                columns: [
+                    {
+                        style: 'p2',
+                        width: '100%',
+                        text: [ 'DECLARO BAJO JURAMENTO : Que el predio con dirección ',
+                                // eslint-disable-next-line max-len
+                                { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )} ${this.getFrase(land.block,',Bloque ')} ${this.getFrase(land.municipalNumber ,',Nro Puerta ')} ${this.getFrase(land.apartmentNumber,',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}` , style:'textR'} ,
+                                'se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+                            ]
+                    }
 
-          ],
-          /*SR. BREINER A. CONDORI LIMA (Titular del predio)
-          AA.HH. ASOCIACION DE VIVIENDA “30 DE MARZO” DE ALTO CAYMA MZ. A LOTE 6 (dirección del Predio)
-          */
+                ]
+            },
+            {
+                columns: [
+                    {
+                        style: 'p3',
+                        width: '100%',
+                        text: 'CROQUIS DE UBICACIÓN ' ,
+                    },
 
-          [
+                ],
+            },
+            {
+                layout: {
+                        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                        hLineWidth: function (i, node) { return  1;},
+                        hLineColor: function (i, node) {return '#94a3b8';},
+                        vLineColor: function (i, node) { return '#94a3b8';},
+                },
+                table: {
+                    widths:['30%', '70%'],
+                    body: [
+                            [
+                                {
+                                    border: [false, false, false, false],
+
+                                    table: {
+                                        widths:['100%'],
+                                        heights: [40, 40, 40],
+                                        body: [
+                                            [{
+                                                border: [false, false, false, true],
+                                                stack:['Ubigeo \n', {text:`${land?.ubigeo ? land?.ubigeo : '-'}` , style:'cellSub'}], style:'cell'
+                                            }],
+                                            [{
+                                                border: [false, false, false, true],
+                                                // eslint-disable-next-line max-len
+                                                stack:[{text:`${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}`}, {text: ` ${ land.cup ? land.cup : land.idCartographicImg}`, style:'cellSub'}] , style:'cell'
+                                            }],
+                                            [{
+                                                border: [false, false, false, true],
+                                                stack:['Latitud \n', {text:`${land.latitude ? land.latitude : '-'}` , style:'cellSub'}], style:'cell'
+                                            }],
+                                            [{
+                                                border: [false, false, false, true],
+                                                stack:['Longitud \n', {text:`${land.longitude ? land.longitude : '-'}` , style:'cellSub'}], style:'cell'
+                                            }],
+                                        ]
+                                    },
+                                    layout: {
+                                            hLineWidth: function (i, node) { return  1 ;},
+                                            hLineColor: function (i, node) {
+                                                return '#94a3b8';
+                                            },
+                                    }
+                                },
+                                {
+                                    alignment:'center',
+                                    border: [true, true, true, true],
+                                    image: screenshot.dataUrl,
+                                    cover: { width: 330, height: 300, valign: 'bottom', align: 'right' },
+                                },
+                            ],
+                        ]
+                },
+            },
+            {
+                    columns: [
+                    {
+                        style: 'p5',
+                        width: '100%',
+                        // eslint-disable-next-line max-len
+                        text: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedad en la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).' ,
+                    },
+                ],
+            },
+            {
+                    columns: [
+                    {
+                        style: 'p3',
+                        bold: false,
+                        width: '100%',
+                        text: 'En señal de conformidad firmo el presente documento.' ,
+                    },
+                ],
+            },
+            {
+                    columns: [
+                    {
+                        margin: [ 0, 15, 0, 10 ],
+                        bold: false,
+                        width: '100%',
+                        text: `${this.toTitleCase(this.district?.name)}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
+                    },
+                ],
+            },
+            {
+                    columns: [
+                    {
+
+                    margin: [ 0, 5, 0, 10 ],
+                    width: '50%',
+                    alignment:'center',
+                    table: {
+                                heights:[80],
+                                widths:[150,5, 70],
+                                body: [
+                                        [{text:'', border: [false, false, false, false]}, {text:'', border: [false, false, false, false]}, ''],
+                                        // eslint-disable-next-line max-len
+                                        [{text:'Firma', border: [false, true, false, false], style:'textF'},{text:'', border: [false, false, false, false]}, {text:'Huella', border: [false, true, false, false],style:'textF'}],
+                                    ]
+                            },
+                    },
+                    {
+                    layout:'noBorders',
+                    margin: [ 55, 75, 0, 0],
+                    style:'tableU',
+                    width: '*',
+                    table: {
+                                widths:[32,1, '*'],
+                                body: [
+                                        [ {text:'Usuario'}, ':', {text:`${this.user.name ? this.user.name : '-'}`,}],
+                                        [ {text:'DNI',},':', {text:`${this.user.dni ? this.user.dni : '-'}`,}],
+                                        [ {text:'Cargo',}, ':' , {text:`${this.user.role?.name ? this.user.role?.name : '-'}`,}],
+                                    ]
+                            },
+                    },
+                ],
+            },
+
+        ],
+        styles: {
+            title: {
+                fontSize: 13,
+                bold: true,
+                alignment:'center',
+            },
+            subheader: {
+                bold: false,
+                margin: [ 0, 8, 0, 0 ],
+                fontSize: 11,
+            },
+
+            p1: {
+
+            margin: [ 0, 25, 0, 10 ],
+            alignment:'justify',
+            lineHeight:1.3
+            },
+            textR: {
+            bold: true,
+            },
+
+            p2: {
+                lineHeight:1.3,
+                alignment:'justify',
+                margin: [ 0, 0, 0, 10 ],
+            },
+
+            p3: {
+                bold: true,
+                margin: [ 0, 4, 0,5],
+            },
+            p4:{
+                margin: [ 0, 40, 0, 20 ],
+            },
+
+            p5:{
+
+            margin: [ 0, 15, 0, 10 ],
+            alignment:'justify',
+            lineHeight:1.3
+            },
+
+            cell : {
+            margin: [ 0, 20, 0, 20 ],
+            },
+
+            cellSub: {
+            margin: [ 0, 3, 0,0 ],
+            bold: true,
+            },
+            tableU:{
+                fontSize: 9,
+                alignment:'rigth',
+            },
+            textF: {
+            margin: [ 0, 5, 0, 0 ],
+            },
+
+        },
+        defaultStyle: {
+            columnGap: 10,
+            fontSize: 11,
+            color:'#1e293b'
+        }
+
+    };
+    pdfMake.createPdf(pdf).download('Declaración Jurada de Ubicación de Predio.pdf');
+
+    }, 2000);
+}*/
+
+
+generarPdf(data: any): void{
+
+    const pdf = {
+        pageMargins: [ 55, 25],
+        pageSize: 'A4',
+        content: [
 
             {
-              content: 'Presente.-',
-              styles: { halign: 'left' },
-          },
+                columns: [
 
-          ],
-
-          [
+                    {
+                        width: '70%',
+                        stack: [
+                            'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
+                            {text: 'MUNICIPALIDAD DE ', style: 'subheader'},
+                        ],
+                        style: 'title'
+                    },
+                ]
+            },
+            {
+                columns: [
+                    {
+                        style: 'p1',
+                        width: '100%',
+                        text: [ 'Yo, ',
+                                { text: '', style:'textR'},
+                                'identificado(a) con DNI/RUC,' ,
+                                {text:' Nº ' , style:'textR'} ,
+                                // eslint-disable-next-line max-len
+                                '',
+                                '; en pleno ejercicio de mis derechos ciudadanos. \n',
+                            ]
+                    }
+                ]
+            },
 
             {
-              content: 'De mi mayor consideración:',
-              styles: { halign: 'left' },
-          },
+                columns: [
+                    {
+                        style: 'p2',
+                        width: '100%',
+                        text: [ 'DECLARO BAJO JURAMENTO : Que el predio con dirección ',
+                                // eslint-disable-next-line max-len
+                                { text: '' , style:'textR'} ,
+                                'se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+                            ]
+                    }
 
-          ],
-
-          [
-
+                ]
+            },
             {
-              content: `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad ubicada en (dirección del Predio), por lo que lo invitamos a cumplir con la inscripción y la presentación de la Declaración Jurada de su predio seguido del pago de sus obligaciones tributarias, como es el Impuesto Predial y los Arbitrios Municipales.`,
-              styles: { halign: 'justify' },
-          },
+                columns: [
+                    {
+                        style: 'p3',
+                        width: '100%',
+                        text: 'CROQUIS DE UBICACIÓN ' ,
+                    },
 
-          ],
-
-          [
-
+                ],
+            },
             {
-              content: 'Tenga en cuenta que la no presentación de la declaración jurada del Impuesto Predial conlleva a ser calificado como evasor ha dicho impuesto por lo que correspondería la aplicación de una multa por infringir lo señalado en el Código Tributario.',
-              styles: { halign: 'justify' },
-          },
+                layout: {
+                        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                        hLineWidth: function (i, node) { return  1;},
+                        hLineColor: function (i, node) {return '#94a3b8';},
+                        vLineColor: function (i, node) { return '#94a3b8';},
+                },
+                table: {
+                    widths:['30%', '70%'],
+                    body: [
+                            [
+                                {
+                                    border: [false, false, false, false],
 
-          ],
+                                    table: {
+                                        widths:['100%'],
+                                        heights: [40, 40, 40],
+                                        body: [
+                                            [{
+                                                border: [false, false, false, true],
+                                                text :'1', style:'cell'
+                                            }],
+                                            [{
+                                                border: [false, false, false, true],
+                                                // eslint-disable-next-line max-len
+                                                text :'2', style:'cell'
+                                            }],
+                                            [{
+                                                border: [false, false, false, true],
+                                                text:'3', style:'cell'
+                                            }],
 
-
-          [
-
+                                        ]
+                                    },
+                                    layout: {
+                                            hLineWidth: function (i, node) { return  1 ;},
+                                            hLineColor: function (i, node) {
+                                                return '#94a3b8';
+                                            },
+                                    }
+                                },
+                                {
+                                    alignment:'center',
+                                    border: [true, true, true, true],
+                                    image: data.screenshot.dataUrl,
+                                    cover: { width: 330, height: 300, valign: 'bottom', align: 'right' },
+                                },
+                            ],
+                        ]
+                },
+            },
             {
-              content: 'Estimado vecino, tributar es el camino al desarrollo de nuestro distrito, del mismo modo el pago de los arbitrios municipales (limpieza pública, parques y jardines y serenazgo) garantizamos la prestación eficiente y eficaz de estos servicios como también la seguridad ciudadana del distrito; mejorando así nuestra calidad de vida.',
-              styles: { halign: 'justify' },
-          },
-
-          ],
-
-          [
-
+                    columns: [
+                    {
+                        style: 'p5',
+                        width: '100%',
+                        // eslint-disable-next-line max-len
+                        text: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedad en la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).' ,
+                    },
+                ],
+            },
             {
-              content: 'Atentamente',
-              styles: { halign: 'left' },
-          },
+                    columns: [
+                    {
+                        style: 'p3',
+                        bold: false,
+                        width: '100%',
+                        text: 'En señal de conformidad firmo el presente documento.' ,
+                    },
+                ],
+            },
+            {
+                    columns: [
+                    {
+                        margin: [ 0, 15, 0, 10 ],
+                        bold: false,
+                        width: '100%',
+                        text: 'kk',
+                    },
+                ],
+            },
 
-          ],
 
-      ],
-  });
+        ],
+        styles: {
+            title: {
+                fontSize: 13,
+                bold: true,
+                alignment:'center',
+            },
+            subheader: {
+                bold: false,
+                margin: [ 0, 8, 0, 0 ],
+                fontSize: 11,
+            },
 
-    doc.save('CARTA DE INVITACION INSCRIPCION.pdf');
+            p1: {
+
+            margin: [ 0, 25, 0, 10 ],
+            alignment:'justify',
+            lineHeight:1.3
+            },
+            textR: {
+            bold: true,
+            },
+
+            p2: {
+                lineHeight:1.3,
+                alignment:'justify',
+                margin: [ 0, 0, 0, 10 ],
+            },
+
+            p3: {
+                bold: true,
+                margin: [ 0, 4, 0,5],
+            },
+            p4:{
+                margin: [ 0, 40, 0, 20 ],
+            },
+
+            p5:{
+
+            margin: [ 0, 15, 0, 10 ],
+            alignment:'justify',
+            lineHeight:1.3
+            },
+
+            cell : {
+            margin: [ 0, 20, 0, 20 ],
+            },
+
+            cellSub: {
+            margin: [ 0, 3, 0,0 ],
+            bold: true,
+            },
+            tableU:{
+                fontSize: 9,
+                alignment:'rigth',
+            },
+            textF: {
+            margin: [ 0, 5, 0, 0 ],
+            },
+
+        },
+        defaultStyle: {
+            columnGap: 10,
+            fontSize: 11,
+            color:'#1e293b'
+        }
+
+    };
+    return pdfMake.createPdf(pdf).download('Carta DE Invitacion de Inscripcion.pdf');
 }
 
 

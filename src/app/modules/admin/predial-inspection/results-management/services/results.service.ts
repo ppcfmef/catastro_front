@@ -15,7 +15,8 @@ export class ResultsService {
     public pointSubject: Subject<any> = new Subject();
     public resetMapSubject: Subject<any> = new Subject();
     public ubigeoSubject: Subject<any> = new Subject();
-
+    public generarNotificacionSubject: Subject<any> = new Subject();
+    public viewSubject: Subject<any> = new Subject();
     constructor() { }
 
     setUbigeo(data: string): void{
@@ -66,6 +67,22 @@ export class ResultsService {
 
     getResetMap(): Observable<any>{
         return this.resetMapSubject.asObservable();
+    }
+
+    setGenerarNotificacion(data: any ): void{
+        this.generarNotificacionSubject.next(data);
+    }
+
+    getGenerarNotificacion(): Observable<any>{
+        return this.generarNotificacionSubject;
+    }
+
+    setView(view: any): void{
+        this.viewSubject.next(view);
+    }
+
+    getView(): Observable<any>{
+        return this.viewSubject;
     }
 }
 
