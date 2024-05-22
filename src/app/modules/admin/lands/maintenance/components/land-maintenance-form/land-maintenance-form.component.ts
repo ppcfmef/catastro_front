@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
@@ -29,7 +29,7 @@ let _this: any;
 })
 export class LandMaintenanceFormComponent implements OnInit {
     ubigeo: string;
-    formLand: UntypedFormGroup;
+    formLand: FormGroup;
     landModel = new LandModel();
     masterDomain: MasterDomain;
     readOnly= false;
@@ -57,14 +57,12 @@ export class LandMaintenanceFormComponent implements OnInit {
       ) {
 
         this.landModel= new LandModel();
-        console.log('landModel>>',this.landModel);
         this.action=(data && data.action)?data.action:Actions.CREAR;
-        this.typeMaintenace =(data && data.typeMaintenace)?data.typeMaintenace:'';
 
+        this.typeMaintenace =(data && data.typeMaintenace)?data.typeMaintenace:'';
 
         if(data){
             this.codigoPredio = data.land.cpm;
-            console.log('data.land.cpm>>',data.land.cpm);
             if(this.action!==Actions.CREAR){
                 this.landModel=(data && data.land)? new LandModel(data.land): new LandModel();
             }
@@ -82,7 +80,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             }
 
             else if (this.action=== Actions.CREAR){
-                const keysData=['ubigeo','uuType','streetType','codStreet','codUu','streetName','habilitacionName','urbanMza','habilitacionName',];
+                const keysData=['ubigeo','uuType','streetType','codStreet','codUu','streetName','habilitacionName','urbanMza','habilitacionName','urbanLotNumber'];
                 keysData.forEach((key)=> {
                     if(this.landModel.hasOwnProperty(key)){
                         this.landModel[key] = data.land[key];
@@ -126,8 +124,6 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       initForm(): void{
-        console.log('this.landModel>>',this.landModel);
-        console.log('this.landModel?.resolutionDate init form>>',this.landModel?.resolutionDate);
         /*const resolutionDate = Date.parse(this.landModel?.resolutionDate);*/
        /* console.log('resolutionDate>>',resolutionDate);*/
         if (this.typeMaintenace === 'Reasignar'){
@@ -144,8 +140,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
                 streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
                 streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
-                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
-                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly || this.data.typeMantenance === 3} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly || this.data.typeMantenance === 3}, [Validators.required]],
                 block: [{value:this.landModel?.block,disabled:this.readOnly}],
                 indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
                 floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
@@ -171,8 +167,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
                 streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
                 streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
-                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly} , [Validators.required]],
-                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly || this.data.typeMantenance === 3} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly || this.data.typeMantenance === 3}, [Validators.required]],
                 block: [{value:this.landModel?.block,disabled:this.readOnly}],
                 indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
                 floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
@@ -182,9 +178,6 @@ export class LandMaintenanceFormComponent implements OnInit {
               });
               //this.toggleRequired();
         }
-        console.log('formLand>>',this.formLand);
-        console.log('formLand.valid>>',this.formLand.valid);
-
 
       }
 
@@ -204,7 +197,7 @@ export class LandMaintenanceFormComponent implements OnInit {
         }
 
         else{
-            console.log(group.controls['cpm']);
+            // console.log(group.controls['cpm']);
         }
 
         if(group.controls['cpm'].value===group.controls['cpm2'].value)
