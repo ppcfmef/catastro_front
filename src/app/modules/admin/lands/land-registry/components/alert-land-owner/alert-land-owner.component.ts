@@ -9,7 +9,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class AlertLandOwnerComponent {
     owners: any[];
     dataSource: any[];
+    ownerId: any;
     displayedColumns =['dni','name'];
+    esPropietario = false;
     constructor(
 
         public dialogRef: MatDialogRef<AlertLandOwnerComponent>,
@@ -18,6 +20,10 @@ export class AlertLandOwnerComponent {
       ) {
         this.dataSource =data.owners;
         this.owners=data.owners;
+        this.ownerId=data.ownerId;
+        this.esPropietario = this.owners.find(o =>  o.id === this.ownerId);
+
+
       }
     continuar(): void{
         this.dialogRef.close('confirmed');

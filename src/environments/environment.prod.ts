@@ -6,7 +6,7 @@ export const environment = {
     apiUrl: host + 'api/v1',
     portalUrl: 'https://ws.mineco.gob.pe/portaldf',
     customViewerUrl: 'https://ws.mineco.gob.pe/portaldf/apps/webappviewer',
-    // mancartoUrl: 'https://ws.mineco.gob.pe/portaldfvisor/mancarto', // habilitar en prod
+    //mancartoUrl: 'https://ws.mineco.gob.pe/portaldfvisor/mancarto', // habilitar en prod
     mancartoUrl: 'https://vmd120205.contaboserver.net/widgets/mancarto',
     mediaUrl: host + 'media',
     exportUrl: host + 'export',
@@ -15,5 +15,7 @@ export const environment = {
     apiKeyArcgis: 'AAPKd8485a61542546879a30f6253592219eTlqeQbra0smKAuDW-tcUE55FiZCbyzYoD8Fvpqa_HtEfQJa-NEibqLyQOuYQEap9',
     apiUrlArcGisServer: 'https://ws.mineco.gob.pe/serverdf/rest/services',
     apiSatUrl: 'https://app.sat-t.gob.pe/api',
-    apiNSRTMUrl: 'https://srtmcapa.mineco.gob.pe/v1/nsrtm-services',
+    apiNSRTMUrl: 'https://srtm.mef.gob.pe/v1/nsrtm-services',
 };
+
+
