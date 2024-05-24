@@ -23,7 +23,7 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { MapUtils } from 'app/shared/utils/map.utils';
 import { loadModules } from 'esri-loader';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GestionPredio } from '../../interfaces/gestion-predios.interface';
 import { Land, LandMapIn } from '../../interfaces/land-map-in.interface';
@@ -65,7 +65,9 @@ moment.locale('es');
 })
 export class LandRegistryGeolocationComponent
     implements OnInit, AfterViewInit, OnDestroy
-{
+{ 
+    
+    @Input() ownerId: number = 639476.5456999997;
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
@@ -1045,6 +1047,102 @@ export class LandRegistryGeolocationComponent
                                                                         'landRecords[0]>>',
                                                                         landRecords[0]
                                                                     );
+
+                                                                    const arrayService=landRecords.map((l)=>{ return this._landOwnerService
+                                                                        .getLandDetail(
+                                                                            l.id
+                                                                        );});
+
+
+                                                                     forkJoin(arrayService).subscribe((res: any[]) => {
+                                                                        let owners =[];
+
+                                                                    
+                                                                        res.forEach((responseOwner: any)=>{
+                                                                             console.log('responseOwner>>',responseOwner);
+                                                                             /*owners.concat(responseOwner.results);*/
+                                                                             owners = [...owners, ...responseOwner.results];
+                                                                            /*return   responseOwner.results;*/
+                                                                            console.log('owners>>',owners);
+                                                                        });
+                                                                        
+                                                                        /*const owners =
+                                                                        responseOwner.results;*/
+                                                                    console.log(
+                                                                        'owners>',
+                                                                        owners
+                                                                    );
+                                                                    dialogRef =
+                                                                        this.dialog.open(
+                                                                            AlertLandOwnerComponent,
+                                                                            {
+                                                                                data: {
+                                                                                    owners: owners,
+                                                                                    ownerId : this.ownerId
+                                                                                },
+                                                                                width: '600px',
+                                                                            }
+                                                                        );
+
+                                                       
+
+                                                                    dialogRef
+                                                                        .afterClosed()
+                                                                        .toPromise()
+                                                                        .then(
+                                                                            (
+                                                                                option
+                                                                            ) => {
+                                                                                if (
+                                                                                    option ===
+                                                                                    'confirmed'
+                                                                                ) {
+
+                                                                                    graphic =
+                                                                                    results[0].graphic;
+
+                                                                                    graphic.attributes[
+                                                                                        'COORD_X'
+                                                                                    ] =
+                                                                                        longitude;
+                                                                                    graphic.attributes[
+                                                                                        'COORD_Y'
+                                                                                    ] =
+                                                                                        latitude;
+                                                                                    this.lote =
+                                                                                        graphic.attributes;
+                                                                                    console.log(
+                                                                                        'lote>>',
+                                                                                        this
+                                                                                            .lote
+                                                                                    );
+                                                                                    this.landRegistryMapModel =
+                                                                                        FormatUtils.formatLoteToLandRegistryMapModel(
+                                                                                            this
+                                                                                                .lote
+                                                                                        );
+                                                                                    this._landRegistryMapService.setEstado(
+                                                                                        Estado.LEER
+                                                                                    );
+                                                                                    this._landRegistryMapService.landOut =
+                                                                                        this.landRegistryMapModel;
+                                                                                } else {
+                                                                                    if (
+                                                                                        this
+                                                                                            .view
+                                                                                    ) {
+                                                                                        this.view.popup.close();
+                                                                                        this.view.graphics.removeAll();
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        );
+
+                                                                    });
+
+
+
+
                                                                     this._landOwnerService
                                                                         .getLandDetail(
                                                                             id
@@ -1053,86 +1151,8 @@ export class LandRegistryGeolocationComponent
                                                                             (
                                                                                 responseOwner
                                                                             ) => {
-                                                                                const owners =
-                                                                                    responseOwner.results;
-                                                                                console.log(
-                                                                                    'owners>',
-                                                                                    owners
-                                                                                );
-                                                                                dialogRef =
-                                                                                    this.dialog.open(
-                                                                                        AlertLandOwnerComponent,
-                                                                                        {
-                                                                                            data: {
-                                                                                                owners: owners,
-                                                                                            },
-                                                                                            width: '600px',
-                                                                                        }
-                                                                                    );
 
-                                                                                /*const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-
-                                                                        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results },
-                                                                        width: '600px',
-                                                                        height:'100%'
-                                                                    });*/
-
-                                                                                /*dialogRef = this.confirmationService.info(
-                                                                        'Ya existe un Titular/Contribuyente, asignado',
-                                                                        `DNI:${owners[0].dni} Nombre:${owners[0].name} ${owners[0].paternalSurname} ${owners[0].maternalSurname}`
-                                                                    );*/
-
-                                                                                dialogRef
-                                                                                    .afterClosed()
-                                                                                    .toPromise()
-                                                                                    .then(
-                                                                                        (
-                                                                                            option
-                                                                                        ) => {
-                                                                                            if (
-                                                                                                option ===
-                                                                                                'confirmed'
-                                                                                            ) {
-
-                                                                                                graphic =
-                                                                                                results[0].graphic;
-
-                                                                                                graphic.attributes[
-                                                                                                    'COORD_X'
-                                                                                                ] =
-                                                                                                    longitude;
-                                                                                                graphic.attributes[
-                                                                                                    'COORD_Y'
-                                                                                                ] =
-                                                                                                    latitude;
-                                                                                                this.lote =
-                                                                                                    graphic.attributes;
-                                                                                                console.log(
-                                                                                                    'lote>>',
-                                                                                                    this
-                                                                                                        .lote
-                                                                                                );
-                                                                                                this.landRegistryMapModel =
-                                                                                                    FormatUtils.formatLoteToLandRegistryMapModel(
-                                                                                                        this
-                                                                                                            .lote
-                                                                                                    );
-                                                                                                this._landRegistryMapService.setEstado(
-                                                                                                    Estado.LEER
-                                                                                                );
-                                                                                                this._landRegistryMapService.landOut =
-                                                                                                    this.landRegistryMapModel;
-                                                                                            } else {
-                                                                                                if (
-                                                                                                    this
-                                                                                                        .view
-                                                                                                ) {
-                                                                                                    this.view.popup.close();
-                                                                                                    this.view.graphics.removeAll();
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    );
+                                                                               
                                                                             }
                                                                         );
                                                                 }
