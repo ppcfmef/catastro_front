@@ -31,15 +31,17 @@
                     <span class="leading-none font-medium text-lg mr-2">DNI: </span>
                     <span class="leading-none text-base">{{ landOwner?.dni }}</span>
             </div>
+
+            <div class="flex items-center">
+                <mat-icon
+                    class="icon-size-5 mr-2"
+                    [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+                <span class="leading-none font-medium text-base mr-2">Codigo de Contribuyente </span>
+                <span class="leading-none text-base"> {{ (landOwner?.code)?landOwner?.code:'-' }}</span>
+            </div>
         </ng-container>
 
-        <div class="flex items-center">
-            <mat-icon
-                class="icon-size-5 mr-2"
-                [svgIcon]="'heroicons_outline:identification'"></mat-icon>
-            <span class="leading-none font-medium text-base mr-2">Codigo de predio: </span>
-            <span class="leading-none text-base"> {{ (landOwner?.code)?landOwner?.code:'-' }}</span>
-        </div>
+
         <div class="flex items-center">
             <mat-icon
                 class="icon-size-5 mr-2"
