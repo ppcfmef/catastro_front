@@ -1,45 +1,34 @@
-<ng-container *ngIf="owners && owners.length > 0; else withoutTaxpayer">
-    <h1 mat-dialog-title class="dialog-title">
-        Ya existe un Titular/Contribuyente, asignado
-    </h1>
-    <br />
-    <div mat-dialog-content>
-        <table mat-table [dataSource]="dataSource" class="table-base">
-            <ng-container matColumnDef="dni">
-                <th mat-header-cell *matHeaderCellDef>DNI</th>
-                <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
-            </ng-container>
 
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element?.name }} {{ element?.paternalSurname }}
-                    {{ element?.maternalSurname }}
-                </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-    </div>
-</ng-container>
+<ng-container *ngIf="esPropietario; else noPropietario">
 
-<ng-template #withoutTaxpayer>
-    <h1 mat-dialog-title class="text-center text-lg font-bold">
-        Ya existe registro de un predio sobre este lote.
-    </h1>
-</ng-template>
+    <ng-container *ngIf="owners && owners.length > 0">
+        <h1 mat-dialog-title class="dialog-title">
+            El Lote ya tiene el mismo  propietario no se puede volver a generar un nuevo registro
+        </h1>
+        <br />
+        <div mat-dialog-content>
+            <table mat-table [dataSource]="dataSource" class="table-base">
+                <ng-container matColumnDef="dni">
+                    <th mat-header-cell *matHeaderCellDef>DNI</th>
+                    <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+                </ng-container>
+    
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element?.name }} {{ element?.paternalSurname }}
+                        {{ element?.maternalSurname }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
 
-<div>
-    <h2 mat-dialog-title [ngClass]="owners && owners.length > 0 ? 'dialog-title' : 'text-center p-4'">
-        Desea continuar con el registro del predio?
-    </h2>
-    <div
+        <div
         class="flex items-center justify-center sm:justify-end py-4 space-x-3 dark:bg-black dark:bg-opacity-10"
         [ngClass]="owners && owners.length > 0 ? 'sm:justify-end' : 'sm:justify-center'"
     >
-        <button mat-raised-button color="primary" (click)="continuar()">
-            Continuar
-        </button>
         <button
             mat-raised-button
             color="primary"
@@ -49,6 +38,68 @@
             <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cancelar
         </button>
     </div>
-    <!-- <div mat-dialog-actions align="end" class="flex flex-row space-x-4" >
-       </div>-->
-</div>
+    </ng-container>
+
+
+</ng-container>
+
+<ng-template #noPropietario>
+
+    <ng-container *ngIf="owners && owners.length > 0; else withoutTaxpayer">
+        <h1 mat-dialog-title class="dialog-title">
+            Ya existe un Titular/Contribuyente, asignado
+        </h1>
+        <br />
+        <div mat-dialog-content>
+            <table mat-table [dataSource]="dataSource" class="table-base">
+                <ng-container matColumnDef="dni">
+                    <th mat-header-cell *matHeaderCellDef>DNI</th>
+                    <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+                </ng-container>
+    
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element?.name }} {{ element?.paternalSurname }}
+                        {{ element?.maternalSurname }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+    </ng-container>
+    
+    <ng-template #withoutTaxpayer>
+        <h1 mat-dialog-title class="text-center text-lg font-bold">
+            Ya existe registro de un predio sobre este lote.
+        </h1>
+    </ng-template>
+    
+    <div>
+        <h2 mat-dialog-title [ngClass]="owners && owners.length > 0 ? 'dialog-title' : 'text-center p-4'">
+            Desea continuar con el registro del predio?
+        </h2>
+        <div
+            class="flex items-center justify-center sm:justify-end py-4 space-x-3 dark:bg-black dark:bg-opacity-10"
+            [ngClass]="owners && owners.length > 0 ? 'sm:justify-end' : 'sm:justify-center'"
+        >
+            <button mat-raised-button color="primary" (click)="continuar()">
+                Continuar
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                class="bg-danger"
+                (click)="close()"
+            >
+                <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cancelar
+            </button>
+        </div>
+        <!-- <div mat-dialog-actions align="end" class="flex flex-row space-x-4" >
+           </div>-->
+    </div>
+    
+
+</ng-template>
+

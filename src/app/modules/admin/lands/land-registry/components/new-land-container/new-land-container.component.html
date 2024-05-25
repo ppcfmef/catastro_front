@@ -1,5 +1,5 @@
 <section class="container">
-    <app-land-registry-geolocation></app-land-registry-geolocation>
+    <app-land-registry-geolocation [ownerId]="ownerId" ></app-land-registry-geolocation>
     <ng-container  [ngSwitch]="showEditForm">
         <app-land-create-and-edit *ngSwitchCase="true"
             [ownerId]="ownerId"
