@@ -32,7 +32,6 @@ export class NewOwnerLandPage implements OnInit {
       this.ownerId = params.ownerId ? Number(params.ownerId) : params.ownerId;
       this.landId = params.landId ? Number(params.landId) : params.landId;
       this.initialPage = true;
-      console.log( this.ownerId, this.landId , 'OnInit NewOwnerLandPage');
     });
 
 //  this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;

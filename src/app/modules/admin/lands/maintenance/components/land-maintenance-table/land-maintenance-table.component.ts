@@ -45,7 +45,6 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
           if(this.typeAction===Actions.EDITAR){
 
             dialogRef.afterClosed().subscribe((result) => {
-                console.log('result>>',result);
                 //land={... result};
 
                 Object.assign(land, result);

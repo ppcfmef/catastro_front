@@ -120,9 +120,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: any) => {
-
-                /*console.log('this.user>>', this.user);*/
-                console.log(user);
                 this.ubigeo = user?.ubigeo;
 
 
@@ -162,7 +159,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 this.masterDomain = result;
-                console.log('this.masterDomain>>', this.masterDomain);
             });
 
 
@@ -280,13 +276,11 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     }
 
                 );
-                console.log(' optionsUU', this.optionsUU);
             });
         };
     };
 
     onSearch(): void {
-        console.log(this.selectedOption, 'options');
         let where = '';
         let params = {};
         if (this.selectedOption === '1') {
@@ -311,20 +305,16 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                             const shortName = tipoVia?.shortName;
                             return { id: attributes['PARTIDA'], name: `${shortName} ${attributes['NOM_VIA']}  ${attributes['NUM_MUN']}  `, geometry: f.geometry };
                         });
-                    console.log('  this.results 2>>', this.results);
                 });
             }
             else {
-                console.log('selectedOptionFeature>>', this.selectedOptionFeature);
                 this.onGo(this.selectedOptionFeature);
             }
 
         }
 
         else if (this.selectedOption === '3') {
-            console.log('lt>>',this.searchForms.get('lt'));
             if (this.searchForms.get('lt').value.id) {
-                console.log(this.searchForms.get('lt'));
                 this.selectedOptionFeature = this.searchForms.get('lt').value;
                 this.onGo(this.selectedOptionFeature);
             }
@@ -339,7 +329,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             }
         }
         else if (!this.selectedOption) {
-            console.log('not option')
             return;
         }
     }
@@ -417,7 +406,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         if (value) {
             this.eventOnGo.emit(value);
             this.parsearData(value, this.selectedOption);
-            console.log(value, 'valueeGo');
         }
 
     };
@@ -439,14 +427,12 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 this.changeStyle = val?.id;
                 break;
             case '3':
-                console.log('val 3>>', val);
-                console.log('mz',this.searchForms.get('mz'));
-                console.log('lt',this.searchForms.get('lt'));
-                this.showSelected = this.searchForms.get('habUrb').value.name + ' ' + 'Mz' + this.searchForms.get('mz').value.name + ' ' + 'Lt' + this.searchForms.get('lt').value.name;
+                this.showSelected = this.searchForms.get('habUrb').value.name + ' '
+                                    + 'Mz' + this.searchForms.get('mz').value.name + ' ' + 'Lt' + this.searchForms.get('lt').value.name;
                 this.changeStyle = val?.id;
                 break;
             default:
-                console.log("Opción no válida");
+                console.log('Opción no válida');
         }
     }
 
@@ -455,24 +441,60 @@ export class SearchMapComponent implements OnInit, OnDestroy {
         this.results = null;
         this.searchForms.reset();
         this.selectedOption = data.cod;
-        console.log(this.selectedOption, 'selectOpt')
+    }
+
+
+
+    openPanel(): void {
+        // Return if the messages panel or its origin is not defined
+        if (!this._messagesPanel || !this._searchOrigin) {
+            return;
+        }
+
+        // Create the overlay if it doesn't exist
+        if (!this._overlayRef) {
+            this._createOverlay();
+        }
+
+        // Attach the portal to the overlay
+        this._overlayRef.attach(
+            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
+        );
+        this.initSelect();
+    }
+
+
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+
+    displayFn(option: any): string {
+        return option && option.name ? option.name : '';
+
+    }
+
+
+
+    onClean(): void {
+        this.searchForms.reset();
+        this.searchForms.get('habUrb').setValue('');
+        this.searchForms.get('mz').setValue('');
+        this.searchForms.get('lt').setValue('');
+        this.results = null;
+    }
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 
     private _filter(value, arrays): string[] {
-        console.log(value, 'value normalize')
         const normalizeText = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
             .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
             .replace(/\s+/g, '').toLowerCase();
 
         const val = value && value.name ? normalizeText(value.name) : normalizeText(value);
-        // const val = (value && value.name) ? normalizeText(value.name) : (value ? normalizeText(value) : '');
 
-        console.log(val, 'val normalize')
-        // if (val === '') {
-        //     return arrays;
-        // }
-
-        return arrays.filter(item => {
+        return arrays.filter((item) => {
             const itemNameNormalized = normalizeText(item.name);
             return itemNameNormalized.includes(val);
         });
@@ -525,49 +547,6 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             this.results = null;
             this._changeDetectorRef.markForCheck();
         });
-    }
-
-    openPanel(): void {
-        // Return if the messages panel or its origin is not defined
-        if (!this._messagesPanel || !this._searchOrigin) {
-            return;
-        }
-
-        // Create the overlay if it doesn't exist
-        if (!this._overlayRef) {
-            this._createOverlay();
-        }
-
-        // Attach the portal to the overlay
-        this._overlayRef.attach(
-            new TemplatePortal(this._messagesPanel, this._viewContainerRef)
-        );
-        this.initSelect();
-    }
-
-
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
-    displayFn(option: any): string {
-        console.log(option, 'opt')
-        return option && option.name ? option.name : '';
-
-    }
-
-
-
-    onClean(): void {
-        this.searchForms.reset();
-        this.searchForms.get('habUrb').setValue('');
-        this.searchForms.get('mz').setValue('');
-        this.searchForms.get('lt').setValue('');
-        this.results = null;
-    }
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 }
 

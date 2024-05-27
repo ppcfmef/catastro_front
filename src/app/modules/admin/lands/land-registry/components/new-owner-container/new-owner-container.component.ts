@@ -51,7 +51,6 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
       this.landOwner.setValue( result);
 
-      console.log(' this.landOwner>>', this.landOwner);
     });
 
     /*this.navigationAuthorizationService.userScopePermission(this.idView)
@@ -161,7 +160,6 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
           .toPromise()
           .then(
             (result: any) => {
-              console.log('result>>',result);
               this._fuseSplashScreenService.hide();
 
               if (result && result.length>0){

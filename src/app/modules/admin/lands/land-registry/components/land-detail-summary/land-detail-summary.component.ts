@@ -23,6 +23,5 @@ export class LandDetailSummaryComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('>>>>app-land-detail-summary', this.landRecord);
   }
 }
