@@ -122,7 +122,7 @@ export class SearchSumaryPage implements OnInit {
         this.selectedCardId = option;
       }
 
-      this._changeDetectorRef.detectChanges();
+    //   this._changeDetectorRef.detectChanges();
     });
   }
 

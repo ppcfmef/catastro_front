@@ -32,6 +32,12 @@ export class LandSummaryTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.landRegistryService.landSelectedSource.subscribe((landSelected) =>  {
+        if(landSelected) {
+            this.landSelected?.clear();
+        }
+    });
+
     this.landRegistryService.getLandCreate()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
