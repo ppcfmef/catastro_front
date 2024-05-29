@@ -65,8 +65,8 @@ moment.locale('es');
 })
 export class LandRegistryGeolocationComponent
     implements OnInit, AfterViewInit, OnDestroy
-{ 
-    
+{
+
     @Input() ownerId: number = 639476.5456999997;
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
@@ -192,7 +192,7 @@ export class LandRegistryGeolocationComponent
             id: -1,
             idServer: 0,
             urlBase:
-                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: 'ESTADO=1',
@@ -1057,7 +1057,7 @@ export class LandRegistryGeolocationComponent
                                                                      forkJoin(arrayService).subscribe((res: any[]) => {
                                                                         let owners =[];
 
-                                                                    
+
                                                                         res.forEach((responseOwner: any)=>{
                                                                              console.log('responseOwner>>',responseOwner);
                                                                              /*owners.concat(responseOwner.results);*/
@@ -1065,7 +1065,7 @@ export class LandRegistryGeolocationComponent
                                                                             /*return   responseOwner.results;*/
                                                                             console.log('owners>>',owners);
                                                                         });
-                                                                        
+
                                                                         /*const owners =
                                                                         responseOwner.results;*/
                                                                     console.log(
@@ -1084,7 +1084,7 @@ export class LandRegistryGeolocationComponent
                                                                             }
                                                                         );
 
-                                                       
+
 
                                                                     dialogRef
                                                                         .afterClosed()
@@ -1152,7 +1152,7 @@ export class LandRegistryGeolocationComponent
                                                                                 responseOwner
                                                                             ) => {
 
-                                                                               
+
                                                                             }
                                                                         );
                                                                 }
