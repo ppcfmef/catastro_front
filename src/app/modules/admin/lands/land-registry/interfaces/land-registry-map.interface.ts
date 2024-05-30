@@ -79,4 +79,7 @@ export interface LandRegistryMap {
     ranNum: string;
     streetBlock: string;
     rangCup: string;
+    longitudePuerta: number;
+    latitudePuerta: number;
+    idLotePuerta: number;
 }
