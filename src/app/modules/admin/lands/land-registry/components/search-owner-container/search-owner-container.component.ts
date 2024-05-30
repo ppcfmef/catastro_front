@@ -158,16 +158,14 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     .toPromise()
     .then(
       (landResult) => {
-
         this.dataSourceLands = landResult.results;
         this.lengthLandsOwner = landResult.count;
 
         this.landRecord = landResult.results && landResult.results.length>0? this.dataSourceLands[0]:null;
         // this.showLandsMap= true;
-     
       }
     );
-    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0.010);
+    setTimeout(() => {document.getElementById('dowloand').scrollIntoView();}, 0.010);
   }
 
   onChangePageLand(data: {paginator: any; sort: Sort}): void {
@@ -176,11 +174,10 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     const limit = data?.paginator.pageSize;
     const offset = limit * data?.paginator.pageIndex;
     const ordering = this.orderingFormater(data.sort);
-    const queryParams = { limit, offset, owner, ordering,  };
+    const queryParams = { limit, offset, ordering,  };
 
-
-
-    this.landRecordService.getList(queryParams).subscribe(
+    //change service this.landRecordService.getList by  this.landRegistryService.getLandbyOwner
+    this.landRegistryService.getLandbyOwner(owner,queryParams).subscribe(
       (response) => {
         this.dataSourceLands = response.results;
         this.lengthLandsOwner = response.count;
@@ -191,7 +188,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onShowLandsMap(landRecord: LandRecord): void {
     this.showLandsMap = true;
     this.landRecord = landRecord;
-    setTimeout(() => {document.getElementById('dowloand').scrollIntoView()}, 0.001);
+    setTimeout(() => {document.getElementById('dowloand').scrollIntoView();}, 0.001);
   }
 
   onDowloandCroquis(): void{
