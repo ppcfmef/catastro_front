@@ -192,7 +192,7 @@ export class LandRegistryGeolocationComponent
             id: -1,
             idServer: 0,
             urlBase:
-                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: 'ESTADO=1',
