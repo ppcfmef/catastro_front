@@ -47,6 +47,8 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
 
       if (changes?.length?.currentValue) {
         this.tableFilters.paginator.length = changes?.length?.currentValue;
+        this.pageIndex = 0;
+        this.pageSize = 10;
       }
   }
 
@@ -70,7 +72,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
 
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
-    this.changePage.emit(paginator);
+    this.pageSize = paginator.pageSize;
   }
 
   onShowLandsTable(landOwner: LandOwner): void {

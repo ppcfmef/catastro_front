@@ -206,7 +206,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 debounceTime(300),
                 takeUntil(this._unsubscribeAll),
                 map(value => this._filter(value, this.optionsDirection))
-            )
+            );
 
         //select habUrb
         this.filteredOptionsUU = this.searchForms.get('habUrb').valueChanges
@@ -214,12 +214,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 startWith(''),
                 debounceTime(300),
                 takeUntil(this._unsubscribeAll),
-                map(value => {
-                    //this.selectedOptionFeature = this.searchForms.get('habUrb').value;
-
-
-                    return this._filter(value, this.optionsUU);
-                })
+                map(value =>  this._filter(value, this.optionsUU))
             );
 
         //select mz
@@ -228,7 +223,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 startWith(''),
                 //debounceTime(30),
                 takeUntil(this._unsubscribeAll),
-                map(value => {
+                map((value) => {
                     this.selectedOptionFeature = this.searchForms.get('mz').value;
                     return this._filter(value, this.optionsMz);
                 })
@@ -240,7 +235,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 startWith(''),
                 debounceTime(30),
                 takeUntil(this._unsubscribeAll),
-                map(value => {
+                map((value) => {
                     this.selectedOptionFeature = this.searchForms.get('lt').value;
                     return this._filter(value, this.optionsLt);
                 })
@@ -265,7 +260,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                         return { id: attributes['COD_VIA'], name: `${shortName}. ${attributes['NOM_VIA']}`, geometry: f.geometry };
                     });
             });
-            const featureLayer2 = this.layersInfo.find((l) => l.id === 4)?.featureLayer;
+            const featureLayer2 = this.layersInfo.find(l => l.id === 4)?.featureLayer;
             MapUtils.queryFeaturelayer(featureLayer2, where).then((features) => {
                 this.optionsUU = features.map(
                     (f: any) => {
@@ -358,7 +353,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                 startWith(''),
                 //debounceTime(30),
                 takeUntil(this._unsubscribeAll),
-                map(value => {
+                map((value) => {
                     this.selectedOptionFeature = this.searchForms.get('mz').value;
                     return this._filter(value, this.optionsMz);
                 })
@@ -394,7 +389,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
                     startWith(''),
                     debounceTime(30),
                     takeUntil(this._unsubscribeAll),
-                    map(value => {
+                    map((value) => {
                         this.selectedOptionFeature = this.searchForms.get('lt').value;
                         return this._filter(value, this.optionsLt);
                     })

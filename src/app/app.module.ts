@@ -18,6 +18,8 @@ import { RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import {environment} from '../environments/environment';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import 'tslib';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomMatPaginatorIntl } from './core/config/MatPaginatorIntl';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -76,6 +78,7 @@ const MY_DATE_FORMAT = {
               siteKey: RECAPTCHA_V2_KEY,
             } as RecaptchaSettings,
         },
+        { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     ]
 })
 export class AppModule
