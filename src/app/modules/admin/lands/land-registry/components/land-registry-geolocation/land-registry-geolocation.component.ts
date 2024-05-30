@@ -155,6 +155,19 @@ export class LandRegistryGeolocationComponent
         height: '50px',
         yoffset: '15px',
     };
+
+
+    simpleMarkerSymbolEntrada ={
+        type: 'simple-marker',
+        style: 'square',
+        size: '10px', // pixels
+        color: [0, 255, 0, 0.5],
+
+        outline: {
+            color: [0, 255, 0], // White
+            width: 1.5,
+        },
+    };
     /*simpleMarkerSearch = {
         type: 'simple-marker',
         style: 'square',
@@ -454,7 +467,7 @@ export class LandRegistryGeolocationComponent
     displayPopupDiv = 'none';
     popupDiv: any;
     landRegistryMapServiceSubscription: any;
-
+    pointEntradaGraphic: any;
     constructor(
         private _userService: UserService,
         private _commonService: CommonService,
@@ -886,7 +899,7 @@ export class LandRegistryGeolocationComponent
                                 ) {
                                     return r;
                                 }
-                            });
+                            }); // layer Id es de lotes
                             const resultsPredio = response.results.filter(
                                 (r) => {
                                     if (
@@ -909,7 +922,7 @@ export class LandRegistryGeolocationComponent
                                 ) {
                                     return r;
                                 }
-                            });
+                            });// layer Id es de poligono de lotes
 
                             console.log('results<<', results);
 
@@ -959,6 +972,13 @@ export class LandRegistryGeolocationComponent
                                                     );
                                             }
                                         } else {
+
+
+                                            const tipoLote = graphic.attributes['TIP_LOT'];
+
+
+
+
                                             if (
                                                 resultsLote.length > 0 &&
                                                 resultsLote[0].graphic
@@ -1193,8 +1213,30 @@ export class LandRegistryGeolocationComponent
                                                             this._landRegistryMapService.setEstado(
                                                                 Estado.LEER
                                                             );
-                                                            this._landRegistryMapService.landOut =
-                                                                this.landRegistryMapModel;
+
+                                                            if( tipoLote === '2'){
+                                                                dialogRef =
+                                                                this.confirmationService.info(
+                                                                    'Puerta de Ingreso',
+                                                                    'Debe seleccionar la puerta de ingreso'
+                                                                );
+                                                                this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+
+
+                                                                /*this.addPoint(
+                                                                    latitude,
+                                                                    longitude,
+                                                                    this
+                                                                        .simpleMarkerSymbolUndefined
+                                                                );*/
+
+                                                            }
+
+                                                            else{
+                                                                this._landRegistryMapService.landOut =this.landRegistryMapModel;
+                                                            }
+
+
                                                         } else {
                                                             if (this.view) {
                                                                 this.view.popup.close();
@@ -1264,8 +1306,100 @@ export class LandRegistryGeolocationComponent
                                             }
                                         });
                                     }
+
+
+
+
+
                                 }
                             }
+                        });
+                    }
+
+
+                    else if(this.estado === Estado.NUEVO_PUNTO_MEDITERRANEO){
+                        this.view.hitTest(event).then((response) => {
+                            console.log('response.results>>', response.results);
+                            const puntosEntrada = response.results.filter((r) => {
+                                if (
+                                    r &&
+                                    r.graphic &&
+                                    r.graphic.layer &&
+                                    r.graphic.layer.layerId === 1
+                                ) {
+                                    return r;
+                                }
+                            });
+
+                            if(puntosEntrada.length>0){
+                                const puntoEntrada=puntosEntrada[0];
+                                ;
+                                console.log('puntoEntrada>>',puntoEntrada);
+                                const pointEntrada = {
+                                    //Create a point
+                                    type: 'point',
+                                    longitude: puntoEntrada?.graphic?.geometry?.longitude,
+                                    latitude: puntoEntrada?.graphic?.geometry?.latitude,
+                                };
+
+                                this.pointEntradaGraphic = new Graphic({
+                                    geometry: pointEntrada,
+                                    symbol: this.simpleMarkerSymbolEntrada,
+                                    /*symbol: this.simpleMarkerSymbolUndefined*/
+                                });
+
+                                if(this.pointEntradaGraphic){
+                                    this.view?.graphics?.remove(this.pointEntradaGraphic);
+                                }
+                                this.view?.graphics?.add(this.pointEntradaGraphic);
+
+
+                                const dialogRef =
+                                this.confirmationService.info(
+                                    'Asignar Puerta',
+                                    'Desea asignar esta puerta?'
+                                );
+
+
+                                dialogRef
+                                .afterClosed()
+                                .toPromise()
+                                .then((option) => {
+                                    if (
+                                        option ===
+                                        'confirmed'
+                                    ) {
+
+                                        /*this.landRegistryMapModel.*/
+                                        this.landRegistryMapModel.codStreet = puntoEntrada?.graphic.attributes['COD_VIA'];
+                                        this.landRegistryMapModel.idAranc = puntoEntrada?.graphic.attributes[ 'ID_ARANC'];
+                                        this.landRegistryMapModel.streetType = puntoEntrada?.graphic.attributes['TIP_VIA'];
+                                        this.landRegistryMapModel.streetName = puntoEntrada?.graphic.attributes['NOM_VIA'];
+                                        this.landRegistryMapModel.longitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_X'];
+                                        this.landRegistryMapModel.latitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_Y'];
+                                        this.landRegistryMapModel.idLotePuerta = puntoEntrada?.graphic.attributes[ 'ID_LOTE'];
+                                        this._landRegistryMapService.landOut =this.landRegistryMapModel;
+                                        this.estado = Estado.CREAR;
+                                    }
+                            });
+/*
+ dialogRef
+                                                        .afterClosed()
+                                                        .toPromise()
+                                                        .then((option) => {
+                                                            if (
+                                                                option ===
+                                                                'confirmed'
+                                                            ) {});
+*/
+
+
+
+                                //dialogRef.afterClosed().subscribe
+
+
+                            }
+
                         });
                     }
                 });
