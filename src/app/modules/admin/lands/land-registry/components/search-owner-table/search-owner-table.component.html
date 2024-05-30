@@ -87,10 +87,12 @@
     </table>
   </div>
 
-  <mat-paginator [length]="length"
+  <mat-paginator #tablePaginator
+          [length]="length"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [pageSizeOptions]="[1, 5, 10, 25, 50, 100, 250, 500]"
+          (page)="onPage($event)"
           >
   </mat-paginator>
 </div>

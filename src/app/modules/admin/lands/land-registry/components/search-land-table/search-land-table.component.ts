@@ -46,6 +46,8 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
 
       if (changes?.length?.currentValue) {
         this.tableFilters.paginator.length = changes?.length?.currentValue;
+        this.pageIndex = 0;
+        this.pageSize = 10;
       }
   }
 
@@ -68,7 +70,7 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
 
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
-    this.changePage.emit(paginator);
+    this.pageSize = paginator.pageSize;
   }
 
   onshowLandMap(landRecord: LandRecord): void {
