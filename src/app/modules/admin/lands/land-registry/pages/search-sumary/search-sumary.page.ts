@@ -144,10 +144,9 @@ export class SearchSumaryPage implements OnInit {
   onSelect(option):void{
     this.selectedCardId = option.id;
     this.landRecordService.filtersOptions$.next(option.id);
-    console.log(this.selectedCardId, 'op')
   };
 
-  onSelectOwner(option):void{
+  onSelectOwner(option): void{
 
   }
 }

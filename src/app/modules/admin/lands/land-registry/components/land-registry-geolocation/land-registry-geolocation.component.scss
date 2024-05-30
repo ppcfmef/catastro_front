@@ -23,12 +23,12 @@
    display: inline!important;
 }
 
-// .map-placeholder {
-//   z-index: 99;
-//   position: absolute;
-//   top: 50px;
-//   left: 20px;
-// }
+.map-placeholder {
+  z-index: 99;
+  position: absolute;
+  top: 50px;
+  left: 20px;
+}
 
 :host ::ng-deep {
 

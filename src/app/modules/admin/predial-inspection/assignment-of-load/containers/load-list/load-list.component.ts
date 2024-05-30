@@ -92,7 +92,6 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     optionSelected(e): void {
         this.optionSelect = e.value;
-        console.log(this.optionSelect, 'here option');
 
         if (this.formFilters.controls['search'].value) {
             this.formFilters.controls['search'].reset();
@@ -119,7 +118,6 @@ export class LoadListComponent implements OnInit, AfterViewInit, OnDestroy {
                     const filters = FormUtils.deleteKeysNullInObject(rawValue);
                     if (filters['search']) {
                         filters['type'] = this.optionSelect;
-                        console.log(filters, 'filt');
                     }
                     if (filters['cod']) {
                         filters['type'] = this.optionSelect;

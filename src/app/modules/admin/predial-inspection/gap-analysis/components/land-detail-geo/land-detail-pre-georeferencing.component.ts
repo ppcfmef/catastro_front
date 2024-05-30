@@ -273,7 +273,6 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes?.dataPoint) {
             this.dataPoint = changes?.dataPoint.currentValue;
-            console.log('this.dataPoint>>', this.dataPoint);
         }
     }
 

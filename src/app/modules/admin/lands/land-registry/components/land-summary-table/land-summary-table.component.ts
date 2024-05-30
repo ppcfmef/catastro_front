@@ -1,16 +1,15 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandRegistryService } from '../../services/land-registry.service';
-
 @Component({
   selector: 'app-land-summary-table',
   templateUrl: './land-summary-table.component.html',
   styleUrls: ['./land-summary-table.component.scss']
 })
-export class LandSummaryTableComponent implements OnInit {
+export class LandSummaryTableComponent implements OnInit, OnDestroy {
 
   @Input() dataSource: LandRegistryMap[];
   @Input() length: number;
@@ -30,12 +29,18 @@ export class LandSummaryTableComponent implements OnInit {
   constructor(
     private landRegistryService: LandRegistryService
   ) { }
+    ngOnDestroy(): void {
+        this.unsubscribeAll.next(null);
+        this.unsubscribeAll.complete();
+    }
 
   ngOnInit(): void {
-    this.landRegistryService.landSelectedSource.subscribe((landSelected) =>  {
-        if(landSelected) {
-            this.landSelected?.clear();
-        }
+    this.landRegistryService.landSelectedSource
+        .pipe(takeUntil(this.unsubscribeAll))
+        .subscribe((landSelected) =>  {
+            if(landSelected) {
+                this.landSelected?.clear();
+            }
     });
 
     this.landRegistryService.getLandCreate()
@@ -46,8 +51,8 @@ export class LandSummaryTableComponent implements OnInit {
       }
     });
     if (this.selectedId && this.dataSource?.length === 1) {
-      this.landSelected.add(this.dataSource[0]);
-    }
+        this.landSelected.add(this.dataSource[0]);
+      }
   }
 
   landSelection(landRecord: LandRegistryMap): void{
@@ -63,11 +68,12 @@ export class LandSummaryTableComponent implements OnInit {
   }
   onPage(paginator: MatPaginator): void {
     this.pageIndex = paginator.pageIndex;
+    this.pageSize = paginator.pageSize;
     this.changePage.emit(paginator);
+    this.landRegistryService.showFormEdit.next(null);
   }
 
   onDownloadDeclaration(landRecord: LandRegistryMap): void {
     this.downloadDeclaration.emit(landRecord);
-    console.log(landRecord, 'download declaration');
   }
 }

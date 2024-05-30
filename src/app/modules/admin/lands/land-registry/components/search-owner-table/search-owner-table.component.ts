@@ -37,25 +37,17 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   ngOnInit(): void {
-    console.log(this.dataTable, 'dataTable');
-    console.log(this.dataSource, 'dataSource');
   }
 
 
   ngOnChanges(changes: SimpleChanges): void {
       if (changes?.dataSource?.currentValue) {
         this.dataTable.data = changes?.dataSource?.currentValue;
-        console.log(this.dataTable, 'data4');
       }
 
       if (changes?.length?.currentValue) {
         this.tableFilters.paginator.length = changes?.length?.currentValue;
-        console.log(this.dataTable, 'data3');
-
       }
-
-      console.log(this.dataTable, 'dataTable2');
-    console.log(this.dataSource, 'dataSource2');
   }
 
   ngAfterViewInit(): void {
@@ -87,7 +79,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   }
 
 
-ngOnDestroy() {
+ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }

@@ -10,7 +10,7 @@
         </app-land-create-and-edit>
 
         <app-land-detail-summary *ngSwitchCase="false"
-            [landRecord]="landRecordIn"
+            [landRecord]="landRecordIn?landRecordIn : landRecordOut "
             (showFormEdit)="receivedShowFormEdit($event)">
         </app-land-detail-summary>
     </ng-container>

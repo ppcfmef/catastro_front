@@ -3,14 +3,14 @@
         <h3 class="subtitle-card mb-2">{{ title?.text }}</h3>
         <mat-icon [svgIcon]="title?.icon"></mat-icon>
     </header>
-    <section>
+    <!-- <section>
         <ng-container *ngIf="isEdit">
             <mat-slide-toggle [disabled]="!landActive" (change)="onToggleStatus($event)" color="primary" class="mb-4"
                 formControlName="status">
                 <span class="ml-2 text-md">Estado del predio</span>
             </mat-slide-toggle>
         </ng-container>
-    </section>
+    </section> -->
 
 
     <!-- <div *ngIf="isEdit" class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-6/12 pr-2.5">
@@ -191,7 +191,7 @@
         <div class="w-full flex items-center justify-end gap-4">
             <button mat-raised-button class="bg-mef-btn-success text-white rounded-md" (click)="saveLand()">
                 Guardar</button>
-            <button mat-stroked-button color="warn" class="rounded-md" (click)="emitShowFormEdit()">Cancelar</button>
+            <button mat-stroked-button color="warn" class="rounded-md" (click)="destroyForm()">Cancelar</button>
         </div>
 
         <button class="button-collapse" (click)="emitShowFormEdit()">

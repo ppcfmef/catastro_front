@@ -54,7 +54,6 @@ export class DetailObserverComponent implements OnInit, OnDestroy{
                     }))
                     .subscribe(
                     (response) => {
-                        console.log(response, 'detail response');
                         this.observation = response[0];
                         this.isLoading = false;
                         this.#changeDetectorRef.markForCheck();

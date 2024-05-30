@@ -501,7 +501,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     async zoomToUbigeo(where: string): Promise<any> {
         try {
-            console.log('where>>', where);
             const layerDistrito = this.layersInfo.find(
                 e => e.title === 'Distritos'
             ).featureLayer;
@@ -530,12 +529,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     async descargar(params: any): Promise<void> {
-        console.log('params>>>',params);
         this._fuseSplashScreenService.show();
         this.proj4DestWkid = params.projection;
         this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
         this.nameZip = `${params.namedistrict}.zip`;
-        console.log('this.proj4DestWkid', this.proj4DestWkid);
         const [
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FeatureLayer,

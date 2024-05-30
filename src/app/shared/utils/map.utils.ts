@@ -161,13 +161,11 @@ export class MapUtils {
     /*if (abortFunction && abortFunction()){
         return false;
     }*/
-    console.log('layer.maxRecordCount>>',layer.sourceJSON.maxRecordCount);
     features = features.concat(queryResult.features);
     if (queryResult.exceededTransferLimit){
 
         query.start = !query.start ? layer.sourceJSON.maxRecordCount : query.start + layer.sourceJSON.maxRecordCount;
         query.num = layer.sourceJSON.maxRecordCount;
-        console.log('quey2>>',query);
         const featuresSecondResult = await MapUtils.queryFeaturesInLayer(layer, query);
         if (featuresSecondResult){
             features = features.concat(featuresSecondResult);

@@ -42,7 +42,6 @@ export class DetailItemComponent implements OnInit, OnDestroy {
                 // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (let index = 0; index < orders.length; index++) {
                     if(item['order'] === orders[index]){
-                        console.log('encointrado');
                         return false;
                     }
                 }

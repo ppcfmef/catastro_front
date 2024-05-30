@@ -18,7 +18,6 @@ export class LandDetailSummaryComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   emitShowFormEdit(): void{
-    console.log(this.landRecord, 'lanrecord');
     this.showFormEdit.emit(true);
   }
 

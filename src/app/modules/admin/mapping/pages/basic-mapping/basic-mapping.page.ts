@@ -55,19 +55,14 @@ urlString='https://ws.mineco.gob.pe/portaldfvisor/actcarto/';
     .subscribe((user: any) => {
         let paramsUbigeo ='';
         this.user = user;
-
-        console.log('this.user>>', this.user);
         this.userUbigeo =
             this.user.ubigeo && this.user.ubigeo
                 ? this.user.ubigeo
                 : '150101';
           this._commonService.getDistrictResource(this.userUbigeo).subscribe((data: any)=>{
-            console.log(data);
-
             const ext: any=data.extensions[0];
             this.x=ext.x;
             this.y=ext.y;
-            console.log(this.x,this.y);
 
 
 

@@ -37,22 +37,6 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     }
 
   ngOnInit(): void {
-    /*this.navigationAuthorizationService.userScopePermission(this.idView)
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((data: any) => {
-      if(!data?.limitScope){
-        this.ubigeo = null;
-
-      }
-      else {
-
-        this.ubigeo = data?.ubigeo;
-      }
-
-      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
-    });*/
-    //console.log('ubigeo',this.ubigeo);
-
    combineLatest([
       this.landRegistryService.getLandOwner(), // Se ejecuta cuando cambiamos de propietario
       this.landRegistryService.getLandRegister() // se ejecuta cuando agregamos o editamos registros
@@ -103,16 +87,10 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     this.landRegistryMapService.landIn = landRecord;
   }
 
-  // createLandRecord(): void {
-  //   this.landRegistryService.setLandCreate(true);
-  //   //this.landRegistryMapService.landIn = null;
-  // }
-
   onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
     const ownerFilter = { owner: this.landOwnerId };
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
-    //const queryParams = { limit, offset, ...ownerFilter };
 
     const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset });
     this.landRegistryService

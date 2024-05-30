@@ -136,7 +136,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   emitShowFormEdit(value: boolean): void {
     /*this.formEdit?.reset();*/
-     
+
 
     if (this.isCreate) {
       this.formEdit?.reset();
@@ -257,10 +257,8 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
 
   onSelectUbigeo(ubigeo: string): void {
     this.ubigeo = ubigeo;
-    console.log('this.ubigeo >>>', this.ubigeo);
     this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
     this.formEdit.get('ubigeo').setValue(this.ubigeo);
-    console.log('create user >>>', this.formEdit.value);
   }
 
   ngOnDestroy(): void {
