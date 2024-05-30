@@ -139,7 +139,7 @@ export class MapUtils {
         queryLayer.outSpatialReference = view.spatialReference;
 
         const res=await layer.queryExtent(queryLayer);
-        console.log('res>>',res);
+
         if(view){
             view.extent=res.extent;
         }
@@ -161,13 +161,11 @@ export class MapUtils {
     /*if (abortFunction && abortFunction()){
         return false;
     }*/
-    console.log('layer.maxRecordCount>>',layer.sourceJSON.maxRecordCount);
     features = features.concat(queryResult.features);
     if (queryResult.exceededTransferLimit){
 
         query.start = !query.start ? layer.sourceJSON.maxRecordCount : query.start + layer.sourceJSON.maxRecordCount;
         query.num = layer.sourceJSON.maxRecordCount;
-        console.log('quey2>>',query);
         const featuresSecondResult = await MapUtils.queryFeaturesInLayer(layer, query);
         if (featuresSecondResult){
             features = features.concat(featuresSecondResult);
@@ -372,31 +370,31 @@ static async createArcgisJSON(
        });*/
     static getCenterOfPolyline(polyline: any): any {
         const paths = polyline.paths;
-    
+
         let totalMidpointX = 0;
         let totalMidpointY = 0;
         let totalSegments = 0;
-    
+
         paths.forEach((path) => {
           for (let i = 0; i < path.length - 1; i++) {
             const startPoint = path[i];
             const endPoint = path[i + 1];
-            
+
             const midpointX = (startPoint[0] + endPoint[0]) / 2;
             const midpointY = (startPoint[1] + endPoint[1]) / 2;
-        
+
             totalMidpointX += midpointX;
             totalMidpointY += midpointY;
             totalSegments++;
           }
         });
-    
+
         const centerOfPolyline = {
            x:totalMidpointX / totalSegments,
            y:totalMidpointY / totalSegments
         };
         return centerOfPolyline;
-    
+
     }
 projectPoint(point: any,proj4SrcKey: string,proj4DestKey: string): any {
     return proj4(

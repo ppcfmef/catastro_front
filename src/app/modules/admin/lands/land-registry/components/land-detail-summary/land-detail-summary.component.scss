@@ -2,16 +2,17 @@
     .container{
         background-color: white;
         padding: 16px;
-        border-radius: 8px;
+        border-radius: 2px;
         margin-top: 10px;
         position: absolute;
-        width: calc(100% - 20px);
-        bottom: 10px;
-        
+        max-width: calc(100% - 280px);
+        margin-right: 16px;
+        bottom: 40px;
+        right: 10px;
+
     }
     p{
         margin-bottom: 6px;
-        margin-right: 28px;
         display: inline-block;
     }
 
@@ -47,4 +48,11 @@
         border-right: 13px solid transparent;
         border-top: 12px solid white;
     }
+}
+
+.btn_close {
+    position: absolute;
+    top:-19px;
+    right: -10px;
+    background-color: #fef2f2
 }

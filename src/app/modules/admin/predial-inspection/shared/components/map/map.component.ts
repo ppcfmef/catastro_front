@@ -144,7 +144,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     onSelectUbigeo(ubigeo: any): void {
         this._currentUserUbigeo = ubigeo;
-        console.log('this.ubigeo ', this._currentUserUbigeo);
         localStorage.setItem('ubigeo', this._currentUserUbigeo);
         this._operatorService.updateUbigeo();
         this._queryUbigeo = `${this._fieldUbigeo} = '${this._currentUserUbigeo}'`;

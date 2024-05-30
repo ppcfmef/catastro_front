@@ -13,6 +13,8 @@ import { MasterDomain } from '../interfaces/master-domain.interface';
 export class LandRegistryService {
 
   apiUrl = environment.apiUrl;
+  landSelectedSource = new BehaviorSubject<boolean| null>(null);
+  showFormEdit = new BehaviorSubject<boolean | null>(null);
   private landOwner$ = new BehaviorSubject<LandOwner>(null);
   private landCreate$ = new BehaviorSubject<boolean>(false);
   private landRegister$ = new BehaviorSubject<LandRegistryMap>(null);

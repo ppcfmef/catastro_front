@@ -34,7 +34,6 @@ export class LandOwnerModel implements LandOwner {
   }
 
   setValue(value: LandOwner): void {
-    console.log('setValue>>',value);
     Object.assign(this, value);
   }
 

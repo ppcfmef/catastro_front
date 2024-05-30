@@ -33,25 +33,21 @@
 :host ::ng-deep {
 
 
-  .esri-component.esri-search.esri-widget{
-    position: absolute !important;
-    top: 0 !important;
-    left: 6px !important;
-  }
+//   .esri-component.esri-search.esri-widget{
+//     position: absolute !important;
+//     top: 0 !important;
+//     left: 6px !important;
+ // }
 
   .esri-ui-top-left.esri-ui-corner {
-    bottom: 0 !important;
-    right: 0 !important;
     left: 0;
-    top: 0;
+    top: 40px !important;
   }
 
   .esri-component.esri-zoom.esri-widget {
     display: flex;
     gap: 8px;
     background: transparent;
-    bottom: 0 !important;
-    right: 0;
     position: absolute;
   }
   .esri-zoom
@@ -65,8 +61,12 @@
 
   /* width & color of legend */
 .esri-component.esri-legend.esri-widget.esri-widget--panel {
-    max-width: 250px !important;
+    max-width: 210px !important;
     /*background-color: rgba(15, 15, 15, 0.75);*/
+  }
+
+  .esri-legend__service {
+    padding: 12px 10px !important;
   }
 }
 
@@ -80,7 +80,8 @@
   user-select: none;
   cursor: pointer;
   z-index: 100;
-  width: 300px;
+  width: 65%;
+  max-width: 300px;
 }
 
 

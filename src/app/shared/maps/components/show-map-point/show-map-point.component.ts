@@ -290,9 +290,7 @@ export class ShowMapPointComponent
         this.renderMap = this.points.every(
             point => point.latitude != null || point.longitude != null
         );
-        console.log(this.renderMap, 'renderMap');
         if (this.renderMap) {
-            console.log(this.renderMap, ' volver a reiniciar mapa');
             setTimeout(() => {
                 this.initializeMap();
             }, 0.001);
@@ -302,7 +300,6 @@ export class ShowMapPointComponent
 
     ngOnChanges(): void {
         if (this.view) {
-            console.log(this.view, 'this.view');
             this.addPoints(this.points);
         }
         this.renderMap = this.points.every(
@@ -310,14 +307,10 @@ export class ShowMapPointComponent
         );
         this._changeDetectorRef.markForCheck();
         if (this.renderMap) {
-            console.log(this.renderMap, ' volver a reiniciar mapa');
             setTimeout(() => {
                 this.initializeMap();
             }, 0.001);
         }
-        console.log(this.renderMap, 'renderMap onchange');
-        console.log(this.landRecord, 'landRecord onchange');
-        console.log(this.points, 'points onchange');
     }
     /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
@@ -1151,7 +1144,6 @@ export class ShowMapPointComponent
         this.view.takeScreenshot().then((screenshot) => {
             const imageElement: any =
                 document.getElementById('screenshotImage');
-            console.log('screenshot.dataUrl>>', screenshot.dataUrl);
             imageElement.src = screenshot.dataUrl;
         });
     };

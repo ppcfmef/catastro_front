@@ -41,6 +41,7 @@ import { MapPlaceholderComponent } from './components/map-placeholder/map-placeh
 import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-land-owner.component';
 import { SearchMapComponent } from './components/search-map/searchMap.component';
 import { SearchModule } from 'app/layout/common/search/search.module';
+import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { SearchModule } from 'app/layout/common/search/search.module';
     MatSelectModule,
     MatProgressSpinnerModule,
     SearchMapComponent,
-    SearchModule
+    SearchModule,
+    FuseScrollbarModule
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: []

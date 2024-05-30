@@ -25,8 +25,6 @@ export class OwnerLandDetailComponent implements OnInit, OnChanges {
     const ownerCurentValue = changes?.landOwnerIn?.currentValue;
     if (ownerCurentValue) {
       this.landOwner.setValue(ownerCurentValue);
-      console.log('ownerCurentValue',ownerCurentValue);
-      console.log('landOwner',this.landOwner);
     }
   }
 

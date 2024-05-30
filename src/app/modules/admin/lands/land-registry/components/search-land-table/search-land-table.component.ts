@@ -50,7 +50,6 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    console.log(this.dataTable, 'data table');
     this.dataTable.sort = this.tableSort;
 
     merge(this.tableSort?.sortChange, this.tablePaginator?.page)
@@ -73,7 +72,6 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   onshowLandMap(landRecord: LandRecord): void {
-    console.log(landRecord , 'table land record');
     this.showLandMap.emit(landRecord);
   }
 }

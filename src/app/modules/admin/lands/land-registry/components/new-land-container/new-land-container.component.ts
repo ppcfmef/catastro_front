@@ -26,6 +26,10 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.landRegistryService.showFormEdit.subscribe((showFromEdit) => {
+        this.showEditForm = showFromEdit;
+    });
+
     this.landRegistryService.getLandOwner()
     .subscribe(result => this.ownerId = result?.id);
 

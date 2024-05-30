@@ -1,17 +1,14 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, OnChanges, OnDestroy, Input, SimpleChanges } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryService } from '../../services/land-registry.service';
-import { LandOwner } from '../../interfaces/land-owner.interface';
-import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { IntegrationService } from 'app/shared/services/integration.service';
 import { SatLandOwner } from 'app/shared/interfaces/integrations.inteface';
 import { LandOwnerModel } from '../../models/land-owner.model';
-import { error } from 'console';
 import { FuseValidators } from '@fuse/validators';
 
 @Component({
@@ -25,7 +22,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   showFormEdit: boolean | null;
   showButtons: boolean = false;
   params: any ={};
-  search: UntypedFormControl = new UntypedFormControl();
+  search: FormControl = new FormControl();
   landOwner: LandOwnerModel = new LandOwnerModel();
   idView = 'gprpregist';
   hideSelectUbigeo = true;
@@ -35,11 +32,10 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   constructor(
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
-    private navigationAuthorizationService: NavigationAuthorizationService,
     private _fuseSplashScreenService: FuseSplashScreenService,
     private integrationService: IntegrationService,
   ) {
-    this.search = new UntypedFormControl('');
+    this.search = new FormControl('');
   }
 
   ngOnInit(): void {
@@ -51,23 +47,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
       this.landOwner.setValue( result);
 
-      console.log(' this.landOwner>>', this.landOwner);
     });
-
-    /*this.navigationAuthorizationService.userScopePermission(this.idView)
-    .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe((data: any) => {
-      if(!data?.limitScope){
-        this.ubigeo = null;
-        this.hideSelectUbigeo = false;
-      }
-      else {
-        this.hideSelectUbigeo = true;
-        this.ubigeo = data?.ubigeo;
-      }
-
-      this.navigationAuthorizationService.ubigeoNavigation = this.ubigeo;
-    });*/
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -84,6 +64,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   receivedShowFormEdit(event): void{
     this.showFormEdit = event;
+    console.log(event, 'EVENTS');
   }
 
   newOwner(): void{
@@ -98,62 +79,9 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
       return;
     };
     this.searchOwnerbyDocument(searchText);
-
-  /*  if(searchText!==''){
-        const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
-
-
-
-        this._fuseSplashScreenService.show();
-
-
-          this.landRegistryService.searchOwnerbyDocument(params)
-          .toPromise()
-          .then(
-            (result: any) => {
-              console.log('result>>',result);
-              this._fuseSplashScreenService.hide();
-
-              if (result && result.length>0){
-                  this.receivedShowFormEdit(false);
-                  this.landRegistryService.setLandOwner(result[0]);
-
-              }
-
-              else{
-
-                  const dialogRef = this.confirmationService.errorInfo(
-                    `Contribuyente no encontrado`,
-                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
-                    );
-
-                    dialogRef.afterClosed().subscribe((option) => {
-                      // if (option === 'confirmed') {
-                      //   this.receivedShowFormEdit(true);
-                      //   console.log('pasar documento al formulario', searchText);
-                      // }
-
-                      this.search.reset();
-                      this.showFormEdit = null;
-                      this.landRegistryService.setLandOwner(null);
-                    });
-              }
-
-            },
-            (error) => {
-              this._fuseSplashScreenService.hide();
-
-
-            }
-          );
-
-
-
-    }
-*/
   }
-
   searchOwnerbyDocument(searchText: any): void{
+    this.showFormEdit = false;
     if(!FuseValidators.isEmptyInputValue(searchText)){
         const params = CommonUtils.deleteKeysNullInObject({ ubigeo: this.ubigeo, code:searchText,limit:1,offset:5});
         this._fuseSplashScreenService.show();
@@ -161,9 +89,10 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
           .toPromise()
           .then(
             (result: any) => {
-              console.log('result>>',result);
+                this.showFormEdit = true;
+                this.landRegistryService.setLandOwner(null);
+                this.landRegistryService.showFormEdit.next(null);
               this._fuseSplashScreenService.hide();
-
               if (result && result.length>0){
                   this.receivedShowFormEdit(false);
                   this.landRegistryService.setLandOwner(result[0]);
@@ -172,101 +101,14 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
               }
 
               else{
-
                 this.searhSrtm(searchText);
-
-                  /*const dialogRef = this.confirmationService.errorInfo(
-                    `Contribuyente no encontrado`,
-                    `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en su sistema de renta`
-                    );
-
-                    dialogRef.afterClosed().subscribe((option) => {
-
-
-                      this.search.reset();
-                      this.showFormEdit = null;
-                      this.landRegistryService.setLandOwner(null);
-                    });*/
               }
 
             },
-            (error) => {
+            (errors) => {
               this._fuseSplashScreenService.hide();
-
-
-              /*const dialogRef = this.confirmationService.error(
-                'Contribuyente no encontrado',
-                `¿Desea crear un nuevo contribuyente con documento ${searchText}?`
-              );
-
-              dialogRef.afterClosed().subscribe((option) => {
-                if (option === 'confirmed') {
-                  this.receivedShowFormEdit(true);
-                  console.log('pasar documento al formulario', searchText);
-                }
-                this.search.reset();
-              });*/
             }
           );
-
-
-
-/*
-        this.landRegistryService.searchOwnerbyDocument(params)
-        .toPromise()
-        .then(
-          (result: any) => {
-            console.log('result>>',result);
-            this._fuseSplashScreenService.hide();
-
-            if (result && result.length>0){
-                this.receivedShowFormEdit(false);
-                this.landRegistryService.setLandOwner(result[0]);
-                this.showButtons = true;
-            }
-
-            else{
-
-                const dialogRef = this.confirmationService.errorInfo(
-                  `Contribuyente no encontrado`,
-                  `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
-                  );
-
-                  dialogRef.afterClosed().subscribe((option) => {
-                    // if (option === 'confirmed') {
-                    //   this.receivedShowFormEdit(true);
-                    //   console.log('pasar documento al formulario', searchText);
-                    // }
-
-                    this.search.reset();
-                    this.showFormEdit = null;
-                    this.landRegistryService.setLandOwner(null);
-                    this.showButtons = false;
-                  });
-            }
-
-          },
-          (error) => {
-            this._fuseSplashScreenService.hide();
-            const dialogRef = this.confirmationService.error(
-              `Contribuyente no encontrado`,
-              `Contribuyente "${searchText}" no esta registrado. <br>Por favor registrese en el sistema de renta`
-              );
-
-
-            dialogRef.afterClosed().subscribe((option) => {
-              // if (option === 'confirmed') {
-              //   this.receivedShowFormEdit(true);
-              //   console.log('pasar documento al formulario', searchText);
-              // }
-
-              this.search.reset();
-              this.showFormEdit = null;
-              this.landRegistryService.setLandOwner(null);
-            });
-          }
-        );*/
-
     }
   }
 
@@ -327,8 +169,6 @@ searhSrtm(searchText: any): void{
           this.integrationService.getLandOwnerNSRTM(ubigeo, landOwnerCode)
           .subscribe(
             (result) => {
-                /*console.log('holasss');
-                console.log('result>>',result);*/
                 if (result && (result.codigo==='404' ||result.status===403 )  ){
                     const dialogRef = this.confirmationService.errorInfo(
                         'Contribuyente no encontrado',
@@ -380,11 +220,9 @@ searhSrtm(searchText: any): void{
 
 }
   saveForm(): void {
-    console.log('saveForm');
     //if (this.formEdit.valid) {
       this._fuseSplashScreenService.show();
       this.landOwner.id=null;
-      //this.landOwner.setValue(this.formEdit.value);
       this.landRegistryService.saveOwner(this.landOwner)
         .toPromise()
         .then(
@@ -393,30 +231,12 @@ searhSrtm(searchText: any): void{
             this.landOwner.id=result.id;
             this.landRegistryService.setLandOwner(this.landOwner);
             this.searchOwner();
-            /*this.searchOwner();*/
-            /*this.emitShowFormEdit(false);*/
-            /*this.confirmationService.success(
-              'Registro de propietario',
-              'Propietario registrado correctamente'
-            );*/
-
           },
-          (error) => {
+          (err) => {
             this._fuseSplashScreenService.hide();
-            /*this.confirmationService.success(
-              'Registro de propietario',
-              //'Error al registrar propietario -  el codigo de predio dentro del distrito deben ser unico',
-              `Error al registrar propietario - ${JSON.stringify(error?.error)}`
-            );*/
-
           }
         );
-    } /*else {
-      this.confirmationService.success(
-        'Registro de propietario',
-        'Error al registrar propietario'
-      );*/
-   // }
+    }
 
 
   clean(): void{
@@ -424,6 +244,7 @@ searhSrtm(searchText: any): void{
     this.search.reset();
     this.showFormEdit = null;
     this.landRegistryService.setLandOwner(null);
+    this.landRegistryService.showFormEdit.next(null);
   }
 
   createLandRecord(): void {
@@ -434,50 +255,5 @@ searhSrtm(searchText: any): void{
     this.landRegistryService.setLandOwner(null);
     this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
-  }
-
-/*
-  getIntegrationLandOwner(): void {
-    const landOwnerCode = this.formEdit.get('code').value;
-    const ubigeo = this.formEdit.get('ubigeo').value;
-
-    this.cleanBeforeSearch();
-    if (ubigeo === '220901') {
-      this.integrationService.getSatLandOwner(ubigeo, landOwnerCode)
-        .toPromise().then(
-          (result: { data: SatLandOwner[] }) => {
-
-            if (result && result.data && result.data.length > 0) {
-              const landOwner: SatLandOwner = result.data[0];
-              this.formEdit.get('dni').setValue(landOwner.nrodocumento);
-              this.formEdit.get('maternalSurname').setValue(landOwner.apmaterno);
-              this.formEdit.get('paternalSurname').setValue(landOwner.appaterno);
-              this.formEdit.get('name').setValue(landOwner.nombre);
-              this.formEdit.get('documentType').setValue('01');
-
-            }
-
-          });
-    }
-    else {
-        this.integrationService.getLandOwnerNSRTM(ubigeo, landOwnerCode)
-        .toPromise().then(
-          (result) => {
-            this.formEdit.get('dni').setValue(result.numeroDocumento);
-            if (result.tipoDocumento === 2) {
-              this.formEdit.get('documentType').setValue('06');
-              this.formEdit.get('descriptionOwner').setValue(result.razonSocial);
-            } else {
-              this.formEdit.get('name').setValue(result.nombres);
-              this.formEdit.get('documentType').setValue('01');
-              this.formEdit.get('maternalSurname').setValue(result.materno);
-              this.formEdit.get('paternalSurname').setValue(result.paterno);
-
-            }
-          });
-
-
-    }
-
-  }*/
+  };
 }

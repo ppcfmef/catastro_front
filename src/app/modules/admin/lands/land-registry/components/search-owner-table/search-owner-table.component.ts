@@ -1,5 +1,5 @@
-import { merge } from 'rxjs';
-import { Component, OnInit,Input, Output, EventEmitter, ViewChild, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { merge, Subject, takeUntil } from 'rxjs';
+import { Component, OnInit,Input, Output, EventEmitter, ViewChild, AfterViewInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,7 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './search-owner-table.component.html',
   styleUrls: ['./search-owner-table.component.scss']
 })
-export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewInit {
+export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   @Input() dataSource: LandOwner[];
   @Input() length: number = 0;
@@ -19,7 +19,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   @Output() showLandsTable: EventEmitter<LandOwner> = new EventEmitter();
   @Output() showLandOwner: EventEmitter<LandOwner> = new EventEmitter();
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
-  @ViewChild(MatSort) tableSort = new MatSort();
+  @ViewChild(MatSort) tableSort: MatSort;
   dataTable = new MatTableDataSource<LandOwner>();
 
   displayedColumns = ['nro','ubigeo', 'documentType', 'dni','code', 'name', 'descriptionOwner', 'creationDate', 'lands'];
@@ -27,7 +27,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   pageSize = 10;
   tableFilters: {paginator: any; sort: Sort};
   defaultPaginator;
-
+  private _unsubscribeAll: Subject<void> = new Subject<void>();
   constructor(private cdRef: ChangeDetectorRef) {
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
     this.tableFilters = {
@@ -39,14 +39,13 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   ngOnInit(): void {
   }
 
+
   ngOnChanges(changes: SimpleChanges): void {
       if (changes?.dataSource?.currentValue) {
         this.dataTable.data = changes?.dataSource?.currentValue;
       }
 
       if (changes?.length?.currentValue) {
-        console.log(changes?.length?.currentValue, 'here'); 
-        console.log(this.tableFilters, 'this.tableFilters.paginator');
         this.tableFilters.paginator.length = changes?.length?.currentValue;
       }
   }
@@ -55,6 +54,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
     this.dataTable.sort = this.tableSort;
 
     merge(this.tableSort?.sortChange, this.tablePaginator?.page)
+    .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((res: any) => {
       if(res?.direction) {
         this.tableFilters.sort = res;
@@ -78,4 +78,9 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
     this.showLandOwner.emit(landOwner);
   }
 
+
+ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 }

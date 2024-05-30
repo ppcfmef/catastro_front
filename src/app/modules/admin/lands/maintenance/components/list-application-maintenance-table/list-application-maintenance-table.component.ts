@@ -61,7 +61,6 @@ export class ListApplicationMaintenanceTableComponent implements OnInit, AfterVi
   }
 
   detailObserved(element): void {
-    console.log(element, 'elemen');
     this.#router.navigate([`./${element.id}`], {relativeTo: this.#activatedRoute});
     this.selectedRowIndex = element.id;
   }

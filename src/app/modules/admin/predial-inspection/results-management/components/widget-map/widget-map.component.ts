@@ -153,7 +153,6 @@ hideSelectUbigeo = false;
     }
 
     ngAfterViewInit(): void {
-        console.log('this.ubigeo>>>',this.ubigeo );
         this._resultsService.getUbicacionData().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: {ubicacion: IUbicacion;ticket: ITicket}) => {
           if (res) {
 

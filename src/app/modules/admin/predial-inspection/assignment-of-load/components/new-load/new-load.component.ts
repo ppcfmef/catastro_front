@@ -94,7 +94,6 @@ export class NewLoadComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //   Implementar logica
     onZoom(row: any): void {
-        console.log('zoom',);
         this._newLoadService.emitRowZoomNewWorkLoad(row);  // @daniel
     }
 

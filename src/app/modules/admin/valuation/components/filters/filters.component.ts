@@ -135,13 +135,11 @@ export class FiltersComponent implements OnInit {
 
     uploadFile(event: any): void {
         //this._fuseSplashScreenService.show(0);
-        console.log('holass');
         this.fileToUpload = event.target.files[0];
         this.fileName = event.target.value;
         this.fileName = this.fileName.split(/(\\|\/)/g).pop();
         this.fileName = this.fileName.toString();
         const ext = this.fileName.split('.').pop();
-        console.log('ext>>',ext);
         this.isDisabled = false;
         //this._fuseSplashScreenService.hide();
     }
@@ -149,7 +147,6 @@ export class FiltersComponent implements OnInit {
     subirDato(): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.params.fileToUpload = this.fileToUpload;
-        console.log(this.params.fileToUpload);
         this.cargarEventEmmiterr.emit(this.params);
     }
 }

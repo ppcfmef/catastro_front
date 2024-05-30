@@ -528,7 +528,6 @@ export class LandRegistryGeolocationComponent
                         this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
                 } else {
-                    //console.log('land>>',land);
                     this._messageProviderService.showAlert(
                         'Por favor elija un punto en el mapa'
                     );
@@ -546,7 +545,6 @@ export class LandRegistryGeolocationComponent
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: LandRegistryMap) => {
                 const _landRegistryMapModel = new LandRegistryMapModel(result);
-                console.log('_landRegistryMapModel>>>',_landRegistryMapModel);
 
                 /*if (_landRegistryMapModel.idPlot) {
                     this.saveLandRegistryMap(_landRegistryMapModel);
@@ -585,7 +583,6 @@ export class LandRegistryGeolocationComponent
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: any) => {
                 this.user = user;
-                console.log('this.user>>', this.user);
                 this.userUbigeo =
                     this.user.ubigeo && this.user.ubigeo
                         ? this.user.ubigeo
@@ -876,7 +873,6 @@ export class LandRegistryGeolocationComponent
                         );
 
                         this.view.hitTest(event).then((response) => {
-                            console.log('response.results>>', response.results);
                             const results = response.results.filter((r) => {
                                 if (
                                     r &&
@@ -911,8 +907,6 @@ export class LandRegistryGeolocationComponent
                                 }
                             });
 
-                            console.log('results<<', results);
-
                             if (results.length > 0) {
                                 const resultsLen = results.length - 1;
 
@@ -922,7 +916,6 @@ export class LandRegistryGeolocationComponent
                                     results[resultsLen].graphic.geometry
                                 ) {
                                     graphic = results[resultsLen].graphic;
-                                    console.log('graphic>>', graphic);
 
                                     //let graphic = event.mapPoint;
                                     longitude = graphic.geometry.longitude;
@@ -966,10 +959,6 @@ export class LandRegistryGeolocationComponent
                                                     0
                                             ) {
                                                 this._fuseSplashScreenService.show();
-                                                console.log(
-                                                    'resultsLote>>',
-                                                    resultsLote
-                                                );
                                                 graphic =
                                                     resultsLote[0].graphic;
                                                 const layerPredio =
@@ -1001,21 +990,12 @@ export class LandRegistryGeolocationComponent
                                                         params,
                                                         true
                                                     );
-                                                console.log('where>>', where);
                                                 MapUtils.queryFeaturelayer(
                                                     layerPredio,
                                                     where
                                                 ).then((featurePredios) => {
-                                                    console.log(
-                                                        'featurePredios>>',
-                                                        featurePredios
-                                                    );
                                                     const featurePredio =
                                                         featurePredios[0];
-                                                    console.log(
-                                                        'featurePredio>>',
-                                                        featurePredio
-                                                    );
                                                     const filters = {
                                                         cup: featurePredio
                                                             ?.attributes[
@@ -1043,11 +1023,6 @@ export class LandRegistryGeolocationComponent
                                                                     const id =
                                                                         landRecords[0]
                                                                             .id;
-                                                                    console.log(
-                                                                        'landRecords[0]>>',
-                                                                        landRecords[0]
-                                                                    );
-
                                                                     const arrayService=landRecords.map((l)=>{ return this._landOwnerService
                                                                         .getLandDetail(
                                                                             l.id
@@ -1059,19 +1034,14 @@ export class LandRegistryGeolocationComponent
 
 
                                                                         res.forEach((responseOwner: any)=>{
-                                                                             console.log('responseOwner>>',responseOwner);
                                                                              /*owners.concat(responseOwner.results);*/
                                                                              owners = [...owners, ...responseOwner.results];
                                                                             /*return   responseOwner.results;*/
-                                                                            console.log('owners>>',owners);
                                                                         });
 
                                                                         /*const owners =
                                                                         responseOwner.results;*/
-                                                                    console.log(
-                                                                        'owners>',
-                                                                        owners
-                                                                    );
+
                                                                     dialogRef =
                                                                         this.dialog.open(
                                                                             AlertLandOwnerComponent,
@@ -1111,11 +1081,6 @@ export class LandRegistryGeolocationComponent
                                                                                         latitude;
                                                                                     this.lote =
                                                                                         graphic.attributes;
-                                                                                    console.log(
-                                                                                        'lote>>',
-                                                                                        this
-                                                                                            .lote
-                                                                                    );
                                                                                     this.landRegistryMapModel =
                                                                                         FormatUtils.formatLoteToLandRegistryMapModel(
                                                                                             this
@@ -1182,10 +1147,7 @@ export class LandRegistryGeolocationComponent
                                                             ] = latitude;
                                                             this.lote =
                                                                 graphic.attributes;
-                                                            console.log(
-                                                                'lote>>',
-                                                                this.lote
-                                                            );
+
                                                             this.landRegistryMapModel =
                                                                 FormatUtils.formatLoteToLandRegistryMapModel(
                                                                     this.lote
@@ -1211,7 +1173,6 @@ export class LandRegistryGeolocationComponent
                                             if (data && data.attributes) {
                                                 const ubigeo =
                                                     data.attributes['UBIGEO'];
-                                                console.log('ubigeo>>', ubigeo);
 
                                                 if (
                                                     this.idCargo ===
@@ -1639,7 +1600,6 @@ export class LandRegistryGeolocationComponent
 
     buscar(ubigeo: string): void {
         const where = `UBIGEO='${ubigeo}'`;
-        console.log('where', this.layersInfo);
         /*this.layersInfo.forEach((l) => {
             if (l.featureLayer) {
                 const featureLayer = l.featureLayer;
@@ -1725,8 +1685,6 @@ export class LandRegistryGeolocationComponent
             ] = await loadModules(['esri/Graphic']);
 
             this.view?.graphics?.removeAll();
-
-            console.log('latitude,longitude>>>', latitude, longitude);
             const point = {
                 //Create a point
                 type: 'point',
@@ -1740,7 +1698,7 @@ export class LandRegistryGeolocationComponent
             });
             this.view?.graphics?.addMany([pointGraphic]);
             if (estado && estado === Estado.LEER) {
-                console.log('open');
+
                 //this.displayPopupDiv='flex';
                 /*
                 let actionEdit = {
@@ -1796,7 +1754,6 @@ export class LandRegistryGeolocationComponent
         query.outStatistics = [maxCPU];
         const response = await layer.queryFeatures(query);
         const stats = response.features[0].attributes;
-        console.log('Total Population in WA:', stats.max_SECUEN);
         const maxSecuen = stats.max_SECUEN ? stats.max_SECUEN : 0;
 
         return maxSecuen;
@@ -1804,8 +1761,6 @@ export class LandRegistryGeolocationComponent
 
     async zoomToUbigeo(where: string): Promise<any> {
         try {
-            console.log('where>>>', where);
-            console.log('this.featureZonaUrbana>>', this.featureZonaUrbana);
             if (this.view) {
                 MapUtils.zoomToFeature(
                     this.view,
@@ -1814,7 +1769,7 @@ export class LandRegistryGeolocationComponent
                 );
             }
         } catch (error) {
-            console.error('EsriLoader: ', error);
+            // console.error('EsriLoader: ', error);
         }
     }
 
@@ -1863,7 +1818,6 @@ export class LandRegistryGeolocationComponent
         land: LandRegistryMap,
         landOwner: LandOwner
     ): Promise<void> {
-        console.log('land>>', land);
         const doc = new jsPDF();
 
         const district = await this._commonService
@@ -2200,7 +2154,7 @@ export class LandRegistryGeolocationComponent
         this.landRegistryMapModel = await this.saveLandRegistryMap(
             this.landRegistryMapModel
         );
-        console.log('creado::', this.landRegistryMapModel);
+
 
         this._landRegistryMapService.landOut = this.landRegistryMapModel;
     }
@@ -2218,7 +2172,7 @@ export class LandRegistryGeolocationComponent
             'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
 
         const wkid = 4326;
-        console.log('data saveLandRegistryMap>>>', data);
+
         if (data.idPlot) {
             const _predio =
                 FormatUtils.formatLandRegistryMapModelToPredio(data);
@@ -2256,7 +2210,6 @@ export class LandRegistryGeolocationComponent
 
             const json = await this.createArcgisJSON([_predio], wkid);
 
-            console.log('json>>>', json);
             const formData = new FormData();
             formData.append('features', JSON.stringify(json));
             formData.append('F', 'json');
@@ -2266,7 +2219,7 @@ export class LandRegistryGeolocationComponent
                 body: formData,
             });
             const responseJson = await response.json();
-            console.log('responseJson>>', responseJson);
+
             const layerTematico = this.layersInfo.find(
                 l => l.id === 1
             )?.featureLayer;
@@ -2308,7 +2261,6 @@ export class LandRegistryGeolocationComponent
             _gestionPredio.ESTADO = 0;
             /*_gestionPredio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
             _gestionPredio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;*/
-            console.log('_gestionPredio>>', _gestionPredio);
             const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio], 4326);
 
@@ -2322,7 +2274,7 @@ export class LandRegistryGeolocationComponent
                 body: formData,
             });
             const responseJson: any = await response.json();
-            console.log('responseJson>>', responseJson);
+
             if (responseJson?.addResults) {
                 const addFeature = responseJson?.addResults[0];
                 data.idObjectImg = addFeature.objectId;
@@ -2330,7 +2282,7 @@ export class LandRegistryGeolocationComponent
         }
 
         // this._fuseSplashScreenService.hide();
-        console.log('data saveLandRegistryMap>>>', data);
+
         return data;
     }
 
@@ -2357,7 +2309,7 @@ export class LandRegistryGeolocationComponent
             body: formData,
         });
         const responseJson = await response.json();
-        console.log('responseJson>>', responseJson);
+
         //this._fuseSplashScreenService.hide();
     }
     /*/FeatureServer/0*/
@@ -2426,7 +2378,7 @@ export class LandRegistryGeolocationComponent
         if (results.features && results.features.length > 0) {
             feature = results.features[0];
         }
-        console.log(feature, 'feature');
+
         return feature;
     }
 
@@ -2435,8 +2387,6 @@ export class LandRegistryGeolocationComponent
         const y = r.COORD_Y;*/
 
         if (this.view) {
-            console.log('r>>', r);
-
             if (r.geometry.type === 'point') {
                 this.view.center = [r.geometry.x, r.geometry.y];
                 this.view.zoom = 19;

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, OnDestroy, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy, OnChanges, SimpleChanges, Input, inject } from '@angular/core';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
+import { LandRegistryService } from '../../services/land-registry.service';
 
 @Component({
   selector: 'app-land-detail-summary',
@@ -10,6 +11,7 @@ export class LandDetailSummaryComponent implements OnInit, OnChanges, OnDestroy 
   @Output() showFormEdit = new EventEmitter<boolean>();
   @Input() landRecord: LandRegistryMap;
 
+  landRegistryService = inject(LandRegistryService);
   constructor() { }
 
   ngOnInit(): void {
@@ -19,10 +21,14 @@ export class LandDetailSummaryComponent implements OnInit, OnChanges, OnDestroy 
     this.showFormEdit.emit(true);
   }
 
+  emitDestroyFormEdit(): void {
+    this.showFormEdit.emit(null);
+    this.landRegistryService.landSelectedSource.next(true);
+  }
+
   ngOnDestroy(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('>>>>app-land-detail-summary', this.landRecord);
   }
 }

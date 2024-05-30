@@ -1,14 +1,18 @@
 <section class="container" *ngIf="landRecord">
     <h3 class="subtitle-card mb-4">Predio</h3>
-    <div class="flex justify-between">
+    <div class="flex flex-wrap gap-3">
         <p class=""><b>Ubigeo:</b> {{ landRecord?.ubigeo }}</p>
         <p class=""><b>Urbanización:</b>  {{ landRecord?.habilitacionName }} </p>
         <p class=""><b>Avenida:</b> {{ landRecord?.streetName }} </p>
     </div>
- 
+
 
     <button class="button-collapse" (click)="emitShowFormEdit()">
         <span class="triangle-top"></span>
+    </button>
+
+    <button mat-icon-button class="btn_close" (click)="emitDestroyFormEdit()">
+        <mat-icon class="text-[#ed3237]" svgIcon="mat_solid:close"></mat-icon>
     </button>
 </section>
 

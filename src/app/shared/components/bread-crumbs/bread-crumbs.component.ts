@@ -272,7 +272,6 @@ export class BreadCrumbsComponent implements OnInit, AfterViewInit{
   isArrayReturnValue(item): void{
 
     if(Array.isArray(item)){
-      console.log('itemArray>>',item);
       for (const el of item) {
         this.isArrayReturnValue(el);
       }

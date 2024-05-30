@@ -107,7 +107,6 @@ export class AuthSignInComponent implements OnInit
 
                 },
                 (response) => {
-                    console.log('response>>',response);
 
                     // Re-enable the form
                     this.signInForm.enable();
@@ -123,7 +122,6 @@ export class AuthSignInComponent implements OnInit
 
                     // Show the alert
                     this.showAlert = true;
-                    console.log(response?.error?.nonFieldErrors[0]);
                     if( response && response.error && response.error.nonFieldErrors && response.error.nonFieldErrors[0]){
                         this.alertCaptcha ={
                             type   : 'error',

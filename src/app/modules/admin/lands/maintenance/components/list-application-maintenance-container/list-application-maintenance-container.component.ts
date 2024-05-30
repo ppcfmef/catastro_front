@@ -88,7 +88,6 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
         this.user = user;
         const permissionsNavigation: any[] = this.user?.permissionsNavigation;
         const readAll = permissionsNavigation.filter((p: any) => (p?.navigationView === this.idView && p?.type === 'read_all'));
-        console.log('readAll>>', readAll);
 
         if (!(readAll.length > 0 || this.user.isSuperuser === true)) {
 
@@ -103,7 +102,6 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
           this.ubigeo = '';
         }
         localStorage.setItem('ubigeo', this.ubigeo);
-        console.log('this.ubigeo>>', this.ubigeo);
         /*else{
           this.ubigeo = '240104';
         }*/
@@ -181,7 +179,6 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
   onFilter(event: any): void {
     const rawValue = this.formFilters.getRawValue();
-    console.log('rawValue>>', rawValue);
     this.getList();
   }
   onDownload(): void {

@@ -9,6 +9,7 @@ import { LandRegistryService } from '../../services/land-registry.service';
 import { LandRegistryMapService } from '../../services/land-registry-map.service';
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { MessageProviderService } from 'app/shared/services/message-provider.service';
 
 export enum LandStatus {
   withOutMapping = 0,
@@ -46,6 +47,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private confirmationService: CustomConfirmationService,
     private landRegistryMapService: LandRegistryMapService,
     private _fuseSplashScreenService: FuseSplashScreenService,
+    private _messageProviderService: MessageProviderService,
+
   ) {
 
     this.landRegistryService.getMasterDomain()
@@ -60,13 +63,17 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((result) => {
         this.masterDomain = result;
-        console.log(result , 'resultDomian ');
     });
   }
 
   emitShowFormEdit(): void{
     this.formEdit.reset();
     this.showFormEdit.emit(false);
+  }
+
+  destroyForm(): void {
+    this.showFormEdit.emit(null);
+
   }
 
   createFormEdit(): void{
@@ -156,9 +163,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
         :!this.formEdit.get('resolutionType').value ? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento'
         :!this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Nro. Doc. Sustento' : '';
 
-        this.confirmationService.error(
-        'Registro de predio',
-        `${message}.`
+        this._messageProviderService.showAlert(
+          `${message}.`
         );
     }
     }
@@ -249,6 +255,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       }
       return landMergeRecord;
     }
+
     return landCurentValue;
   }
 
