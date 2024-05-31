@@ -62,7 +62,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes>>',changes);
+
     if(changes && changes.idLand.currentValue){
     const queryParams={id:this.idLand};
     this.landMaintenanceService.getList(queryParams)
@@ -100,8 +100,6 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
       });
 
       dialogRef.afterClosed().subscribe((res) => {
-        //console.log('result>>',result);
-
 
         if(res){
             const copy=[... this.results];

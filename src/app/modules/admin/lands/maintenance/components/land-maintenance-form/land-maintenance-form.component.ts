@@ -128,9 +128,9 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       initForm(): void{
-        /*const resolutionDate = Date.parse(this.landModel?.resolutionDate);*/
-       /* console.log('resolutionDate>>',resolutionDate);*/
+
         if (this.typeMaintenace === 'Reasignar'){
+
             this.formLand = this.fb.group({
                 cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
@@ -216,7 +216,6 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       save(): void{
-
         //results{}
         /*console.log('this.formLand>>',this.formLand.get('resolutionDate').value);*/
         /*this.formLand.get('resolutionDate').setValue(this.formLand.get('resolutionDate').value.toString());*/
@@ -229,7 +228,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             this.landRecords.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length
             + this.results.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length;
 
-            if(cantRepetidos>0){
+            if(cantRepetidos>0 && this.data.typeMantenance !== 3){
                 const diag=this.confirmationService.error(
                     'Registro de predio',
                     'Existe un lote urbano con la misma denominación, dentro del mismo ámbito de unidad urbana y manzana urbana.Desea continuar con el registro?'

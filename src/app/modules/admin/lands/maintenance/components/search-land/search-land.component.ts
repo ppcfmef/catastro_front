@@ -54,12 +54,10 @@ export class SearchLandComponent implements OnInit {
         this.cupSelect=null;
     }
     onSelectedPredio(event: any): void{
-        console.log('event>>',event);
         this.cupSelect=event.option.value.id;
     }
 
     displayFn(option: any): string {
-        console.log(option, 'opt')
         return option && option.cup ? option.cup : '';
 
     }
@@ -74,7 +72,6 @@ export class SearchLandComponent implements OnInit {
                .toPromise()
                .then(
                (landResult) => {
-                    console.log('landResult>>',landResult);
                    this.landRecords = landResult.results;
                    this.agregarPredioEvent.emit(this.landRecords[0]);
                }

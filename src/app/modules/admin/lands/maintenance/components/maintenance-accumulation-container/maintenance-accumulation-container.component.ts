@@ -80,7 +80,6 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
   }
 
   onAgregarPredio(land: LandUI): void{
-    console.log('land>>',land);
     const copy=[... this.landRecords];
     const el=copy.find(e=> {if( (e?.cup && e.cup===land.cup ) || (e?.cpm && e?.cpm!=='null' && e.cpm===land.cpm ) ){return e;}  } );
     if(!el){
@@ -114,8 +113,6 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
 
       dialogRef.afterClosed().subscribe((result) => {
         this._fuseSplashScreenService.show();
-        console.log('result>>',result);
-        console.log('The dialog was closed');
         this.results =  [new ResultModel(result)];
         this.results= this.results.map(r=>  FormatUtils.formatResultUIToResultUI(r));
         const body = {

@@ -54,10 +54,8 @@ export class ReportCartographicComponent implements OnInit {
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user: User) => {
         this.user = user;
-        console.log('this.user>>',this.user);
         const permissionsNavigation: any[]=this.user?.permissionsNavigation;
         const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
-        console.log('readAll>>',readAll);
         const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
         this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
 
@@ -109,7 +107,6 @@ export class ReportCartographicComponent implements OnInit {
   selectDist(event: any): void {
     this.paramsUbigeo.ubigeo = event.value.code;
     this.selectionText.dist = event.value.name;
-    console.log('this.paramsUbigeo.ubigeo>>',this.paramsUbigeo.ubigeo);
     this.makeReportUrl(this.paramsUbigeo.ubigeo);
 
   }
@@ -133,15 +130,6 @@ export class ReportCartographicComponent implements OnInit {
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
   }
-
-  /*private getLand(data: any): any {
-    return {
-      dpto: data.code?data.code.substring(0,2):'14',
-      prov: data.code?data.code.substring(2,4):'02',
-      ubigeo: data.code?data.code:'140204',
-      zone: (data?.resources[0])?.utm?data?.resources[0]?.utm:'17'
-    };
-  }*/
 
   private getLand(ubigeo: any): any {
     return {
@@ -173,19 +161,4 @@ export class ReportCartographicComponent implements OnInit {
       }
    }
   }
-
-
-
-/*
-  private makeReportUrl(ubigeo: string): void {
-
-    const land: any=this.getLand(ubigeo);
-    console.log('land>>',land);
-    const baseUrl = `${this.portalUrl}/apps/dashboards/dee6809e8bf54a31b7f8b07d4c1efbc9`;
-    const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
-
-    this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
-
-  }
-*/
 }

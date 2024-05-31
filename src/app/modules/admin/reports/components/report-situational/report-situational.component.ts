@@ -54,10 +54,8 @@ export class ReportSituationalComponent implements OnInit {
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((user: User) => {
         this.user = user;
-        console.log('this.user>>',this.user);
         const permissionsNavigation: any[]=this.user?.permissionsNavigation;
         const readAll = permissionsNavigation.filter((p: any)=>(p?.navigationView===this.idView && p?.type==='read_all'));
-        console.log('readAll>>',readAll);
         const ubigeo = this.user.ubigeo? this.user.ubigeo: '150101';
         this._commonService.getDistrictResource(ubigeo).subscribe((data)=>{
 
@@ -113,7 +111,6 @@ selectProv(event: any): void {
 selectDist(event: any): void {
   this.paramsUbigeo.ubigeo = event.value.code;
   this.selectionText.dist = event.value.name;
-  console.log('this.paramsUbigeo.ubigeo>>',this.paramsUbigeo.ubigeo);
   this.makeReportUrl(this.paramsUbigeo.ubigeo);
 
 }
@@ -155,12 +152,10 @@ selectDist(event: any): void {
 
     */
     const land: any=this.getLand(ubigeo);
-    console.log('land>>',land);
     const baseUrl = `${this.portalUrl}/apps/dashboards/dee6809e8bf54a31b7f8b07d4c1efbc9`;
     const filters = `dpto=${land?.dpto}&prov=${land?.prov}&ubigeo=${land?.ubigeo}`;
 
     this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}#${filters}`);
-    console.log('this.reportUrl>>',this.reportUrl);
     //const filters = `dpto=14&prov=02&ubigeo=140204`;
     /*if(this.readAll){
       this.reportUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${baseUrl}`);
