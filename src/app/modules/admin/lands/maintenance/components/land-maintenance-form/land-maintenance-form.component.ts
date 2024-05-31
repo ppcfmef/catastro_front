@@ -39,7 +39,8 @@ export class LandMaintenanceFormComponent implements OnInit {
     _this = this;
     typeMaintenace ='';
     landRecords: LandUI[]=[];
-    results : ResultUI[];
+    results: ResultUI[];
+    maxDay = new Date();
     public date = new Date();
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -102,6 +103,9 @@ export class LandMaintenanceFormComponent implements OnInit {
             }
 
         }
+
+        //get day
+        this.maxDay = moment().toDate();
 
        }
 

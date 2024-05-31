@@ -7,7 +7,7 @@
 
     <ng-container *ngIf="landRecords">
         <app-list-land-maintenance-table [dataSource]="landRecords" [length]="tableLength"
-            (changePage)="onChangePage($event)"></app-list-land-maintenance-table>
+            [reset]="updateTable" (changePage)="onChangePage($event)"></app-list-land-maintenance-table>
     </ng-container>
 
 </div>

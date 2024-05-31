@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,10 +20,11 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
     templateUrl: './list-land-maintenance-table.component.html',
     styleUrls: ['./list-land-maintenance-table.component.scss']
 })
-export class ListLandMaintenanceTableComponent implements OnInit {
+export class ListLandMaintenanceTableComponent implements OnInit, OnChanges {
     @Input() dataSource: LandUI[];
     @Input() length: number;
     @Input() selectedId: number;
+    @Input() reset: boolean;
     @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
     @Output() refreshPage: EventEmitter<any> = new EventEmitter();
     displayedColumns: string[] = ['nro', 'cup', 'habilitacionName', 'direccion', 'creationDate', 'typeApplication', 'actions'];
@@ -69,12 +70,29 @@ export class ListLandMaintenanceTableComponent implements OnInit {
             });
 
     }
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes?.dataSource?.currentValue){
+            this.dataSource = changes.dataSource.currentValue;
+        }
+        if (changes?.length?.currentValue) {
+            this.pageIndex = 0;
+            this.pageSize = 5;
+          }
+
+       // Verifica si la propiedad `reset` ha cambiado a `true`
+       if (changes.reset && changes.reset.currentValue === true) {
+        this.pageIndex = 0;
+        this.pageSize = 5;
+    }
+    }
 
     ngOnInit(): void {
     }
 
+
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
+        this.pageSize = paginator.pageSize;
         this.changePage.emit(paginator);
     }
     onRefreshPage(): void {
@@ -137,8 +155,7 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                             },
                             (err)=>{
                               this._fuseSplashScreenService.hide();
-                            console.log('error',err);
-                            this._messageProviderService.showAlert(
+                              this._messageProviderService.showAlert(
                               'Error al registrar'
                             );
                           });
@@ -161,40 +178,9 @@ export class ListLandMaintenanceTableComponent implements OnInit {
                         );
 
                     });
-
-
-                }
-
-
-
-                /*const body = {
-                    application:application,
-                    results: this.results,
-                    lands:this.landRecords
                 };
-    
-                this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
-                    if(res){
-                        const dataForm: any= {};
-                        dataForm.id_app= res.id;
-                        dataForm.file= this.file;
-                        this.applicationMaintenaceService.uploadFile(dataForm).subscribe((r: any)=>{
-                            if(r && r.success){
-                                this._messageProviderService.showAlert(
-                                    'Solicitud registrada'
-                                );
-                                this._router.navigate(['/land/maintenance']);
-                            }
-                        });
-                    }
-                });*/
-
             });
 
-        }
-    }
-
-    onChangeSolicitud(i: number, row: any): void {
-
-    }
+        };
+    };
 }
