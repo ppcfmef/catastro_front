@@ -82,4 +82,6 @@ export interface LandRegistryMap {
     longitudePuerta: number;
     latitudePuerta: number;
     idLotePuerta: number;
+    loteUrbanoPuerta: string;
+    manzanaUrbanaPuerta: string;
 }
