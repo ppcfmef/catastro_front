@@ -494,7 +494,6 @@ export class LandRegistryGeolocationComponent
 
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('changes>>',changes);
         if (changes['cancelEvent']) {
             this.cancelEvent=changes['cancelEvent'].currentValue;
             this.onCancel();
@@ -1127,7 +1126,7 @@ export class LandRegistryGeolocationComponent
                                                                                             this
                                                                                                 .lote
                                                                                         );
-                                                                                   
+
 
 
                                                                                     if( tipoLote === '2'){
@@ -1143,7 +1142,7 @@ export class LandRegistryGeolocationComponent
                                                                                         )?.featureLayer;
 
                                                                                         console.log('this.lote>>',this.lote);
-                                                                                       
+
                                                                                         puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
 
 
@@ -1324,7 +1323,7 @@ export class LandRegistryGeolocationComponent
                                                                     Estado.LEER
                                                                 );
 
-                                                              
+
 
                                                             } else {
                                                             }
@@ -2028,7 +2027,6 @@ export class LandRegistryGeolocationComponent
         landOwner: LandOwner
     ): Promise<void> {
         const doc = new jsPDF();
-
         const district = await this._commonService
             .getDistrictResource(land.ubigeo)
             .toPromise();
@@ -2132,7 +2130,10 @@ export class LandRegistryGeolocationComponent
                             text: [ 'DECLARO BAJO JURAMENTO : Que el predio con dirección ',
                                     // eslint-disable-next-line max-len
                                     { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )} ${this.getFrase(land.block,',Bloque ')} ${this.getFrase(land.municipalNumber ,',Nro Puerta ')} ${this.getFrase(land.apartmentNumber,',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}` , style:'textR'} ,
-                                    'se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+
+                                    //cambiar los campos segun servicio
+                                    // eslint-disable-next-line max-len
+                                    {text: `${land.idLotePuerta ? `, que cuenta con un paso de servidumbre ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )}`: ''}` , style:'textR'},', se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
                                 ]
                         }
 
