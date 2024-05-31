@@ -1405,6 +1405,8 @@ export class LandRegistryGeolocationComponent
                                         this.landRegistryMapModel.idAranc = puntoEntrada?.graphic.attributes[ 'ID_ARANC'];
                                         this.landRegistryMapModel.streetType = puntoEntrada?.graphic.attributes['TIP_VIA'];
                                         this.landRegistryMapModel.streetName = puntoEntrada?.graphic.attributes['NOM_VIA'];
+                                        this.landRegistryMapModel.loteUrbanoPuerta = puntoEntrada?.graphic.attributes['LOT_URB'];
+                                        this.landRegistryMapModel.manzanaUrbanaPuerta = puntoEntrada?.graphic.attributes['MZN_URB'];
                                         this.landRegistryMapModel.longitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_X'];
                                         this.landRegistryMapModel.latitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_Y'];
                                         this.landRegistryMapModel.idLotePuerta = puntoEntrada?.graphic.attributes[ 'ID_LOTE'];
