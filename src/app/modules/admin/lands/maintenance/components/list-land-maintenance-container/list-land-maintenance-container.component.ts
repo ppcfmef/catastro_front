@@ -54,8 +54,7 @@ export class ListLandMaintenanceContainerComponent implements OnInit {
 
   onSearch( search: any ): void{
     this.search = search;
-    const ubigeo = this.ubigeo;
-    const filterRawValue = { search,ubigeo:this.ubigeo };
+    const filterRawValue = {limit: this.defaultTableLimit, search,ubigeo:this.ubigeo };
     const queryParams=CommonUtils.deleteKeysNullInObject(filterRawValue);
     this.landMaintenanceService.getHasNotApplicationsList(queryParams)
     .toPromise()

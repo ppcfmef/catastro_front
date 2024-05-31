@@ -64,7 +64,6 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
   receivedShowFormEdit(event): void{
     this.showFormEdit = event;
-    console.log(event, 'EVENTS');
   }
 
   newOwner(): void{

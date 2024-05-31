@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
@@ -164,7 +164,7 @@ export class LandMaintenanceFormComponent implements OnInit {
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, ],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
                /* resolutionDate : [{value:moment()}, ],*/
-                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
+                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required , this.noWhitespaceValidator]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
                 codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
                 habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
@@ -284,9 +284,11 @@ export class LandMaintenanceFormComponent implements OnInit {
 
         }
 
-
       }
-
-
-
+       noWhitespaceValidator(control: FormControl): ValidationErrors | null {
+        if ((control.value || '').trim().length === 0) {
+          return { 'whitespace': true };
+        }
+        return null;
+      }
 }
