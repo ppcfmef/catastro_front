@@ -126,12 +126,8 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
   //onChangePage(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
   onChangePage(data: { paginator: MatPaginator | { pageSize: number; pageIndex: number }; sort: Sort }): void {
     //const ownerFilter = { owner: this.landOwnerId };
-
-    if (data.paginator) {
-      this.limit = data.paginator.pageSize;
-      this.offset = this.limit * data.paginator.pageIndex;
-    }
-
+    this.limit = data.paginator.pageSize;
+    this.offset = this.limit * data.paginator.pageIndex;
     this.ordering = this.orderingFormater(data.sort);
     this.getList();
 
@@ -167,7 +163,6 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
           this.applicationRecords = landResult.results;
           this.applicationRecords.map((a) => {
-            //console.log(a.lands.map(l=>l.cpm).join(','));
             a.landsFlat = a.lands.map(l => l.cup).join(', ');
           });
           this.tableLength = landResult.count;
@@ -179,21 +174,23 @@ export class ListApplicationMaintenanceContainerComponent implements OnInit {
 
   onFilter(event: any): void {
     const rawValue = this.formFilters.getRawValue();
+    this.limit = this.defaultTableLimit;
+    this.offset = null;
     this.getList();
   }
   onDownload(): void {
 
   }
 
+    getFormFieldHelpersAsString(): string
+    {
+        return this.formFieldHelpers.join(' ');
+    };
 
   private orderingFormater(sort: Sort): string {
     const orderingActive = sort?.active;
     return (sort?.direction === 'desc') ? '-' + orderingActive : orderingActive;
-  }
+  };
 
-  getFormFieldHelpersAsString(): string
-  {
-      return this.formFieldHelpers.join(' ');
-  }
 
-}
+};
