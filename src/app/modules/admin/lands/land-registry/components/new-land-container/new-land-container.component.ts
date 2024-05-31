@@ -16,6 +16,7 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   landRecordIn: LandRegistryMap;
   landRecordOut: LandRegistryMap;
   ownerId: number;
+  cancel: number =1;
   private unsubscribeInAll = new Subject<any>();
   private unsubscribeAll = new Subject<any>();
 
@@ -64,6 +65,13 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
 
   receivedShowFormEdit(event): void{
     this.showEditForm = event;
+  }
+
+  receivedCancel(event): void{
+    console.log('receivedCancel>>',event);
+    /*this.cancel = event;*/
+    this.cancel = this.cancel +1;
+    /*this.cancel = false;*/
   }
 
   registerLand(landRecord: LandRegistryMap): void {
