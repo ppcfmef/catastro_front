@@ -81,7 +81,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
     ranNum: string;
     streetBlock: string;
     rangCup: string;
-
+    longitudePuerta: number;
+    latitudePuerta: number;
+    idLotePuerta: number;
     //RAN_CPU
     //DEPARTURE
     constructor(l?: LandRegistryMap){
@@ -161,7 +163,9 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.streetBlock=l?.streetBlock;
         this.rangCup= l?.rangCup;
         this.municipalNumberAlt = l?.municipalNumberAlt;
-
+        this.latitudePuerta = l?.latitudePuerta;
+        this.longitudePuerta = l?.longitudePuerta;
+        this.idLotePuerta =  l?.idLotePuerta;
     }
 
 
