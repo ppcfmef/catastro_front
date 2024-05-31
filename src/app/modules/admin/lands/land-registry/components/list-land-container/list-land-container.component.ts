@@ -8,6 +8,7 @@ import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
 import { LandOwner } from '../../interfaces/land-owner.interface';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { MasterDomain } from '../../interfaces/master-domain.interface';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   @Input() ubigeo: string;
   landRecords: LandRegistryMap[];
   tableLength: number;
+  masterDomain: MasterDomain;
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private landOwnerId!: number;
@@ -30,7 +32,13 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     private landRegistryService: LandRegistryService,
     private landRegistryMapService: LandRegistryMapService,
     private navigationAuthorizationService: NavigationAuthorizationService
-  ) { }
+  ) {
+    this.landRegistryService.getMasterDomain()
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) => {
+      this.masterDomain = result;
+  });
+   }
     ngOnChanges(changes: SimpleChanges): void {
         /*this.ubigeo=this.navigationAuthorizationService.ubigeoNavigation;
         console.log('ubigeo',this.ubigeo);*/
@@ -69,6 +77,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
           .toPromise()
           .then(
             (landResult) => {
+                this.updateDataSourceWithStreetNames(landResult.results);
               this.landRecords = landResult.results;
               this.tableLength = landResult.count;
               if (this.landId && this.tableLength > 0) {
@@ -107,6 +116,15 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     );
   }
 
+  updateDataSourceWithStreetNames(data): void {
+    data.forEach((item) => {
+      // Encuentra el nombre de la calle correspondiente al streetType del item
+      const matchingStreet = this.masterDomain.codStreet.find(street => street.id === item.streetType);
+      if (matchingStreet) {
+        item.typeStreetName = matchingStreet.name;
+      }
+    });
+  };
   ngOnDestroy(): void {
 
     this.unsubscribeAll.next(null);

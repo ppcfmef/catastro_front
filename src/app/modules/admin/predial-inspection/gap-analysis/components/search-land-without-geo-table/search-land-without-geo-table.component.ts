@@ -37,7 +37,6 @@ export class SearchLandWithoutGeoTableComponent implements OnInit {
     }
 
     const queryParams={search};
-    console.log('datos',queryParams);
     this.searchEvent.emit(queryParams);
   }
 
