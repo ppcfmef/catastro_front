@@ -239,7 +239,6 @@ hideSelectUbigeo = false;
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes>>',changes);
 
     if(changes.ubicacion && this.ubicacion && this.view){
       this.fotos = this.ubicacion.fotos;
@@ -523,8 +522,6 @@ hideSelectUbigeo = false;
 
 
         this.view.on('click', async (event) => {
-
-          console.log('event>>',event);
           this.view.popup.close();
 
           this.graphics.forEach(g=>{

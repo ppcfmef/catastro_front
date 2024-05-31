@@ -37,7 +37,6 @@ export class CaseSuministroComponent implements OnInit, OnChanges {
 
   constructor(  private _landOwnerService: LandOwnerService,) { }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes>>',changes);
     this.getDataItem();
   }
 

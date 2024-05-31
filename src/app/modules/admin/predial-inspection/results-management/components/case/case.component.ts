@@ -50,7 +50,6 @@ export class CaseComponent implements OnInit , OnChanges{
 
      }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('changes>>',changes);
         this.refreshForm();
     }
 
