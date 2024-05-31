@@ -29,6 +29,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   @Input() landRecord: LandRegistryMap;
   @Input() landMapRecord: LandRegistryMap;
   @Output() showFormEdit = new EventEmitter<boolean>();
+  @Output() cancelEvent = new EventEmitter<boolean>(false);
   @Output() registerLand = new EventEmitter<LandRegistryMap>();
   landMergeRecord: LandRegistryMap;
   formEdit: FormGroup;
@@ -39,6 +40,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   masterDomain: MasterDomain;
   landActive = true;
   hideInfoFields = false;
+
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -73,6 +75,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
   destroyForm(): void {
     this.showFormEdit.emit(null);
+    this.cancelEvent.emit(true);
 
   }
 
@@ -110,7 +113,10 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled: !!this.landMergeRecord?.resolutionType }, Validators.required],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled:(this.landMergeRecord?.latitude)? true:disabled}],
       longitude: [{ value: this.landMergeRecord?.longitude, disabled :(this.landMergeRecord?.longitude)? true:disabled }],
-      rangCup:[{ value: this.landMergeRecord?.rangCup, disabled: (this.landMergeRecord?.rangCup)? true:disabled }]
+      rangCup:[{ value: this.landMergeRecord?.rangCup, disabled: (this.landMergeRecord?.rangCup)? true:disabled }],
+      latitudePuerta: [ this.landMergeRecord?.latitudePuerta],
+      longitudePuerta: [ this.landMergeRecord?.longitudePuerta],
+      idLotePuerta: [this.landMergeRecord?.idLotePuerta],
     });
     /*console.log('this.formEdit>>',this.formEdit.value);*/
     this.setTitle();

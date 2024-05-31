@@ -1,12 +1,16 @@
 <section class="container">
-    <app-land-registry-geolocation [ownerId]="ownerId" ></app-land-registry-geolocation>
+    <app-land-registry-geolocation [ownerId]="ownerId" [cancelEvent]="cancel" ></app-land-registry-geolocation>
     <ng-container  [ngSwitch]="showEditForm">
         <app-land-create-and-edit *ngSwitchCase="true"
             [ownerId]="ownerId"
             [landRecord]="landRecordIn"
             [landMapRecord]="landRecordOut"
             (registerLand)="registerLand($event)"
-            (showFormEdit)="receivedShowFormEdit($event)">
+            (showFormEdit)="receivedShowFormEdit($event)"
+            (cancelEvent)="receivedCancel($event)"
+            
+            
+            >
         </app-land-create-and-edit>
 
         <app-land-detail-summary *ngSwitchCase="false"

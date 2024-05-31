@@ -7,8 +7,10 @@ import {
     Component,
     ElementRef,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
+    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import jsPDF from 'jspdf';
@@ -64,12 +66,13 @@ moment.locale('es');
     styleUrls: ['./land-registry-geolocation.component.scss'],
 })
 export class LandRegistryGeolocationComponent
-    implements OnInit, AfterViewInit, OnDestroy
+    implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
 
     @Input() ownerId: number = 639476.5456999997;
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
+    @Input()  cancelEvent: boolean = false;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
 
     apiKey =
@@ -221,7 +224,7 @@ export class LandRegistryGeolocationComponent
             id: 0,
             idServer: 1,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 1,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -488,6 +491,24 @@ export class LandRegistryGeolocationComponent
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+
+
+    ngOnChanges(changes: SimpleChanges) {
+        console.log('changes>>',changes);
+        if (changes['cancelEvent']) {
+            this.cancelEvent=changes['cancelEvent'].currentValue;
+            this.onCancel();
+
+          /*console.log('inputData changed from', changes['inputData'].previousValue, 'to', changes['showEditForm'].currentValue);*/
+        }
+      }
+
+
+      onCancel(): void{
+        this.view.graphics.removeAll();
+        this.estado = Estado.LEER;
+        /*this.cancelEvent = false;*/
+      }
 
     ngOnInit(): void {
         this.loadImage();
@@ -1106,11 +1127,48 @@ export class LandRegistryGeolocationComponent
                                                                                             this
                                                                                                 .lote
                                                                                         );
-                                                                                    this._landRegistryMapService.setEstado(
-                                                                                        Estado.LEER
-                                                                                    );
-                                                                                    this._landRegistryMapService.landOut =
+                                                                                   
+
+
+                                                                                    if( tipoLote === '2'){
+                                                                                        dialogRef =
+                                                                                        this.confirmationService.info(
+                                                                                            'Puerta de Ingreso',
+                                                                                            'Debe seleccionar la puerta de ingreso'
+                                                                                        );
+                                                                                        this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+
+                                                                                        const puntosLote = this.layersInfo.find(
+                                                                                            l => l.id === 0
+                                                                                        )?.featureLayer;
+
+                                                                                        console.log('this.lote>>',this.lote);
+                                                                                       
+                                                                                        puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
+
+
+
+
+                                                                                        const puntosPredio = this.layersInfo.find(
+                                                                                            l => l.id === -1
+                                                                                        )?.featureLayer;
+
+                                                                                        puntosPredio['definitionExpression'] = '1<>1';
+
+                                                                                    }
+
+                                                                                    else{
+
+                                                                                        this._landRegistryMapService.landOut =
                                                                                         this.landRegistryMapModel;
+                                                                                        this.estado =   Estado.LEER;
+                                                                                        /*this._landRegistryMapService.setEstado(
+                                                                                            Estado.LEER
+                                                                                        );*/
+                                                                                    }
+
+
+
                                                                                 } else {
                                                                                     if (
                                                                                         this
@@ -1184,18 +1242,24 @@ export class LandRegistryGeolocationComponent
                                                                 );
                                                                 this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
 
+                                                                const puntosLote = this.layersInfo.find(
+                                                                    l => l.id === 0
+                                                                )?.featureLayer;
 
-                                                                /*this.addPoint(
-                                                                    latitude,
-                                                                    longitude,
-                                                                    this
-                                                                        .simpleMarkerSymbolUndefined
-                                                                );*/
+                                                                console.log('this.lote>>',this.lote);
+
+                                                                puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
+                                                                const puntosPredio = this.layersInfo.find(
+                                                                    l => l.id === -1
+                                                                )?.featureLayer;
+
+                                                                puntosPredio['definitionExpression'] = '1<>1';
 
                                                             }
 
                                                             else{
                                                                 this._landRegistryMapService.landOut =this.landRegistryMapModel;
+                                                                this.estado = Estado.LEER;
                                                             }
 
 
@@ -1259,7 +1323,9 @@ export class LandRegistryGeolocationComponent
                                                                 this._landRegistryMapService.setEstado(
                                                                     Estado.LEER
                                                                 );
-                                                                /*     this._landRegistryMapService.landOut = this.landRegistryMapModel;*/
+
+                                                              
+
                                                             } else {
                                                             }
                                                         });
@@ -1332,6 +1398,9 @@ export class LandRegistryGeolocationComponent
                                     ) {
 
                                         /*this.landRegistryMapModel.*/
+
+
+                                        /*puntoEntrada?.graphic.attributes*/
                                         this.landRegistryMapModel.codStreet = puntoEntrada?.graphic.attributes['COD_VIA'];
                                         this.landRegistryMapModel.idAranc = puntoEntrada?.graphic.attributes[ 'ID_ARANC'];
                                         this.landRegistryMapModel.streetType = puntoEntrada?.graphic.attributes['TIP_VIA'];
@@ -1341,22 +1410,28 @@ export class LandRegistryGeolocationComponent
                                         this.landRegistryMapModel.idLotePuerta = puntoEntrada?.graphic.attributes[ 'ID_LOTE'];
                                         this._landRegistryMapService.landOut =this.landRegistryMapModel;
                                         this.estado = Estado.CREAR;
+
+
+                                        const puntosLote = this.layersInfo.find(
+                                            l => l.id === 0
+                                        )?.featureLayer;
+
+
+                                        puntosLote['definitionExpression'] =  this.layersInfo.find(
+                                            l => l.id === 0
+                                        )?.definitionExpression;
+
+
+                                        const puntosPredio = this.layersInfo.find(
+                                            l => l.id === -1
+                                        )?.featureLayer;
+
+                                        puntosPredio['definitionExpression'] =  this.layersInfo.find(
+                                            l => l.id === -1
+                                        )?.definitionExpression;
                                     }
                             });
-/*
- dialogRef
-                                                        .afterClosed()
-                                                        .toPromise()
-                                                        .then((option) => {
-                                                            if (
-                                                                option ===
-                                                                'confirmed'
-                                                            ) {});
-*/
 
-
-
-                                //dialogRef.afterClosed().subscribe
 
 
                             }
