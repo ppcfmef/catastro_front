@@ -2135,7 +2135,7 @@ export class LandRegistryGeolocationComponent
 
                                     //cambiar los campos segun servicio
                                     // eslint-disable-next-line max-len
-                                    {text: `${land.idLotePuerta ? `, que cuenta con un paso de servidumbre ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )}`: ''}` , style:'textR'},', se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+                                    {text: `${land.idLotePuerta ? `, que cuenta con un paso de servidumbre ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.manzanaUrbanaPuerta,', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta , ', Lote ' )}`: ''}` , style:'textR'},', se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
                                 ]
                         }
 
