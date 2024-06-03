@@ -41,6 +41,7 @@ export interface User {
     isSuperuser?: boolean;
     ubigeo: string;
     permissionsNavigation: any[];
+    districtName?: string;
 }
 
 

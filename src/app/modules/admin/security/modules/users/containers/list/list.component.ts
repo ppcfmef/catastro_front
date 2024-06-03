@@ -7,9 +7,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {BehaviorSubject, merge, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, from, merge, Observable, Subject} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
-import {debounceTime, switchMap, takeUntil} from 'rxjs/operators';
+import {debounceTime, mergeMap, switchMap, takeUntil, toArray} from 'rxjs/operators';
 import {UserService} from '../../../../../../../core/user/user.service';
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -19,6 +19,8 @@ import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
 import {Role} from '../../../../../../../core/user/user.types';
 import * as moment from 'moment';
+import { inject } from '@angular/core';
+import { CommonService } from 'app/core/common/services/common.service';
 
 @Component({
     selector: 'app-list',
@@ -36,7 +38,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     title = 'Gestión de usuarios';
 
-    displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'rol', 'status', 'creationDate', 'actions'];
+    displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'districtName', 'rol', 'status', 'creationDate', 'actions'];
 
     filters: UntypedFormGroup;
     search: UntypedFormGroup;
@@ -49,7 +51,11 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     pageSize = 10;
 
     changesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+    #commonService = inject(CommonService);
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
 
     /**
      * Constructor
@@ -136,9 +142,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    /**
-     * Init pagination results
-     */
+
     initPagination(): void {
         merge(this.paginator.page, this.changesSubject, this.filters.valueChanges)
             .pipe(
@@ -146,14 +150,35 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap(() => {
                     const queryParamsByPaginator = this.makeQueryParams();
                     return this._userService.getUsers(queryParamsByPaginator);
+                }),
+                mergeMap((response) => {
+                    this.count = response.count;
+                    return from(response.results).pipe(
+                        mergeMap((user) => {
+                            // Verificar si user.district tiene un valor válido
+                            if (user.district) {
+                                return this.#commonService.getDistrictResource(user.district.toString()).pipe(
+                                    mergeMap((res) => {
+                                        if (user.district.toString() === res.code) {
+                                            user.districtName = res.name;
+                                        }
+                                        return from([user]);
+                                    })
+                                );
+                            } else {
+                                // Si user.district no tiene un valor válido, asigna un valor predeterminado
+                                user.districtName = '';
+                                return from([user]);
+                            }
+                        }),
+                        toArray()
+                    );
                 })
-            ).subscribe((response) => {
-            this.count = response.count;
-            this.dataSource = response.results;
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
+            )
+            .subscribe((modifiedUsers) => {
+                this.dataSource = modifiedUsers;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     makeQueryParams(): any {
@@ -211,6 +236,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
+        this.pageSize = paginator.pageSize;
     }
 
     onSearch(): void {
