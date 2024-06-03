@@ -10,6 +10,8 @@ import { IntegrationService } from 'app/shared/services/integration.service';
 import { SatLandOwner } from 'app/shared/interfaces/integrations.inteface';
 import { LandOwnerModel } from '../../models/land-owner.model';
 import { FuseValidators } from '@fuse/validators';
+import { LandRegistryMapService } from '../../services/land-registry-map.service';
+import { Estado } from 'app/shared/enums/estado-map.enum';
 
 @Component({
   selector: 'app-new-owner-container',
@@ -26,7 +28,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   landOwner: LandOwnerModel = new LandOwnerModel();
   idView = 'gprpregist';
   hideSelectUbigeo = true;
-
+  estadoIniciar = true;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -34,6 +36,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
     private confirmationService: CustomConfirmationService,
     private _fuseSplashScreenService: FuseSplashScreenService,
     private integrationService: IntegrationService,
+    private _landRegistryMapService: LandRegistryMapService,
   ) {
     this.search = new FormControl('');
   }
@@ -48,6 +51,18 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
       this.landOwner.setValue( result);
 
     });
+
+    this._landRegistryMapService.getEstado().subscribe((estado: any)=>{
+
+      if (estado === Estado.INICIAR || estado === Estado.LEER){
+        this.estadoIniciar = true;
+      }
+
+      else{
+        this.estadoIniciar = false;
+      }
+    });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,7 +75,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
         this.search.setValue(res.dni);
       });
     }
-  }
+     }
 
   receivedShowFormEdit(event): void{
     this.showFormEdit = event;

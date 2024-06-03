@@ -77,7 +77,7 @@ export class CustomConfirmationService {
     });
   }
 
-  info(title: string, message: string): MatDialogRef<FuseConfirmationDialogComponent> {
+  info(title: string, message: string,showCancel: any = true): MatDialogRef<FuseConfirmationDialogComponent> {
     return this.confirmation.open({
       title: title,
       message: message,
@@ -92,7 +92,7 @@ export class CustomConfirmationService {
           color: 'primary'
         },
         cancel: {
-          show: true,
+          show: showCancel,
           label:'Cancelar'
         }
       }

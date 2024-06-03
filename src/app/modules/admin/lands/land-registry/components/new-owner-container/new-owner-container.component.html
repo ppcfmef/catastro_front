@@ -13,7 +13,7 @@
              <mat-icon class="text-white " svgIcon="mat_outline:cleaning_services"></mat-icon>
         </button>
 
-        <ng-container *ngIf="showButtons">
+        <ng-container *ngIf="showButtons && estadoIniciar">
             <button mat-button class="box-shadow-z1 rounded-md bg-mef-aplleGreen-100 ml-2 text-white"
             (click)="createLandRecord()"> Crear predio nuevo
             <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
