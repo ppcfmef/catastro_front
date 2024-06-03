@@ -43,7 +43,7 @@
   (showLandMap)="onShowLandsMap($event)">
 </app-search-land-table>
 
-<div class="container-panel flex w-full"  *ngIf="showLandsMap"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+<div class="container-panel flex w-full"  *ngIf="landRecord"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
   <div class="map-container">
     <app-show-map-point  *ngIf="landRecord" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
   </div>

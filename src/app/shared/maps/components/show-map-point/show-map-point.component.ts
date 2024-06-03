@@ -42,7 +42,7 @@ export class ShowMapPointComponent
         { latitude: -13.54, longitude: -71.955921 },
     ];
     @ViewChild('mapViewNode', { static: false }) private mapViewEl: ElementRef;
-    renderMap: boolean;
+    renderMap: boolean = false;
     title = 'Gestor Cartográfico';
     view: any = null;
     map: any;
@@ -152,33 +152,32 @@ export class ShowMapPointComponent
                     id: 2,
                     visible: true,
                     title: 'CF_EJE_VIAL',
-                    labelingInfo: {
+                    /*labelingInfo: {
                         symbol: {
                             type: 'text', // autocasts as new TextSymbol()
                             color: 'black',
                             font: {
                                 // autocast as new Font()
                                 family: 'arial',
-                                size: 8,
-                                //weight: 'bold'
+                                size: 10,
+                                weight: 'bold'
                             },
                         },
                         labelPlacement: 'above-center',
                         labelExpressionInfo: {
-                            expression:
-                                '$feature.DES_VIA +" "+ $feature.NOM_VIA',
+                            expression:'$feature.DES_VIA +" "+ $feature.NOM_VIA',
                         },
-                    },
+                    },*/
                 },
                 {
                     id: 1,
-                    visible: true,
+                    visible: false,
                     title: 'CF_LOTES_PUN',
                 },
 
                 {
                     id: 0,
-                    visible: true,
+                    visible: false,
                     title: 'CF_PREDIO',
                     definitionExpression: 'ESTADO =1',
                     labelingInfo: {
@@ -249,6 +248,7 @@ export class ShowMapPointComponent
         },
     ];
     subscription: Subscription;
+    inicio:false;
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
@@ -259,6 +259,9 @@ export class ShowMapPointComponent
     }
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
         //this._landRecordService.setLandRecordDownloadCroquis(false);
         //throw new Error('Method not implemented.');
     }
@@ -295,22 +298,34 @@ export class ShowMapPointComponent
                 this.initializeMap();
             }, 0.001);
         }
+
         //this.points=[{latitude: -13.53063, longitude: -71.955921}] ;
     }
 
     ngOnChanges(): void {
-        if (this.view) {
-            this.addPoints(this.points);
-        }
+
         this.renderMap = this.points.every(
             point => point.latitude != null || point.longitude != null
         );
-        this._changeDetectorRef.markForCheck();
-        if (this.renderMap) {
-            setTimeout(() => {
-                this.initializeMap();
-            }, 0.001);
+
+        if (this.view && this.renderMap) {
+            this.addPoints(this.points);
         }
+        /*if (this.view) {
+            this.addPoints(this.points);
+        }
+        else{
+            this.renderMap = this.points.every(
+                point => point.latitude != null || point.longitude != null
+            );
+            this._changeDetectorRef.markForCheck();
+            if (this.renderMap) {
+                setTimeout(() => {
+                    this.initializeMap();
+                }, 0.001);
+            }
+        }*/
+        
     }
     /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
@@ -440,6 +455,26 @@ export class ShowMapPointComponent
             const x = inputPoints[0].longitude;
             const y = inputPoints[0].latitude;
             this.view.center = [x, y];
+            
+            
+            const textSymbol = {
+                type: 'text',  // autocasts as new TextSymbol()
+                color: 'black',
+                haloColor: 'white',
+                haloSize: '2px',
+                text: this.landRecord.cup,
+                xoffset: 65,
+                yoffset: 15,
+                font: {  // autocasts as new Font()
+                  size: 10,
+            
+                  weight: 'bold'
+                }
+            };
+            
+
+            /*this.textSymbol.text*/
+
             inputPoints.forEach((inputPoint: Coordinates) => {
                 const point = {
                     //Create a point
@@ -451,7 +486,12 @@ export class ShowMapPointComponent
                     geometry: point,
                     symbol: this.simpleMarkerSymbol,
                 });
-                this.view.graphics.addMany([pointGraphic]);
+
+                const pointGraphicText = new Graphic({
+                    geometry: point,
+                    symbol: textSymbol,
+                });
+                this.view.graphics.addMany([pointGraphic,pointGraphicText]);
             });
         }
     }
