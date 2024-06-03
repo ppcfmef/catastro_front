@@ -66,13 +66,12 @@ moment.locale('es');
     styleUrls: ['./land-registry-geolocation.component.scss'],
 })
 export class LandRegistryGeolocationComponent
-    implements OnInit, AfterViewInit, OnDestroy, OnChanges
-{
+    implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
     @Input() ownerId: number = 639476.5456999997;
     @Input() x: number = 639476.5456999997;
     @Input() y: number = 9265200.7227;
-    @Input()  cancelEvent: boolean = false;
+    @Input() cancelEvent: boolean = false;
     @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
 
     apiKey =
@@ -160,7 +159,7 @@ export class LandRegistryGeolocationComponent
     };
 
 
-    simpleMarkerSymbolEntrada ={
+    simpleMarkerSymbolEntrada = {
         type: 'simple-marker',
         style: 'square',
         size: '10px', // pixels
@@ -208,7 +207,7 @@ export class LandRegistryGeolocationComponent
             id: -1,
             idServer: 0,
             urlBase:
-                 `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: 'ESTADO=1',
@@ -224,7 +223,7 @@ export class LandRegistryGeolocationComponent
             id: 0,
             idServer: 1,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 1,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -239,7 +238,7 @@ export class LandRegistryGeolocationComponent
             id: 1,
             idServer: 5,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -253,7 +252,7 @@ export class LandRegistryGeolocationComponent
                 field: 'ESTADO_INS',
                 legendOptions: {
                     title: " ",
-                  },
+                },
 
                 classBreakInfos: [
                     {
@@ -310,7 +309,7 @@ export class LandRegistryGeolocationComponent
             idServer: 2,
 
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -342,7 +341,7 @@ export class LandRegistryGeolocationComponent
             id: 3,
             idServer: 9,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -376,7 +375,7 @@ export class LandRegistryGeolocationComponent
             id: 4,
             idServer: 6,
             urlBase:
-            `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
+                `${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -392,7 +391,7 @@ export class LandRegistryGeolocationComponent
             id: 9,
             idServer: 0,
             urlBase:
-            `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
+                `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
 
             order: 0,
             featureLayer: null,
@@ -409,7 +408,7 @@ export class LandRegistryGeolocationComponent
             id: 10,
             idServer: 1,
             urlBase:
-            `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
+                `${environment.apiUrlArcGisServer}/ACTUALIZACION/CARTO_ACT/MapServer`,
 
 
             order: 0,
@@ -427,7 +426,7 @@ export class LandRegistryGeolocationComponent
             id: 11,
             idServer: 0,
             urlBase:
-            `${environment.apiUrlArcGisServer}/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer`,
+                `${environment.apiUrlArcGisServer}/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/MapServer`,
             order: 0,
             featureLayer: null,
             definitionExpression: '1=1',
@@ -495,19 +494,22 @@ export class LandRegistryGeolocationComponent
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['cancelEvent']) {
-            this.cancelEvent=changes['cancelEvent'].currentValue;
+            this.cancelEvent = changes['cancelEvent'].currentValue;
             this.onCancel();
 
-          /*console.log('inputData changed from', changes['inputData'].previousValue, 'to', changes['showEditForm'].currentValue);*/
+            /*console.log('inputData changed from', changes['inputData'].previousValue, 'to', changes['showEditForm'].currentValue);*/
         }
-      }
+    }
 
 
-      onCancel(): void{
+    onCancel(): void {
         this.view.graphics.removeAll();
         this.estado = Estado.LEER;
+        this._landRegistryMapService.setEstado(
+            Estado.LEER
+        );
         /*this.cancelEvent = false;*/
-      }
+    }
 
     ngOnInit(): void {
         this.loadImage();
@@ -586,8 +588,9 @@ export class LandRegistryGeolocationComponent
                 }*/
 
                 if (_landRegistryMapModel.idCartographicImg) {
-                    this.updateLandRegistryMap(_landRegistryMapModel);}
-                else if (_landRegistryMapModel){
+                    this.updateLandRegistryMap(_landRegistryMapModel);
+                }
+                else if (_landRegistryMapModel) {
                     this.saveLandRegistryMap(_landRegistryMapModel);
                 }
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
@@ -781,10 +784,10 @@ export class LandRegistryGeolocationComponent
 
                 if (this.idCargo === Role.DISTRITAL) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
-                    if (l['definitionExpression'].length>0){
+                    if (l['definitionExpression'].length > 0) {
                         options['definitionExpression'] = `${l['definitionExpression']} and ${where}`;
                     }
-                    else  {
+                    else {
                         options['definitionExpression'] = `${where}`;
                     }
 
@@ -996,7 +999,7 @@ export class LandRegistryGeolocationComponent
                                                 resultsLote.length > 0 &&
                                                 resultsLote[0].graphic
                                                     .attributes['ESTADO_INS'] >
-                                                    0
+                                                0
                                             ) {
                                                 this._fuseSplashScreenService.show();
                                                 graphic =
@@ -1017,12 +1020,12 @@ export class LandRegistryGeolocationComponent
                                                     // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     MZN_URB:
                                                         graphic.attributes[
-                                                            'MZN_URB'
+                                                        'MZN_URB'
                                                         ],
                                                     // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     LOT_URB:
                                                         graphic.attributes[
-                                                            'LOT_URB'
+                                                        'LOT_URB'
                                                         ],
                                                 };
                                                 const where =
@@ -1063,43 +1066,42 @@ export class LandRegistryGeolocationComponent
                                                                     const id =
                                                                         landRecords[0]
                                                                             .id;
-                                                                    const arrayService=landRecords.map((l)=>{ return this._landOwnerService
-                                                                        .getLandDetail(
-                                                                            l.id
-                                                                        );});
+                                                                    const arrayService = landRecords.map((l) => {
+                                                                        return this._landOwnerService
+                                                                            .getLandDetail(
+                                                                                l.id
+                                                                            );
+                                                                    });
 
 
-                                                                     forkJoin(arrayService).subscribe((res: any[]) => {
-                                                                        let owners =[];
+                                                                    forkJoin(arrayService).subscribe((res: any[]) => {
+                                                                        let owners = [];
 
 
-                                                                        res.forEach((responseOwner: any)=>{
-                                                                             /*owners.concat(responseOwner.results);*/
-                                                                             owners = [...owners, ...responseOwner.results];
+                                                                        res.forEach((responseOwner: any) => {
+                                                                            /*owners.concat(responseOwner.results);*/
+                                                                            owners = [...owners, ...responseOwner.results];
                                                                             /*return   responseOwner.results;*/
                                                                         });
 
                                                                         /*const owners =
                                                                         responseOwner.results;*/
 
-                                                                    dialogRef =
-                                                                        this.dialog.open(
-                                                                            AlertLandOwnerComponent,
-                                                                            {
-                                                                                data: {
-                                                                                    owners: owners,
-                                                                                    ownerId : this.ownerId
-                                                                                },
-                                                                                width: '600px',
-                                                                            }
-                                                                        );
+                                                                        dialogRef =
+                                                                            this.dialog.open(
+                                                                                AlertLandOwnerComponent,
+                                                                                {
+                                                                                    data: {
+                                                                                        owners: owners,
+                                                                                        ownerId: this.ownerId
+                                                                                    },
+                                                                                    width: '600px',
+                                                                                }
+                                                                            );
 
 
 
-                                                                    dialogRef
-                                                                        .afterClosed()
-                                                                        .toPromise()
-                                                                        .then(
+                                                    dialogRef.afterClosed().toPromise().then(
                                                                             (
                                                                                 option
                                                                             ) => {
@@ -1174,43 +1176,101 @@ export class LandRegistryGeolocationComponent
                                                                                         this._landRegistryMapService.landOut =
                                                                                         this.landRegistryMapModel;
                                                                                         this.estado =   Estado.LEER;
-                                                                                        /*this._landRegistryMapService.setEstado(
-                                                                                            Estado.LEER
-                                                                                        );*/
+                                                                                     
                                                                                     }
 
 
 
                                                                                 } else {
-                                                                                    if (
-                                                                                        this
-                                                                                            .view
+                                                                                   /* if (
+                                                                                        option ===
+                                                                                        'confirmed'
                                                                                     ) {
-                                                                                        this.view.popup.close();
-                                                                                        this.view.graphics.removeAll();
-                                                                                    }
+
+                                                                                        graphic =
+                                                                                            results[0].graphic;
+
+                                                                                        graphic.attributes[
+                                                                                            'COORD_X'
+                                                                                        ] =
+                                                                                            longitude;
+                                                                                        graphic.attributes[
+                                                                                            'COORD_Y'
+                                                                                        ] =
+                                                                                            latitude;
+                                                                                        this.lote =
+                                                                                            graphic.attributes;
+                                                                                        this.landRegistryMapModel =
+                                                                                            FormatUtils.formatLoteToLandRegistryMapModel(
+                                                                                                this
+                                                                                                    .lote
+                                                                                            );
+
+
+
+                                                                                        if (tipoLote === '2') {
+                                                                                            dialogRef =
+                                                                                                this.confirmationService.info(
+                                                                                                    'Puerta de Ingreso',
+                                                                                                    'Debe seleccionar la puerta de ingreso'
+                                                                                                );
+                                                                                            this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+
+                                                                                            const puntosLote = this.layersInfo.find(
+                                                                                                l => l.id === 0
+                                                                                            )?.featureLayer;
+
+                                                                                            console.log('this.lote>>', this.lote);
+
+                                                                                            puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
+
+
+
+
+                                                                                            const puntosPredio = this.layersInfo.find(
+                                                                                                l => l.id === -1
+                                                                                            )?.featureLayer;
+
+                                                                                            puntosPredio['definitionExpression'] = '1<>1';
+
+                                                                                        }
+
+                                                                                        else {
+
+                                                                                            this._landRegistryMapService.landOut =
+                                                                                                this.landRegistryMapModel;
+                                                                                            this.estado = Estado.LEER;
+                                                                                            this._landRegistryMapService.setEstado(
+                                                                                                Estado.LEER
+                                                                                            );
+                                                                                        }
+
+
+
+                                                                                    }*/ /*else {*/
+
+                                                                                    console.log('cancelar registro');
+                                                                                        if (
+                                                                                            this
+                                                                                                .view
+                                                                                        ) {
+                                                                                            this.view.popup.close();
+                                                                                            this.view.graphics.removeAll();
+                                                                                        }
+                                                                                        this.estado =   Estado.LEER;
+                                                                                        this._landRegistryMapService.setEstado(
+                                                                                            Estado.LEER
+                                                                                        );
+                                                                                    //}
                                                                                 }
-                                                                            }
-                                                                        );
+                                                                      }  );
 
                                                                     });
 
-
-
-
-                                                                    this._landOwnerService
-                                                                        .getLandDetail(
-                                                                            id
-                                                                        )
-                                                                        .subscribe(
-                                                                            (
-                                                                                responseOwner
-                                                                            ) => {
-
-
-                                                                            }
-                                                                        );
                                                                 }
+                                                            
+                                                            
+                                                            
                                                             }
                                                         );
                                                 });
@@ -1246,7 +1306,7 @@ export class LandRegistryGeolocationComponent
                                                                 Estado.LEER
                                                             );
 
-                                                            if( tipoLote === '2'){
+                                                            if (tipoLote === '2') {
                                                                 dialogRef =
                                                                 this.confirmationService.info(
                                                                     'Puerta de Ingreso',
@@ -1261,7 +1321,8 @@ export class LandRegistryGeolocationComponent
                                                                     l => l.id === 0
                                                                 )?.featureLayer;
 
-                                                                console.log('this.lote>>',this.lote);
+                                                                console.log('this.lote>>', this.lote);
+
 
 
                                                                 puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
@@ -1285,9 +1346,12 @@ export class LandRegistryGeolocationComponent
 
                                                             }
 
-                                                            else{
-                                                                this._landRegistryMapService.landOut =this.landRegistryMapModel;
+                                                            else {
+                                                                this._landRegistryMapService.landOut = this.landRegistryMapModel;
                                                                 this.estado = Estado.LEER;
+                                                                /*this._landRegistryMapService.setEstado(
+                                                                                                Estado.LEER
+                                                                                            );*/
                                                             }
 
 
@@ -1296,6 +1360,12 @@ export class LandRegistryGeolocationComponent
                                                                 this.view.popup.close();
                                                                 this.view.graphics.removeAll();
                                                             }
+
+
+                                                            this.estado =   Estado.LEER;
+                                                                                        this._landRegistryMapService.setEstado(
+                                                                                            Estado.LEER
+                                                                                        );
                                                         }
                                                     });
                                             }
@@ -1310,7 +1380,7 @@ export class LandRegistryGeolocationComponent
 
                                                 if (
                                                     this.idCargo ===
-                                                        Role.DISTRITAL &&
+                                                    Role.DISTRITAL &&
                                                     this.userUbigeo !== ubigeo
                                                 ) {
                                                     this._messageProviderService.showAlert(
@@ -1372,7 +1442,7 @@ export class LandRegistryGeolocationComponent
                     }
 
 
-                    else if(this.estado === Estado.NUEVO_PUNTO_MEDITERRANEO){
+                    else if (this.estado === Estado.NUEVO_PUNTO_MEDITERRANEO) {
                         this.view.hitTest(event).then((response) => {
                             console.log('response.results>>', response.results);
                             const puntosEntrada = response.results.filter((r) => {
@@ -1386,10 +1456,10 @@ export class LandRegistryGeolocationComponent
                                 }
                             });
 
-                            if(puntosEntrada.length>0){
-                                const puntoEntrada=puntosEntrada[0];
+                            if (puntosEntrada.length > 0) {
+                                const puntoEntrada = puntosEntrada[0];
                                 ;
-                                console.log('puntoEntrada>>',puntoEntrada);
+                                console.log('puntoEntrada>>', puntoEntrada);
                                 const pointEntrada = {
                                     //Create a point
                                     type: 'point',
@@ -1403,58 +1473,58 @@ export class LandRegistryGeolocationComponent
                                     /*symbol: this.simpleMarkerSymbolUndefined*/
                                 });
 
-                                if(this.pointEntradaGraphic){
+                                if (this.pointEntradaGraphic) {
                                     this.view?.graphics?.remove(this.pointEntradaGraphic);
                                 }
                                 this.view?.graphics?.add(this.pointEntradaGraphic);
 
 
                                 const dialogRef =
-                                this.confirmationService.info(
-                                    'Asignar Puerta',
-                                    'Desea asignar esta puerta?'
-                                );
+                                    this.confirmationService.info(
+                                        'Asignar Puerta',
+                                        'Desea asignar esta puerta?'
+                                    );
 
 
                                 dialogRef
-                                .afterClosed()
-                                .toPromise()
-                                .then((option) => {
-                                    if (
-                                        option ===
-                                        'confirmed'
-                                    ) {
+                                    .afterClosed()
+                                    .toPromise()
+                                    .then((option) => {
+                                        if (
+                                            option ===
+                                            'confirmed'
+                                        ) {
 
-                                        /*this.landRegistryMapModel.*/
-
-
-                                        /*puntoEntrada?.graphic.attributes*/
-                                        this.landRegistryMapModel.codStreet = puntoEntrada?.graphic.attributes['COD_VIA'];
-                                        this.landRegistryMapModel.idAranc = puntoEntrada?.graphic.attributes[ 'ID_ARANC'];
-                                        this.landRegistryMapModel.streetType = puntoEntrada?.graphic.attributes['TIP_VIA'];
-                                        this.landRegistryMapModel.streetName = puntoEntrada?.graphic.attributes['NOM_VIA'];
-                                        this.landRegistryMapModel.loteUrbanoPuerta = puntoEntrada?.graphic.attributes['LOT_URB'];
-                                        this.landRegistryMapModel.manzanaUrbanaPuerta = puntoEntrada?.graphic.attributes['MZN_URB'];
-                                        this.landRegistryMapModel.longitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_X'];
-                                        this.landRegistryMapModel.latitudePuerta = puntoEntrada?.graphic.attributes[ 'COORD_Y'];
-                                        this.landRegistryMapModel.idLotePuerta = puntoEntrada?.graphic.attributes[ 'ID_LOTE'];
-                                        this._landRegistryMapService.landOut =this.landRegistryMapModel;
-                                        this.estado = Estado.CREAR;
+                                            /*this.landRegistryMapModel.*/
 
 
-                                        const puntosLote = this.layersInfo.find(
-                                            l => l.id === 0
-                                        )?.featureLayer;
+                                            /*puntoEntrada?.graphic.attributes*/
+                                            this.landRegistryMapModel.codStreet = puntoEntrada?.graphic.attributes['COD_VIA'];
+                                            this.landRegistryMapModel.idAranc = puntoEntrada?.graphic.attributes['ID_ARANC'];
+                                            this.landRegistryMapModel.streetType = puntoEntrada?.graphic.attributes['TIP_VIA'];
+                                            this.landRegistryMapModel.streetName = puntoEntrada?.graphic.attributes['NOM_VIA'];
+                                            this.landRegistryMapModel.loteUrbanoPuerta = puntoEntrada?.graphic.attributes['LOT_URB'];
+                                            this.landRegistryMapModel.manzanaUrbanaPuerta = puntoEntrada?.graphic.attributes['MZN_URB'];
+                                            this.landRegistryMapModel.longitudePuerta = puntoEntrada?.graphic.attributes['COORD_X'];
+                                            this.landRegistryMapModel.latitudePuerta = puntoEntrada?.graphic.attributes['COORD_Y'];
+                                            this.landRegistryMapModel.idLotePuerta = puntoEntrada?.graphic.attributes['ID_LOTE'];
+                                            this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                            this.estado = Estado.CREAR;
 
 
-                                        puntosLote['definitionExpression'] =  this.layersInfo.find(
-                                            l => l.id === 0
-                                        )?.definitionExpression;
+                                            const puntosLote = this.layersInfo.find(
+                                                l => l.id === 0
+                                            )?.featureLayer;
 
 
-                                        const puntosPredio = this.layersInfo.find(
-                                            l => l.id === -1
-                                        )?.featureLayer;
+                                            puntosLote['definitionExpression'] = this.layersInfo.find(
+                                                l => l.id === 0
+                                            )?.definitionExpression;
+
+
+                                            const puntosPredio = this.layersInfo.find(
+                                                l => l.id === -1
+                                            )?.featureLayer;
 
                                         puntosPredio['definitionExpression'] =  this.layersInfo.find(
                                             l => l.id === -1
@@ -2056,7 +2126,7 @@ export class LandRegistryGeolocationComponent
     }
 
     toTitleCase(text) {
-        return text.replace(/\w\S*/g, function(word) {
+        return text.replace(/\w\S*/g, function (word) {
             return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
         });
     }
@@ -2087,6 +2157,7 @@ export class LandRegistryGeolocationComponent
                 Estado.LEER
             );
         }
+        console.log(land);
         setTimeout(async () => {
 
             const screenshot = await view.takeScreenshot({
@@ -2114,269 +2185,269 @@ export class LandRegistryGeolocationComponent
 
 
 
-        const pdf = {
-            pageMargins: [ 55, 25],
-            pageSize: 'A4',
-            content: [
+            const pdf = {
+                pageMargins: [55, 25],
+                pageSize: 'A4',
+                content: [
 
-                {
-                    columns: [
-                        {
-                            width: '30%',
-                            margin: [ 0, 5, 0, 5 ],
-                            image: this.dataUrl,
-                            cover: {
-                                width: desiredWidth,
-                                height: desiredHeight,
-                                valign: 'bottom',
-                                align: 'right',
+                    {
+                        columns: [
+                            {
+                                width: '30%',
+                                margin: [0, 5, 0, 5],
+                                image: this.dataUrl,
+                                cover: {
+                                    width: desiredWidth,
+                                    height: desiredHeight,
+                                    valign: 'bottom',
+                                    align: 'right',
+                                },
                             },
-                        },
-                        {
-                            width: '70%',
-                            stack: [
-                                'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
-                                {text: `MUNICIPALIDAD DE ${ district?.name ? district?.name:''}`, style: 'subheader'},
-                            ],
-                            style: 'title'
-                        },
-                    ]
-                },
-                {
-                    columns: [
-                        {
-                            style: 'p1',
-                            width: '100%',
-                            text: [ 'Yo, ',
-                                    { text: newName , style:'textR'},
-                                    'identificado(a) con DNI/RUC,' ,
-                                    {text:` Nº ${this.landOwner.dni?this.landOwner.dni:'-'}` , style:'textR'} ,
+                            {
+                                width: '70%',
+                                stack: [
+                                    'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
+                                    { text: `MUNICIPALIDAD DE ${district?.name ? district?.name : ''}`, style: 'subheader' },
+                                ],
+                                style: 'title'
+                            },
+                        ]
+                    },
+                    {
+                        columns: [
+                            {
+                                style: 'p1',
+                                width: '100%',
+                                text: ['Yo, ',
+                                    { text: newName, style: 'textR' },
+                                    'identificado(a) con DNI/RUC,',
+                                    { text: ` Nº ${this.landOwner.dni ? this.landOwner.dni : '-'}`, style: 'textR' },
                                     // eslint-disable-next-line max-len
-                                    landOwner.phone || landOwner.email ? {text:['con datos de contacto:', {text:`Telefono: ${landOwner.phone ? landOwner.phone : '-'} , Email: ${landOwner.email ? landOwner.email : '-'}` , style:'textR'} || ''] , style:'textR'}:''
+                                    landOwner.phone || landOwner.email ? { text: ['con datos de contacto:', { text: `Telefono: ${landOwner.phone ? landOwner.phone : '-'} , Email: ${landOwner.email ? landOwner.email : '-'}`, style: 'textR' } || ''], style: 'textR' } : ''
                                     // eslint-disable-next-line max-len
                                     ,
                                     '; en pleno ejercicio de mis derechos ciudadanos. \n',
                                 ]
-                        }
-                    ]
-                },
+                            }
+                        ]
+                    },
 
-                {
-                    columns: [
-                        {
-                            style: 'p2',
-                            width: '100%',
-                            text: [ 'DECLARO BAJO JURAMENTO : Que el predio con dirección ',
+                    {
+                        columns: [
+                            {
+                                style: 'p2',
+                                width: '100%',
+                                text: ['DECLARO BAJO JURAMENTO : Que el predio con dirección ',
                                     // eslint-disable-next-line max-len
-                                    { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza,', Manzana ')} ${this.getFrase(land.urbanLotNumber , ', Lote ' )} ${this.getFrase(land.block,',Bloque ')} ${this.getFrase(land.municipalNumber ,',Nro Puerta ')} ${this.getFrase(land.apartmentNumber,',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}` , style:'textR'} ,
+                                    { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.urbanLotNumber, ', Lote ')} ${this.getFrase(land.block, ',Bloque ')} ${this.getFrase(land.municipalNumber, ',Nro Puerta ')} ${this.getFrase(land.apartmentNumber, ',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}`, style: 'textR' },
 
                                     //cambiar los campos segun servicio
                                     // eslint-disable-next-line max-len
-                                    {text: `${land.idLotePuerta ? `, que cuenta con un paso de servidumbre ${streetType ? ', ' + this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.manzanaUrbanaPuerta,', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta , ', Lote ' )}`: ''}` , style:'textR'},', se encuentra ubicado tal cual se muestra en el siguiente croquis. \n'
+                                    { text: `${land.idLotePuerta ? `, el cual cuenta con paso de servidumbre en ${streetType ? this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta, ', Lote ')}` : ''}`, style: 'textR' }, ', conforme al siguiente croquis: \n'
                                 ]
-                        }
+                            }
 
-                    ]
-                },
-                {
-                    columns: [
-                        {
-                            style: 'p3',
-                            width: '100%',
-                            text: 'CROQUIS DE UBICACIÓN ' ,
-                        },
-
-                    ],
-                },
-                {
-                    layout: {
-                            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                            hLineWidth: function (i, node) { return  1;},
-                            hLineColor: function (i, node) {return '#94a3b8';},
-                            vLineColor: function (i, node) { return '#94a3b8';},
+                        ]
                     },
-                    table: {
-                        widths:['30%', '70%'],
-                        body: [
+                    {
+                        columns: [
+                            {
+                                style: 'p3',
+                                width: '100%',
+                                text: 'CROQUIS DE UBICACIÓN ',
+                            },
+
+                        ],
+                    },
+                    {
+                        layout: {
+                            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                            hLineWidth: function (i, node) { return 1; },
+                            hLineColor: function (i, node) { return '#94a3b8'; },
+                            vLineColor: function (i, node) { return '#94a3b8'; },
+                        },
+                        table: {
+                            widths: ['30%', '70%'],
+                            body: [
                                 [
                                     {
                                         border: [false, false, false, false],
 
                                         table: {
-                                            widths:['100%'],
+                                            widths: ['100%'],
                                             heights: [40, 40, 40],
                                             body: [
                                                 [{
                                                     border: [false, false, false, true],
-                                                    stack:['Ubigeo \n', {text:`${land?.ubigeo ? land?.ubigeo : '-'}` , style:'cellSub'}], style:'cell'
+                                                    stack: ['Ubigeo \n', { text: `${land?.ubigeo ? land?.ubigeo : '-'}`, style: 'cellSub' }], style: 'cell'
                                                 }],
                                                 [{
                                                     border: [false, false, false, true],
                                                     // eslint-disable-next-line max-len
-                                                    stack:[{text:`${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}`}, {text: ` ${ land.cup ? land.cup : land.idCartographicImg}`, style:'cellSub'}] , style:'cell'
+                                                    stack: [{ text: `${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}` }, { text: ` ${land.cup ? land.cup : land.idCartographicImg}`, style: 'cellSub' }], style: 'cell'
                                                 }],
                                                 [{
                                                     border: [false, false, false, true],
-                                                    stack:['Latitud \n', {text:`${land.latitude ? land.latitude : '-'}` , style:'cellSub'}], style:'cell'
+                                                    stack: ['Latitud \n', { text: `${land.latitude ? land.latitude : '-'}`, style: 'cellSub' }], style: 'cell'
                                                 }],
                                                 [{
                                                     border: [false, false, false, true],
-                                                    stack:['Longitud \n', {text:`${land.longitude ? land.longitude : '-'}` , style:'cellSub'}], style:'cell'
+                                                    stack: ['Longitud \n', { text: `${land.longitude ? land.longitude : '-'}`, style: 'cellSub' }], style: 'cell'
                                                 }],
                                             ]
                                         },
                                         layout: {
-                                                hLineWidth: function (i, node) { return  1 ;},
-                                                hLineColor: function (i, node) {
-                                                    return '#94a3b8';
-                                                },
+                                            hLineWidth: function (i, node) { return 1; },
+                                            hLineColor: function (i, node) {
+                                                return '#94a3b8';
+                                            },
                                         }
                                     },
                                     {
-                                        alignment:'center',
+                                        alignment: 'center',
                                         border: [true, true, true, true],
                                         image: screenshot.dataUrl,
                                         cover: { width: 330, height: 300, valign: 'bottom', align: 'right' },
                                     },
                                 ],
                             ]
+                        },
                     },
-                },
-                {
+                    {
                         columns: [
-                        {
-                            style: 'p5',
-                            width: '100%',
-                            // eslint-disable-next-line max-len
-                            text: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedad en la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).' ,
-                        },
-                    ],
-                },
-                {
+                            {
+                                style: 'p5',
+                                width: '100%',
+                                // eslint-disable-next-line max-len
+                                text: 'Formulo la presente declaración jurada instruido(a) de las acciones administrativas, civiles y penales a las que me vería sujeto(a) en caso de falsedad en la presente declaración (Ley del Procedimiento Administrativo General, Ley Nº 27444, Artículo 32, numeral 32.3).',
+                            },
+                        ],
+                    },
+                    {
                         columns: [
-                        {
-                            style: 'p3',
-                            bold: false,
-                            width: '100%',
-                            text: 'En señal de conformidad firmo el presente documento.' ,
-                        },
-                    ],
-                },
-                {
+                            {
+                                style: 'p3',
+                                bold: false,
+                                width: '100%',
+                                text: 'En señal de conformidad firmo el presente documento.',
+                            },
+                        ],
+                    },
+                    {
                         columns: [
-                        {
-                            margin: [ 0, 15, 0, 10 ],
-                            bold: false,
-                            width: '100%',
-                            text: `${this.toTitleCase(this.district?.name)}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
-                        },
-                    ],
-                },
-                {
+                            {
+                                margin: [0, 15, 0, 10],
+                                bold: false,
+                                width: '100%',
+                                text: `${this.toTitleCase(this.district?.name)}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
+                            },
+                        ],
+                    },
+                    {
                         columns: [
-                        {
+                            {
 
-                        margin: [ 0, 5, 0, 10 ],
-                        width: '50%',
-                        alignment:'center',
-                        table: {
-                                    heights:[80],
-                                    widths:[150,5, 70],
+                                margin: [0, 5, 0, 10],
+                                width: '50%',
+                                alignment: 'center',
+                                table: {
+                                    heights: [80],
+                                    widths: [150, 5, 70],
                                     body: [
-                                            [{text:'', border: [false, false, false, false]}, {text:'', border: [false, false, false, false]}, ''],
-                                            // eslint-disable-next-line max-len
-                                            [{text:'Firma', border: [false, true, false, false], style:'textF'},{text:'', border: [false, false, false, false]}, {text:'Huella', border: [false, true, false, false],style:'textF'}],
-                                        ]
+                                        [{ text: '', border: [false, false, false, false] }, { text: '', border: [false, false, false, false] }, ''],
+                                        // eslint-disable-next-line max-len
+                                        [{ text: 'Firma', border: [false, true, false, false], style: 'textF' }, { text: '', border: [false, false, false, false] }, { text: 'Huella', border: [false, true, false, false], style: 'textF' }],
+                                    ]
                                 },
-                        },
-                        {
-                        layout:'noBorders',
-                        margin: [ 55, 75, 0, 0],
-                        style:'tableU',
-                        width: '*',
-                        table: {
-                                    widths:[32,1, '*'],
+                            },
+                            {
+                                layout: 'noBorders',
+                                margin: [55, 75, 0, 0],
+                                style: 'tableU',
+                                width: '*',
+                                table: {
+                                    widths: [32, 1, '*'],
                                     body: [
-                                            [ {text:'Usuario'}, ':', {text:`${this.user.name ? this.user.name : '-'}`,}],
-                                            [ {text:'DNI',},':', {text:`${this.user.dni ? this.user.dni : '-'}`,}],
-                                            [ {text:'Cargo',}, ':' , {text:`${this.user.role?.name ? this.user.role?.name : '-'}`,}],
-                                        ]
+                                        [{ text: 'Usuario' }, ':', { text: `${this.user.name ? this.user.name : '-'}`, }],
+                                        [{ text: 'DNI', }, ':', { text: `${this.user.dni ? this.user.dni : '-'}`, }],
+                                        [{ text: 'Cargo', }, ':', { text: `${this.user.role?.name ? this.user.role?.name : '-'}`, }],
+                                    ]
                                 },
-                        },
-                    ],
-                },
+                            },
+                        ],
+                    },
 
-            ],
-            styles: {
-                title: {
-                    fontSize: 13,
-                    bold: true,
-                    alignment:'center',
+                ],
+                styles: {
+                    title: {
+                        fontSize: 13,
+                        bold: true,
+                        alignment: 'center',
+                    },
+                    subheader: {
+                        bold: false,
+                        margin: [0, 8, 0, 0],
+                        fontSize: 11,
+                    },
+
+                    p1: {
+
+                        margin: [0, 25, 0, 10],
+                        alignment: 'justify',
+                        lineHeight: 1.3
+                    },
+                    textR: {
+                        bold: true,
+                    },
+
+                    p2: {
+                        lineHeight: 1.3,
+                        alignment: 'justify',
+                        margin: [0, 0, 0, 10],
+                    },
+
+                    p3: {
+                        bold: true,
+                        margin: [0, 4, 0, 5],
+                    },
+                    p4: {
+                        margin: [0, 40, 0, 20],
+                    },
+
+                    p5: {
+
+                        margin: [0, 15, 0, 10],
+                        alignment: 'justify',
+                        lineHeight: 1.3
+                    },
+
+                    cell: {
+                        margin: [0, 20, 0, 20],
+                    },
+
+                    cellSub: {
+                        margin: [0, 3, 0, 0],
+                        bold: true,
+                    },
+                    tableU: {
+                        fontSize: 9,
+                        alignment: 'rigth',
+                    },
+                    textF: {
+                        margin: [0, 5, 0, 0],
+                    },
+
                 },
-                subheader: {
-                    bold: false,
-                    margin: [ 0, 8, 0, 0 ],
+                defaultStyle: {
+                    columnGap: 10,
                     fontSize: 11,
-                },
+                    color: '#1e293b'
+                }
 
-                p1: {
+            };
+            pdfMake.createPdf(pdf).download('Declaración Jurada de Ubicación de Predio.pdf');
 
-                margin: [ 0, 25, 0, 10 ],
-                alignment:'justify',
-                lineHeight:1.3
-                },
-                textR: {
-                bold: true,
-                },
-
-                p2: {
-                    lineHeight:1.3,
-                    alignment:'justify',
-                    margin: [ 0, 0, 0, 10 ],
-                },
-
-                p3: {
-                    bold: true,
-                    margin: [ 0, 4, 0,5],
-                },
-                p4:{
-                    margin: [ 0, 40, 0, 20 ],
-                },
-
-                p5:{
-
-                margin: [ 0, 15, 0, 10 ],
-                alignment:'justify',
-                lineHeight:1.3
-                },
-
-                cell : {
-                margin: [ 0, 20, 0, 20 ],
-                },
-
-                cellSub: {
-                margin: [ 0, 3, 0,0 ],
-                bold: true,
-                },
-                tableU:{
-                    fontSize: 9,
-                    alignment:'rigth',
-                },
-                textF: {
-                margin: [ 0, 5, 0, 0 ],
-                },
-
-            },
-            defaultStyle: {
-                columnGap: 10,
-                fontSize: 11,
-                color:'#1e293b'
-            }
-
-        };
-        pdfMake.createPdf(pdf).download('Declaración Jurada de Ubicación de Predio.pdf');
-
-    }, 2000);
+        }, 2000);
     }
 
     async saveNewPointGestionPredio(): Promise<void> {
