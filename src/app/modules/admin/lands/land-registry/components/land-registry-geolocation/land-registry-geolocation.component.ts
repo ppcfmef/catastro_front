@@ -170,6 +170,15 @@ export class LandRegistryGeolocationComponent
             width: 1.5,
         },
     };
+
+
+    simpleMarkerSymbolEntrada2 = {
+        type: 'picture-marker',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/GreenPin1LargeB.png',
+        width: '30px',
+        height: '30px',
+        yoffset: '15px',
+    };
     /*simpleMarkerSearch = {
         type: 'simple-marker',
         style: 'square',
@@ -549,12 +558,21 @@ export class LandRegistryGeolocationComponent
                             land.latitude,
                             land.longitude,
                             symbol,
-                            Estado.LEER
+                            
                         );
 
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
+
+                            if(land.idLotePuerta){
+                                this.addPoint(
+                                    land.latitudePuerta,
+                                    land.longitudePuerta,
+                                    this.simpleMarkerSymbolEntrada2,
+                                    false
+                                );
+                            }
                             this.view.popup.close();
                         }
                         this._landRegistryMapService.setEstado(Estado.LEER);
@@ -2021,15 +2039,17 @@ export class LandRegistryGeolocationComponent
         latitude,
         longitude,
         symbol,
-        estado: string = null
+        reset: boolean= true
     ): Promise<any> {
         try {
             const [
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 Graphic,
             ] = await loadModules(['esri/Graphic']);
+            if (reset){
+                this.view?.graphics?.removeAll();
 
-            this.view?.graphics?.removeAll();
+            }
             const point = {
                 //Create a point
                 type: 'point',
@@ -2042,42 +2062,7 @@ export class LandRegistryGeolocationComponent
                 /*symbol: this.simpleMarkerSymbolUndefined*/
             });
             this.view?.graphics?.addMany([pointGraphic]);
-            if (estado && estado === Estado.LEER) {
-
-                //this.displayPopupDiv='flex';
-                /*
-                let actionEdit = {
-                    // This text is displayed as a tooltip
-                    title: "Editar",
-                    // The ID used to reference this action in the event handler
-                    id: "edit",
-                    // Sets the icon font used to style the action button
-                    className: "esri-icon-zoom-out-magnifying-glass"
-                };*/
-
-                /*
-                this.view?.popup?.open({
-                    title: 'Predio',
-                    //content:  `latitud: ${latitude}/longitud:${longitude}`,// content displayed in the popup
-                    location: pointGraphic.geometry,
-                    content: ' <button class="btn-confirm mr-4" (click)="editPointEvent()">Editar</button>'
-                    //actions:[actionEdit]
-                });*/
-
-                // this.view.popup.alignment = 'top-right';
-                // this.view.popup.collapseEnabled= false;
-
-                /*
-                    let zoomOutAction = {
-                    // This text is displayed as a tooltip
-                    title: "Zoom",
-                    // The ID used to reference this action in the event handler
-                    id: "zoom-out",
-                    // Sets the icon font used to style the action button
-                    className: "esri-icon-zoom-out-magnifying-glass"
-                };
-*/
-            }
+        
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -2182,8 +2167,20 @@ export class LandRegistryGeolocationComponent
                 land.latitude,
                 land.longitude,
                 this.simpleMarkerSymbol,
-                Estado.LEER
+                
+                
             );
+
+            if(land.idLotePuerta){
+                this.addPoint(
+                    land.latitudePuerta,
+                    land.longitudePuerta,
+                    this.simpleMarkerSymbolEntrada2,
+                    false
+                );
+            }
+
+           
         }
         console.log(land);
         setTimeout(async () => {
