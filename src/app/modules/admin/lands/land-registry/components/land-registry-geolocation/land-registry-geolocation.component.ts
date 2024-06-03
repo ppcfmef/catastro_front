@@ -1133,7 +1133,8 @@ export class LandRegistryGeolocationComponent
                                                                                         dialogRef =
                                                                                         this.confirmationService.info(
                                                                                             'Puerta de Ingreso',
-                                                                                            'Debe seleccionar la puerta de ingreso'
+                                                                                            'Debe seleccionar la puerta de ingreso',
+                                                                                            false
                                                                                         );
                                                                                         this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
 
@@ -1153,6 +1154,18 @@ export class LandRegistryGeolocationComponent
                                                                                         )?.featureLayer;
 
                                                                                         puntosPredio['definitionExpression'] = '1<>1';
+
+
+                                                                                        const manzanaUrbana = this.layersInfo.find(
+                                                                                            l => l.id === 3
+                                                                                        )?.featureLayer;
+                                                                                        
+                                                                                        const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                                        MapUtils.zoomToFeature(
+                                                                                            this.view,
+                                                                                            manzanaUrbana,
+                                                                                            where
+                                                                                        );
 
                                                                                     }
 
@@ -1237,8 +1250,11 @@ export class LandRegistryGeolocationComponent
                                                                 dialogRef =
                                                                 this.confirmationService.info(
                                                                     'Puerta de Ingreso',
-                                                                    'Debe seleccionar la puerta de ingreso'
+                                                                    'Debe seleccionar la puerta de ingreso',
+                                                                    false
                                                                 );
+
+
                                                                 this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
 
                                                                 const puntosLote = this.layersInfo.find(
@@ -1247,12 +1263,25 @@ export class LandRegistryGeolocationComponent
 
                                                                 console.log('this.lote>>',this.lote);
 
+
                                                                 puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
                                                                 const puntosPredio = this.layersInfo.find(
                                                                     l => l.id === -1
                                                                 )?.featureLayer;
 
                                                                 puntosPredio['definitionExpression'] = '1<>1';
+
+
+                                                                 const manzanaUrbana = this.layersInfo.find(
+                                                                    l => l.id === 3
+                                                                )?.featureLayer;
+                                                                
+                                                                const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                MapUtils.zoomToFeature(
+                                                                    this.view,
+                                                                    manzanaUrbana,
+                                                                    where
+                                                                );
 
                                                             }
 
@@ -1430,6 +1459,14 @@ export class LandRegistryGeolocationComponent
                                         puntosPredio['definitionExpression'] =  this.layersInfo.find(
                                             l => l.id === -1
                                         )?.definitionExpression;
+                                    }
+
+                                    else {
+                                        if(this.pointEntradaGraphic){
+                                            this.view?.graphics?.remove(this.pointEntradaGraphic);
+                                        }
+                                        /*this.view?.graphics?.add(this.pointEntradaGraphic);*/
+
                                     }
                             });
 
