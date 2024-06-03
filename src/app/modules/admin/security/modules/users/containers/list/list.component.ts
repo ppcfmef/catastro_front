@@ -38,7 +38,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     title = 'Gestión de usuarios';
 
-    displayedColumns = ['nro', 'dni', 'username', 'institute', 'district', 'districtName', 'rol', 'status', 'creationDate', 'actions'];
+    displayedColumns = ['nro', 'dni', 'username', 'institute', 'districtName','district',  'rol', 'status', 'creationDate', 'actions'];
 
     filters: UntypedFormGroup;
     search: UntypedFormGroup;
