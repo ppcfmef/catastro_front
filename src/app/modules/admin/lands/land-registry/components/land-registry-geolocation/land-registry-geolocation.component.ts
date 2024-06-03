@@ -1161,7 +1161,7 @@ export class LandRegistryGeolocationComponent
                                                                                         const manzanaUrbana = this.layersInfo.find(
                                                                                             l => l.id === 3
                                                                                         )?.featureLayer;
-                                                                                        
+
                                                                                         const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
                                                                                         MapUtils.zoomToFeature(
                                                                                             this.view,
@@ -1176,7 +1176,7 @@ export class LandRegistryGeolocationComponent
                                                                                         this._landRegistryMapService.landOut =
                                                                                         this.landRegistryMapModel;
                                                                                         this.estado =   Estado.LEER;
-                                                                                     
+
                                                                                     }
 
 
@@ -1268,7 +1268,7 @@ export class LandRegistryGeolocationComponent
                                                                     });
 
                                                                 }
-                                                            
+
                                                                 else {
                                                                     dialogRef =
                                                                     this.confirmationService.info(
@@ -1280,13 +1280,13 @@ export class LandRegistryGeolocationComponent
                                                                     );
 
 
-                                                                    
+
                                                                     if (this.view) {
                                                                         this.view.popup.close();
                                                                         this.view.graphics.removeAll();
                                                                     }
-        
-        
+
+
                                                                     this.estado =   Estado.LEER;
                                                                                                 this._landRegistryMapService.setEstado(
                                                                                                     Estado.LEER
@@ -1298,7 +1298,7 @@ export class LandRegistryGeolocationComponent
 
                                                                     });*/
                                                                 }
-                                                            
+
                                                             }
                                                         );
                                                 });
@@ -1364,7 +1364,7 @@ export class LandRegistryGeolocationComponent
                                                                  const manzanaUrbana = this.layersInfo.find(
                                                                     l => l.id === 3
                                                                 )?.featureLayer;
-                                                                
+
                                                                 const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
                                                                 MapUtils.zoomToFeature(
                                                                     this.view,
@@ -2271,7 +2271,9 @@ export class LandRegistryGeolocationComponent
 
                                     //cambiar los campos segun servicio
                                     // eslint-disable-next-line max-len
-                                    { text: `${land.idLotePuerta ? `, el cual cuenta con paso de servidumbre en ${streetType ? this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta, ', Lote ')}` : ''}`, style: 'textR' }, ', conforme al siguiente croquis: \n'
+                                    {text: `${land.idLotePuerta ? ', el cual cuenta con paso de servidumbre en':'' }`},
+                                    // eslint-disable-next-line max-len
+                                    { text: `${land.idLotePuerta ? `${streetType ? this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta, ', Lote ')}` : ''}`, style: 'textR' }, ', conforme al siguiente croquis: \n'
                                 ]
                             }
 
