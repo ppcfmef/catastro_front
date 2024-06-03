@@ -1269,7 +1269,35 @@ export class LandRegistryGeolocationComponent
 
                                                                 }
                                                             
-                                                            
+                                                                else {
+                                                                    dialogRef =
+                                                                    this.confirmationService.info(
+                                                                        'Error del predio',
+                                                                    `El predio  ${featurePredio
+                                                                        ?.attributes[
+                                                                        'COD_CPU'
+                                                                    ]} no se encuentra registrado en el Catastro Fiscal `,false
+                                                                    );
+
+
+                                                                    
+                                                                    if (this.view) {
+                                                                        this.view.popup.close();
+                                                                        this.view.graphics.removeAll();
+                                                                    }
+        
+        
+                                                                    this.estado =   Estado.LEER;
+                                                                                                this._landRegistryMapService.setEstado(
+                                                                                                    Estado.LEER
+                                                                                                );
+
+                                                                    /*dialogRef
+                                                                    .afterClosed()
+                                                                    .toPromise().then((option) => {
+
+                                                                    });*/
+                                                                }
                                                             
                                                             }
                                                         );
