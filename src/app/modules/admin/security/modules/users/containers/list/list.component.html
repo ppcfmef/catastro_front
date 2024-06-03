@@ -91,8 +91,8 @@
 
                     <div class="flex flex-row sm:flex-row w-full max-w-xs sm:max-w-none"
                          [formGroup]="search">
-                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">      
-                            
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-3/12 input-icon-form">
+
                             <input type="text" matInput formControlName="search"
                                    placeholder="Buscar por Municipalidad o Documento"
                                    autocomplete="off">
@@ -119,7 +119,7 @@
                             <ng-container matColumnDef="nro">
                                 <th mat-header-cell *matHeaderCellDef> Nro.</th>
                                 <td mat-cell *matCellDef="let element; let i = index">
-                                    {{ count - (pageIndex * pageSize) - i }}
+                                    {{ (pageIndex * pageSize) + i + 1 }}
                                 </td>
                             </ng-container>
 
@@ -145,9 +145,16 @@
                             </ng-container>
 
                             <ng-container matColumnDef="district">
-                                <th mat-header-cell *matHeaderCellDef> Cod. Municipal</th>
+                                <th mat-header-cell *matHeaderCellDef> Ubigeo</th>
                                 <td mat-cell *matCellDef="let element">
                                     {{ element?.district }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="districtName">
+                                <th mat-header-cell *matHeaderCellDef> Distrito</th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{ element?.districtName }}
                                 </td>
                             </ng-container>
 
