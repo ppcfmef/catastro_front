@@ -10,7 +10,7 @@ import { environment } from 'environments/environment';
 export class UserMonitoringServiceService {
 
   apiUrl = environment.apiUrl;
-  private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
+  /*private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);*/
 
 
   constructor(

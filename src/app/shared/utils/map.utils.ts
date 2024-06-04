@@ -142,6 +142,7 @@ export class MapUtils {
 
         if(view){
             view.extent=res.extent;
+            /*view.zoom = view.zoom - 1;*/
         }
 
         return res;

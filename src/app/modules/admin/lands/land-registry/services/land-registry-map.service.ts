@@ -21,6 +21,7 @@ export class LandRegistryMapService {
   public _estado: Subject<string> = new Subject();
   public _print: Subject<any>= new Subject();
 
+  public _eventCancel: Subject<any> = new Subject();
 
   layersInfo = [
 
@@ -126,6 +127,15 @@ export class LandRegistryMapService {
 
     setEstado(value: string): void {
         this._estado.next(value);
+    }
+
+    getEventCancel(): Observable<any> {
+        return this._eventCancel.asObservable();
+    }
+
+
+    setEventCancel(value: boolean): void {
+        this._eventCancel.next(value);
     }
 
 

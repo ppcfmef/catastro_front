@@ -96,7 +96,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   ngAfterViewInit(): void {
     const queryParams = this.makeQueryParams();
     this.getLandRecords({limit: 10, ...queryParams});
-    this.landRecordService.filtersOptions$.subscribe((option) => {
+    this.landRecordService.filtersOptions$.pipe(takeUntil(this.unsubscribeAll)).subscribe((option) => {
       if(FuseValidators.isEmptyInputValue(option)){
         this.formFilters.controls.status.setValue('');
       }else{
