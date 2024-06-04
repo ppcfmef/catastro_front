@@ -558,7 +558,7 @@ export class LandRegistryGeolocationComponent
                             land.latitude,
                             land.longitude,
                             symbol,
-                            
+
                         );
 
                         if (this.view) {
@@ -2062,7 +2062,7 @@ export class LandRegistryGeolocationComponent
                 /*symbol: this.simpleMarkerSymbolUndefined*/
             });
             this.view?.graphics?.addMany([pointGraphic]);
-        
+
         } catch (error) {
             console.error('EsriLoader: ', error);
         }
@@ -2167,8 +2167,8 @@ export class LandRegistryGeolocationComponent
                 land.latitude,
                 land.longitude,
                 this.simpleMarkerSymbol,
-                
-                
+
+
             );
 
             if(land.idLotePuerta){
@@ -2180,7 +2180,7 @@ export class LandRegistryGeolocationComponent
                 );
             }
 
-           
+
         }
         console.log(land);
         setTimeout(async () => {
@@ -2302,7 +2302,7 @@ export class LandRegistryGeolocationComponent
 
                                         table: {
                                             widths: ['100%'],
-                                            heights: [40, 40, 40],
+                                            heights: [20, 20, 20, 30],
                                             body: [
                                                 [{
                                                     border: [false, false, false, true],
@@ -2320,6 +2320,34 @@ export class LandRegistryGeolocationComponent
                                                 [{
                                                     border: [false, false, false, true],
                                                     stack: ['Longitud \n', { text: `${land.longitude ? land.longitude : '-'}`, style: 'cellSub' }], style: 'cell'
+                                                }],
+                                                [{
+                                                    border: [false, false, false, true],
+                                                    stack: [
+                                                        [
+                                                            {text:'Leyenda', style: 'legend'},
+                                                        ],
+                                                        {
+                                                            layout: 'noBorders',
+                                                            table: {
+                                                                    widths:[12,'*'],
+                                                                    heights: ['*', 25],
+                                                                    style:'img',
+                                                                body: [
+                                                                    [
+                                                                          // eslint-disable-next-line max-len
+                                                                        {svg: '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16" fill="none"><path d="M10.688 11.3137L6.26087 16L1.83374 11.3137C0.958151 10.3868 0.361869 9.20592 0.120298 7.92033C-0.121273 6.63474 0.00271781 5.30219 0.47659 4.0912C0.950463 2.8802 1.75293 1.84514 2.78253 1.11692C3.81212 0.388689 5.02259 0 6.26087 0C7.49915 0 8.70962 0.388689 9.73921 1.11692C10.7688 1.84514 11.5713 2.8802 12.0452 4.0912C12.519 5.30219 12.643 6.63474 12.4014 7.92033C12.1599 9.20592 11.5636 10.3868 10.688 11.3137Z" fill="#FD2C19"/></svg>'},
+                                                                        {text:'Predio Registrado', style:'text_img'},
+                                                                    ],
+                                                                    land.idLotePuerta ? [
+                                                                          // eslint-disable-next-line max-len
+                                                                        {svg: '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16" fill="none"><path d="M10.688 11.3137L6.26087 16L1.83374 11.3137C0.958151 10.3868 0.361869 9.20592 0.120298 7.92033C-0.121273 6.63474 0.00271781 5.30219 0.47659 4.0912C0.950463 2.8802 1.75293 1.84514 2.78253 1.11692C3.81212 0.388689 5.02259 0 6.26087 0C7.49915 0 8.70962 0.388689 9.73921 1.11692C10.7688 1.84514 11.5713 2.8802 12.0452 4.0912C12.519 5.30219 12.643 6.63474 12.4014 7.92033C12.1599 9.20592 11.5636 10.3868 10.688 11.3137Z" fill="#5DB62F"/></svg>'},
+                                                                        {text:'Paso de Servidumbre', style:'text_img'},
+                                                                    ]:['',''],
+                                                                ]
+                                                            },
+                                                        }
+                                                    ],
                                                 }],
                                             ]
                                         },
@@ -2406,6 +2434,15 @@ export class LandRegistryGeolocationComponent
 
                 ],
                 styles: {
+                    text_img: {
+                        margin: [0, 3, 0, 0],
+                        bold: true,
+                    },
+                    legend: {
+                        fontSize: 11,
+                        bold: false,
+                        margin: [0,5]
+                    },
                     title: {
                         fontSize: 13,
                         bold: true,
@@ -2449,7 +2486,7 @@ export class LandRegistryGeolocationComponent
                     },
 
                     cell: {
-                        margin: [0, 20, 0, 20],
+                        margin: [0, 10, 0, 10],
                     },
 
                     cellSub: {
