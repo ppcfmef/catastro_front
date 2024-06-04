@@ -68,7 +68,6 @@ export class NewLandContainerComponent implements OnInit, OnDestroy {
   }
 
   receivedCancel(event): void{
-    console.log('receivedCancel>>',event);
     /*this.cancel = event;*/
     this.cancel = this.cancel +1;
     /*this.cancel = false;*/

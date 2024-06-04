@@ -94,7 +94,7 @@ export class LoadAttendComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        console.log(this.result, 'resptafff');
+        // console.log(this.result, 'resptafff');
 
     }
 

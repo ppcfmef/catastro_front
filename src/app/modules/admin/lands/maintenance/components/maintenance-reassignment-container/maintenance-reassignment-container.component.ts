@@ -80,7 +80,6 @@ private confirmationService: CustomConfirmationService,
         results:this.results,
         lands:this.landRecords
     };
-    console.log('_results>>>',body.results);
     this.disabled =true;
     this._fuseSplashScreenService.show();
     this.applicationMaintenaceService.create(body).subscribe((res: ApplicationUI)=>{
@@ -108,7 +107,6 @@ private confirmationService: CustomConfirmationService,
             },
             (err)=>{
               this._fuseSplashScreenService.hide();
-            console.log('error',err);
             this.confirmationService.error(
               'Registro de predio',
                `Error al registrar el predio, ${err.error.message}`
@@ -117,7 +115,6 @@ private confirmationService: CustomConfirmationService,
         }
     },(err)=>{
         this._fuseSplashScreenService.hide();
-        console.log('error',err);
         this.confirmationService.error(
           'Registro de predio',
            `Error al registrar el predio, ${err.error.message}`

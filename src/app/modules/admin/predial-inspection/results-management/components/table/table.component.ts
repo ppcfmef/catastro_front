@@ -40,7 +40,6 @@ export class TableComponent implements OnInit {
     onPage(paginator: MatPaginator): void {
         this.pageIndex = paginator.pageIndex;
         this.changePage.emit(paginator);
-        console.log(paginator, 'paginator2');
     }
     onRefreshPage(): void {
         this.refreshPage.emit();

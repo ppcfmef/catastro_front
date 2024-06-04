@@ -192,7 +192,6 @@ hideSelectUbigeo = false;
         this._resultsService.getEstado().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any)=>{
             if(res){
             this.estado = res;
-            console.log('this.estado>>>',this.estado);
             if(this.estado === Estado.INICIAR){
                 this.addUbicacion(this.ubicacion);
                 this.estado = Estado.LEER;
@@ -201,7 +200,6 @@ hideSelectUbigeo = false;
         });
 
       this._resultsService.getResetMap().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: any )=>{
-          console.log('resetEvent',res);
           if(res){
               this.resetMap=res;
               this.onResetMap(res);

@@ -107,7 +107,6 @@ export class AssignmentsComponent implements OnInit {
 
     executeTransactionByPermission(payload): Observable<any> {
         if (payload?.id) {
-            console.log('here');
             return this._permissionService.updatePermissionById(payload.id, payload);
         }
         return this._permissionService.createPermission(payload);

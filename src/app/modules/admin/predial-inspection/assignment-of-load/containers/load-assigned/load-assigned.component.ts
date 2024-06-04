@@ -125,7 +125,6 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
                     return;
                 } else {
                     this.params['search'] = dni;
-                    console.log(this.params, '');
                     this.user = false;
                     this.getOperator();
                 }
@@ -191,7 +190,7 @@ export class LoadAssignedComponent implements OnInit, AfterViewInit, OnDestroy {
         const operator = null;
 
         const messageUnassign = `¿Está seguro que quiere desasignar la carga de trabajo: ${workload}?`;
-        const messageDeletePending = `No se puede desasignar la carga ${workload} porque contiene tickets resueltos. 
+        const messageDeletePending = `No se puede desasignar la carga ${workload} porque contiene tickets resueltos.
         ¿Desea eliminar los tickets pendientes para su reasignación en una nueva carga de trabajo?`;
         const messageUnassignSuccess = `La carga de trabajo ${workload} fue desasignada`;
         const messageDeletePendingSuccess = `Se eliminaron los tickets pendientes de la carga de trabajo ${workload}`;

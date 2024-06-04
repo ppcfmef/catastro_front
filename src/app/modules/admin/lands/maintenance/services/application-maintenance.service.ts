@@ -32,7 +32,7 @@ export class ApplicationMaintenanceService {
     formData.append('file', data.file);
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
-    console.log('formData>>',formData);
+
     return this.http.post<any>(`${this.apiUrl}/maintenance/application/upload-file/`, formData,{headers});
   }
 /*

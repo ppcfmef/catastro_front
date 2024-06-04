@@ -174,7 +174,6 @@ export class PrevisualizacionComponent implements OnInit {
         ) {}
 
     ngOnInit(): void {
-        console.log('dataDialog', this.dataDialog);
         this.dataGabinete = this.dataDialog.registrosTitularidad;
         this.fotos = this.dataDialog.fotos?this.dataDialog.fotos:[];
         this.dataCaracteristicasOrigen = [
