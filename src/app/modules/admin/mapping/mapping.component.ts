@@ -81,7 +81,7 @@ export class MappingComponent implements OnInit {
 
                 }
 
-                console.log('this.urlString',this.urlString);
+
                 this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlString);
 
             });

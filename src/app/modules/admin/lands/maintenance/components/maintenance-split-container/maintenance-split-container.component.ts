@@ -121,7 +121,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
         results: this.results,
         lands:this.landRecords
     };
-    console.log('_results>>>',body.results);
 
     this._fuseSplashScreenService.show();
     this.disabled =true;
@@ -152,7 +151,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
             },
             (err)=>{
               this._fuseSplashScreenService.hide();
-            console.log('error',err);
+
             this.confirmationService.error(
               'Registro de predio',
                `Error al registrar el predio, ${err.error.message}`
@@ -167,7 +166,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
     },(err)=>{
         this._fuseSplashScreenService.hide();
-      console.log('error',err);
       this.confirmationService.error(
         'Registro de predio',
          `Error al registrar el predio, ${err.error.message}`

@@ -516,7 +516,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     buscar(params: any): void {
-        console.log('params', params);
         const ubigeo = params.district;
         this.where = `UBIGEO='${ubigeo}'`;
         this.zoomToUbigeo(this.where);

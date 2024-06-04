@@ -43,6 +43,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   unsubscribeAll: Subject<any> = new Subject<any>();
   idView = 'gprpregist';
   hideSelectUbigeo = true;
+  resetTableFlag = false;
 
   constructor(
     private router: Router,
@@ -147,7 +148,9 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onShowLandsTable(landOwner: LandOwner): void {
     const filterQueryParams = this.makeQueryParams();
     delete filterQueryParams['search'];
-
+    this.resetTableFlag = true;
+    // restableciendo resetTableFlag
+    setTimeout(() => this.resetTableFlag = false, 0);
     this.showLandsTable = true;
     this.showLandsMap = true;
     this.landOwner = landOwner;

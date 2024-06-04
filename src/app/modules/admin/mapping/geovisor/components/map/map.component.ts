@@ -232,7 +232,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                 const jsonLayers: any = await response.json();
                 const response2 = await fetch(url);
                 const jsonImageLayer: any = await response2.json();
-                console.log('infoLayers>>>',jsonLayers);
                 const layers: any[]=jsonLayers.layers;
                 l.wkid=jsonImageLayer.spatialReference.wkid;
                 l.layers=layers.map( (layer: any)=> ({id:layer.id, name: layer.name})).filter((c)=>{ if(!c.name.includes('LOTE') && !c.name.includes('PREDIO') ) {return c;}});
@@ -307,7 +306,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                 //this.visibility = 'visible';
 
                 this._fuseSplashScreenService.hide();
-                console.log('this.user>>',this.user);
                 //if(this.user.placeScope.id === Role.DISTRITAL){
                 if(this.params.district){
                     this.buscar(this.params);
@@ -336,7 +334,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     buscar(params: any): void {
         if(this.view){
-            console.log('params', params);
             const ubigeo = params.district;
             const where = `UBIGEO='${ubigeo}'`;
 
@@ -381,7 +378,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         this.view.takeScreenshot().then((screenshot)=> {
             const imageElement: any = document.getElementById('screenshotImage');
-            console.log('screenshot.dataUrl>>',screenshot.dataUrl);
             imageElement.src = screenshot.dataUrl;
         });
     }
@@ -396,7 +392,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.proj4DestWkid = _imageLayer.wkid;
         this.proj4SrcKey = this.proj4Catalog + ':' + String(this.proj4DestWkid);
         const nameZip = `${_imageLayer.title}_${_layer.name}_${params.namedistrict}.zip`;
-        console.log('this.proj4DestWkid>>',this.proj4DestWkid);
         const [
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FeatureLayer,
@@ -408,7 +403,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         ]);
 
         this._fuseSplashScreenService.show();
-        console.log('url',_imageLayer.url + '/' + _layer.id);
         const _featureLayer = new FeatureLayer(
             _imageLayer.url + '/' + _layer.id
         );
@@ -424,7 +418,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             query
         );
         if(features && features.length>0 ){
-            console.log('features>>',features);
             const geojson = await MapUtils.arcgisToGeoJSON(features);
 
             const options = {
@@ -435,7 +428,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                 },
                 wkt: proj4DestWKT,
             };
-            console.log('geojson>>',geojson);
             shpwrite.zip(geojson, options).then((content) => {
                 saveAs(content, nameZip);
                 this._fuseSplashScreenService.hide();
@@ -458,7 +450,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     cargar(params: any): void {
         const file = params.fileToUpload;
-        console.log('file>>',file);
         const _imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===params.serviceId);
         const _layers=(_imageLayer )?_imageLayer.layers:[];
         const _layer= _layers.find((l: any)=> l.id===params.featureId);

@@ -106,10 +106,8 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
             .subscribe((dateOperator) => {
                 if (!dateOperator) {
                     this.operator = null;
-                    console.log(dateOperator, 'dateOperator');
                 } else {
                     this.params['search'] = dateOperator;
-                    console.log(this.params, '');
                     this.user = true;
                     this.getOperator();
                 }
@@ -194,7 +192,6 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
                 if (confirm){
                     await this._tableService.assigmentOperator(operator, nameOperator, workload, dateLimit, ubigeo)
                     .then(async (result) => {
-                        console.log(result, 'result');
                         //this._tableService._updateTable.next(true);
                         await this._messageProviderService.showAlert('Asignado correctamente');
                         this.form.reset();
@@ -203,7 +200,6 @@ export class LoadPendingAssignmentComponent implements OnInit, AfterViewInit, On
                         this._fuseSplashScreenService.hide();
                     })
                     .catch((error) => {
-                        console.log(error, 'errr');
                         this._messageProviderService.showSnackError('Error al asignar carga');
                         window.location.reload();
                     });

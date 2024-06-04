@@ -600,7 +600,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                     .catch((error) => {
                         self._fuseSplashScreenService.hide();
                         self._tableService.setWebMap(self._webmap);
-                        console.log(error);
                     });
             };
 

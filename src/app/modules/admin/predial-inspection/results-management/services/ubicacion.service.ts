@@ -88,7 +88,6 @@ export class UbicacionService {
 
 
   updateObs(id,data: any): Observable<any> {
-    console.log('dataOBS',data);
     const formData= new FormData();
     const headers = new HttpHeaders();
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -100,7 +99,6 @@ export class UbicacionService {
 
 
     headers.append('Content-Type', 'multipart/form-data');
-    console.log('formData>>',formData);
     return this.http.patch(`${this.apiUrl}/inspection/location/${id}/`, formData);
     //return this.http.post<any>(`${this.apiUrl}/maintenance/application/upload-file/`, formData,{headers});
   }

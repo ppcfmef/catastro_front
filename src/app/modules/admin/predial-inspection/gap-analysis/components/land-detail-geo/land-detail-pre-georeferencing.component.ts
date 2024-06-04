@@ -145,7 +145,6 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         this.land.statusGapAnalisys =
                             LandGeorreferencingStatusGapAnalisys.UBICADO_CON_PUNTO_CAMPO;
                         this.land = FormUtils.deleteKeysNullInObject(this.land);
-                        console.log('this.land>>',this.land);
                         this._puntoCampoService
                             .crearPuntoCampo([puntoCampo])
                             .then((result) => {

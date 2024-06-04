@@ -72,7 +72,6 @@ getDataTicket(idTicket: string): void{
       });
 
 
-      console.log('module ticket this.ticket>>>', this.ticket);
       this.totalUbicaciones =res.ubicaciones.length;
       this.ubicaciones = res.ubicaciones.map((data: IUbicacion,index: number)=> {
           const registroTitularidad: IRegistroTitularidad[] =data.registrosTitularidad;
@@ -94,7 +93,6 @@ getDataTicket(idTicket: string): void{
       if([TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket) ) {
 
         this.openLocation= true;
-        console.log('this.openLocation>>>', this.openLocation);
 
        /* if(res.ubicaciones && res.ubicaciones.length>0)
             {this.ubicacion = res.ubicaciones[0];}*/
@@ -125,8 +123,6 @@ navegateTo(): void {
 eventOpenLocation(event: any): void {
   this.openLocation = event.openLocation;
   const codUbicacion = event.codUbicacion;
-    console.log('codUbicacion>>>',codUbicacion);
-    console.log('this.openLocation>>>',this.openLocation);
     if(codUbicacion){
         this._ubicacionService.get2(codUbicacion).subscribe( (data: IUbicacion) =>{
 
@@ -139,9 +135,7 @@ eventOpenLocation(event: any): void {
 
 
 actualizarCFTicket(codTicket: string, estado: any): void{
-    console.log('actualizarCFTicket...');
     this._cfTicketService.getTicket({'COD_TICKET':codTicket, 'ESTADO_V':1}).then((responseJson)=>{
-        console.log('responseJson>>',responseJson);
         if (responseJson && responseJson.features) {
             const features: any[] = responseJson.features;
 
@@ -196,10 +190,7 @@ updateTicket(ticket: ITicket): void{
     const cantUbiObs= ticket.ubicaciones.filter(u=> u.status ===TicketStatus.OBSERVADO_GESTION_RESULTADOS).length;
     const totalUbicaciones =ticket.ubicaciones.length;
 
-    console.log('cantUbiObs>>>',cantUbiObs);
-    console.log('cantUbiAprob>>>',cantUbiAprob);
-    console.log('cantTotalResueltos>>>',cantTotalResueltos);
-    console.log('totalUbicaciones>>>',cantTotalResueltos);
+
     if( cantTotalResueltos === totalUbicaciones && cantTotalResueltos>0 ){
       if(cantUbiObs> 0){
         ticket.codEstTrabajoTicket = String(TicketStatus.OBSERVADO_GESTION_RESULTADOS);

@@ -86,12 +86,8 @@ export class FiltersComponent implements OnInit {
 
 
   selectService(): void{
-    console.log('this.params.serviceId',this.params.serviceId);
-    console.log('this.listImageLayers',this.listImageLayers);
     const imageLayer=this.listImageLayers.find( (l: ServiceLayer) => l.id===this.params.serviceId);
-    console.log('imageLayer',imageLayer);
     this.layers=(imageLayer)?imageLayer.layers:[];
-    console.log('this.layers',this.layers);
   }
   initParams(): void {
     if(this.user.placeScope.id === Role.DISTRITAL){
@@ -155,7 +151,6 @@ export class FiltersComponent implements OnInit {
 
   uploadFile(event: any): void {
     //this._fuseSplashScreenService.show(0);
-    console.log('holass');
     this.fileToUpload = event.target.files[0];
     this.fileName = event.target.value;
     this.fileName = this.fileName.split(/(\\|\/)/g).pop();

@@ -75,7 +75,7 @@ export class FaqContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	selecCategory(idCategory: string): void {
-		console.log(idCategory);
+		// console.log(idCategory);
 	}
 
 	ngOnDestroy(): void {

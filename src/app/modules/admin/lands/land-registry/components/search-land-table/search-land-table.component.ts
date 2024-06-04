@@ -14,6 +14,8 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
 
   @Input() dataSource: LandRecord[];
   @Input() length: number = 0;
+  @Input() reset: boolean;
+
   @Output() changePage: EventEmitter<any> = new EventEmitter();
   @Output() showLandMap: EventEmitter<LandRecord> = new EventEmitter();
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
@@ -48,6 +50,13 @@ export class SearchLandTableComponent implements OnInit, OnChanges, AfterViewIni
         this.tableFilters.paginator.length = changes?.length?.currentValue;
         this.pageIndex = 0;
         this.pageSize = 10;
+      }
+
+      if (changes.reset && changes.reset.currentValue === true) {
+        this.pageIndex = 0;
+        this.pageSize = 10;
+        this.tableFilters.paginator.pageIndex =0;
+        this.tableFilters.paginator.pageSize =10;
       }
   }
 

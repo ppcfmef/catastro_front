@@ -63,17 +63,14 @@ export class TableComponent implements OnInit {
 
     onEdit(row: any): void {
         this.action.emit({ action: TableAction.edit, row });
-        console.log('emit - edit', row);
     }
 
     onDelete(row: any): void {
         this.action.emit({ action: TableAction.delete, row });
-        console.log('emit - deelte', row);
     }
 
     onZoom(row: any): void {
         this.action.emit({ action: TableAction.zoom, row });
-        console.log('emit - zoom', row);
     }
 
     isAllSelected(): boolean {

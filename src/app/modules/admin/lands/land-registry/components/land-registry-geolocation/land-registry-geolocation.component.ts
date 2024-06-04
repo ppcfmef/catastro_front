@@ -506,7 +506,6 @@ export class LandRegistryGeolocationComponent
             this.cancelEvent = changes['cancelEvent'].currentValue;
             this.onCancel();
 
-            /*console.log('inputData changed from', changes['inputData'].previousValue, 'to', changes['showEditForm'].currentValue);*/
         }
     }
 
@@ -1162,8 +1161,6 @@ export class LandRegistryGeolocationComponent
                                                                                             l => l.id === 0
                                                                                         )?.featureLayer;
 
-                                                                                        console.log('this.lote>>',this.lote);
-
                                                                                         puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
 
 
@@ -1267,7 +1264,7 @@ export class LandRegistryGeolocationComponent
 
                                                                                     }*/ /*else {*/
 
-                                                                                    console.log('cancelar registro');
+
                                                                                         if (
                                                                                             this
                                                                                                 .view
@@ -1367,7 +1364,7 @@ export class LandRegistryGeolocationComponent
                                                                     l => l.id === 0
                                                                 )?.featureLayer;
 
-                                                                console.log('this.lote>>', this.lote);
+
 
 
 
@@ -1490,7 +1487,7 @@ export class LandRegistryGeolocationComponent
 
                     else if (this.estado === Estado.NUEVO_PUNTO_MEDITERRANEO) {
                         this.view.hitTest(event).then((response) => {
-                            console.log('response.results>>', response.results);
+
                             const puntosEntrada = response.results.filter((r) => {
                                 if (
                                     r &&
@@ -1505,7 +1502,7 @@ export class LandRegistryGeolocationComponent
                             if (puntosEntrada.length > 0) {
                                 const puntoEntrada = puntosEntrada[0];
                                 ;
-                                console.log('puntoEntrada>>', puntoEntrada);
+
                                 const pointEntrada = {
                                     //Create a point
                                     type: 'point',
@@ -2182,7 +2179,6 @@ export class LandRegistryGeolocationComponent
 
 
         }
-        console.log(land);
         setTimeout(async () => {
 
             const screenshot = await view.takeScreenshot({

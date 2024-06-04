@@ -364,17 +364,14 @@ onChangePagePendiente(
 
   onZoom(row: any): void {
     this._route.navigate([`ticket/${row.codTicket}`], {relativeTo: this._activeRouter});
-    console.log('onZoom', row);
   }
 
   onZoomObservado(row: any): void {
     this._route.navigate([`ticket-rejected/${row.id}`], {relativeTo: this._activeRouter});
-    console.log('onZoomObservado', row);
   }
 
   onZoomTerminado(row: any): void {
     this._route.navigate([`ticket-done/${row.id}`], {relativeTo: this._activeRouter});
-    console.log('onZoomTerminado', row);
   }
 
   getSelectedIndex(): any  {

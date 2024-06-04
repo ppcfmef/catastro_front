@@ -95,7 +95,6 @@ export class ReportCartographicComponent implements OnInit {
   }
 
   selectProv(event: any): void {
-    console.log(event);
     this.paramsUbigeo.prov = event.value.code;
     this.selectionText.prov = event.value.name;
     this.selectionText.dist= '';
