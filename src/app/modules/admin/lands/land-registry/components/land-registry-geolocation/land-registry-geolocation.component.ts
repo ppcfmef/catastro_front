@@ -1192,49 +1192,72 @@ export class LandRegistryGeolocationComponent
 
 
                                                                                     if( tipoLote === '2'){
-                                                                                        dialogRef =
+                                                                                        const dialogRef2 =
                                                                                         this.confirmationService.info(
                                                                                             'Puerta de Ingreso',
                                                                                             'Debe seleccionar la puerta de ingreso',
                                                                                             
                                                                                         );
-                                                                                        this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
-
-                                                                                        this._landRegistryMapService
-                                                                                        .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
-                                                                                        const puntosLote = this.layersInfo.find(
-                                                                                            l => l.id === 0
-                                                                                        )?.featureLayer;
-
-                                                                                        /*
-                                                                                        console.log('this.lote>>',this.lote);*/
-
-                                                                                        puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
 
 
+                                                                                        dialogRef2.afterClosed().toPromise().then(
+                                                                                            (
+                                                                                                option2
+                                                                                            ) => {
+                                                                                                if (
+                                                                                                    option2 ===
+                                                                                                    'confirmed'
+                                                                                                ) {
+                                                                                                    this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+
+                                                                                                    this._landRegistryMapService
+                                                                                                    .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
+                                                                                                    const puntosLote = this.layersInfo.find(
+                                                                                                        l => l.id === 0
+                                                                                                    )?.featureLayer;
+            
+                                                                                                    /*
+                                                                                                    console.log('this.lote>>',this.lote);*/
+            
+                                                                                                    puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
+            
+            
+            
+            
+                                                                                                    const puntosPredio = this.layersInfo.find(
+                                                                                                        l => l.id === -1
+                                                                                                    )?.featureLayer;
+            
+                                                                                                    puntosPredio['definitionExpression'] = '1<>1';
+            
+            
+                                                                                                    const manzanaUrbana = this.layersInfo.find(
+                                                                                                        l => l.id === 3
+                                                                                                    )?.featureLayer;
+            
+                                                                                                    const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                                                    MapUtils.zoomToFeature(
+                                                                                                        this.view,
+                                                                                                        manzanaUrbana,
+                                                                                                        where
+                                                                                                    ).then(()=>{
+                                                                                                        //console.log(this.view.zoom);
+                                                                                                        this.view.zoom = this.view.zoom - 1;
+                                                                                                        //console.log(this.view.zoom);
+                                                                                                    });
 
 
-                                                                                        const puntosPredio = this.layersInfo.find(
-                                                                                            l => l.id === -1
-                                                                                        )?.featureLayer;
 
-                                                                                        puntosPredio['definitionExpression'] = '1<>1';
-
-
-                                                                                        const manzanaUrbana = this.layersInfo.find(
-                                                                                            l => l.id === 3
-                                                                                        )?.featureLayer;
-
-                                                                                        const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
-                                                                                        MapUtils.zoomToFeature(
-                                                                                            this.view,
-                                                                                            manzanaUrbana,
-                                                                                            where
-                                                                                        ).then(()=>{
-                                                                                            //console.log(this.view.zoom);
-                                                                                            this.view.zoom = this.view.zoom - 1;
-                                                                                            //console.log(this.view.zoom);
-                                                                                        });
+                                                                                                }
+                                                                                            
+                                                                                                else{
+                                                                                                    this.onCancel();
+                                                                                                }
+                                                                                            
+                                                                                            }
+                                                                                            
+                                                                                            );
+                                                                                       
 
 
 
