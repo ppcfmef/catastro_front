@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 import { LandRegistryMap } from '../../interfaces/land-registry-map.interface';
@@ -109,7 +109,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       municipalNumber: [{ value: this.landMergeRecord?.municipalNumber, disabled:  (this.landMergeRecord?.municipalNumber)?true:disabled }],
       municipalNumberAlt: [{ value: this.landMergeRecord?.municipalNumberAlt, disabled}],
       apartmentNumber: [{ value: this.landMergeRecord?.apartmentNumber, disabled: (this.landMergeRecord?.apartmentNumber)?true:disabled }],
-      resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled },Validators.required],
+      // eslint-disable-next-line max-len
+      resolutionDocument: [{ value: this.landMergeRecord?.resolutionDocument, disabled:(this.landMergeRecord?.resolutionDocument)?true:disabled },[Validators.required, this.noWhitespaceValidator]],
     //   resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled:(this.landMergeRecord?.resolutionType)? true:disabled  }],
       resolutionType: [{ value: this.landMergeRecord?.resolutionType, disabled: !!this.landMergeRecord?.resolutionType }, Validators.required],
       latitude: [{ value: this.landMergeRecord?.latitude, disabled:(this.landMergeRecord?.latitude)? true:disabled}],
@@ -167,9 +168,10 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
     }else {
         // eslint-disable-next-line max-len
-        const message = !this.formEdit.get('resolutionType').value && !this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento y Nro. Doc. Sustento.'
+        const message = (!this.formEdit.get('resolutionType').value && !this.formEdit.get('resolutionDocument').value )? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento y Nro. Doc. Sustento.'
         :!this.formEdit.get('resolutionType').value ? 'Error al registrar el predio. Es obligatorio ingresar el Tipo Doc. Sustento'
-        :!this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Nro. Doc. Sustento' : '';
+        // eslint-disable-next-line max-len
+        :!this.formEdit.get('resolutionDocument').value ? 'Error al registrar el predio. Es obligatorio ingresar el Nro. Doc. Sustento':' Error al registrar el predio. Ingresar campos requeridos';
 
         this._messageProviderService.showAlert(
           `${message}.`
@@ -310,5 +312,12 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       return LandStatus.inactive;
     }
     return 0;
+  }
+
+  private noWhitespaceValidator(control: FormControl): ValidationErrors | null {
+    if ((control.value || '').trim().length === 0) {
+      return { 'whitespace': true };
+    }
+    return null;
   }
 }
