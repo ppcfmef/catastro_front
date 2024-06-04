@@ -153,7 +153,6 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('initPagination', this.filters.valueChanges);
         merge(this.paginator.page, this.changesSubject, this.filters.valueChanges)
             .pipe(
-                debounceTime(300),
                 switchMap(() => {
                     const queryParamsByPaginator = this.makeQueryParams();
                     return this._userService.getUsers(queryParamsByPaginator);
