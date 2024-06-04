@@ -47,7 +47,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     private readonly fb: UntypedFormBuilder,
     private landRegistryService: LandRegistryService,
     private confirmationService: CustomConfirmationService,
-    private landRegistryMapService: LandRegistryMapService,
+    private _landRegistryMapService: LandRegistryMapService,
     private _fuseSplashScreenService: FuseSplashScreenService,
     private _messageProviderService: MessageProviderService,
 
@@ -75,7 +75,8 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
   destroyForm(): void {
     this.showFormEdit.emit(null);
-    this.cancelEvent.emit(true);
+    this._landRegistryMapService.setEventCancel(true);
+    /*this.cancelEvent.emit(true);*/
 
   }
 
@@ -155,7 +156,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
         // ToDo: debe ser en el container
         if (data.idPlot && !data.cup) {
         this._fuseSplashScreenService.show();
-        this.landRegistryMapService.createCpu(data).toPromise()
+        this._landRegistryMapService.createCpu(data).toPromise()
         .then((result) => {
             this.saveLandApi(result);
         });
@@ -230,7 +231,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
     this.landRegistryService.saveLand(data).toPromise()
       .then(
         (result) => {
-           this.landRegistryMapService.landIn = result;
+           this._landRegistryMapService.landIn = result;
             this._fuseSplashScreenService.hide();
           this.confirmationService.success(
             'Registro de predio',

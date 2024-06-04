@@ -14,11 +14,12 @@ import { LandRecordSummary } from '../interfaces/land-record-summary.interface';
 export class LandRecordService {
 
   apiUrl = environment.apiUrl;
-  private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
+  
   filtersOptions$ = new BehaviorSubject<string>(null);
   filtersOptionsSelect$ = new BehaviorSubject<any>(null);
   lengthOwner$ = new BehaviorSubject<number>(null);
   renderOption$ = new Subject<boolean>();
+  private _landRecordDownloadCroquis$ = new BehaviorSubject<boolean>(null);
   constructor(
     private http: HttpClient
   ) { }

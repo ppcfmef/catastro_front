@@ -54,7 +54,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
     this._landRegistryMapService.getEstado().subscribe((estado: any)=>{
 
-      if (estado === Estado.INICIAR || estado === Estado.LEER){
+      if (estado === Estado.INICIAR  ){
         this.estadoIniciar = true;
       }
 
@@ -88,11 +88,21 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   searchOwner(): void {
+    this._landRegistryMapService.setEventCancel(true);
+
+
     const searchText = this.search.value;
     if(FuseValidators.isEmptyInputValue(searchText)){
       return;
     };
     this.searchOwnerbyDocument(searchText);
+    /*if (this.estadoIniciar){
+      if(FuseValidators.isEmptyInputValue(searchText)){
+        return;
+      };
+      this.searchOwnerbyDocument(searchText);
+    }*/
+    
   }
   searchOwnerbyDocument(searchText: any): void{
     this.showFormEdit = false;

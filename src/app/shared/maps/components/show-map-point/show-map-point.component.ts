@@ -212,15 +212,16 @@ export class ShowMapPointComponent
             featureTable: null,
             popupTemplate: null,
             legend: null,
+            visible:false,
             sublayers: [
                 {
                     id: 0,
-                    visible: true,
+                    visible: false,
                     title: 'ACT_ARANCEL',
                 },
                 {
                     id: 1,
-                    visible: true,
+                    visible: false,
                     title: 'ACT_MANZANA',
                 },
             ],
@@ -238,17 +239,18 @@ export class ShowMapPointComponent
             featureTable: null,
             popupTemplate: null,
             legend: null,
+            visible:false,
             sublayers: [
                 {
                     id: 0,
-                    visible: true,
+                    visible: false,
                     title: 'TB_PUNTO_IMG',
                 },
             ],
         },
     ];
-    subscription: Subscription;
-    inicio:false;
+   /* subscription: Subscription;*/
+    inicio: false;
     constructor(
         private _landRecordService: LandRecordService,
         private _commonService: CommonService,
@@ -258,19 +260,22 @@ export class ShowMapPointComponent
         pdfMake.vfs = pdfFonts.pdfMake.vfs;
     }
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-
+        /*this.subscription.unsubscribe();*/
+        this._landRecordService.setLandRecordDownloadCroquis(null);
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
-        //this._landRecordService.setLandRecordDownloadCroquis(false);
+        //
         //throw new Error('Method not implemented.');
     }
 
     ngOnInit(): void {
         this.loadImage();
-        this.subscription = this._landRecordService
+        this._landRecordService
             .getLandRecordDownloadCroquis()
+            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res: boolean) => {
+                /*console.log('descargar pdf', res);*/
+
                 if (res) {
                     this.downloadPDF();
                 }
@@ -463,7 +468,7 @@ export class ShowMapPointComponent
                 haloColor: 'white',
                 haloSize: '2px',
                 text: this.landRecord.cup,
-                xoffset: 65,
+                xoffset: 25,
                 yoffset: 15,
                 font: {  // autocasts as new Font()
                   size: 10,
