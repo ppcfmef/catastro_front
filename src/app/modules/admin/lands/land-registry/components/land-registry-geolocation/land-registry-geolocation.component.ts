@@ -581,7 +581,7 @@ export class LandRegistryGeolocationComponent
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((land: LandRegistryMap) => {
-                this.onCancel();
+               
                 if (land) {
                     
                     this.landRegistryMapModel = new LandRegistryMapModel(land);
@@ -603,7 +603,7 @@ export class LandRegistryGeolocationComponent
                             symbol,
 
                         );
-
+                        this.onCancel();
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
@@ -621,8 +621,9 @@ export class LandRegistryGeolocationComponent
 
                         //this._landRegistryMapService.setEstado(Estado.INICIAR);
                     } else if (land && land.ubigeo) {
+                        this.onCancel();
                         this.resetMap();
-                        this._landRegistryMapService.setEstado(Estado.EDITAR);
+                        //this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
                 } else {
                     this._messageProviderService.showAlert(
