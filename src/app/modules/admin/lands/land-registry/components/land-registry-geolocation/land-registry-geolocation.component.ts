@@ -1196,7 +1196,7 @@ export class LandRegistryGeolocationComponent
                                                                                         this.confirmationService.info(
                                                                                             'Puerta de Ingreso',
                                                                                             'Debe seleccionar la puerta de ingreso',
-                                                                                            
+
                                                                                         );
 
 
@@ -1254,9 +1254,7 @@ export class LandRegistryGeolocationComponent
                                                                                                     this.onCancel();
                                                                                                 }
                                                                                             
-                                                                                            }
-                                                                                            
-                                                                                            );
+                                                                                            });
                                                                                        
 
 
