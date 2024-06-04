@@ -48,6 +48,7 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { DetailComponent } from '../../security/modules/user-monitoring/components/detail/detail.component';
 import { DetailObserverComponent } from './components/detail-observer/detail-observer.component';
+import { EstatusPipe } from './pipes/status.pipe';
 @NgModule({
   declarations: [
 
@@ -74,6 +75,7 @@ import { DetailObserverComponent } from './components/detail-observer/detail-obs
       LandMaintenanceDesactivateComponent,
       MaintenanceIndependencePage,
       MaintenanceIndependenceContainerComponent,
+      EstatusPipe,
   ],
   imports: [
     CommonModule,
