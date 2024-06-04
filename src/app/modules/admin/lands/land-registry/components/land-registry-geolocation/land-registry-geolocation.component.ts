@@ -583,10 +583,10 @@ export class LandRegistryGeolocationComponent
             .subscribe((land: LandRegistryMap) => {
                
                 if (land) {
-                    
+                    this.onCancel();
                     this.landRegistryMapModel = new LandRegistryMapModel(land);
                     if (land?.latitude && land?.longitude) {
-                       
+                        //this.onCancel();
                         let symbol = this.simpleMarkerSymbolUndefined;
                         if (
                             this.landRegistryMapModel?.idCartographicImg &&
@@ -603,7 +603,7 @@ export class LandRegistryGeolocationComponent
                             symbol,
 
                         );
-                        this.onCancel();
+                        
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
@@ -621,7 +621,7 @@ export class LandRegistryGeolocationComponent
 
                         //this._landRegistryMapService.setEstado(Estado.INICIAR);
                     } else if (land && land.ubigeo) {
-                        this.onCancel();
+                        //this.onCancel();
                         this.resetMap();
                         //this._landRegistryMapService.setEstado(Estado.EDITAR);
                     }
