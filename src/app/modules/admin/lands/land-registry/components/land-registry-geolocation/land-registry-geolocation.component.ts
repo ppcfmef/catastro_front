@@ -581,10 +581,12 @@ export class LandRegistryGeolocationComponent
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((land: LandRegistryMap) => {
+                this.onCancel();
                 if (land) {
+                    
                     this.landRegistryMapModel = new LandRegistryMapModel(land);
                     if (land?.latitude && land?.longitude) {
-                        this.onCancel();
+                       
                         let symbol = this.simpleMarkerSymbolUndefined;
                         if (
                             this.landRegistryMapModel?.idCartographicImg &&
