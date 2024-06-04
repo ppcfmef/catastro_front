@@ -15,7 +15,7 @@ import {MatDrawer} from '@angular/material/sidenav';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FuseMediaWatcherService} from '../../../../../../../../@fuse/services/media-watcher';
 import {FuseConfirmationService} from '../../../../../../../../@fuse/services/confirmation';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {FormGroup, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CommonUtils} from '../../../../../../../core/common/utils/common.utils';
 import {Role} from '../../../../../../../core/user/user.types';
 import * as moment from 'moment';
@@ -40,8 +40,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     displayedColumns = ['nro', 'dni', 'username', 'institute', 'districtName','district',  'rol', 'status', 'creationDate', 'actions'];
 
-    filters: UntypedFormGroup;
-    search: UntypedFormGroup;
+    filters: FormGroup;
+    search: FormGroup;
 
     roles$: Observable<Role[]>;
 
@@ -131,6 +131,12 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     ngAfterViewInit(): void {
         this.initPagination();
+        this.filters.valueChanges.subscribe((changes)=> {
+            this.paginator.pageIndex = 0;
+            this.pageIndex = 0;
+            this.paginator.pageSize = 10;
+            this.initPagination();
+        });
     }
 
     /**
@@ -144,6 +150,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     initPagination(): void {
+        console.log('initPagination', this.filters.valueChanges);
         merge(this.paginator.page, this.changesSubject, this.filters.valueChanges)
             .pipe(
                 debounceTime(300),
