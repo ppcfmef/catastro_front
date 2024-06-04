@@ -75,10 +75,20 @@
                             <mat-option *ngFor="let domain of masterDomain.resolutionType.slice(0, 3)" [value]="domain.id">
                                 {{domain.name}}</mat-option>
                         </mat-select>
+                        <mat-error
+                        *ngIf="formEdit.get('resolutionType').hasError('required')"
+                        >
+                            Campo requerido.
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field class="w-3/12">
                         <mat-label>Nro. Doc. Sustento</mat-label>
                         <input matInput type="text" formControlName="resolutionDocument">
+                        <mat-error
+                        *ngIf="formEdit.get('resolutionDocument').hasError('required')"
+                        >
+                            Campo requerido.
+                        </mat-error>
                     </mat-form-field>
                 </div>
 
