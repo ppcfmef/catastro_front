@@ -35,12 +35,13 @@
   (showLandsTable)="onShowLandsTable($event)">
 </app-search-owner-table>
 
-<app-search-land-table 
+<app-search-land-table
   *ngIf="showLandsTable"
   [dataSource]="dataSourceLands"
   [length]="lengthLandsOwner"
   (changePage)="onChangePageLand($event)"
-  (showLandMap)="onShowLandsMap($event)">
+  (showLandMap)="onShowLandsMap($event)"
+  [reset]="resetTableFlag" >
 </app-search-land-table>
 
 <div class="container-panel flex w-full"  *ngIf="landRecord"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
@@ -50,7 +51,7 @@
   <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
     <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
     <ng-container *ngIf="landRecord.longitude || landRecord.latitude">
-      <button mat-flat-button [color]="'primary'" class="m-8 rounded-md" 
+      <button mat-flat-button [color]="'primary'" class="m-8 rounded-md"
         mat-flat-button [color]="'primary'"
         (click)="onDowloandCroquis()" >
         <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
