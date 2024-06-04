@@ -27,7 +27,7 @@ export class ListLandMaintenanceTableComponent implements OnInit, OnChanges {
     @Input() reset: boolean;
     @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
     @Output() refreshPage: EventEmitter<any> = new EventEmitter();
-    displayedColumns: string[] = ['nro', 'cup', 'habilitacionName', 'direccion', 'creationDate', 'typeApplication', 'actions'];
+    displayedColumns: string[] = ['nro', 'cup', 'status','habilitacionName', 'direccion', 'creationDate', 'typeApplication', 'actions'];
     landSelected = new Set<any>();
     pageIndex = 0;
     pageSize = 5;
