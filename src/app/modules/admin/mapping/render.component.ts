@@ -18,7 +18,6 @@ export class RenderComponent implements OnInit {
         ) {};
     ngOnInit(): void {
         this.router.navigate(['/'], { relativeTo: this.route });
-           // Abre una nueva pestaña con la ruta '/geovisor'
         const redirect = `${environment.redirect}/geovisor`.trim();
         window.open(redirect, '_blank');
     }
