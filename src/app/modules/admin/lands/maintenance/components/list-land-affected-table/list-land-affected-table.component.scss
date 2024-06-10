@@ -1,0 +1,31 @@
+@import "styles/mixins";
+
+.container {
+    @include container();
+    max-height: 175px;
+    padding: 0 16px;
+ }
+
+:host ::ng-deep {
+    table.table-base {
+        @include table_style(var(--mef-c-header));
+        thead tr {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+     }
+
+     .mdc-data-table__table {
+        white-space: nowrap !important;
+        padding-left: 16px !important;
+     }
+     table.table-base thead tr th {
+        padding-right:16px !important;
+    }
+
+     table.table-base thead tr th:first-child {
+        padding-left: 16px !important;
+     }
+
+}

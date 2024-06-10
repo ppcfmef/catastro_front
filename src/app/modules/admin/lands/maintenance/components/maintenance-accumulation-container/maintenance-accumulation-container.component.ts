@@ -32,7 +32,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     application: ApplicationModel;
     results: ResultUI[];
     user: User;
-
+    landAffected: any[]=[];
     ubigeo: string;
     fileName: string;
     file: any;
@@ -71,6 +71,7 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
        (landResult) => {
            this.landRecords = landResult.results;
            this.ubigeo = this.landRecords[0].ubigeo;
+           this.landAffected =  this.landRecords[0].landsAffected;
        }
        );
     }
