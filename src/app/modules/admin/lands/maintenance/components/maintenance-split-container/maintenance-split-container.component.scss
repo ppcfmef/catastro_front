@@ -7,6 +7,13 @@
 }
 
 
+:host ::ng-deep app-land-maintenance-table.land {
+    table.table-base {
+        @include table_style(#b8b8bf);
+    }
+}
+
+
 .btn_add {
     @include btn(var(--mef-c-btn-secondary));
 }
