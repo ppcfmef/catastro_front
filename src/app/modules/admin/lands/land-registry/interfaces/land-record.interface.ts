@@ -22,5 +22,8 @@ export interface LandRecord {
   builtArea: number;
   owner: number;
   hasOwners?: boolean;
+  hasApplications?: boolean;
+  hasLandsAffectedApplications?: boolean;
+
   creationDate?: string;
 }

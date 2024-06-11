@@ -1129,6 +1129,29 @@ export class LandRegistryGeolocationComponent
                                                                     const id =
                                                                         landRecords[0]
                                                                             .id;
+                                                                    const hasApplications = landRecords.filter( r=> ( r.hasApplications ===true || r.hasLandsAffectedApplications === true) ).length> 0? true:false;
+
+                                                                    
+                                                                    if (hasApplications){
+                                                                        const dialogRef2 =
+                                                                        this.confirmationService.errorInfo(
+                                                                            'Error de registro',
+                                                                            'Los predios asociados a este lote tienen solicitudes pendientes',
+
+                                                                        );
+
+                                                                        dialogRef2.afterClosed().toPromise().then((option)=>{
+                                                                            this.onCancel();
+                                                                           
+                                                                        });
+                                                                        return;
+
+
+
+                                                                    }
+
+                                                                    
+                                                                    
                                                                     const arrayService = landRecords.map((l) => {
                                                                         return this._landOwnerService
                                                                             .getLandDetail(

@@ -84,4 +84,5 @@ export interface LandRegistryMap {
     idLotePuerta: number;
     loteUrbanoPuerta: string;
     manzanaUrbanaPuerta: string;
+    idLoteP: number;
 }
