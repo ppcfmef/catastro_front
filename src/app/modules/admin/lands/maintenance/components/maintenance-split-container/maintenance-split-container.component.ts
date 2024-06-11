@@ -35,6 +35,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
     editar= Actions.EDITAR;
     fileName: string;
     file: any;
+    landAffected: any[]=[];
     _unsubscribeAll: Subject<any> = new Subject<any>();
     disabled = false;
 
@@ -70,6 +71,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
        (landResult) => {
            this.landRecords = landResult.results;
            this.ubigeo = this.landRecords[0].ubigeo;
+           this.landAffected =  this.landRecords[0].landsAffected;
        }
        );
     }

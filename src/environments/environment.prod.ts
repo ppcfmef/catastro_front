@@ -16,7 +16,7 @@ export const environment = {
     apiUrlArcGisServer: 'https://ws.mineco.gob.pe/serverdf/rest/services',
     apiSatUrl: 'https://app.sat-t.gob.pe/api',
     apiNSRTMUrl: 'https://srtm.mef.gob.pe/v1/nsrtm-services',
-    redirect: '',
+    redirect: 'https://apps9.mineco.gob.pe/plataformaCF/catastrofront'
 
 };
 

@@ -18,7 +18,7 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
     @Input() typeMaintenace = 'Division';
     @Output() dataSourceUpdateEvent: EventEmitter<LandUI[]> = new EventEmitter();
     leer=Actions.LEER;
-    displayedColumns: string[] = ['nro','ubigeo', 'cup','idLote', 'habilitacionName','streetName','urbanMza','urbanLotNumber','creationDate','actions'];
+    displayedColumns: string[] = ['nro','ubigeo', 'cup', 'habilitacionName','streetName','urbanMza','urbanLotNumber','creationDate','actions'];
     constructor(public dialog: MatDialog) {
 
      }

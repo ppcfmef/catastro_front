@@ -84,4 +84,5 @@ export interface LandUI{
     district: string;
     province: string;
     department: string;
+    landsAffected?: any[];
 }

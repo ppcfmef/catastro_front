@@ -14,7 +14,17 @@
         </div>
     </div>
 
-    <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"
+    <div class="bg-white">
+        <app-land-maintenance-table [dataSource]="landRecords" (dataSourceUpdateEvent)="ondataSourceUpdate($event)"
         [isRemove]="true" [typeAction]="'leer'" [typeMaintenace]="'Acumulacion'"></app-land-maintenance-table>
+
+        <div *ngIf="landAffected.length > 0">
+            <h1 class="text-lg font-bold bg-white pl-4 mb-2">Predios afectados</h1>
+            <app-list-land-affected-table class="land"
+                [dataSource]="landAffected"
+            ></app-list-land-affected-table>
+        </div>
+    </div>
+
 
 </div>

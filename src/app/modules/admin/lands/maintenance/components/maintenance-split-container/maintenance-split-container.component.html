@@ -6,15 +6,24 @@
         (fileEventEmit)="fileUpload($event)"
     ></app-upload-support>
 
-    <div class="w-full my-2">
-        <div class="text-lg font-bold"><h1>Predio Original</h1></div>
-        <app-land-maintenance-table
-            [dataSource]="landRecords"
-            [typeAction]="leer"
-            [isRemove]="false"
-        ></app-land-maintenance-table>
-    </div>
+    <div>
+        <div class="text-lg font-bold mb-4"><h1>Predio Original</h1></div>
+        <div class="w-full bg-white">
+            <app-land-maintenance-table
+                [dataSource]="landRecords"
+                [typeAction]="leer"
+                [isRemove]="false"
+            ></app-land-maintenance-table>
 
+            <div *ngIf="landAffected.length > 0">
+                <h1 class="text-lg font-bold bg-white pl-4 mb-2">Predios afectados</h1>
+                <app-list-land-affected-table class="land"
+                [dataSource]="landAffected"
+                ></app-list-land-affected-table>
+            </div>
+
+        </div>
+    </div>
     <div class="w-full">
         <div class="text-lg font-bold"><h1>Predios Divididos</h1></div>
 
