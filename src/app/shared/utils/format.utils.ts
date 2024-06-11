@@ -46,6 +46,7 @@ export class FormatUtils {
         land.streetBlock=lote.CUADRA;
         land.rangCup = lote.RAN_CPU;
         land.municipalNumber = lote.NUM_MUN;
+        land.idLoteP = lote.ID_LOTE_P;
     return land;
 
 }
@@ -54,9 +55,9 @@ export class FormatUtils {
 public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapModel): GestionPredio{
     const gestion: GestionPredio ={
         OBJECTID: land.idObjectImg,
-
+        ID_LOTE_P : land.idLoteP,
         UBIGEO: land.ubigeo,
-
+        
         COD_MZN: land.codMzn,
 
         COD_SECT: land.codSect,
@@ -149,7 +150,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  Predio{
     const predio: Predio ={
         OBJECTID: null,
-
+        ID_LOTE_P : land.idLoteP,
         ID_LOTE: land.idPlot,
 
         UBIGEO: land.ubigeo,
@@ -228,7 +229,6 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         COD_VER: land.cup ? parseInt(land.cup.split('-')[2], 10) : null,
         NOM_USER: '',
         NOM_PC: '',
-        ID_LOTE_P: 0,
         ZONA_UTM: 0,
         VAL_ACT: 0,
         ESTADO:1,

@@ -47,7 +47,7 @@ export interface GestionPredio {
     NOM_USER: string;
     NOM_PC: string;
     ZONA_UTM: number;
-
+    ID_LOTE_P: number;
 
 }
 /* eslint-enable @typescript-eslint/naming-convention  */
