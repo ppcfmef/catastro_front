@@ -121,6 +121,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
       idLotePuerta: [this.landMergeRecord?.idLotePuerta],
       loteUrbanoPuerta: [this.landMergeRecord?.loteUrbanoPuerta],
       manzanaUrbanaPuerta: [this.landMergeRecord?.manzanaUrbanaPuerta],
+      idLoteP: [this.landMergeRecord?.idLoteP],
     });
     this.setTitle();
   }

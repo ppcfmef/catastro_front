@@ -86,6 +86,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     idLotePuerta: number;
     loteUrbanoPuerta: string;
     manzanaUrbanaPuerta: string;
+    idLoteP: number;
     //RAN_CPU
     //DEPARTURE
     constructor(l?: LandRegistryMap){
@@ -170,6 +171,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.idLotePuerta =  l?.idLotePuerta;
         this.loteUrbanoPuerta = l?.loteUrbanoPuerta;
         this.manzanaUrbanaPuerta = l?.manzanaUrbanaPuerta;
+        this.idLoteP = l?.idLoteP;
     }
 
 
