@@ -1129,14 +1129,17 @@ export class LandRegistryGeolocationComponent
                                                                     const id =
                                                                         landRecords[0]
                                                                             .id;
-                                                                    const hasApplications = landRecords.filter( r=> ( r.hasApplications ===true || r.hasLandsAffectedApplications === true) ).length> 0? true:false;
 
-                                                                    
+                                                                    const hasApplications = landRecords.filter( r=> ( r.hasApplications ===true) ).length> 0?true:false;
+
                                                                     if (hasApplications){
+                                                                        const landRecord = landRecords.filter( r=> ( r.hasApplications ===true) )[0];
+                                                                        const application =landRecord.applications;
+                                                                        
                                                                         const dialogRef2 =
                                                                         this.confirmationService.errorInfo(
                                                                             'Error de registro',
-                                                                            'Los predios asociados a este lote tienen solicitudes pendientes',
+                                                                            `Los predios asociados a este lote tiene una solicitud pendiente de tipo ${application.type} `,
 
                                                                         );
 
@@ -1220,8 +1223,8 @@ export class LandRegistryGeolocationComponent
                                                                                     if( tipoLote === '2'){
                                                                                         const dialogRef2 =
                                                                                         this.confirmationService.info(
-                                                                                            'Puerta de Ingreso',
-                                                                                            'Debe seleccionar la puerta de ingreso',
+                                                                                            'Lote paso de servidumbre',
+                                                                                            'Ahora debe seleccionar el lote paso de servidumbre',
 
                                                                                         );
 
@@ -1441,7 +1444,8 @@ export class LandRegistryGeolocationComponent
 
 
                                                         } else {
-                                                            if (this.view) {
+                                                            this.onCancel();
+                                                            /*if (this.view) {
                                                                 this.view.popup.close();
                                                                 this.view.graphics.removeAll();
                                                             }
@@ -1450,7 +1454,7 @@ export class LandRegistryGeolocationComponent
                                                             this.estado =   Estado.LEER;
                                                             this._landRegistryMapService.setEstado(
                                                                                             Estado.LEER
-                                                                                        );
+                                                                                        );*/
                                                         }
                                                     });
                                             }
@@ -1566,8 +1570,8 @@ export class LandRegistryGeolocationComponent
 
                                 const dialogRef =
                                     this.confirmationService.info(
-                                        'Asignar Puerta',
-                                        'Desea asignar esta puerta?'
+                                        'Asignar Lote Paso de servidumbre',
+                                        'Desea asignar este lote paso de servidumbre?'
                                     );
 
 
