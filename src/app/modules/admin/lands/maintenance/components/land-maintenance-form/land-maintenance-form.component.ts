@@ -291,4 +291,10 @@ export class LandMaintenanceFormComponent implements OnInit {
         }
         return null;
       }
+
+      onResolutionDateEvent(event: any): void {
+        if (!event) {
+          this.landModel.resolutionDate =null;
+        }
+      }
 }

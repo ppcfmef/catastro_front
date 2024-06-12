@@ -1014,7 +1014,7 @@ descargarNotificacionPredio(data: IRegistroTitularidad): void{
 
 generarNotificacion(r: IRegistroTitularidad): void{
 
-    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad.`;
+    const texto = `Nos dirigimos a usted en representación de la Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria ,con el propósito de recordarle la importancia de cumplir con sus obligaciones tributarias.Hemos observado que hasta la fecha no ha presentado la Declaración Jurada correspondiente a su propiedad. Es fundamental recordarle la importancia de cumplir con esta obligación tributaria, así como con el pago puntual del impuesto predial y los arbitrios municipales.`;
 
 
 
@@ -1109,7 +1109,7 @@ generarNotificacion(r: IRegistroTitularidad): void{
 
 generarNotificacionPredio(r: IRegistroTitularidad): void{
     //const  direccion = `${this.ubicacion.address}`;
-    const texto = `La Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria le hace llegar saludos cordiales y a la vez comunicarle que se ha detectado que usted ha omitido en inscribir oportunamente su propiedad.`;
+    const texto = `Nos dirigimos a usted en representación de la Municipalidad Distrital de ${this.distrito?.name}, a través de la Gerencia de Administración Tributaria ,con el propósito de recordarle la importancia de cumplir con sus obligaciones tributarias.Hemos observado que hasta la fecha no ha presentado la Declaración Jurada correspondiente a su propiedad. Es fundamental recordarle la importancia de cumplir con esta obligación tributaria, así como con el pago puntual del impuesto predial y los arbitrios municipales.`;
 
 
         this.dialogRef = this._confirmationService.info(
