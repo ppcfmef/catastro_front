@@ -288,6 +288,7 @@ export class SearchMapComponent implements OnInit, OnDestroy {
             if (this.searchForms.get('door').value) {
                 this._fuseSplashScreenService.show();
                 const tipouu = this.searchForms.get('tipouu').value;
+                this.parsearData( tipouu , this.selectedOption);
                 params = { 'UBIGEO': this.ubigeo, 'COD_VIA': tipouu.id, 'NUM_MUN': this.searchForms.get('door').value };
                 where = CommonUtils.generateWhereArgis(params);
                 const featureLayer = this.layersInfo.find((l) => l.id === 0)?.featureLayer;
@@ -414,16 +415,29 @@ export class SearchMapComponent implements OnInit, OnDestroy {
     parsearData(val, typeSearch): void {
         switch (typeSearch) {
             case '1':
-                this.showSelected = val.partida;
+                this.showSelected = val.partida ? val.partida : '';
                 this.changeStyle = val?.partida;
                 break;
             case '2':
-                this.showSelected = val.name;
+                const tipouu = this.searchForms.get('tipouu').value.name;
+                const door = this.searchForms.get('door').value;
+                let addressD = tipouu ? tipouu : '';
+                // eslint-disable-next-line curly
+                if (door) addressD += ' Nro. ' + door;
+                this._changeDetectorRef.markForCheck();
+                this.showSelected = addressD;
                 this.changeStyle = val?.id;
                 break;
             case '3':
-                this.showSelected = this.searchForms.get('habUrb').value.name + ' '
-                                    + 'Mz' + this.searchForms.get('mz').value.name + ' ' + 'Lt' + this.searchForms.get('lt').value.name;
+                const habUrb = this.searchForms.get('habUrb').value.name;
+                const mz = this.searchForms.get('mz').value?.name;
+                const lt = this.searchForms.get('lt').value?.name;
+                let address = habUrb ? habUrb : '';
+                // eslint-disable-next-line curly
+                if (mz) address += ' Mz ' + mz;
+                // eslint-disable-next-line curly
+                if (lt) address += ' Lt ' + lt;
+                this.showSelected = address;
                 this.changeStyle = val?.id;
                 break;
             default:
