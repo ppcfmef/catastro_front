@@ -312,7 +312,7 @@ public static  formatResultUIToResultUI(r: ResultUI):  ResultUI{
         streetBlock: r.streetBlock,
         rangCup:null,
         creationDate: null,
-        resolutionDate: moment(r.resolutionDate).format('YYYY-MM-DD')
+        resolutionDate: r.resolutionDate?moment(r.resolutionDate).format('YYYY-MM-DD'):null
     };
     return result;
 
