@@ -86,6 +86,16 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
     if(!el){
         copy.push(land);
         this.landRecords=copy;
+
+        const copyAffected = [...this.landAffected];
+        this.landMaintenanceService.getList({id:land.id}).subscribe((landResult) => {
+            landResult.results[0].landsAffected.forEach((row: any) => {
+                copyAffected.push(row);
+            });
+            this.landAffected= copyAffected;
+
+        });
+
     }
 
   }
