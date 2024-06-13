@@ -12,7 +12,7 @@ export class ListLandAffectedTableComponent implements OnChanges {
 
     @Input() dataSource;
 
-    displayedColumns: string[] = ['nro', 'cup', 'streetName', 'creationDate'];
+    displayedColumns: string[] = ['nro','ubigeo', 'cup', 'habilitacionName','streetName','urbanMza','urbanLotNumber','creationDate'];
 
     #unsubscribeAll: Subject<any> = new Subject<any>();
 

@@ -71,7 +71,12 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
        (landResult) => {
            this.landRecords = landResult.results;
            this.ubigeo = this.landRecords[0].ubigeo;
-           this.landAffected =  this.landRecords[0].landsAffected;
+           const copy = this.landRecords[0].landsAffected;
+           copy.forEach((element) => {
+                element.ubigeo = this.landRecords[0].ubigeo;
+                element.habilitacionName = this.landRecords[0].habilitacionName;
+           });
+           this.landAffected = copy;
        }
        );
     }
@@ -100,7 +105,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
             copy.push(new ResultModel(res));
             this.results = copy;
         }
-        
+
 
       });
 
@@ -145,7 +150,7 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
                         'Solicitud registrada'
                     );
 
-                    m.afterClosed().subscribe(r=>{
+                    m.afterClosed().subscribe(()=>{
                         this.disabled =false;
 
                         this._router.navigate(['/land/maintenance']);
