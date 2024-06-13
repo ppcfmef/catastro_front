@@ -84,5 +84,22 @@ export interface LandUI{
     district: string;
     province: string;
     department: string;
-    landsAffected?: any[];
+    landsAffected?: LandAffected[];
 }
+
+interface LandAffected {
+    cpm: string ;
+    cup: string;
+    codCuc: string ;
+    ubigeo?: string;
+    streetType: string;
+    streetNameAlt: string ;
+    streetName: string;
+    secEjec: number  ;
+    urbanLotNumber: string;
+    urbanMza: string;
+    municipalNumber: string ;
+    idPlot: string | null;
+    creationDate: string;
+    habilitacionName?: string;
+  }

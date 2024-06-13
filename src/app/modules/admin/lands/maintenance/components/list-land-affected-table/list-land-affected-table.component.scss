@@ -2,18 +2,18 @@
 
 .container {
     @include container();
-    max-height: 175px;
+    // max-height: 170px;
     padding: 0 16px;
  }
 
 :host ::ng-deep {
     table.table-base {
         @include table_style(var(--mef-c-header));
-        thead tr {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+        // thead tr {
+        //     position: sticky;
+        //     top: 0;
+        //     z-index: 10;
+        // }
      }
 
      .mdc-data-table__table {
