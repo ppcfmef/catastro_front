@@ -216,11 +216,12 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       save(): void{
-        //results{}
-        /*console.log('this.formLand>>',this.formLand.get('resolutionDate').value);*/
-        /*this.formLand.get('resolutionDate').setValue(this.formLand.get('resolutionDate').value.toString());*/
-        if(this.action!== Actions.LEER){
+        // Habilitar todos los campos deshabilitados en el formulario
+        Object.keys(this.formLand.controls).forEach((controlName) => {
+                this.formLand.get(controlName).enable();
+        });
 
+        if(this.action!== Actions.LEER){
             const codUu=this.formLand.get('codUu').value;
             const urbanMza=this.formLand.get('urbanMza').value;
             const urbanLotNumber=this.formLand.get('urbanLotNumber').value;
