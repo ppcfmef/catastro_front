@@ -75,6 +75,8 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
            copy.forEach((element) => {
                 element.ubigeo = this.landRecords[0].ubigeo;
                 element.habilitacionName = this.landRecords[0].habilitacionName;
+                element.codUu = landResult.results[0].codUu;
+                element.uuType= landResult.results[0].uuType;
            });
            this.landAffected = copy;
        }

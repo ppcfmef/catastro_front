@@ -102,4 +102,6 @@ interface LandAffected {
     idPlot: string | null;
     creationDate: string;
     habilitacionName?: string;
+    codUu?: string;
+    uuType?: string;
   }

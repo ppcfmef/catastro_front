@@ -155,8 +155,8 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                         );
                         this._fuseSplashScreenService.hide();
 
-                        m.afterClosed().subscribe(r=>{
-                          this.disabled =true;
+                        m.afterClosed().subscribe(()=>{
+                            this.disabled =true;
                             this._router.navigate(['/land/maintenance']);
                         });
 
@@ -192,7 +192,9 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
       landResult.results[0].landsAffected.map((row: any) => ({
         ...row,
         ubigeo: landResult.results[0].ubigeo,
-        habilitacionName: landResult.results[0].habilitacionName
+        habilitacionName: landResult.results[0].habilitacionName,
+        codUu: landResult.results[0].codUu,
+        uuType: landResult.results[0].uuType
       }))
     );
   }

@@ -21,9 +21,9 @@
 
     <div class="bg-white mt-4" *ngIf="landAffected.length > 0">
         <h1 class="text-lg font-bold  pl-4 pt-3 mb-2">Predios afectados</h1>
-        <app-list-land-affected-table class="land"
-            [dataSource]="landAffected"
-        ></app-list-land-affected-table>
+        <app-land-maintenance-table class="land"
+            [dataSource]="landAffected"  [isRemove]="false" [typeAction]="'leer'"  [typeMaintenace]="'Acumulacion'"
+        ></app-land-maintenance-table>
     </div>
 
 </div>
