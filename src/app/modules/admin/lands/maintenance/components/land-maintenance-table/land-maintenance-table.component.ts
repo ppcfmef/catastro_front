@@ -27,15 +27,9 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //console.log('changes>>',changes);
-    /*if(changes && changes.idLand.currentValue){
-
-
-     }*/
-    }
+}
 
     landSelection(land: LandUI): void{
-
         const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
             data: {land:land,action:this.typeAction,ubigeo :this.ubigeo,typeMaintenace:this.typeMaintenace},
             width: '600px',
@@ -43,7 +37,6 @@ export class LandMaintenanceTableComponent implements OnInit,OnChanges {
           });
 
           if(this.typeAction===Actions.EDITAR){
-
             dialogRef.afterClosed().subscribe((result) => {
                 //land={... result};
 

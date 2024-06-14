@@ -100,8 +100,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
 
       dialogRef.afterClosed().subscribe((res) => {
         //console.log('result>>',result);
-
-        console.log('res>>',res);
         if(res){
             const copy=[... this.results];
             copy.push(new ResultModel(res));
@@ -115,8 +113,6 @@ export class MaintenanceSplitContainerComponent implements OnInit,OnChanges {
   }
 
   ondataSourceUpdate(landRecords: LandUI[]): void{
-
-    console.log('landRecords>>',landRecords);
     this.results =landRecords;
   }
 
