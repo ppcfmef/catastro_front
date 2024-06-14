@@ -94,7 +94,7 @@ export class MaintenanceIndependenceContainerComponent implements OnInit,OnChang
   onAgregarResult(): void{
 
     const dialogRef = this.dialog.open(LandMaintenanceFormComponent, {
-        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results, typeMantenance:3},
+        data: {action:Actions.CREAR,land:this.landRecords[0], landRecords:this.landRecords,results:this.results, typeMaintenace:3},
         width: '600px',
         /*height:'100%'*/
       });
