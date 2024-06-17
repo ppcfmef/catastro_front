@@ -49,7 +49,6 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { DetailComponent } from '../../security/modules/user-monitoring/components/detail/detail.component';
 import { DetailObserverComponent } from './components/detail-observer/detail-observer.component';
 import { EstatusPipe } from './pipes/status.pipe';
-import { ListLandAffectedTableComponent } from './components/list-land-affected-table/list-land-affected-table.component';
 @NgModule({
   declarations: [
 
@@ -70,7 +69,6 @@ import { ListLandAffectedTableComponent } from './components/list-land-affected-
     UploadSupportComponent,
 
     ListApplicationMaintenanceTableComponent,
-    ListLandAffectedTableComponent,
     ListApplicationMaintenanceContainerComponent,
       ListApplicationMaintenancePage,
       LandMaintenanceDesactivateComponent,

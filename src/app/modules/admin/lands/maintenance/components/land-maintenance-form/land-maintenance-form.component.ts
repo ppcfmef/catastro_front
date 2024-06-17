@@ -144,8 +144,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
                 streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
                 streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
-                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly || this.data.typeMantenance === 3} , [Validators.required]],
-                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly || this.data.typeMantenance === 3}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly || this.data.typeMaintenace === 3} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly || this.data.typeMaintenace === 3}, [Validators.required]],
                 block: [{value:this.landModel?.block,disabled:this.readOnly}],
                 indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
                 floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
@@ -158,6 +158,7 @@ export class LandMaintenanceFormComponent implements OnInit {
         }
 
         else {
+            const isTypeMaintenance3 = (this.data.typeMaintenace === 3) ;
             this.formLand = this.fb.group({
                 cpm2 : [ {value: this.codigoPredio,disabled:this.readOnly}],
                 ubigeo: [ {value:this.landModel?.ubigeo,disabled:this.readOnly,}, [Validators.required]],
@@ -171,8 +172,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 codStreet: [{value: this.landModel?.codStreet,disabled: this.readOnly}],
                 streetType: [{value: this.landModel?.streetType,disabled:this.readOnly}, [Validators.required]],
                 streetName: [{value: this.landModel?.streetName,disabled: this.readOnly}, [Validators.required]],
-                urbanMza: [{value:this.landModel?.urbanMza,disabled:this.readOnly || this.data.typeMantenance === 3} , [Validators.required]],
-                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled:this.readOnly || this.data.typeMantenance === 3}, [Validators.required]],
+                urbanMza: [{value:this.landModel?.urbanMza, disabled: isTypeMaintenance3 ? isTypeMaintenance3 : this.readOnly} , [Validators.required]],
+                urbanLotNumber: [{value: this.landModel?.urbanLotNumber,disabled: isTypeMaintenance3 ? isTypeMaintenance3 : this.readOnly}, [Validators.required]],
                 block: [{value:this.landModel?.block,disabled:this.readOnly}],
                 indoor: [{value:this.landModel?.indoor,disabled:this.readOnly}],
                 floor: [{value:this.landModel?.floor,disabled:this.readOnly}],
@@ -216,11 +217,12 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       save(): void{
-        //results{}
-        /*console.log('this.formLand>>',this.formLand.get('resolutionDate').value);*/
-        /*this.formLand.get('resolutionDate').setValue(this.formLand.get('resolutionDate').value.toString());*/
-        if(this.action!== Actions.LEER){
+        // Habilitar todos los campos deshabilitados en el formulario
+        Object.keys(this.formLand.controls).forEach((controlName) => {
+                this.formLand.get(controlName).enable();
+        });
 
+        if(this.action!== Actions.LEER){
             const codUu=this.formLand.get('codUu').value;
             const urbanMza=this.formLand.get('urbanMza').value;
             const urbanLotNumber=this.formLand.get('urbanLotNumber').value;
@@ -228,7 +230,7 @@ export class LandMaintenanceFormComponent implements OnInit {
             this.landRecords.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length
             + this.results.filter(r=>  r.codUu === codUu && r.urbanMza === urbanMza && r.urbanLotNumber===urbanLotNumber ).length;
 
-            if(cantRepetidos>0 && this.data.typeMantenance !== 3){
+            if(cantRepetidos>0 && this.data.typeMaintenace !== 3){
                 const diag=this.confirmationService.error(
                     'Registro de predio',
                     'Existe un lote urbano con la misma denominación, dentro del mismo ámbito de unidad urbana y manzana urbana.Desea continuar con el registro?'
@@ -290,5 +292,11 @@ export class LandMaintenanceFormComponent implements OnInit {
           return { 'whitespace': true };
         }
         return null;
+      }
+
+      onResolutionDateEvent(event: any): void {
+        if (!event) {
+          this.landModel.resolutionDate =null;
+        }
       }
 }

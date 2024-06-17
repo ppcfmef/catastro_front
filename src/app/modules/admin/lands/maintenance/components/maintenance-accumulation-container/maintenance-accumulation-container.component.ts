@@ -5,8 +5,8 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Actions } from 'app/shared/enums/actions.enum';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ApplicationUI } from '../../interfaces/application';
 import { LandUI } from '../../interfaces/land.interface';
 import { ResultUI } from '../../interfaces/result.interface';
@@ -71,7 +71,14 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
        (landResult) => {
            this.landRecords = landResult.results;
            this.ubigeo = this.landRecords[0].ubigeo;
-           this.landAffected =  this.landRecords[0].landsAffected;
+
+            this.landAffected = this.processLandsAffected(this.landAffected, landResult);
+        //    const copy = this.landRecords[0].landsAffected;
+        //    copy.forEach((element) => {
+        //     element.ubigeo = this.landRecords[0].ubigeo;
+        //     element.habilitacionName = this.landRecords[0].habilitacionName;
+        //    });
+        //    this.landAffected = copy;
        }
        );
     }
@@ -80,21 +87,34 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
   ngOnInit(): void {
   }
 
-  onAgregarPredio(land: LandUI): void{
-    const copy=[... this.landRecords];
-    const el=copy.find(e=> {if( (e?.cup && e.cup===land.cup ) || (e?.cpm && e?.cpm!=='null' && e.cpm===land.cpm ) ){return e;}  } );
-    if(!el){
-        copy.push(land);
-        this.landRecords=copy;
+    onAgregarPredio(land: LandUI): void{
+        const copy=[... this.landRecords];
+        const el=copy.find((e)=> {if( (e?.cup && e.cup===land.cup ) || (e?.cpm && e?.cpm!=='null' && e.cpm===land.cpm ) ){return e;}  } );
+        if(!el){
+            copy.push(land);
+            this.landRecords=copy;
+
+            this.landMaintenanceService.getList({id: land.id}).subscribe((landResult) => {
+                this.landAffected = this.processLandsAffected(this.landAffected, landResult);
+            });
+        }
+
     }
 
-  }
 
-  ondataSourceUpdate(landRecords: LandUI[]): void{
-    this.landRecords =landRecords;
-  }
+    ondataSourceUpdate(landRecords: LandUI[]): void {
+        this.landRecords = landRecords;
+        const observables = this.landRecords.map(land =>
+          this.landMaintenanceService.getList({id: land.id}).pipe(
+            takeUntil(this._unsubscribeAll),
+            map(landResult => this.processLandsAffected([], landResult))
+          )
+        );
 
-
+        forkJoin(observables).subscribe((results) => {
+          this.landAffected = [].concat(...results);
+        });
+      }
 
   onGenerateAccumulation(): void{
 
@@ -135,8 +155,8 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
                         );
                         this._fuseSplashScreenService.hide();
 
-                        m.afterClosed().subscribe(r=>{
-                          this.disabled =true;
+                        m.afterClosed().subscribe(()=>{
+                            this.disabled =true;
                             this._router.navigate(['/land/maintenance']);
                         });
 
@@ -165,6 +185,18 @@ export class MaintenanceAccumulationContainerComponent implements OnInit,OnChang
   fileUpload(file: any): void{
 
     this.file = file;
+  }
+
+  private processLandsAffected(lands: any[], landResult: any): any[] {
+    return lands.concat(
+      landResult.results[0].landsAffected.map((row: any) => ({
+        ...row,
+        ubigeo: landResult.results[0].ubigeo,
+        habilitacionName: landResult.results[0].habilitacionName,
+        codUu: landResult.results[0].codUu,
+        uuType: landResult.results[0].uuType
+      }))
+    );
   }
 
 }

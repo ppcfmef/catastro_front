@@ -16,10 +16,12 @@
             ></app-land-maintenance-table>
 
             <div *ngIf="landAffected.length > 0">
-                <h1 class="text-lg font-bold bg-white pl-4 mb-2">Predios afectados</h1>
-                <app-list-land-affected-table class="land"
-                [dataSource]="landAffected"
-                ></app-list-land-affected-table>
+                <h1 class="text-lg font-bold bg-white pl-4">Predios afectados</h1>
+                <app-land-maintenance-table
+                    [dataSource]="landAffected"
+                    [typeAction]="'leer'"
+                    [isRemove]="false">
+                </app-land-maintenance-table>
             </div>
 
         </div>
