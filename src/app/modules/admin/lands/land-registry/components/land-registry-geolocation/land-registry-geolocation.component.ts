@@ -2286,7 +2286,10 @@ export class LandRegistryGeolocationComponent
                                 width: '70%',
                                 stack: [
                                     'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
-                                    { text: `MUNICIPALIDAD DE ${district?.name ? district?.name : ''}`, style: 'subheader' },
+                                    { text:  district?.municipalName ?  district?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${district?.name ?  district?.name : ''}`, 
+                                    style: 'subheader'
+                                    },
+                                    //{ text: `MUNICIPALIDAD DE ${district?.name ?  district?.name : ''}`, style: 'subheader' },
                                 ],
                                 style: 'title'
                             },
@@ -2479,7 +2482,7 @@ export class LandRegistryGeolocationComponent
                                     body: [
                                         [{ text: 'Usuario' }, ':', { text: `${this.user.name ? this.user.name : '-'}`, }],
                                         [{ text: 'DNI', }, ':', { text: `${this.user.dni ? this.user.dni : '-'}`, }],
-                                        [{ text: 'Cargo', }, ':', { text: `${this.user.role?.name ? this.user.role?.name : '-'}`, }],
+                                        [{ text: 'Cargo', }, ':', { text: `${this.user.role?.name ? this.user?.jobTitle : '-'}`, }],
                                     ]
                                 },
                             },
