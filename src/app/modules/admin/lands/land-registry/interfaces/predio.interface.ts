@@ -90,6 +90,7 @@ export interface Predio {
 
      ESTADO: number;
      NUM_ALT: string;
+     ESTADO_PARTIDA: string;
 }
 
 
