@@ -25,7 +25,9 @@
             <form
                 class="mt-8"
                 [formGroup]="signInForm"
-                #signInNgForm="ngForm">
+                #signInNgForm="ngForm"
+              
+                >
 
                 <!-- Email field -->
                 <mat-form-field class="w-full">
@@ -73,7 +75,7 @@
                    <div >
                     <div class="flex">
                         <img  *ngIf="captcha" src="data:image/png;base64,{{this.captcha.captchaImage}}">
-                        <button mat-icon-button (click)="onUpdateCaptcha()">
+                        <button  type="button" mat-icon-button (click)="onUpdateCaptcha($event)">
                             <mat-icon
                             class="icon-size-5"
                             [svgIcon]="'heroicons_solid:refresh'"></mat-icon>
@@ -119,6 +121,11 @@
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
             </form>
+
+            <div class="inline-flex items-end justify-center w-full mt-1.5">
+                 Version 1.{{versionMonth}}.{{versionDay}}
+            </div>
+
         </div>
     </div>
 </div>

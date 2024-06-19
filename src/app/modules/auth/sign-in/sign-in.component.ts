@@ -6,7 +6,8 @@ import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
 import { Captcha } from 'app/shared/interfaces/captcha.interface';
 import { CaptchaService } from 'app/shared/services/captcha.service';
-
+import moment from 'moment';
+moment.locale('es');
 @Component({
     selector     : 'auth-sign-in',
     templateUrl  : './sign-in.component.html',
@@ -31,6 +32,8 @@ export class AuthSignInComponent implements OnInit
     showAlert: boolean = false;
     captcha: Captcha;
     captchaImage: any;
+    versionDay: number = moment(new Date()).date();
+    versionMonth: number =moment(new Date()).month() + 1  ;
     /**
      * Constructor
      */
@@ -150,7 +153,8 @@ export class AuthSignInComponent implements OnInit
         });
     }
 
-    onUpdateCaptcha(): void {
+    onUpdateCaptcha(event: any): void {
+
         this.getCaptcha();
     }
 
