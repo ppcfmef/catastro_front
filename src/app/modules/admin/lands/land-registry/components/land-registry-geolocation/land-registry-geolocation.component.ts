@@ -2614,6 +2614,8 @@ export class LandRegistryGeolocationComponent
         if (data.idPlot) {
             const _predio =
                 FormatUtils.formatLandRegistryMapModelToPredio(data);
+
+                console.log('_predio>>',_predio);
             _predio.NOM_USER = this.user.username;
             _predio.NOM_PC = 'PLATAFORMA';
             _predio.ID_LOTE_P =

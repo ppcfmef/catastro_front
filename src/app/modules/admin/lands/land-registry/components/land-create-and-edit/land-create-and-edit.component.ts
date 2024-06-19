@@ -38,6 +38,7 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
   showCartographicImg = false;
   showPlot = false;
   masterDomain: MasterDomain;
+resolutionType: any[];
   landActive = true;
   hideInfoFields = false;
 
@@ -55,7 +56,14 @@ export class LandCreateAndEditComponent implements OnInit, OnChanges, OnDestroy 
 
     this.landRegistryService.getMasterDomain()
     .pipe(takeUntil(this.unsubscribeAll))
-    .subscribe(result => this.masterDomain = result);}
+    .subscribe((result) =>{
+      this.masterDomain = result;
+
+      this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
+
+    } 
+
+    );}
 
   get f(): {[key: string]: AbstractControl} {
     return this.formEdit.controls;
