@@ -6,7 +6,9 @@ import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
 import { Captcha } from 'app/shared/interfaces/captcha.interface';
 import { CaptchaService } from 'app/shared/services/captcha.service';
+import { environment } from 'environments/environment';
 import moment from 'moment';
+
 moment.locale('es');
 @Component({
     selector     : 'auth-sign-in',
@@ -32,8 +34,10 @@ export class AuthSignInComponent implements OnInit
     showAlert: boolean = false;
     captcha: Captcha;
     captchaImage: any;
-    versionDay: number = moment(new Date()).date();
-    versionMonth: number =moment(new Date()).month() + 1  ;
+    
+    versionCodigo1: number = environment.versionCodigo1;
+    versionCodigo2: number = environment.versionCodigo2;
+    versionCodigo3: number = environment.versionCodigo3 ;
     /**
      * Constructor
      */
