@@ -21,6 +21,9 @@ export const environment = {
     apiSatUrl: 'https://app.sat-t.gob.pe/api',
     apiNSRTMUrl: 'https://srtm.mef.gob.pe/v1/nsrtm-services',
     redirect: '',
+    versionCodigo1 :1,
+    versionCodigo2 :6,
+    versionCodigo3 :20,
 };
 
 /*
