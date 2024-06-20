@@ -35,6 +35,7 @@ export interface DistrictResource {
     province: string;
     extensions: Extension[];
     resources: Resource[];
+    municipalName: string;
 }
 
 

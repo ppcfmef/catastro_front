@@ -758,10 +758,11 @@ export class ShowMapPointComponent
                                 {
                                     stack: [
                                         'CATASTRO FISCAL - FICHA DE PREDIO',
-                                        {
-                                            text: `MUNICIPALIDAD DE ${_districtResource?.name}`,
-                                            style: 'subheader',
+                                        // eslint-disable-next-line max-len
+                                        {   text:  _districtResource?.municipalName ?  _districtResource?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${_districtResource?.name ?  _districtResource?.name : ''}`, 
+                                            style: 'subheader'
                                         },
+
                                     ],
                                     style: 'title',
                                 },

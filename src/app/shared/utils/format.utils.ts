@@ -141,7 +141,9 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         CUADRA: land.streetBlock,
         NOM_USER: '',
         NOM_PC: '',
-        ZONA_UTM: 0
+        ZONA_UTM: 0,
+        /*PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
+        ESTADO_PARTIDA: land.resolutionType==='1'?  0:null,*/
     };
     return gestion;
 }
@@ -219,7 +221,7 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
 
 
-        PARTIDA: land.departure,
+      
 
         LADO: land.side,
         RAN_NUM: land.ranNum,
@@ -232,6 +234,8 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         ZONA_UTM: 0,
         VAL_ACT: 0,
         ESTADO:1,
+        PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
+        ESTADO_PARTIDA: land.resolutionType==='1'?  '0' :null,
     };
     return predio;
 
