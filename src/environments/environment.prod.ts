@@ -6,8 +6,8 @@ export const environment = {
     apiUrl: host + 'api/v1',
     portalUrl: 'https://ws.mineco.gob.pe/portaldf',
     customViewerUrl: 'https://ws.mineco.gob.pe/portaldf/apps/webappviewer',
-    mancartoUrl: 'https://ws.mineco.gob.pe/portaldfvisor/mancarto', // habilitar en prod
-    //mancartoUrl: 'https://vmd120205.contaboserver.net/widgets/mancarto',
+    //mancartoUrl: 'https://ws.mineco.gob.pe/portaldfvisor/mancarto', // habilitar en prod
+    mancartoUrl: 'https://vmd120205.contaboserver.net/widgets/mancarto',
     mediaUrl: host + 'media',
     exportUrl: host + 'export',
     captcha: '6LcBOVAhAAAAAO9zd3JZ6EnXUI2YJW8xfxuSF5Sv',
@@ -19,7 +19,7 @@ export const environment = {
     versionCodigo1 :1,
     versionCodigo2 :2,
     versionCodigo3 :20,
-     redirect: 'https://apps9.mineco.gob.pe/plataformaCF/catastrofront'
+     redirect: ''
 
 };
 
