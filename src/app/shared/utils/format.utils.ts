@@ -220,9 +220,6 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         AREA: 0,
 
 
-
-      
-
         LADO: land.side,
         RAN_NUM: land.ranNum,
         CUADRA: land.streetBlock,
@@ -236,6 +233,10 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         ESTADO:1,
         PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
         ESTADO_PARTIDA: land.resolutionType==='1'?  '0' :null,
+
+
+
+
     };
     return predio;
 

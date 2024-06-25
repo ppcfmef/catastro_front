@@ -242,6 +242,7 @@ resolutionType: any[];
     this.landRegistryService.saveLand(data).toPromise()
       .then(
         (result) => {
+          result.id = data.id;
            this._landRegistryMapService.landIn = result;
             this._fuseSplashScreenService.hide();
           this.confirmationService.success(
