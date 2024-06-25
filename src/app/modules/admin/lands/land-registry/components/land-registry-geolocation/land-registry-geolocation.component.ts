@@ -2451,7 +2451,7 @@ export class LandRegistryGeolocationComponent
                                 margin: [0, 15, 0, 10],
                                 bold: false,
                                 width: '100%',
-                                text: `${this.toTitleCase(this.district?.name)}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
+                                text:  district?.municipalName ?  district?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${district?.name ?  this.toTitleCase(this.district?.name) : ''  }` + `, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
                             },
                         ],
                     },
@@ -2614,7 +2614,7 @@ export class LandRegistryGeolocationComponent
 
         const wkid = 4326;
 
-        if (data.idPlot) {
+        if (data.idPlot && !data.cup)  {
             const _predio =
                 FormatUtils.formatLandRegistryMapModelToPredio(data);
 
@@ -2691,11 +2691,13 @@ export class LandRegistryGeolocationComponent
                 .catch((error) => {
                     console.error('Error querying features:', error);
                 });
-            /*if(responseJson?.addResults){
-                    const addFeature=responseJson?.addResults[0];
-                    //data.idObjectImg=addFeature.objectId;
-                }*/
-        } else {
+            
+        } else if (data.idPlot && data.cup)  {
+
+
+        }
+        
+        else if (!data.idPlot) {
             const _gestionPredio =
                 FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
 

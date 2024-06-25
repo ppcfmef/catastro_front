@@ -199,7 +199,7 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
 
 
 
-        SEC_EJEC: 0,
+        SEC_EJEC: land.secEjec,
 
         COD_CPU: land.cup,
 
@@ -229,8 +229,8 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         RAN_CPU: land.cup ? parseInt(land.cup.split('-')[0], 10) : null,
         COD_UI: land.cup ? parseInt(land.cup.split('-')[1], 10) : null,
         COD_VER: land.cup ? parseInt(land.cup.split('-')[2], 10) : null,
-        NOM_USER: '',
-        NOM_PC: '',
+        NOM_USER: null,
+        NOM_PC: null,
         ZONA_UTM: 0,
         VAL_ACT: 0,
         ESTADO:1,
