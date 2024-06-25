@@ -643,19 +643,22 @@ export class LandRegistryGeolocationComponent
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result: LandRegistryMap) => {
                 const _landRegistryMapModel = new LandRegistryMapModel(result);
-
+                console.log('_landRegistryMapModel',_landRegistryMapModel);
                 /*if (_landRegistryMapModel.idPlot) {
                     this.saveLandRegistryMap(_landRegistryMapModel);
                 } else if (_landRegistryMapModel.idCartographicImg) {
                     this.updateLandRegistryMap(_landRegistryMapModel);
                 }*/
+               
+                if (!_landRegistryMapModel.id)
+                {this.saveLandRegistryMap(_landRegistryMapModel);}
 
-                if (_landRegistryMapModel.idCartographicImg) {
-                    this.updateLandRegistryMap(_landRegistryMapModel);
+                /*if (_landRegistryMapModel.cup) {
+                    //this.updateLandRegistryMap(_landRegistryMapModel);
                 }
                 else if (_landRegistryMapModel) {
                     this.saveLandRegistryMap(_landRegistryMapModel);
-                }
+                }*/
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
             });
 
@@ -2614,7 +2617,8 @@ export class LandRegistryGeolocationComponent
 
         const wkid = 4326;
 
-        if (data.idPlot && !data.cup)  {
+        if (data.idPlot && !data.id)  {
+            console.log('aqui  se guarda');
             const _predio =
                 FormatUtils.formatLandRegistryMapModelToPredio(data);
 
@@ -2691,9 +2695,10 @@ export class LandRegistryGeolocationComponent
                 .catch((error) => {
                     console.error('Error querying features:', error);
                 });
-            
-        } else if (data.idPlot && data.cup)  {
 
+        } 
+
+        else if (data.idPlot && data.id){
 
         }
         
