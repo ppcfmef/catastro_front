@@ -142,6 +142,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         NOM_USER: '',
         NOM_PC: '',
         ZONA_UTM: 0,
+        
         /*PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
         ESTADO_PARTIDA: land.resolutionType==='1'?  0:null,*/
     };
@@ -233,7 +234,7 @@ public static  formatLandRegistryMapModelToPredio(land: LandRegistryMapModel):  
         ESTADO:1,
         PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
         ESTADO_PARTIDA: land.resolutionType==='1'?  '0' :null,
-
+        id_lote_sirv : land.idLotePuerta
 
 
 

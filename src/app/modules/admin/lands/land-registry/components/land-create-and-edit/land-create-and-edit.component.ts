@@ -168,6 +168,7 @@ resolutionType: any[];
         this._fuseSplashScreenService.show();
         this._landRegistryMapService.createCpu(data).toPromise()
         .then((result) => {
+            result.origen= 'registro_predios';
             this.saveLandApi(result);
         });
         }else {

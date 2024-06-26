@@ -87,6 +87,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     loteUrbanoPuerta: string;
     manzanaUrbanaPuerta: string;
     idLoteP: number;
+    origen?: string;
     //owner?: number;
  
     /*applications: any[];
@@ -176,6 +177,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         this.loteUrbanoPuerta = l?.loteUrbanoPuerta;
         this.manzanaUrbanaPuerta = l?.manzanaUrbanaPuerta;
         this.idLoteP = l?.idLoteP;
+        this.origen = l?.origen;
        /* this.applications = l?.applications;
         this.landsAffectedApplications=l?.landsAffectedApplications;*/
     }

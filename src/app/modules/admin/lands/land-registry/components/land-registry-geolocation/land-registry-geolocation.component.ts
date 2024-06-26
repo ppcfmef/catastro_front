@@ -2649,7 +2649,7 @@ export class LandRegistryGeolocationComponent
             _predio.VAL_ACT =
                 this.lote && this.lote?.VAL_ACT ? this.lote.VAL_ACT : null;
             _predio.ESTADO = 1;
-
+            _predio.COD_LOTE = this.lote.COD_LOTE;
             const urlBase = `${_urlBase.replace(
                 'MapServer',
                 'FeatureServer'
