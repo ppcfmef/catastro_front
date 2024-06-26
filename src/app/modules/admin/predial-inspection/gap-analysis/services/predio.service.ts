@@ -80,7 +80,7 @@ export class PredioService {
         const query2 = layer?.createQuery();
         if (value.UBIGEO && value.RAN_CPU && parseInt(value.RAN_CPU, 10) > 0) {
             query.where = `UBIGEO='${value.UBIGEO}' and RAN_CPU=${value.RAN_CPU}`;
-            query2.where2 = `UBIGEO='${value.UBIGEO}' `;
+            query2.where = `UBIGEO='${value.UBIGEO}' `;
             const maxCPUStatistics = {
                 onStatisticField: 'COD_CPU', // service field for 2015 population
                 outStatisticFieldName: 'max_COD_CPU',
@@ -99,9 +99,10 @@ export class PredioService {
             const response2 = await layer?.queryFeatures(query2);
             const stats = response.features[0].attributes;
             const stats2 = response2.features[0].attributes;
-
             const rangCPU = value.RAN_CPU;
 
+
+            console.log('stats2>>',stats2);
             let unidadImbNew = '0001';
             if (
                 response.features.length > 0 &&
@@ -132,10 +133,11 @@ export class PredioService {
             let v = [11, 10].includes(s % 11) ? s % 11 : 11 - (s % 11);
             v = v > 9 ? 11 - v : v;
 
-            //value.cup = maxCPU.toString();
-            /*value.cup = maxCPU;
-    value.idLandCartographic = idPRED.toString();*/
+            
             res.COD_CPU = `${rangCPU}-${unidadImbNew}-${v}`;
+
+
+
             res.ID_PRED = (
                 stats2.max_ID_PRED ? parseInt(stats2.max_ID_PRED, 10) + 1 : 1
             ).toString();
