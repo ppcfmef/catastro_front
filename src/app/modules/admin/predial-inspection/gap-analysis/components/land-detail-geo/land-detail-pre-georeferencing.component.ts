@@ -211,6 +211,8 @@ export class LandDetailPreGeoreferencingComponent implements OnInit, OnChanges {
                         this._predioService
                             .generateMaxCPU(this.dataPoint.point)
                             .then((res) => {
+
+                                console.log('res generateMaxCPU>>',res);
                                 const predio = new PredioModel(
                                     this.dataPoint.point
                                 );

@@ -644,21 +644,12 @@ export class LandRegistryGeolocationComponent
             .subscribe((result: LandRegistryMap) => {
                 const _landRegistryMapModel = new LandRegistryMapModel(result);
                 console.log('_landRegistryMapModel',_landRegistryMapModel);
-                /*if (_landRegistryMapModel.idPlot) {
-                    this.saveLandRegistryMap(_landRegistryMapModel);
-                } else if (_landRegistryMapModel.idCartographicImg) {
-                    this.updateLandRegistryMap(_landRegistryMapModel);
-                }*/
-               
+            
+
                 if (!_landRegistryMapModel.id)
                 {this.saveLandRegistryMap(_landRegistryMapModel);}
 
-                /*if (_landRegistryMapModel.cup) {
-                    //this.updateLandRegistryMap(_landRegistryMapModel);
-                }
-                else if (_landRegistryMapModel) {
-                    this.saveLandRegistryMap(_landRegistryMapModel);
-                }*/
+            
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
             });
 

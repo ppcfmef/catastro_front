@@ -180,9 +180,11 @@ export class LandRegistryMapService {
         const layer = new FeatureLayer(url);
 
         const query = layer?.createQuery();
+        const query2 = layer?.createQuery();
 
         if(value.ubigeo && value.rangCup && parseInt(value.rangCup,10)>0 ){
             query.where = `UBIGEO='${value.ubigeo}' and RAN_CPU='${value.rangCup}'`;
+            query2.where = `UBIGEO='${value.ubigeo}'`;
 
             const maxCPUStatistics={
                 onStatisticField: 'COD_CPU',  // service field for 2015 population
@@ -199,14 +201,15 @@ export class LandRegistryMapService {
             };
 
 
-        query.outStatistics = [ maxCPUStatistics ,maxIDPREDIOStatistics];
-
+        query.outStatistics = [ maxCPUStatistics ];
+        query2.outStatistics = [ maxIDPREDIOStatistics];
 
 
 
         const response=await layer?.queryFeatures(query);
-
+        const response2=await layer?.queryFeatures(query2);
     const stats = response.features[0].attributes;
+    const stats2 = response2.features[0].attributes;
     const rangCPU=value.rangCup;
     let unidadImbNew = '0001';
     if(response.features.length>0 && stats.max_COD_CPU && stats.max_COD_CPU!==null ){
@@ -232,11 +235,10 @@ export class LandRegistryMapService {
     const maxCPU =`${rangCPU}-${unidadImbNew}-${v}`;
 
 
-    const idPRED =(stats.max_ID_PRED)? parseInt(stats.max_ID_PRED, 10) +1 :1;
+    const idPRED =(stats2.max_ID_PRED)? parseInt(stats2.max_ID_PRED, 10) +1 :1;
     value.cup = maxCPU;
     value.idLandCartographic = idPRED.toString();
         }
-
 
 return value;
 
