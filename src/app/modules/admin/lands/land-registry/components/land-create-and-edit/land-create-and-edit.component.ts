@@ -10,6 +10,7 @@ import { LandRegistryMapService } from '../../services/land-registry-map.service
 import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 
 export enum LandStatus {
   withOutMapping = 0,
@@ -53,17 +54,21 @@ resolutionType: any[];
     private _messageProviderService: MessageProviderService,
 
   ) {
-
+    console.log('this.landRecord',this.landRecord);
+    console.log('this.landMapRecord',this.landMapRecord);
+    
+   
     this.landRegistryService.getMasterDomain()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) =>{
       this.masterDomain = result;
 
-      this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
+      //this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
+    });
+    
+  
 
-    } 
-
-    );}
+  }
 
   get f(): {[key: string]: AbstractControl} {
     return this.formEdit.controls;
@@ -131,6 +136,18 @@ resolutionType: any[];
       manzanaUrbanaPuerta: [this.landMergeRecord?.manzanaUrbanaPuerta],
       idLoteP: [this.landMergeRecord?.idLoteP],
     });
+
+    const params =CommonUtils.deleteKeysNullInObject(  {ubigeo:this.landMergeRecord?.ubigeo, estado_registro:1 });
+
+    this.landRegistryService.getResolution(params)
+    .pipe(takeUntil(this.unsubscribeAll))
+    .subscribe((result) =>{
+      this.resolutionType = result;
+
+      //this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
+    });
+
+
     this.setTitle();
   }
 

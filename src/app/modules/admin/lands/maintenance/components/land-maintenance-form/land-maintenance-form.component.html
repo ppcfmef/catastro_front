@@ -46,7 +46,7 @@
 
             <mat-select formControlName="resolutionType">
                 <mat-option
-                    *ngFor="let domain of masterDomain.resolutionType"
+                    *ngFor="let domain of resolutionType"
                     [value]="domain.id"
                 >
                     {{ domain.name }}</mat-option
