@@ -115,4 +115,8 @@ export class LandRegistryService {
   getMasterDomain(): Observable<MasterDomain> {
     return this.http.get<MasterDomain>(`${this.apiUrl}/master/domain/`);
   }
+
+  getResolution(queryParams: any): Observable<any[]> {
+    return this.http.get<any>(`${this.apiUrl}/master/resolution/`, {params: queryParams});
+  }
 }

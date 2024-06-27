@@ -18,6 +18,7 @@ import { CustomConfirmationService } from 'app/shared/services/custom-confirmati
 import { MatNativeDateModule } from '@angular/material/core';*/
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import { CommonUtils } from 'app/core/common/utils/common.utils';
 const moment = _rollupMoment || _moment;
 
 let _this: any;
@@ -41,6 +42,7 @@ export class LandMaintenanceFormComponent implements OnInit {
     landRecords: LandUI[]=[];
     results: ResultUI[];
     maxDay = new Date();
+    resolutionType: any[];
     public date = new Date();
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -114,17 +116,31 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       init(): void{
+
+        const params = CommonUtils.deleteKeysNullInObject({ubigeo:this.ubigeo, estado_mantenimiento:1 });
+
         this.landRegistryService.getMasterDomain()
         .pipe(takeUntil(this.unsubscribeAll))
         .subscribe((result) => {
             this.masterDomain = result;
             /*console.log('this.masterDomain.resolutionType>>',this.masterDomain.resolutionType);*/
 
-            const indexConstancia=this.masterDomain.resolutionType.findIndex(e=> e.id ==='3');
-            this.masterDomain.resolutionType.splice(indexConstancia,1);
+            //const indexConstancia=this.masterDomain.resolutionType.findIndex(e=> e.id ==='3');
+            //this.masterDomain.resolutionType.splice(indexConstancia,1);
             this.initForm();
             this.toggleRequired();
         });
+
+
+        this.landRegistryService.getResolution(params)
+        .pipe(takeUntil(this.unsubscribeAll))
+        .subscribe((result) =>{
+          this.resolutionType = result;
+    
+          //this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
+        });
+
+
       }
 
       initForm(): void{
