@@ -1695,6 +1695,19 @@
                 stroke="currentColor"
                 d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
         </svg>
+           <svg
+            id="filter_solid"
+            x="480"
+            y="192"
+            viewBox="0 0 24 24">
+            <path
+                fill="currentColor"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
+        </svg>
         <svg
             id="flag"
             x="528"

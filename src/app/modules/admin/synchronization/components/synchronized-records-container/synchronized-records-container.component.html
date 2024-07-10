@@ -1,0 +1,48 @@
+
+<div class="flex flex-col w-full gap-4 flex-auto">
+
+    <form [formGroup]="filtersForm" class="flex w-full flex-col gap-4 mat-form-field-personalized justify-between sm:flex-row">
+
+        <div class="w-full md:w-1/2 lg:w-72">
+            <mat-form-field
+                class="flex-auto w-full">
+                <input class="text-base"
+                    matInput
+                    [placeholder]="'Cod. DJ , Predio o Contribuyente'"
+                    formControlName="search"
+                    (keydown.enter)="filterTable()">
+                <mat-icon
+                    class="icon-size-5"
+                    matSuffix
+                    [svgIcon]="'heroicons_outline:search'">
+                </mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div class="flex justify-between md:justify-end">
+            <button mat-button class="bg-mef-c-filter rounded-sm text mr-4 btn-hover shadow-sm">
+              Filtros
+                <mat-icon
+                    class="icon-size-5 p-1 icon-hover"
+                    [svgIcon]="'feather:filter_solid'">
+                </mat-icon>
+            </button>
+
+            <button mat-button class="bg-mef-c-download rounded-md text shadow-sm">
+                <span class="ml-1">Descargar</span>
+                <mat-icon
+                    class="icon-size-5 "
+                    [svgIcon]="'mat_solid:download'">
+                </mat-icon>
+            </button>
+        </div>
+
+    </form>
+
+    <div [ngClass]=" isLoading ? 'wrapper_loader--loading' : 'wrapper_loader'">
+        <app-table-synchronizations-processed [dataSource]="tableSinchronizationsProcessed" class="w-full"></app-table-synchronizations-processed>
+        <span class="loader"></span>
+    </div>
+
+
+</div>
