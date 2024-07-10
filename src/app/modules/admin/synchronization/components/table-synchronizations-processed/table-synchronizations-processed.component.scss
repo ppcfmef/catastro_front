@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.card {
+  width: 100%;
+  max-height: calc(100vh - 360px);
+}
+
+
+.synchronized {
+    color: #10B981;
+    background: #E8FFF3;
+}
+
+.not-synchronized {
+    color: #F1416C;
+    background: #FFF5F8;
+}
+
+.default {
+    color: #2e2d2d;
+    background:#ececec;
+    ;
+}

@@ -118,6 +118,9 @@ const config = {
             'mef-btn-success':"#007bff",
             'mef-btn-success-green':"#84c157",
             'mef-alert': "#d97706",
+            'mef-c-filter':" #F1FAFF",
+            'mef-c-download':"#F5F8FA",
+
         },
         fontSize: {
             'xs'  : '0.625rem',
