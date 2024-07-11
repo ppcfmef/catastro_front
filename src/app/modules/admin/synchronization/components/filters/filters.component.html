@@ -1,0 +1,58 @@
+<button mat-button
+        #filtersOrigin
+        class="bg-mef-c-filter rounded-sm text btn-hover shadow-sm"
+        (click)="openFilters()">
+    Filtros
+      <mat-icon
+          class="icon-size-5 p-1 icon-hover"
+          [svgIcon]="'feather:filter_solid'">
+      </mat-icon>
+  </button>
+
+  <!-- Shortcuts panel -->
+<ng-template #filtersPanel>
+    <!-- <div class="fixed inset-0 sm:static sm:inset-auto flex flex-col sm:min-w-90 sm:w-90 sm:rounded-2xl overflow-hidden shadow-lg">
+
+        <div class="relative flex flex-col flex-auto sm:max-h-120 -mb-px overflow-y-auto bg-card">
+            Filtros
+        </div>
+    </div> -->
+
+    <div class="flex flex-col gap-4 rounded-md shadow-m bg-white w-[300px] filter-secondary">
+
+        <h1 class="px-5 py-4 font-bold border-b-2 border-b-gray-100">Filtros</h1>
+
+        <section class="flex flex-col gap-3 px-5 pb-4 pt-2">
+            <mat-form-field class="flex-auto">
+                <mat-label>Estado:</mat-label>
+                <mat-select [value] = "'0'">
+                    <mat-option value="0">Todos</mat-option>
+                    <mat-option value="1">Sincronizado</mat-option>
+                    <mat-option value="2">No Sincronizado</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="flex flex-col gap-2 ">
+                <label for="picker" class="font-medium opacity-90">Elige un rango de fecha:</label>
+                <mat-form-field appearance="fill">
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                      <input matInput matStartDate formControlName="start" placeholder="Fecha inicio">
+                      <input matInput matEndDate formControlName="end" placeholder="Fecha fin">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+
+                    <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                    <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                  </mat-form-field>
+            </div>
+
+            <div class="flex justify-end gap-4">
+                <button mat-button class="bg-mef-c-filter rounded-md btn-hover" (click)="clearFilters()">
+                    <span class="text-[#7e8299] icon-hover ">Limpiar</span></button>
+                <button mat-button class="button-primary rounded-md shadow-sm" (click)="applyFilters()">Filtrar</button>
+            </div>
+        </section>
+
+    </div>
+</ng-template>

@@ -1,0 +1,20 @@
+
+
+:host {
+  display: block;
+}
+
+.btn-hover:hover {
+    color: #009ef7;
+}
+
+.btn-hover:hover .icon-hover {
+    color: #009ef7 !important;
+  }
+
+.shadow-m {
+    box-shadow: -1px 0px 20px 1px rgba(82, 63, 105, 0.1490196078);
+}
+
+
+

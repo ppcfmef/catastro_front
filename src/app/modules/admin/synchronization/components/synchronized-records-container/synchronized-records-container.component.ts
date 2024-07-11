@@ -10,6 +10,7 @@ import { stat } from 'fs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject, switchMap, takeUntil, filter, distinctUntilChanged } from 'rxjs';
 import { debounce } from 'lodash';
+import { FiltersComponent } from '../filters/filters.component';
 
 @Component({
     selector: 'app-synchronized-records-container',
@@ -21,8 +22,10 @@ import { debounce } from 'lodash';
         MatInputModule,
         TextFieldModule,
         MatButtonModule,
+        ReactiveFormsModule,
         TableSynchronizationsProcessedComponent,
-        ReactiveFormsModule],
+        FiltersComponent,
+        ],
     templateUrl: './synchronized-records-container.component.html',
     styleUrls: ['./synchronized-records-container.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +46,7 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
             codigoDeclaracionJurada: '123457444',
             codigoPredio: '73042128-0005-1',
             codigoContribuyente: '0853',
-            falloDescripcion: 'Fallo de conexción',
+            falloDescripcion: 'Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción',
             secuenciaEjecutora: 'Tarapoto',
             fecha: '17/18/2024 23:17:04',
             estado: 'Sincronizado'

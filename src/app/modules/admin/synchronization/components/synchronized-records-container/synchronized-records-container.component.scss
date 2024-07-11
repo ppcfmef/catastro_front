@@ -1,3 +1,4 @@
+@import 'styles/mixins';
 
 .btn-hover:hover {
     color: #009ef7;
@@ -7,3 +8,6 @@
     color: #009ef7;
   }
 
+  .btn-basic {
+    @include btn(var(--mef-c-go))
+}
