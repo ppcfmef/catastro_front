@@ -9,24 +9,23 @@
     --mef-c-red: #db4b4b;
     --mef-c-purple: #62626b;
     --mef-c-grey: #656364;
-    --mef-c-confirm: #45B1FF;
-    --mef-c-success: #4CAF50;
+    --mef-c-confirm: #45b1ff;
+    --mef-c-success: #4caf50;
     --mef-c-danger: #ad4c4c;
-    --mef-c-blue-100: #E0E9F4;
-    --mef-text-secondary: #0056AC;
-    --mef-c-clean: #F28500;
-    --mef-c-header:#007bff;
-    --mef-c-header-secondary:#7e9098;
-    --mef-c-inactive: #C0C0C0;
-    --mef-c-btn-secondary: #005792 ;
-    --mef-c-btn-accion: #02355c ;
-    --mef-c-cancel:#df1616;
-    --mef-c-accept: #4CAF50;
-    --mef-cancel-btn-secondary: #F44336;
-    --mef-alert: #FFA000;
-    --mef-c-go:#007bff;
-    --mef-c-filter: #F1FAFF;
-
+    --mef-c-blue-100: #e0e9f4;
+    --mef-text-secondary: #0056ac;
+    --mef-c-clean: #f28500;
+    --mef-c-header: #007bff;
+    --mef-c-header-secondary: #7e9098;
+    --mef-c-inactive: #c0c0c0;
+    --mef-c-btn-secondary: #005792;
+    --mef-c-btn-accion: #02355c;
+    --mef-c-cancel: #df1616;
+    --mef-c-accept: #4caf50;
+    --mef-cancel-btn-secondary: #f44336;
+    --mef-alert: #ffa000;
+    --mef-c-go: #007bff;
+    --mef-c-filter: #f1faff;
 }
 
 .bg-mef {
@@ -70,13 +69,12 @@
 }
 
 .c-confirm {
-    color: #45B1FF !important;
+    color: #45b1ff !important;
 }
 
 .c-white {
     color: white;
 }
-
 
 .touched {
     cursor: pointer;
@@ -118,7 +116,6 @@ Personalizacion
 .header-table-default {
     table {
         border-collapse: inherit !important;
-
     }
     .mat-mdc-header-row {
         position: sticky;
@@ -146,19 +143,17 @@ Personalizacion
     padding-left: 16px !important;
 }
 
-
 .mdc-data-table__cell:nth-child(1) {
     padding-left: 16px !important;
 }
 
 .snack-success {
-    background-color: #4CAF50 !important;
+    background-color: #4caf50 !important;
     color: white !important;
 
     mat-icon {
         color: white !important;
     }
-
 }
 
 .snack-error {
@@ -188,12 +183,35 @@ mat-option.option-multiple-lines {
         /* Default style tweaks and enhancements */
         .mat-mdc-text-field-wrapper {
             border-width: 0px !important;
-            background-color: #F5F8FA !important;
-
+            background-color: #f5f8fa !important;
+            .mat-mdc-form-field-flex {
+                .mat-mdc-form-field-infix {
+                    min-height: 47px !important;
+                }
+            }
         }
     }
 }
 
+.filter-secondary {
+    .mat-mdc-form-field.mat-form-field-appearance-fill {
+        /* Default style tweaks and enhancements */
+        .mat-mdc-text-field-wrapper {
+            border-width: 0px !important;
+            background-color: #f1faff !important;
+            .mat-mdc-form-field-flex {
+                .mat-mdc-form-field-infix {
+                    min-height: 47px !important;
+                }
+            }
+        }
+    }
+}
+
+.button-primary {
+    color: #ffffff !important;
+    background-color: #009ef7 !important;
+}
 
 .wrapper_loader {
     width: 100%;
@@ -255,51 +273,40 @@ mat-option.option-multiple-lines {
     display: none;
 }
 
- @keyframes mulShdSpin {
+
+@keyframes mulShdSpin {
     0%,
     100% {
-        box-shadow: 0 -3em 0 0.2em,
-            2em -2em 0 0em, 3em 0 0 -1em,
-            2em 2em 0 -1em, 0 3em 0 -1em,
-            -2em 2em 0 -1em, -3em 0 0 -1em,
-            -2em -2em 0 0;
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em,
+            0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
     }
     12.5% {
-        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em,
-            3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em,
-            -2em 2em 0 -1em, -3em 0 0 -1em,
-            -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em,
+            0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
     }
     25% {
-        box-shadow: 0 -3em 0 -0.5em,
-            2em -2em 0 0, 3em 0 0 0.2em,
-            2em 2em 0 0, 0 3em 0 -1em,
-            -2em 2em 0 -1em, -3em 0 0 -1em,
-            -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0,
+            0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
     }
     37.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-            3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em,
-            -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em,
+            0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
     }
     50% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-            3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em,
-            -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em,
+            0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
     }
     62.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0,
-            -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+            0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
     }
     75% {
-        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em,
-            3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
-            -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em,
+            2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em,
+            -2em -2em 0 0;
     }
     87.5% {
-        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em,
-            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
-            -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+            0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
     }
 }

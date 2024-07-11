@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleCha
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-table-synchronizations-processed',
@@ -11,7 +14,10 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
         CommonModule,
         MatTableModule,
         MatPaginatorModule,
-        FuseScrollbarModule
+        FuseScrollbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
     ],
     templateUrl: './table-synchronizations-processed.component.html',
     styleUrls: ['./table-synchronizations-processed.component.scss'],
@@ -24,7 +30,7 @@ export class TableSynchronizationsProcessedComponent  implements OnChanges  , On
     tableDataSource;
     pageIndex = 0;
     pageSize = 10;
-    displayedColumns: string[] = ['Nro','codigoDeclaracionJurada', 'codigoPredio', 'codigoContribuyente', 'falloDescripcion','secuenciaEjecutora', 'fecha', 'estado'];
+    displayedColumns: string[] = ['Nro','codigoDeclaracionJurada', 'codigoPredio', 'codigoContribuyente', 'falloDescripcion','secuenciaEjecutora', 'fecha', 'estado','actions'];
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
