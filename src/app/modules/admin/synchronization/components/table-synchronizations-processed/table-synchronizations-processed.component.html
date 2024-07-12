@@ -1,6 +1,6 @@
 <div  class="overflow-x-auto w-full card header-table-default">
     <table
-        class="w-full bg-transparent"
+        class="w-full bg-transparent "
         mat-table
         matSort
         [dataSource]="tableDataSource"
@@ -98,10 +98,12 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-            <button mat-icon-button (click)="onAction(element)"
-                matTooltip="Sincronizar">
-                <mat-icon svgIcon="mat_solid:loop"></mat-icon>
-            </button>
+                <ng-container *ngIf="element.estado==='No Sincronizado'">
+                    <button mat-icon-button (click)="onAction(element)"
+                        matTooltip="Sincronizar">
+                        <mat-icon svgIcon="mat_solid:loop"></mat-icon>
+                    </button>
+                </ng-container>
             </td>
         </ng-container>
 
