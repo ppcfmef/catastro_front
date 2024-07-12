@@ -3,7 +3,7 @@
 
     <form [formGroup]="filtersForm" class="flex w-full flex-col gap-4 mat-form-field-personalized justify-between sm:flex-row">
 
-        <div class="w-full md:w-1/2 lg:w-72">
+        <div class="w-full md:w-5/12 lg:w-72">
             <mat-form-field
                 class="flex-auto w-full">
                 <input class="text-base"
@@ -19,11 +19,11 @@
             </mat-form-field>
         </div>
 
-        <div class="flex justify-start flex-wrap gap-2 md:justify-end md:gap-4">
+        <div class="flex gap-2 md:justify-end md:gap-4">
 
             <app-filters></app-filters>
 
-            <button mat-button class="bg-mef-c-download rounded-md text shadow-sm">
+            <button mat-button class="bg-mef-c-download rounded-md text shadow-sm ">
                 <span class="ml-1">Descargar</span>
                 <mat-icon
                     class="icon-size-5 "
