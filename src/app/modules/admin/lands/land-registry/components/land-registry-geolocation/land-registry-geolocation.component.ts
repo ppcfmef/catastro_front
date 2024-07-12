@@ -272,7 +272,7 @@ export class LandRegistryGeolocationComponent
                             type: 'simple-fill',
                             color: [205, 102, 102, 0.5],
                             style: 'solid',
-                        
+
                             outline: {
                                 color: [205, 102, 102, 0.8],
                                 width: 0.5,
@@ -287,7 +287,7 @@ export class LandRegistryGeolocationComponent
                             type: 'simple-fill',
                             color: [68, 101, 137, 0.5],
                             style: 'solid',
-                       
+
                             outline: {
                                 color: [68, 101, 137, 0.8],
                                 width: 0.5,
@@ -335,7 +335,7 @@ export class LandRegistryGeolocationComponent
                 symbol: {
                     type: 'text', // autocasts as new TextSymbol()
                     color: 'black',
-                  
+
                     font: {
                         // autocast as new Font()
                         family: 'arial',
@@ -370,7 +370,7 @@ export class LandRegistryGeolocationComponent
                     color: 'blue',
                     haloColor: 'white',
                     haloSize: 1,
-                 
+
                     font: {
                         // autocast as new Font()
                         family: 'arial',
@@ -512,7 +512,7 @@ export class LandRegistryGeolocationComponent
             this.cancelEvent = changes['cancelEvent'].currentValue;
             this.onCancel();
 
-           
+
         }*/
     }
 
@@ -581,7 +581,7 @@ export class LandRegistryGeolocationComponent
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((land: LandRegistryMap) => {
-               
+
                 if (land) {
                     this.onCancel();
                     this.landRegistryMapModel = new LandRegistryMapModel(land);
@@ -603,7 +603,7 @@ export class LandRegistryGeolocationComponent
                             symbol,
 
                         );
-                        
+
                         if (this.view) {
                             this.view.center = [land.longitude, land.latitude];
                             this.view.zoom = 19;
@@ -644,12 +644,12 @@ export class LandRegistryGeolocationComponent
             .subscribe((result: LandRegistryMap) => {
                 const _landRegistryMapModel = new LandRegistryMapModel(result);
                 console.log('_landRegistryMapModel',_landRegistryMapModel);
-            
+
 
                 if (!_landRegistryMapModel.id)
                 {this.saveLandRegistryMap(_landRegistryMapModel);}
 
-            
+
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
             });
 
@@ -1129,7 +1129,7 @@ export class LandRegistryGeolocationComponent
                                                                     if (hasApplications){
                                                                         const landRecord = landRecords.filter( r=> ( r.hasApplications ===true) )[0];
                                                                         const application =landRecord.applications;
-                                                                        
+
                                                                         const dialogRef2 =
                                                                         this.confirmationService.errorInfo(
                                                                             'Error de registro',
@@ -1139,7 +1139,7 @@ export class LandRegistryGeolocationComponent
 
                                                                         dialogRef2.afterClosed().toPromise().then((option)=>{
                                                                             this.onCancel();
-                                                                           
+
                                                                         });
                                                                         return;
 
@@ -1147,8 +1147,8 @@ export class LandRegistryGeolocationComponent
 
                                                                     }
 
-                                                                    
-                                                                    
+
+
                                                                     const arrayService = landRecords.map((l) => {
                                                                         return this._landOwnerService
                                                                             .getLandDetail(
@@ -1238,26 +1238,26 @@ export class LandRegistryGeolocationComponent
                                                                                                     const puntosLote = this.layersInfo.find(
                                                                                                         l => l.id === 0
                                                                                                     )?.featureLayer;
-            
+
                                                                                                     /*
                                                                                                     console.log('this.lote>>',this.lote);*/
-            
+
                                                                                                     puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
-            
-            
-            
-            
+
+
+
+
                                                                                                     const puntosPredio = this.layersInfo.find(
                                                                                                         l => l.id === -1
                                                                                                     )?.featureLayer;
-            
+
                                                                                                     puntosPredio['definitionExpression'] = '1<>1';
-            
-            
+
+
                                                                                                     const manzanaUrbana = this.layersInfo.find(
                                                                                                         l => l.id === 3
                                                                                                     )?.featureLayer;
-            
+
                                                                                                     const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
                                                                                                     MapUtils.zoomToFeature(
                                                                                                         this.view,
@@ -1272,17 +1272,17 @@ export class LandRegistryGeolocationComponent
 
 
                                                                                                 }
-                                                                                            
+
                                                                                                 else{
                                                                                                     this.onCancel();
                                                                                                 }
-                                                                                            
+
                                                                                             });
-                                                                                       
 
 
 
-                                                                                        
+
+
 
                                                                                     }
 
@@ -1297,7 +1297,7 @@ export class LandRegistryGeolocationComponent
 
 
                                                                                 } else {
-                                                                         
+
 
                                                                                     this.onCancel();
                                                                                 }
@@ -1310,7 +1310,7 @@ export class LandRegistryGeolocationComponent
                                                                 else {
                                                                     dialogRef =
                                                                     /*
-                                                                    
+
                                                                     this.confirmationService.info(
                                                                         'Error del predio',
                                                                     `El predio  ${featurePredio
@@ -1413,15 +1413,15 @@ export class LandRegistryGeolocationComponent
                                                                 )?.featureLayer;
 
                                                                 const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
-                                                                
+
                                                                 MapUtils.zoomToFeature(
                                                                     this.view,
                                                                     manzanaUrbana,
                                                                     where
                                                                 ).then(()=>{
-                                                                    
+
                                                                     this.view.zoom = this.view.zoom - 1;
-                                                                    
+
                                                                 });
 
                                                                 //this.view.zoom = this.view.zoom - 1;
@@ -1621,7 +1621,7 @@ export class LandRegistryGeolocationComponent
                                             this
                                                 .view
                                         ) {
-                                          
+
                                             this.view.graphics.removeAll();
                                         }
 
@@ -2207,7 +2207,7 @@ export class LandRegistryGeolocationComponent
         const streetType = land.uuType
             ? this.masterDomain.codStreet.find(e => e.id === land?.streetType)
             : null;
-        //console.log('type;;',uuType)
+        console.log('district;;',district)
 
         if (view) {
             view.center = [land.longitude, land.latitude];
@@ -2280,7 +2280,7 @@ export class LandRegistryGeolocationComponent
                                 width: '70%',
                                 stack: [
                                     'DECLARACIÓN JURADA DE UBICACIÓN DE PREDIO  \n CATASTRO FISCAL',
-                                    { text:  district?.municipalName ?  district?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${district?.name ?  district?.name : ''}`, 
+                                    { text:  district?.municipalName ?  district?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${district?.name ?  district?.name : ''}`,
                                     style: 'subheader'
                                     },
                                     //{ text: `MUNICIPALIDAD DE ${district?.name ?  district?.name : ''}`, style: 'subheader' },
@@ -2313,7 +2313,7 @@ export class LandRegistryGeolocationComponent
                             {
                                 style: 'p2',
                                 width: '100%',
-                                text: ['DECLARO BAJO JURAMENTO : Que el predio con dirección ',
+                                text: ['DECLARO BAJO JURAMENTO : Tener un predio ubicado en el',
                                     // eslint-disable-next-line max-len
                                     { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.urbanLotNumber, ', Lote ')} ${this.getFrase(land.block, ',Bloque ')} ${this.getFrase(land.municipalNumber, ',Nro Puerta ')} ${this.getFrase(land.apartmentNumber, ',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}`, style: 'textR' },
 
@@ -2445,7 +2445,8 @@ export class LandRegistryGeolocationComponent
                                 margin: [0, 15, 0, 10],
                                 bold: false,
                                 width: '100%',
-                                text:  district?.municipalName ?  district?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${district?.name ?  this.toTitleCase(this.district?.name) : ''  }` + `, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')}`,
+                                text: `${district.name ? this.toTitleCase(this.district?.name) : ''},${moment(new Date()).format('DD [de] MMMM [del] YYYY')
+                                .replace(moment(new Date()).format('MMMM'), this.toTitleCase(moment(new Date()).format('MMMM')))}`,
                             },
                         ],
                     },
@@ -2687,12 +2688,12 @@ export class LandRegistryGeolocationComponent
                     console.error('Error querying features:', error);
                 });
 
-        } 
+        }
 
         else if (data.idPlot && data.id){
 
         }
-        
+
         else if (!data.idPlot) {
             const _gestionPredio =
                 FormatUtils.formatLandRegistryMapModelToGestionPredio(data);
