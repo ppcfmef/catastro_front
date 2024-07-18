@@ -52,16 +52,16 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
 
     });
 
-    this._landRegistryMapService.getEstado().subscribe((estado: any)=>{
+    // this._landRegistryMapService.getEstado().subscribe((estado: any)=>{
 
-      if (estado === Estado.INICIAR  ){
-        this.estadoIniciar = true;
-      }
-
-      else{
-        this.estadoIniciar = false;
-      }
-    });
+    //     console.log(estado, 'ESTADO');
+    //   if (estado === Estado.INICIAR  ){
+    //     this.estadoIniciar = true;
+    //   }
+    //   else{
+    //     this.estadoIniciar = false;
+    //   }
+    // });
 
   }
 
@@ -102,7 +102,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
       };
       this.searchOwnerbyDocument(searchText);
     }*/
-    
+
   }
   searchOwnerbyDocument(searchText: any): void{
     this.showFormEdit = false;
