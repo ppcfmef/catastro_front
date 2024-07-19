@@ -12,7 +12,7 @@
                     <th mat-header-cell *matHeaderCellDef>DNI</th>
                     <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
                 </ng-container>
-    
+
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Nombre</th>
                     <td mat-cell *matCellDef="let element">
@@ -29,14 +29,7 @@
         class="flex items-center justify-center sm:justify-end py-4 space-x-3 dark:bg-black dark:bg-opacity-10"
         [ngClass]="owners && owners.length > 0 ? 'sm:justify-end' : 'sm:justify-center'"
     >
-        <button
-            mat-raised-button
-            color="primary"
-            class="bg-danger"
-            (click)="close()"
-        >
-            <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cancelar
-        </button>
+        <button mat-raised-button color="warn" class="rounded-md" (click)="close()" > Cancelar</button>
     </div>
     </ng-container>
 
@@ -46,17 +39,26 @@
 <ng-template #noPropietario>
 
     <ng-container *ngIf="owners && owners.length > 0; else withoutTaxpayer">
-        <h1 mat-dialog-title class="dialog-title">
-            Ya existe un Titular/Contribuyente, asignado
-        </h1>
-        <br />
-        <div mat-dialog-content>
-            <table mat-table [dataSource]="dataSource" class="table-base">
+        <div class="flex items-center p-4 bg-[#fef2f2] rounded-md mb-2 gap-4 border-[#f87171] border-[1px] ">
+            <mat-icon svgIcon="heroicons_solid:exclamation-triangle" class="text-[#dc2626] icon-size-10 pt-1"></mat-icon>
+            <div class="flex flex-col">
+                <h1 mat-dialog-title class="text-[#7f1d1d] opacity-100 font-semibold pb-1">
+                   Alerta :  Ya existe un Titular/Contribuyente asignado.
+                </h1>
+                <p class="text-[#b91c1c]"> Por favor verifique si el predio que desea registrar fue transferido, si es el caso cancele y diríjase al <strong>
+                    <a target="_blank" matTooltip="Sistema de Recaudación Tributaria Municipal" class="underline cursor-pointer pl-1" href="https://authorizesrtm.mef.gob.pe/auth/realms/mef-comp5/protocol/openid-connect/auth?client_id=jwtClient&redirect_uri=https%3A%2F%2Fsrtm.mef.gob.pe%2Fnsrtmcontainer%2Fnsrtmcajapagos%2Fcontrol-agencia&state=536e07cb-9340-4c43-8dd1-7024c00e5cc8&response_mode=fragment&response_type=code&scope=openid&nonce=254864bd-dee5-4561-9c6c-19ff35928bb8">
+                        SRTM
+                  </a></strong>.</p>
+            </div>
+
+        </div>
+        <div mat-dialog-content class="header-table-modal pb-3 container">
+            <table mat-table [dataSource]="dataSource" class="w-full bg-transparent">
                 <ng-container matColumnDef="dni">
                     <th mat-header-cell *matHeaderCellDef>DNI</th>
                     <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
                 </ng-container>
-    
+
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Nombre</th>
                     <td mat-cell *matCellDef="let element">
@@ -69,37 +71,33 @@
             </table>
         </div>
     </ng-container>
-    
+
     <ng-template #withoutTaxpayer>
         <h1 mat-dialog-title class="text-center text-lg font-bold">
             Ya existe registro de un predio sobre este lote.
         </h1>
     </ng-template>
-    
+
     <div>
-        <h2 mat-dialog-title [ngClass]="owners && owners.length > 0 ? 'dialog-title' : 'text-center p-4'">
+        <h2 mat-dialog-title [ngClass]="owners && owners.length > 0 ? 'font-semibold' : 'text-center p-4'">
             Desea continuar con el registro del predio?
         </h2>
         <div
-            class="flex items-center justify-center sm:justify-end py-4 space-x-3 dark:bg-black dark:bg-opacity-10"
+            class="flex items-center justify-center sm:justify-end py-4 space-x-3"
             [ngClass]="owners && owners.length > 0 ? 'sm:justify-end' : 'sm:justify-center'"
         >
-            <button mat-raised-button color="primary" (click)="continuar()">
-                Continuar
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                class="bg-danger"
-                (click)="close()"
-            >
-                <mat-icon svgIcon="heroicons_outline:x"></mat-icon> Cancelar
-            </button>
+
+            <div class="w-full flex items-center justify-end gap-4">
+                <button mat-stroked-button color="primary" class="rounded-md text-[#067dfc]" (click)="continuar()">Continuar</button>
+                <button mat-raised-button color="warn" class="rounded-md" (click)="close()" > Cancelar</button>
+            </div>
         </div>
+
+
         <!-- <div mat-dialog-actions align="end" class="flex flex-row space-x-4" >
            </div>-->
     </div>
-    
+
 
 </ng-template>
 

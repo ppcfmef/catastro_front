@@ -1,0 +1,14 @@
+@import "styles/mixins";
+
+:host ::ng-deep{
+    .mat-mdc-outlined-button:not([disabled=false]){
+        border-color: #067dfc !important;
+
+    }
+
+}
+
+.container {
+    max-height: calc(100vh - 500px);
+    overflow-x: auto !important;
+}
