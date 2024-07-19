@@ -200,9 +200,9 @@
 
             </ng-container>
             <div class="w-full flex items-center justify-end gap-4">
-                <button mat-raised-button class="bg-mef-btn-success text-white rounded-md" (click)="saveLand()" *ngIf="landActive"  >
-                    Guardar</button>
                 <button mat-stroked-button color="warn" class="rounded-md" (click)="destroyForm()"  > {{ (isEdit && landActive)? 'Cancelar':'Cerrar' }} </button>
+                <button mat-raised-button class="bg-mef-btn-success text-white rounded-md" (click)="saveLand()" *ngIf="landActive" >
+                    Guardar</button>
             </div>
         </div>
     </form>

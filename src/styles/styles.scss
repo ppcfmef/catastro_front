@@ -134,6 +134,24 @@ Personalizacion
     }
 }
 
+.header-table-modal{
+    .mat-mdc-header-row {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    table {
+        border-collapse: inherit !important;
+    }
+    .mat-mdc-header-cell {
+        border-bottom: 2px solid #b7b8c4 !important;
+        background: white !important;
+        color: #000000 !important;
+        font-size: 14px !important;
+        z-index: 11;
+    }
+}
+
 .mdc-data-table__cell {
     padding: 0 !important;
     overflow-wrap: break-word !important;
