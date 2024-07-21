@@ -121,7 +121,7 @@ export class LandRegistryGeolocationComponent
         {
             id: 0,
             title: 'Cartografia Fiscal',
-            children: [2, 3, 0, -1],
+            children: [2, 3, 4,0, -1],
         },
 
         {
@@ -208,7 +208,21 @@ export class LandRegistryGeolocationComponent
         styleName: 'Esri2DPointSymbolsStyle',
         width: '20px'
 
-    };*/
+    };
+    
+    
+    
+    var popupTemplate = new PopupTemplate({
+  title: "{Name}",
+  content: `
+    <b>Nombre:</b> {Name} <br>
+    <b>Tipo:</b> {Type} <br>
+    <b>Descripción:</b> {Description} <br>
+    <img src="{ImageUrl}" alt="{Name}" width="200" height="150">
+  `
+});
+    
+    */
 
     layersInfo = [
         {
@@ -221,10 +235,164 @@ export class LandRegistryGeolocationComponent
             featureLayer: null,
             definitionExpression: 'ESTADO=1',
             featureTable: null,
-            popupTemplate: null,
+            popupTemplate: {
+                title: 'Predios',
+
+                content: [{
+                    type: 'fields',
+                    
+
+
+                    fieldInfos: [{
+                      fieldName: "COD_PRE",
+                      label: "Cod. Predio",
+                      visible: true
+                    }, {
+                      fieldName: "COD_CPU",
+                      label: "cpu",
+                      visible: true
+                    }
+                    , {
+                        fieldName: "TIPO_UU",
+                        label: "Tipo de unidad urb.",
+                        visible: true
+                      }
+
+                     
+                    , {
+                        fieldName: "NOM_UU",
+                        label: "Nombre de unidad urb.",
+                        visible: true
+                      }
+                  
+                    
+                    , {
+                      fieldName: "MZN_URB",
+                      label: "Manzana urb.",
+                      visible: true
+                    }
+                
+                    , {
+                        fieldName: "LOT_URB",
+                        label: "Lote urb.",
+                        visible: true
+                      }
+
+                      , {
+                        fieldName: "TIP_VIA",
+                        label: "Tipo de via",
+                        visible: true
+                      }
+                      
+                      , {
+                        fieldName: "NOM_VIA",
+                        label: "Nombre de via",
+                        visible: true
+                      }
+
+                      
+                      , {
+                        fieldName: "NOM_ALT",
+                        label: "Nombre de via alt.",
+                        visible: true
+                      }
+
+                      
+                      , {
+                        fieldName: "NUM_MUN",
+                        label: "Número domiciliaro",
+                        visible: true
+                      }
+                      ,
+                      {
+                        fieldName: "NUM_ALT ",
+                        label: "Número alterno",
+                        visible: true
+                      }
+                      ,
+                      {
+                        fieldName: "BLOCK",
+                        label: "Block",
+                        visible: true
+                      } ,
+                      {
+                        fieldName: "NUM_DEP",
+                        label: "Número de departamento",
+                        visible: true
+                      } ,
+                      {
+                        fieldName: "INTERIOR",
+                        label: "Interior",
+                        visible: true
+                      },
+                      {
+                        fieldName: "PISO",
+                        label: "Piso",
+                        visible: true
+                      },
+                      {
+                        fieldName: "KM",
+                        label: "km",
+                        visible: true
+                      },
+                      {
+                        fieldName: "REFEREN",
+                        label: "Referencia",
+                        visible: true
+                      },
+                      {
+                        fieldName: "CUADRA",
+                        label: "Cuadra",
+                        visible: true
+                      },
+                      {
+                        fieldName: "LADO",
+                        label: "Lado",
+                        visible: true
+                      },
+                      {
+                        fieldName: "PARTIDA",
+                        label: "Partida registral",
+                        visible: true
+                      }
+                      ,
+                      {
+                        fieldName: "ANO_CART",
+                        label: "Año de info",
+                        visible: true
+                      }
+                      ,
+                      {
+                        fieldName: "FUENTE",
+                        label: "Origen de info.",
+                        visible: true
+                      }
+                      ,
+                      {
+                        fieldName: "COD_CUC",
+                        label: "CUC",
+                        visible: true
+                      }
+
+                      ,
+                      {
+                        fieldName: "VAL_ACT",
+                        label: "Arancel",
+                        visible: true
+                      }
+
+                ]
+                  }]
+                /*content: `
+                 holasss
+                `*/
+              },
+
+            
             utm: null,
             projection: null,
             visible: true,
+            popupEnabled: true
         },
 
         {
@@ -241,6 +409,7 @@ export class LandRegistryGeolocationComponent
             utm: null,
             projection: null,
             visible: true,
+            popupEnabled: false,
         },
         {
             title: 'Polígono de Lotes',
@@ -314,6 +483,7 @@ export class LandRegistryGeolocationComponent
                     expression: '$feature.LOT_URB',
                 },
             },
+            popupEnabled: false,
         },
 
         {
@@ -386,7 +556,7 @@ export class LandRegistryGeolocationComponent
         },
 
         {
-            title: 'Unidad Urbana',
+            title: 'Unidades Urbanas',
             id: 4,
             idServer: 6,
             urlBase:
@@ -398,7 +568,7 @@ export class LandRegistryGeolocationComponent
             popupTemplate: null,
             utm: null,
             projection: null,
-            visible: false,
+            visible: true,
         },
 
         {
@@ -545,8 +715,8 @@ export class LandRegistryGeolocationComponent
             l => l.id === -1
         )?.definitionExpression;
 
-
-
+        puntosPredio['popupEnabled']= true;
+       
         /*this.cancelEvent = false;*/
     }
 
@@ -732,6 +902,13 @@ export class LandRegistryGeolocationComponent
                 MapImageLayer,
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 Legend,
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
+                Home,
+                 // eslint-disable-next-line @typescript-eslint/naming-convention
+                PopupTemplate,
+ // eslint-disable-next-line @typescript-eslint/naming-convention
+                Viewpoint
+
             ] = await loadModules([
                 'esri/Map',
                 'esri/views/MapView',
@@ -748,6 +925,9 @@ export class LandRegistryGeolocationComponent
                 'esri/widgets/BasemapGallery',
                 'esri/layers/MapImageLayer',
                 'esri/widgets/Legend',
+                 'esri/widgets/Home',
+                 'esri/PopupTemplate',
+                 'esri/Viewpoint'
             ]);
 
             const mapProperties = {
@@ -770,7 +950,7 @@ export class LandRegistryGeolocationComponent
                 zoom: 17,
                 center: [-71.955921, -13.53063],
                 map: this.map,
-                popup: {
+                /*popup: {
                     dockEnabled: false,
                     dockOptions: {
                         //buttonEnabled: false,
@@ -779,7 +959,7 @@ export class LandRegistryGeolocationComponent
                     alignment: 'top-right',
                     autoOpenEnabled: false,
                     actions: [actionEdit],
-                },
+                },*/
             };
 
             this.view = new MapView(mapViewProperties);
@@ -839,6 +1019,18 @@ export class LandRegistryGeolocationComponent
                 }
 
 
+                if (l['popupEnabled']) {
+                    options['popupEnabled'] = l['popupEnabled'];
+                }
+
+                if (l['popupTemplate']) {
+                    const popupTemplate= new PopupTemplate(l['popupTemplate']);
+                    //popupTemplate: popupTemplate
+                    options['popupTemplate'] = popupTemplate;
+                }
+
+
+               
                 if (this.idCargo === Role.DISTRITAL) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
                     if (l['definitionExpression'].length > 0) {
@@ -909,18 +1101,38 @@ export class LandRegistryGeolocationComponent
             this.popupDiv = document.getElementById('popupDiv');
             this.view.when(() => {
                 this._fuseSplashScreenService.hide();
+                const homeWidget = new Home({
+                    view: this.view,
+                   
+                });
+
+
                 if (
                     this.userUbigeo &&
                     (this.estado === Estado.INICIAR ||
                         this.estado === Estado.CREAR) &&
                     this.idCargo === Role.DISTRITAL
                 ) {
-                    /*this.zoomToUbigeo(this.userUbigeo);*/
-                    this.buscar(this.userUbigeo);
+
+                    const where = `UBIGEO='${this.userUbigeo}'`;
+                    this.zoomToUbigeo(where).then(( res)=>{
+
+                    homeWidget.viewpoint = new Viewpoint({
+                        targetGeometry: res.extent
+                    });
+
+                    });
+
                 }
 
                 this.view.on('click', (event) => {
+                    
+                    const puntosPredio = this.layersInfo.find(
+                        l => l.id === -1
+                    )?.featureLayer;
+
                     if (this.estado === Estado.LEER) {
+                        //puntosPredio.popupEnabled = true;
                         this.view.hitTest(event).then((response) => {
                             const results = response.results.filter((r) => {
                                 if (
@@ -932,6 +1144,8 @@ export class LandRegistryGeolocationComponent
                                 }
                             });
 
+
+
                             if (results.length > 0) {
                                 /*this.displayPopupDiv='inline';*/
                                 /*this.view.popup.open({
@@ -942,6 +1156,8 @@ export class LandRegistryGeolocationComponent
                                 });*/
                             }
                         });
+                    
+                    
                     }
 
                     if (
@@ -949,7 +1165,7 @@ export class LandRegistryGeolocationComponent
                         this.estado === Estado.CREAR ||
                         this.estado === Estado.NUEVO_PUNTO
                     ) {
-                        //let graphic = event.mapPoint;
+                        puntosPredio.popupEnabled = false;
                         let graphic = event.mapPoint;
                         let longitude = graphic.longitude;
                         let latitude = graphic.latitude;
@@ -1526,6 +1742,7 @@ export class LandRegistryGeolocationComponent
 
 
                     else if (this.estado === Estado.NUEVO_PUNTO_MEDITERRANEO) {
+                        puntosPredio.popupEnabled = false;
                         this.view.hitTest(event).then((response) => {
 
                             const puntosEntrada = response.results.filter((r) => {
@@ -1954,18 +2171,24 @@ export class LandRegistryGeolocationComponent
                 }
 
                 // this.view.popup.collapseEnabled= false;
+              
+               
 
-                this.view.ui.add([toolbar], {
-                    position: 'top-right',
+                this.view.ui.add([toolbar, ], {
+                    position: 'top-left',
                 });
 
-                this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
+                this.view.ui.add([homeWidget,baseMapGalleryExpand, layerListExpand], {
                     position: 'top-right',
                 });
 
                 this.view.ui.add([legend], {
                     position: 'bottom-left',
                 });
+
+
+
+
 
                 /* this.view.ui.add([baseMapGalleryExpand], {
                     position: 'top-right',
@@ -2139,13 +2362,17 @@ export class LandRegistryGeolocationComponent
     }
 
     async zoomToUbigeo(where: string): Promise<any> {
+        const r = null;
         try {
             if (this.view) {
-                MapUtils.zoomToFeature(
+                const r: any =MapUtils.zoomToFeature(
                     this.view,
                     this.featureZonaUrbana,
                     where
                 );
+
+                return r;
+                //extent =r.extent;
             }
         } catch (error) {
             // console.error('EsriLoader: ', error);

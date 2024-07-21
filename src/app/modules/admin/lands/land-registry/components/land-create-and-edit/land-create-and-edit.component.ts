@@ -272,12 +272,22 @@ resolutionType: any[];
           this.registerLand.emit(result);
           setTimeout(() => {this.showFormEdit.emit(false);}, 1000);
         },
-        (error) => {
+        (errorResponse) => {
             this._fuseSplashScreenService.hide();
-          this.confirmationService.error(
-            'Registro de predio',
-            'Error al registrar el predio, intente nuevamente'
-          );
+          console.log(errorResponse.error);
+          if ( errorResponse?.error?.mensaje){
+            this.confirmationService.error(
+              'Registro de predio',
+              `${errorResponse?.error?.mensaje}`
+            );
+          }
+          else{
+            this.confirmationService.error(
+              'Registro de predio',
+              'Error al registrar el predio, intente nuevamente'
+            );
+  
+          }
         }
       );
   }
