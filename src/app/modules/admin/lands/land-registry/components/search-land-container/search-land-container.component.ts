@@ -209,13 +209,20 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   private makeQueryParams(): {[key: string]: string | number} {
     const rawValue = this.formFilters.getRawValue();
-    const queryParams = {};
+    let queryParams = {};
     const search = rawValue?.search || null;
     const status = rawValue?.status;
+    const direccion: string = rawValue?.direccion;
     const ubigeo = this.ubigeo;
     queryParams['search'] = search;
     queryParams['status'] = status;
     queryParams['ubigeo'] = ubigeo;
+
+    if (direccion && direccion.length>0){
+      queryParams = { ... queryParams , ... this.parseAddress(direccion)};
+    }
+
+
     /*if (search !== null) {
       queryParams['search'] = search;
     }
@@ -231,11 +238,55 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     return CommonUtils.deleteKeysNullInObject( queryParams);
   }
 
+
+  private parseAddress(address: string ): any {
+
+    const regex = /^(.*?)(?:\s+(\d+))?\s*(?:Mz\s+(\w+)\s*Lt\s+(\w+))?$/;
+    const match = address.match(regex);
+    if (match) {
+        return {
+          'street_name': match[1] || null,
+            'municipal_number': match[2] || null,
+            'urban_mza': match[3] || null,
+            'urb_lot_number': match[4] || null,
+        };
+    }
+    return null;
+    /*const regex = /^(?:(.*?)\s+(\d+))|(?:(.*?)\s+Mz\s+(\d+)\s+Lt\s+(\d+))|(?:Mz\s+(\d+)\s+Lt\s+(\d+))$/;
+    const match = address.match(regex);
+    if (match) {
+        if (match[1] && match[2]) {
+            // Formato: Nombre de la vía seguido por número de puerta
+            return {
+                streetName: match[1],
+                municipalNumber: match[2],
+            };
+        } else if (match[3] && match[4] && match[5]) {
+            // Formato: Nombre de la vía seguido por manzana y lote
+            return {
+                streetName: match[3],
+                urbanMza: match[4],
+                urbLotNumber: match[5],
+            };
+        } else if (match[6] && match[7]) {
+            // Formato: Solo manzana y lote
+            return {
+              urbanMza: match[6],
+              urbLotNumber: match[7],
+            };
+        }
+
+    }
+    return null;
+*/
+
+  }
   private createFormFilters(): void {
     this.formFilters = new FormGroup({
       search: new FormControl(),
       view: new FormControl('predio'),
       status: new FormControl(''),
+      direccion:new FormControl(''),
     });
   }
 
