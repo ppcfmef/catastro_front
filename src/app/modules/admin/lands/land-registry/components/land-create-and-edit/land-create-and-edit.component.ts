@@ -56,7 +56,6 @@ resolutionType: any[];
   ) {
     console.log('this.landRecord',this.landRecord);
     console.log('this.landMapRecord',this.landMapRecord);
-    
    
     this.landRegistryService.getMasterDomain()
     .pipe(takeUntil(this.unsubscribeAll))
@@ -66,8 +65,6 @@ resolutionType: any[];
       //this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
     });
     
-  
-
   }
 
   get f(): {[key: string]: AbstractControl} {
