@@ -44,20 +44,21 @@
     top: 40px !important;
   }
 
-  .esri-component.esri-zoom.esri-widget {
+  /*.esri-component.esri-zoom.esri-widget {
     display: flex;
     gap: 8px;
     background: transparent;
     position: absolute;
-  }
-  .esri-zoom
+  }*/
+  
+  /*.esri-zoom
   .esri-widget--button{
     border-radius: 4px;
 
     span {
       font-weight: 600;
     }
-  }
+  }*/
 
   /* width & color of legend */
 .esri-component.esri-legend.esri-widget.esri-widget--panel {

@@ -569,6 +569,18 @@ export class LandRegistryGeolocationComponent
             utm: null,
             projection: null,
             visible: true,
+
+            renderer: {
+                type: 'simple',
+                symbol:{
+                    type: 'simple-line',
+                    width: '3px',
+                    style: 'solid',
+                    color:'#E64C00'
+                }
+            
+
+            },
         },
 
         {
@@ -2174,11 +2186,11 @@ export class LandRegistryGeolocationComponent
               
                
 
-                this.view.ui.add([toolbar, ], {
+                this.view.ui.add([toolbar,homeWidget ], {
                     position: 'top-left',
                 });
 
-                this.view.ui.add([homeWidget,baseMapGalleryExpand, layerListExpand], {
+                this.view.ui.add([baseMapGalleryExpand, layerListExpand], {
                     position: 'top-right',
                 });
 
