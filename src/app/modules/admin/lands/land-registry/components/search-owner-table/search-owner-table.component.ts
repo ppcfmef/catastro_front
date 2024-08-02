@@ -43,6 +43,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
   ngOnChanges(changes: SimpleChanges): void {
       if (changes?.dataSource?.currentValue) {
         this.dataTable.data = changes?.dataSource?.currentValue;
+        this.dataTable.data.map(d=> d.numberLands = d.lands.length );
       }
 
       if (changes?.length?.currentValue) {
