@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -16,6 +16,8 @@ import { NavigationAuthorizationService } from 'app/shared/services/navigation-a
 import { takeUntil } from 'rxjs/operators';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { LandRegistryService } from '../../services/land-registry.service';
+import { LandOwnerDetailService } from '../../services/land-owner-detail.service';
+import { LandOwnerDetail } from '../../interfaces/land-owner-detail.interface';
 
 
 @Component({
@@ -44,6 +46,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   idView = 'gprpregist';
   hideSelectUbigeo = true;
   resetTableFlag = false;
+  isVisible = false;
+  detailLandByOwner$: Observable<LandOwnerDetail>;
 
   constructor(
     private router: Router,
@@ -52,7 +56,8 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     private landRecordService: LandRecordService,
     private landRegistryService: LandRegistryService,
     private navigationAuthorizationService: NavigationAuthorizationService,
-  ) {}
+    private landOwnerDetailService: LandOwnerDetailService
+) {}
 
   ngOnInit(): void {
     this.landRecordService.renderOption$.next(false);
@@ -154,6 +159,7 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
     this.showLandsTable = true;
     this.showLandsMap = true;
     this.landOwner = landOwner;
+    this.isVisible = false;
     const queryParams = { limit: 10 ,...filterQueryParams };
 
     this.landRegistryService
@@ -191,7 +197,22 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   onShowLandsMap(landRecord: LandRecord): void {
     this.showLandsMap = true;
     this.landRecord = landRecord;
+    this.isVisible = false;
     setTimeout(() => {document.getElementById('dowloand').scrollIntoView();}, 0.001);
+  }
+
+
+  scrollTo(): void{
+    this.detailLandByOwner$ = this.landOwnerDetailService.getDetailLandByOwner(this.landRecord.id, this.landOwner.id);
+    this.isVisible = !this.isVisible;
+    if (this.isVisible) {
+        setTimeout(() => {
+            const element = document.getElementById('moreDetail');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+      }
   }
 
   onDowloandCroquis(): void{

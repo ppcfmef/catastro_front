@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,12 +14,16 @@ import { takeUntil } from 'rxjs/operators';
 import { NavigationAuthorizationService } from 'app/shared/services/navigation-authorization.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { FuseValidators } from '@fuse/validators';
+import { fuseAnimations } from '@fuse/animations';
+import { LandOwnerDetailService } from '../../services/land-owner-detail.service';
+import { LandOwnerDetail } from '../../interfaces/land-owner-detail.interface';
 
 
 @Component({
   selector: 'app-search-land-container',
   templateUrl: './search-land-container.component.html',
-  styleUrls: ['./search-land-container.component.scss']
+  styleUrls: ['./search-land-container.component.scss'],
+  animations : fuseAnimations
 })
 export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -30,9 +34,9 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   formFilters: UntypedFormGroup;
 
   showOwnerTable = false;
-
+  detailLandByOwner$: Observable<LandOwnerDetail>;
   showLandsMap = false;
-
+  isLoading: boolean = false;
   dataSource: LandOwner[] = [];
   dataSourceLands: LandRecord[] = [];
   lengthOwner: number = 0;
@@ -65,6 +69,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
       option:'Predios Inactivos'
     }
   ];
+  isVisible = false;
   constructor(
     private router: Router,
     private cdRef: ChangeDetectorRef,
@@ -72,7 +77,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     private landRecordService: LandRecordService,
     private exportReportService: ExportReportService,
     private navigationAuthorizationService: NavigationAuthorizationService,
-  ) {}
+    private landOwnerDetailService: LandOwnerDetailService
+  ) {};
 
   ngOnInit(): void {
     this.landRecordService.renderOption$.next(true);
@@ -135,6 +141,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
             this.showOwnerTable = false;
         }
 
+        this.isVisible = false;
         this.showLandsMap = true;
         setTimeout(() => {
             document.getElementById('dowloandCroquis').scrollIntoView();
@@ -204,9 +211,22 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   onShowLandOwner(landOwner: LandOwner): void{
     this.landOwner = landOwner;
+    this.isVisible = false;
     setTimeout(() => document.getElementById('dowloandCroquis').scrollIntoView(), 0.001);
   }
 
+  scrollTo(): void{
+    this.detailLandByOwner$ = this.landOwnerDetailService.getDetailLandByOwner(this.landRecord.id, this.landOwner.id);
+    this.isVisible = !this.isVisible;
+    if (this.isVisible) {
+        setTimeout(() => {
+            const element = document.getElementById('moreDetail');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+      }
+  }
   private makeQueryParams(): {[key: string]: string | number} {
     const rawValue = this.formFilters.getRawValue();
     let queryParams = {};
@@ -245,9 +265,13 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     const match = address.match(regex);
     if (match) {
         return {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'street_name': match[1] || null,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'municipal_number': match[2] || null,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'urban_mza': match[3] || null,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'urb_lot_number': match[4] || null,
         };
     }

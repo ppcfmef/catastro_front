@@ -28,6 +28,21 @@
             border-radius: 0 5px 5px 0 !important;
             margin-right: -16px;
         }
-        
+
     }
 }
+
+
+.hidden-class {
+    display: none;
+  }
+
+  .visible-class {
+    display: flex;
+  }
+
+
+  .border-div {
+    padding-top: 32px;
+    border-bottom: 2px solid #cfdae4;
+  }

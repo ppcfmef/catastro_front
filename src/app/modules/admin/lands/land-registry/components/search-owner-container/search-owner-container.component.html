@@ -44,20 +44,38 @@
   [reset]="resetTableFlag" >
 </app-search-land-table>
 
-<div class="container-panel flex w-full"  *ngIf="landRecord"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
-  <div class="map-container">
-    <app-show-map-point  *ngIf="landRecord" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
-  </div>
-  <div class="flex flex-col px-4 w-2/5" *ngIf="landRecord && landOwner" style="min-height: 400px;">
-    <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
-    <ng-container *ngIf="landRecord.longitude || landRecord.latitude">
-      <button mat-flat-button [color]="'primary'" class="m-8 rounded-md"
-        mat-flat-button [color]="'primary'"
-        (click)="onDowloandCroquis()" >
-        <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
-        <span class="ml-4 ">CROQUIS</span>
-      </button>
-    </ng-container>
-  </div>
-  <div id="dowloand"></div>>
+<div class="container-panel flex flex-col w-full justify-between"  *ngIf="landRecord"   [ngStyle]="{'padding': (landRecord && landOwner)? '10px': '0'}">
+    <div class="flex w-full flex-col gap-4 md:flex-row">
+        <div class="w-full h-100 md:w-2/4 lg:w-8/12">
+            <app-show-map-point  *ngIf="landRecord" [points]="[{ latitude: landRecord.latitude, longitude: landRecord.longitude }]" [landRecord]="landRecord" [landOwner]="landOwner" ></app-show-map-point>
+        </div>
+
+        <div class="flex flex-col px-4 pt-4 flex-auto gap-4" *ngIf="landRecord && landOwner" style="min-height: 400px;">
+            <app-detail-predio [landRecord]="landRecord" [landOwner]="landOwner" [builtArea]="builtArea" ></app-detail-predio>
+
+            <div class="underline cursor-pointer text-mef-blue-400 font-semibold pb-2"
+                (click)="scrollTo()">
+                Ver mas detalle del predio
+            </div>
+
+            <ng-container *ngIf="landRecord.longitude || landRecord.latitude">
+                <button mat-flat-button [color]="'primary'" class="rounded-md mb-4"
+                    mat-flat-button [color]="'primary'"
+                    (click)="onDowloandCroquis()" >
+                    <mat-icon svgIcon="heroicons_outline:printer"></mat-icon>
+                    <span class="ml-4 ">CROQUIS</span>
+                </button>
+            </ng-container>
+        </div>
+        <div id="dowloand"></div>>
+    </div>
+    <div [ngClass]="{'hidden-class': !isVisible, 'border-div': isVisible}">
+    </div>
+    <div  class="w-full" [ngClass]="{'hidden-class': !isVisible, 'visible-class': isVisible}">
+        <div class="w-full py-4 h-full"  >
+            <app-detail-predio-by-owner *ngIf="detailLandByOwner$ | async as detailLandByOwner" [detailLand]="detailLandByOwner"></app-detail-predio-by-owner>
+        </div>
+        <div id="moreDetail" class="h-100"></div>
+    </div>
+
 </div>

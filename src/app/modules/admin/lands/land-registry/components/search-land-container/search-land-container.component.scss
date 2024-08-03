@@ -11,12 +11,7 @@
         padding: 10px;
         background-color: white;
         border-radius: 8px;
-        
-    }
-    .map-container{
-        width: 600px;
-        min-width: 60%;
-        max-width: 60%;
+
     }
 
     .input-icon-form{
@@ -28,6 +23,21 @@
             border-radius: 0 5px 5px 0 !important;
             margin-right: -16px;
         }
-        
+
     }
 }
+
+
+.hidden-class {
+    display: none;
+  }
+
+  .visible-class {
+    display: flex;
+  }
+
+
+  .border-div {
+    padding-top: 32px;
+    border-bottom: 2px solid #cfdae4;
+  }
