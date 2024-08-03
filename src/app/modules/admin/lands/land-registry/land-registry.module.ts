@@ -42,6 +42,7 @@ import { AlertLandOwnerComponent } from './components/alert-land-owner/alert-lan
 import { SearchMapComponent } from './components/search-map/searchMap.component';
 import { SearchModule } from 'app/layout/common/search/search.module';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
+import { DetailPredioByOwnerComponent } from './components/detail-predio-by-owner/detail-predio-by-owner.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
     MatProgressSpinnerModule,
     SearchMapComponent,
     SearchModule,
-    FuseScrollbarModule
+    FuseScrollbarModule,
+    DetailPredioByOwnerComponent
   ],
   exports:[LandRegistryGeolocationComponent],
   providers: []

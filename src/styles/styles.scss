@@ -113,6 +113,19 @@ Personalizacion
     padding-right: 16px !important;
 }
 
+.header-vertical {
+    .mat-mdc-header-cell {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        white-space: nowrap;
+        padding: 16px !important;
+        text-align: left;
+        vertical-align: middle;
+        background: #f0f7fd !important;
+        color: #161515 !important;
+        border-left: 4px solid #fff;
+    }
+}
 .header-table-default {
     table {
         border-collapse: inherit !important;

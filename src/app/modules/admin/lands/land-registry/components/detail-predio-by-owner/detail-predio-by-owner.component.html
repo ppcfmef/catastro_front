@@ -1,0 +1,141 @@
+<div class="flex flex-wrap gap-10 justify-between p-4">
+    <div class="flex flex-auto flex-col">
+        <h1 class="text-xl font-semibold pb-6">Detalles Declaración Jurada Nro. {{detailLand.numeroDj ? detailLand.numeroDj : '-'}} </h1>
+        <div class="grid gap-8 grid-cols-3">
+            <div>
+                <h4>Motivo de Declaración:</h4>
+                <p>{{detailLand.motivoDj ? detailLand.motivoDj : ' '}}</p>
+            </div>
+            <div>
+                <h4>Usuario Registrador:</h4>
+                <p>{{detailLand.usuarioAuditoria ? detailLand.usuarioAuditoria : ' '}}</p>
+            </div>
+            <div>
+                <h4>Fecha de declaración:</h4>
+                <p>{{detailLand.fechaDj ? detailLand.fechaDj : ' '}}</p>
+            </div>
+            <div>
+                <h4>Partida Registral:</h4>
+                <p>{{detailLand.parRegistral ? detailLand.parRegistral : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Ubigeo:</h4>
+                <p>{{detailLand.ubigeo ? detailLand.ubigeo : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Secuencia Ejecutora:</h4>
+                <p>{{detailLand.secEjec ? detailLand.secEjec : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Tipo de transferencia:</h4>
+                <p>{{detailLand.tipTransferencia ? detailLand.tipTransferencia : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Tipo de Uso:</h4>
+                <p>{{detailLand.tipUsoPredio ? detailLand.tipUsoPredio : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Tipo de Propiedad:</h4>
+                <p>{{detailLand.tipPropiedad ? detailLand.tipPropiedad : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Area del terreno:</h4>
+                <p>{{detailLand.areaTerreno ? detailLand.areaTerreno+'m' : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Area Construida:</h4>
+                <p>{{detailLand.areaConstruida ? detailLand.areaConstruida+'m' : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Longitud de frente:</h4>
+                <p>{{detailLand.longitudFrente ? detailLand.longitudFrente+'m' : ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Porcentaje de propiedad:</h4>
+                <p>{{detailLand.porPropiedad ? detailLand.porPropiedad+'%': ' '}}</p>
+            </div>
+
+            <div>
+                <h4>Cantidad de habitantes:</h4>
+                <p>{{detailLand.cantidadHabitantes ? detailLand.cantidadHabitantes : ' '}}</p>
+            </div>
+
+        </div>
+    </div>
+    <div class="header-vertical pt-8">
+        <h4 class="pb-4">Niveles de Construcción:</h4>
+        <table mat-table [dataSource]="detailLand.nivelesConstruccion">
+            <ng-container matColumnDef="#">
+                <th mat-header-cell *matHeaderCellDef>#</th>
+                <td mat-cell *matCellDef="let row ; let i = index">{{i + 1}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="tNivel">
+                <th mat-header-cell *matHeaderCellDef>Tipo nivel</th>
+                <td mat-cell *matCellDef="let row">{{row.tNivel}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="aConstrucc">
+                <th mat-header-cell *matHeaderCellDef>Año Mes construcción</th>
+                <td mat-cell *matCellDef="let row"> {{row.anioConstruccion}} - {{row.mesConstruccion}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="piso">
+                <th mat-header-cell *matHeaderCellDef>N° Piso</th>
+                <td mat-cell *matCellDef="let row">{{row.numPiso}}</td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="materialPred">
+                <th mat-header-cell *matHeaderCellDef>Material predominante</th>
+                <td mat-cell *matCellDef="let row">{{row.materialPred}}</td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="eConstruc">
+                <th mat-header-cell *matHeaderCellDef>Estado de construcción</th>
+                <td mat-cell *matCellDef="let row">{{row.estConservacion}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="muros">
+                <th mat-header-cell *matHeaderCellDef>Muros y columnas</th>
+                <td mat-cell *matCellDef="let row">{{row.categoriaMuroColumna}}</td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="techos">
+                <th mat-header-cell *matHeaderCellDef>Techos</th>
+                <td mat-cell *matCellDef="let row"></td>
+            </ng-container> -->
+
+            <!-- <ng-container matColumnDef="puertas">
+                <th mat-header-cell *matHeaderCellDef>Puertas y ventanas</th>
+                <td mat-cell *matCellDef="let row"></td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="aConstruida">
+                <th mat-header-cell *matHeaderCellDef>Area construida (m)</th>
+                <td mat-cell *matCellDef="let row">{{row.areaConstruida}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="aComun">
+                <th mat-header-cell *matHeaderCellDef>Area común (m)</th>
+                <td mat-cell *matCellDef="let row"> {{row.areaConstruidaComun}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div *ngIf="!detailLand.nivelesConstruccion.length" class="px-1 py-4">
+            Sin niveles de construcción declarados
+        </div>
+    </div>
+</div>
+
+
