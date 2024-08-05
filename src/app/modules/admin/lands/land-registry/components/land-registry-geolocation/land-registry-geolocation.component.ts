@@ -209,9 +209,9 @@ export class LandRegistryGeolocationComponent
         width: '20px'
 
     };
-    
-    
-    
+
+
+
     var popupTemplate = new PopupTemplate({
   title: "{Name}",
   content: `
@@ -221,7 +221,7 @@ export class LandRegistryGeolocationComponent
     <img src="{ImageUrl}" alt="{Name}" width="200" height="150">
   `
 });
-    
+
     */
 
     layersInfo = [
@@ -240,7 +240,7 @@ export class LandRegistryGeolocationComponent
 
                 content: [{
                     type: 'fields',
-                    
+
 
 
                     fieldInfos: [{
@@ -258,20 +258,20 @@ export class LandRegistryGeolocationComponent
                         visible: true
                       }
 
-                     
+
                     , {
                         fieldName: "NOM_UU",
                         label: "Nombre de unidad urb.",
                         visible: true
                       }
-                  
-                    
+
+
                     , {
                       fieldName: "MZN_URB",
                       label: "Manzana urb.",
                       visible: true
                     }
-                
+
                     , {
                         fieldName: "LOT_URB",
                         label: "Lote urb.",
@@ -283,21 +283,21 @@ export class LandRegistryGeolocationComponent
                         label: "Tipo de via",
                         visible: true
                       }
-                      
+
                       , {
                         fieldName: "NOM_VIA",
                         label: "Nombre de via",
                         visible: true
                       }
 
-                      
+
                       , {
                         fieldName: "NOM_ALT",
                         label: "Nombre de via alt.",
                         visible: true
                       }
 
-                      
+
                       , {
                         fieldName: "NUM_MUN",
                         label: "Número domiciliaro",
@@ -388,7 +388,7 @@ export class LandRegistryGeolocationComponent
                 `*/
               },
 
-            
+
             utm: null,
             projection: null,
             visible: true,
@@ -578,7 +578,7 @@ export class LandRegistryGeolocationComponent
                     style: 'solid',
                     color:'#E64C00'
                 }
-            
+
 
             },
         },
@@ -728,7 +728,7 @@ export class LandRegistryGeolocationComponent
         )?.definitionExpression;
 
         puntosPredio['popupEnabled']= true;
-       
+
         /*this.cancelEvent = false;*/
     }
 
@@ -1042,7 +1042,7 @@ export class LandRegistryGeolocationComponent
                 }
 
 
-               
+
                 if (this.idCargo === Role.DISTRITAL) {
                     const where = `UBIGEO='${this.userUbigeo}'`;
                     if (l['definitionExpression'].length > 0) {
@@ -1115,7 +1115,7 @@ export class LandRegistryGeolocationComponent
                 this._fuseSplashScreenService.hide();
                 const homeWidget = new Home({
                     view: this.view,
-                   
+
                 });
 
 
@@ -1138,7 +1138,7 @@ export class LandRegistryGeolocationComponent
                 }
 
                 this.view.on('click', (event) => {
-                    
+
                     const puntosPredio = this.layersInfo.find(
                         l => l.id === -1
                     )?.featureLayer;
@@ -1168,8 +1168,8 @@ export class LandRegistryGeolocationComponent
                                 });*/
                             }
                         });
-                    
-                    
+
+
                     }
 
                     if (
@@ -2183,8 +2183,8 @@ export class LandRegistryGeolocationComponent
                 }
 
                 // this.view.popup.collapseEnabled= false;
-              
-               
+
+
 
                 this.view.ui.add([toolbar,homeWidget ], {
                     position: 'top-left',
@@ -2446,7 +2446,6 @@ export class LandRegistryGeolocationComponent
         const streetType = land.uuType
             ? this.masterDomain.codStreet.find(e => e.id === land?.streetType)
             : null;
-        console.log('district;;',district)
 
         if (view) {
             view.center = [land.longitude, land.latitude];
@@ -2532,6 +2531,17 @@ export class LandRegistryGeolocationComponent
                         columns: [
                             {
                                 style: 'p1',
+                                width: '100%',
+                                text: ['Fecha de Registro: ',
+                                    { text: `${land.updateDate ? moment(land.updateDate).format('DD/MM/YYYY') : '-'} `, style: 'textR' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        columns: [
+                            {
+                                style: 'p2',
                                 width: '100%',
                                 text: ['Yo, ',
                                     { text: newName, style: 'textR' },
@@ -2747,14 +2757,13 @@ export class LandRegistryGeolocationComponent
 
                     p1: {
 
-                        margin: [0, 25, 0, 10],
+                        margin: [0, 25, 0, 5],
                         alignment: 'justify',
                         lineHeight: 1.3
                     },
                     textR: {
                         bold: true,
                     },
-
                     p2: {
                         lineHeight: 1.3,
                         alignment: 'justify',

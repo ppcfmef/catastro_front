@@ -68,7 +68,7 @@ export interface LandRegistryMap {
     apartmentNumber: string;
     statusImg: number;
     idLote: string;
-
+    updateDate?: string | null;
     owner?: number | null;
     idImg: string;
     secuen: number;
