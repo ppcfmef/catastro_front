@@ -18,7 +18,7 @@ export const environment = {
     apiNSRTMUrl: 'https://srtm.mef.gob.pe/v1/nsrtm-services',
     versionCodigo1 :1,
     versionCodigo2 :2,
-    versionCodigo3 :20,
+    versionCodigo3 :30,
      redirect: ''
 
 };
