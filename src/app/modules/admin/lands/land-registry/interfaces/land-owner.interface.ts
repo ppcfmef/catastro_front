@@ -30,4 +30,5 @@ export interface LandOwner {
   numberLands?: number;
   address?: OwnerAddress;
   creationDate?: string;
+  lands?: any[];
 }
