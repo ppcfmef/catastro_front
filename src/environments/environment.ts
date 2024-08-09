@@ -23,7 +23,7 @@ export const environment = {
     redirect: '',
     versionCodigo1 :1,
     versionCodigo2 :2,
-    versionCodigo3 :25,
+    versionCodigo3 :30,
 };
 
 /*
