@@ -1306,7 +1306,7 @@ export class LandRegistryGeolocationComponent
                                                     MZN_URB:
                                                         graphic.attributes[
                                                         'MZN_URB'
-                                                        ],
+                                                        ].replace('\'','\'\''),
                                                     // eslint-disable-next-line @typescript-eslint/naming-convention
                                                     LOT_URB:
                                                         graphic.attributes[
@@ -1470,7 +1470,7 @@ export class LandRegistryGeolocationComponent
                                                                                                     /*
                                                                                                     console.log('this.lote>>',this.lote);*/
 
-                                                                                                    puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
+                                                                                                    puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
 
 
 
@@ -1486,7 +1486,7 @@ export class LandRegistryGeolocationComponent
                                                                                                         l => l.id === 3
                                                                                                     )?.featureLayer;
 
-                                                                                                    const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                                                    const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
                                                                                                     MapUtils.zoomToFeature(
                                                                                                         this.view,
                                                                                                         manzanaUrbana,
@@ -1628,7 +1628,7 @@ export class LandRegistryGeolocationComponent
 
 
 
-                                                                puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
+                                                                puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
                                                                 const puntosPredio = this.layersInfo.find(
                                                                     l => l.id === -1
                                                                 )?.featureLayer;
@@ -1640,7 +1640,7 @@ export class LandRegistryGeolocationComponent
                                                                     l => l.id === 3
                                                                 )?.featureLayer;
 
-                                                                const where =   `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
 
                                                                 MapUtils.zoomToFeature(
                                                                     this.view,
@@ -2912,7 +2912,7 @@ export class LandRegistryGeolocationComponent
             )?.featureLayer;
 
             const query = layerTematico.createQuery();
-            query.where = `MZN_URB = '${this.lote.MZN_URB}' AND UBIGEO = '${this.lote.UBIGEO}'  AND LOT_URB = '${this.lote.LOT_URB}' and COD_UU = '${this.lote.COD_UU}'`;
+            query.where = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  AND LOT_URB = '${this.lote.LOT_URB}' and COD_UU = '${this.lote.COD_UU}'`;
 
             layerTematico
                 .queryFeatures(query)
