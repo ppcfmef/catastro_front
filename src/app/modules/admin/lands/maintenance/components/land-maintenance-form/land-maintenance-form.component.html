@@ -73,13 +73,18 @@
             class="fuse-mat-dense fuse-mat-no-subscript mat-form-field-style w-full pr-2 pb-2"
         >
             <mat-label>Nro. Doc. Sustento</mat-label>
-            <input matInput type="text" formControlName="resolutionDocument" />
+            <input matInput type="text" formControlName="resolutionDocument"/>
             <mat-error
                 *ngIf="formLand.get('resolutionDocument').hasError('required')"
             >
                 El campo es obligatorio.
             </mat-error>
 
+            <mat-error
+            *ngIf="formLand.get('resolutionDocument').hasError('maxlength')"
+            >
+                El campo no puede contener mas de 20 caracteres.
+            </mat-error>
             <!--
             <div *ngIf="formLand.get('resolutionDocument').invalid && (formLand.get('resolutionDocument').touched || formLand.get('resolutionDocument').submitted)">
                 <div *ngIf="formLand.get('resolutionDocument').errors.required" class="c-danger small" > <mat-error> El campo  es obligatorio.</mat-error></div>

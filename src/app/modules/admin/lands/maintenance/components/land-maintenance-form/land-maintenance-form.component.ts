@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, ValidationErrors, Validators, MaxLengthValidator } from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { MasterDomain } from '../../../land-registry/interfaces/master-domain.interface';
@@ -136,7 +136,7 @@ export class LandMaintenanceFormComponent implements OnInit {
         .pipe(takeUntil(this.unsubscribeAll))
         .subscribe((result) =>{
           this.resolutionType = result;
-    
+
           //this.resolutionType =this.masterDomain.resolutionType.filter((r)=>r.id !== '4');
         });
 
@@ -144,7 +144,6 @@ export class LandMaintenanceFormComponent implements OnInit {
       }
 
       initForm(): void{
-
         if (this.typeMaintenace === 'Reasignar'){
 
             this.formLand = this.fb.group({
@@ -153,7 +152,7 @@ export class LandMaintenanceFormComponent implements OnInit {
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
                /* resolutionDate : [{value:moment()},],*/
-                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required]],
+                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly},[Validators.required]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
                 codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
                 habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
@@ -181,7 +180,8 @@ export class LandMaintenanceFormComponent implements OnInit {
                 cpm : [ {value:this.landModel?.cpm,disabled:this.readOnly}, ],
                 resolutionType : [ {value:this.landModel?.resolutionType,disabled:this.readOnly}, [Validators.required]],
                /* resolutionDate : [{value:moment()}, ],*/
-                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly}, [Validators.required , this.noWhitespaceValidator]],
+                resolutionDocument : [ {value:this.landModel?.resolutionDocument,disabled:this.readOnly},
+                    [Validators.required , this.noWhitespaceValidator]],
                 uuType: [{value: this.landModel?.uuType,disabled:this.readOnly }],
                 codUu: [ { value: this.landModel?.codUu,disabled: this.readOnly}],
                 habilitacionName: [{value: this.landModel?.habilitacionName, disabled: this.readOnly}],
@@ -200,6 +200,17 @@ export class LandMaintenanceFormComponent implements OnInit {
               //this.toggleRequired();
         }
 
+        this.formLand.get('resolutionType').valueChanges.subscribe((value) => {
+            console.log(value) ;
+            const resolutionDocumentControl = this.formLand.get('resolutionDocument');
+            if(value === '1') {
+                resolutionDocumentControl.setValidators([this.noWhitespaceValidator, Validators.maxLength(20), Validators.required]);
+            }else {
+                resolutionDocumentControl.setValidators([this.noWhitespaceValidator, Validators.maxLength(100), Validators.required]);
+            }
+            resolutionDocumentControl.updateValueAndValidity();
+            resolutionDocumentControl.markAsTouched();
+        } );
       }
 
       cpmValidator(control: AbstractControl): {[s: string ]: boolean} {
@@ -229,7 +240,6 @@ export class LandMaintenanceFormComponent implements OnInit {
 
       ngOnInit(): void {
         this.init();
-
       }
 
       save(): void{
