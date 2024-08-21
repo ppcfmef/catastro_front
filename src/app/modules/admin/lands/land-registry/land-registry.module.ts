@@ -43,6 +43,7 @@ import { SearchMapComponent } from './components/search-map/searchMap.component'
 import { SearchModule } from 'app/layout/common/search/search.module';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { DetailPredioByOwnerComponent } from './components/detail-predio-by-owner/detail-predio-by-owner.component';
+import { DocumentsPipe } from './pipes/documents.pipe';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { DetailPredioByOwnerComponent } from './components/detail-predio-by-owne
     MatSlideToggleModule,
     MatTooltipModule,
     CustomSharedModule,
+    DocumentsPipe,
     //LandRegistryGeolocationComponent,
 
     MapsModule,

@@ -11,9 +11,9 @@
             </ng-template>
         </div>
         <div class="w-[200px]">
-            <b class="font-medium" >{{ 'DNI' }} : </b> {{ landOwner.dni }}
+            <b class="font-medium" >{{ landOwner.documentType | documents }} : </b> {{ landOwner.dni }}
         </div>
-        
+
     </div>
 
    <!-- <p><b>Telefono:</b> {{ landOwner.phone }}</p>
