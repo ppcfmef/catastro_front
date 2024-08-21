@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ import { FuseValidators } from '@fuse/validators';
 import { fuseAnimations } from '@fuse/animations';
 import { LandOwnerDetailService } from '../../services/land-owner-detail.service';
 import { LandOwnerDetail } from '../../interfaces/land-owner-detail.interface';
+import moment from 'moment';
 
 
 @Component({
@@ -33,6 +34,9 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
   formFilters: UntypedFormGroup;
 
+  year: number;
+  displayedColumns: string[] = ['#', 'tNivel', 'piso', 'aConstrucc','eConsv','muros','techos', 'puertas',
+    'aConstruida', 'aComun'];
   showOwnerTable = false;
   detailLandByOwner$: Observable<LandOwnerDetail>;
   showLandsMap = false;
@@ -216,8 +220,18 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   scrollTo(): void{
+
     this.detailLandByOwner$ = this.landOwnerDetailService.getDetailLandByOwner(this.landRecord.id, this.landOwner.id);
+
+    this.detailLandByOwner$.subscribe((response) => {
+        this.year = moment(response.fechaDj).year();
+            if (this.year < 2024) {
+                this.displayedColumns = ['#', 'tNivel','piso', 'aConstrucc','eConsv','muros','techos', 'cPiso','puertas',
+                    'revestimiento', 'bano','instSanitarias','aConstruida', 'aComun'];
+            }
+        });
     this.isVisible = !this.isVisible;
+
     if (this.isVisible) {
         setTimeout(() => {
             const element = document.getElementById('moreDetail');
