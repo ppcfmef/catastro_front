@@ -18,6 +18,7 @@ import { CommonUtils } from 'app/core/common/utils/common.utils';
 import { LandRegistryService } from '../../services/land-registry.service';
 import { LandOwnerDetailService } from '../../services/land-owner-detail.service';
 import { LandOwnerDetail } from '../../interfaces/land-owner-detail.interface';
+import moment from 'moment';
 
 
 @Component({
@@ -34,6 +35,10 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
   formFilters: FormGroup;
   showLandsTable = false;
   showLandsMap = false;
+
+  year: number;
+  displayedColumns: string[] = ['#', 'tNivel', 'piso', 'aConstrucc','eConsv','muros','techos', 'puertas',
+    'aConstruida', 'aComun'];
 
   dataSource: LandOwner[] = [];
   dataSourceLands: any[] = [];
@@ -204,6 +209,15 @@ export class SearchOwnerContainerComponent implements OnInit, OnDestroy, AfterVi
 
   scrollTo(): void{
     this.detailLandByOwner$ = this.landOwnerDetailService.getDetailLandByOwner(this.landRecord.id, this.landOwner.id);
+
+    this.detailLandByOwner$.subscribe((response) => {
+        this.year = moment(response.fechaDj).year();
+            if (this.year < 2024) {
+                this.displayedColumns = ['#', 'tNivel','piso', 'aConstrucc','eConsv','muros','techos', 'cPiso','puertas',
+                    'revestimiento', 'bano','instSanitarias','aConstruida', 'aComun'];
+            }
+        });
+
     this.isVisible = !this.isVisible;
     if (this.isVisible) {
         setTimeout(() => {
