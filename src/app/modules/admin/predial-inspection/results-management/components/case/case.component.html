@@ -6,7 +6,7 @@
             item.state ===98? 'obs':'active' "
             (click)="accordionItem.toggle()"
         >
-        <ng-container *ngIf="this.registro?.predioPadron">
+        <ng-container *ngIf="this.registro?.predioPadron &&  codTypeGap!=='5'">
             Codigo de predio - {{ item.codCase}}  encontrado en padron de predios
             <mat-icon
                svgIcon="{{
@@ -17,7 +17,7 @@
 
         </ng-container>
 
-        <ng-container *ngIf="!this.registro?.predioPadron">
+        <ng-container *ngIf="!this.registro?.predioPadron &&  codTypeGap!=='5'">
             Predio no encontrado
             en el padron de predios
             <mat-icon
@@ -28,6 +28,18 @@
            ></mat-icon>
 
         </ng-container>
+       
+        <ng-container *ngIf="codTypeGap==='5'">
+            Predio  {{ registro?.predioInspeccion?.codCpu }}
+            <mat-icon
+               svgIcon="{{
+                item.state === 0 ?  'iconsmind:manage':
+                item.state ===98? 'iconsmind:manageObs':'iconsmind:manageTrue'
+               }}"
+           ></mat-icon>
+
+        </ng-container>
+      
 
         </div>
         <div [style.display]="accordionItem.expanded ? '' : 'none'">
@@ -230,7 +242,7 @@
 
                 <some-element *ngSwitchCase="5">
 
-                    <div class="flex w-full " *ngIf="!iniciar" >
+                    <!--<div class="flex w-full " *ngIf="!iniciar" >
                         <button
                         class="btnGenerar green w-full "
                         (click)="onClickOpenItem()"
@@ -239,9 +251,9 @@
                         </button>
 
 
-                    </div>
+                    </div>-->
 
-                    <button class="btnGenerar w-full"   *ngIf="iniciar"   (click)="onClickPrevisualizacion()" >
+                    <button class="btnGenerar w-full"      (click)="onClickPrevisualizacion()" >
                         Previsualizar
                     </button>
 

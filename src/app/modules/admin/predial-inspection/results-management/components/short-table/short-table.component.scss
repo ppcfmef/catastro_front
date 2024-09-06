@@ -1,6 +1,7 @@
 .shortTable {
-    display: flex;
+    display: grid;
     width: max-content;
+    //flex-wrap: wrap;
     border: 1px solid #66BB6A;
 
     &__title {
