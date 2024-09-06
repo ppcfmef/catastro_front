@@ -20,25 +20,26 @@
 
         <ng-container matColumnDef="tipoBrecha">
           <th mat-header-cell *matHeaderCellDef  > Tipo Brecha </th>
-          <td mat-cell *matCellDef="let element" colspan="2"  >
+          <td mat-cell *matCellDef="let element"   >
             <!-- Tabla anidada -->
             <table  class="w-full">
               <tr>
                 <td>{{ element.tipoBrecha }}</td>
-                <td>{{ element.fechaBrecha | date:'dd/MM/yyyy' }}</td>
+               <!-- <td>{{ element.fechaBrecha | date:'dd/MM/yyyy' }}</td>-->
               </tr>
-              <tr>
+              <!--<tr>
                 <td colspan="2"> <div class="text-domicilio">
                     {{ element.direccion }}
                 </div></td>
-              </tr>
+              </tr>-->
             </table>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef  > Fecha </th>
-          <td mat-cell *matCellDef="let element" style="display: none;"></td>
+          <!--<td mat-cell *matCellDef="let element" style="display: none;"></td>-->
+          <td mat-cell *matCellDef="let element">{{ element.fecha | date:'dd/MM/yyyy' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

@@ -42,6 +42,7 @@ import { saveAs } from 'file-saver';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { FuseSplashScreenModule, FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { LandOwnerService } from 'app/modules/admin/lands/land-registry/services/land-owner.service';
 moment.locale('es');
 
 @Component({
@@ -123,7 +124,8 @@ export class LocationComponent implements OnInit , OnChanges {
     private _suministroService: SuministroService,
     private _cfTicketService: CFTicketService,
     private _predioPadronService: PredioPadronService,
-    private _fuseSplashScreenService: FuseSplashScreenService
+    private _fuseSplashScreenService: FuseSplashScreenService,
+    //private _landOwnerService: LandOwnerService
     ) {
         pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -1725,10 +1727,21 @@ updateLocation(ubicacion: IUbicacion, nroNoticacion: number=null): void{
 }
 
 previsualizacion(registroTitularidad: IRegistroTitularidad): void {
+    const cup=registroTitularidad.predioInspeccion.codCpu;
+    /*
+    const queryParams = {
+        'cup':cup
+    };
+
+    this._landOwnerService.getLandOwnerDetail(queryParams).subscribe(data=>{
+        const dj = data[0];
+
+    });
+    */
 
     const dialogRef= this._messageProviderService.showModal(PrevisualizacionComponent,
             {width:'100%', height:'100%',
-            data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos},
+            data: {registrosTitularidad: registroTitularidad,fotos: this.ubicacion.fotos , ticket:this.ticket, ubicacion: this.ubicacion},
         });
 
     dialogRef

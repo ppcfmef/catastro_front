@@ -3,6 +3,7 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 import {IRegistroTitularidad} from '../../interfaces/registro-titularidad.interface';
 import { IFoto } from '../../interfaces/foto.interface';
 import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
+import { ITicket } from '../../interfaces/ticket.interface';
 @Component({selector: 'app-previsualizacion', templateUrl: './previsualizacion.component.html', styleUrls: ['./previsualizacion.component.scss']})
 export class PrevisualizacionComponent implements OnInit {
 
@@ -23,7 +24,7 @@ export class PrevisualizacionComponent implements OnInit {
     ];
 
 
-    dataSourceCaracteristicas: any[] = [
+    dataEdificaciones: any[] = [
      /*   {
             nivel: 'Piso 1',
             materialpred: 'Madera',
@@ -164,9 +165,11 @@ export class PrevisualizacionComponent implements OnInit {
 
 
     fotos: IFoto[]=[];
-    dataGabinete: IRegistroTitularidad;
+    //dataGabinete: IRegistroTitularidad;
+    dataGabinete: any;
     dataCaracteristicasOrigen= [];
-    dataSourceCaracteristicasOrigen =[];
+    dataEdificacionesOrigen =[];
+    ticket: ITicket;
     constructor(
         public dialogRef: MatDialogRef < PrevisualizacionComponent >,
         @Inject(MAT_DIALOG_DATA)public dataDialog: any,
@@ -174,25 +177,41 @@ export class PrevisualizacionComponent implements OnInit {
         ) {}
 
     ngOnInit(): void {
+        this.ticket = this.dataDialog.ticket;
         this.dataGabinete = this.dataDialog.registrosTitularidad;
         this.fotos = this.dataDialog.fotos?this.dataDialog.fotos:[];
         this.dataCaracteristicasOrigen = [
             {
-                title: 'Long. Frente',
-                total: null
-            }, {
-                title: 'Arancel',
-                total: null
+                title: 'Tipo de Predio',
+                total: this.dataGabinete?.predioPadron?.tipoPredioNombre
+            }
+            , {
+                title: 'Número de Partida',
+                total: this.dataGabinete?.predioPadron?.resolutionDocument?this.dataGabinete?.predioPadron?.resolutionDocument:''
+            }
+            , {
+                title: 'Clase de uso',
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.claseUsoNombre
+            },{
+                title: 'SubClase de uso',
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.subclaseUsoNombre
+            },{
+                title: 'Uso del Predio',
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.tipUsoPredioNombre
             }, {
                 title: 'Area Terreno',
-                total: null
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.areaTerreno
             }, {
-                title: 'Predio',
-                total: null
+                title: 'Area común terreno',
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.areaTotTerrComun
+            }, {
+                title: 'Cant. de hab. o aforo',
+                total: this.dataGabinete?.predioPadron?.predioContribuyente[0]?.cantidadHabitantes
             },
         ];
-        this.dataSourceCaracteristicasOrigen =    [
-            {nivel: null,
+        this.dataEdificacionesOrigen =    [
+            {
+            nivel: null,
             materialpred: null,
             estadoConserva: null,
             claPred: null,
@@ -205,31 +224,47 @@ export class PrevisualizacionComponent implements OnInit {
             cBano: null,
             cElecttricidad: null,
             aconstruida: null
-}
+        }
         ] ;
 
         this.dataCaracteristicas = [
+
             {
-                title: 'Long. Frente',
-                total: this.dataGabinete.caracteristicas?. longitudFrente
-            }, {
-                title: 'Arancel',
-                total: this.dataGabinete.caracteristicas?. arancel
+                title: 'Tipo de Predio',
+                total: this.dataGabinete?.predioInspeccion?.tipoPredioNombre
+            }
+            ,
+            /*{
+                title: 'Número de Partida',
+                total: this.dataGabinete?.predioPadron?.resolutionDocument?this.dataGabinete?.predioPadron?.resolutionDocument:''
+            }*/
+             {
+                title: 'Clase de uso',
+                total: this.dataGabinete?.predioInspeccion?.claseUsoNombre
+            },{
+                title: 'SubClase de uso',
+                total: this.dataGabinete?.predioInspeccion?.subclaseUsoNombre
+            },{
+                title: 'Uso del Predio',
+                total: this.dataGabinete?.predioInspeccion?.tipoUsoNombre
             }, {
                 title: 'Area Terreno',
-                total: this.dataGabinete.caracteristicas?. areaTerreno
-            }, {
-                title: 'Predio',
-                total: null
-            },
+                total: this.dataGabinete?.caracteristicas?.areaTerreno
+            }, /*{
+                title: 'Area común terreno',
+                total: this.dataGabinete?.caracteristicas?.predioContribuyente[0]?.areaTotTerrComun
+            }*/
+
+
         ];
 
         const c =this.dataGabinete.caracteristicas;
-        this.dataSourceCaracteristicas = [
-                {nivel: 'Piso ' + c?.piso,
+        this.dataEdificaciones = [
+                {
+                nivel: 'Piso ' + c?.piso,
                 materialpred: c?.materialPred,
-                estadoConserva: c?.estadoConserva,
-                claPred: c?.clasificacionPred,
+                estadoConserva: c?.estadoConservaNombre,
+                claPred: c?.materialPredNombre,
                 aConst: c?.anioConstruccion,
                 cMuroColumna: c?.categoriaMuroColumna,
                 cTecho: c?.catergoriaTecho,
