@@ -1,0 +1,77 @@
+<div class="header-vertical pt-8"
+fuseScrollbar
+[fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollY: true}">
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="#">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let row ; let i = index">{{i + 1}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="tNivel">
+        <th mat-header-cell *matHeaderCellDef>Nivel</th>
+        <td mat-cell *matCellDef="let row">{{row.tNivel}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="tmatpred">
+        <th mat-header-cell *matHeaderCellDef>Material pred</th>
+        <td mat-cell *matCellDef="let row">{{row.tmatpred}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="eConsv">
+        <th mat-header-cell *matHeaderCellDef>Estado de conservación</th>
+        <td mat-cell *matCellDef="let row">{{row.eConsv}}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="aConstrucc">
+        <th mat-header-cell *matHeaderCellDef>Año construcción</th>
+        <td mat-cell *matCellDef="let row"> {{row.aConstrucc}} - {{row.mesConstruccion}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="muros">
+        <th mat-header-cell *matHeaderCellDef>C. Muros y columnas</th>
+        <td mat-cell *matCellDef="let row">{{row.muros}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="techos">
+        <th mat-header-cell *matHeaderCellDef>C. Techos</th>
+        <td mat-cell *matCellDef="let row">{{row.techos}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="piso">
+            <th mat-header-cell *matHeaderCellDef>C. Piso</th>
+            <td mat-cell *matCellDef="let row">{{row.piso}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="puertas">
+        <th mat-header-cell *matHeaderCellDef>C. Puertas y ventanas</th>
+        <td mat-cell *matCellDef="let row">{{row.puertas}}</td>
+    </ng-container>
+
+    <ng-container  matColumnDef="revestimiento" *ngIf="displayedColumns.includes('revestimiento')">
+        <th mat-header-cell *matHeaderCellDef>C. Revestimientos</th>
+        <td mat-cell *matCellDef="let row">{{row.revestimiento}}</td>
+    </ng-container>
+
+    <ng-container  matColumnDef="bano" *ngIf="displayedColumns.includes('bano')">
+        <th mat-header-cell *matHeaderCellDef>C. Baños</th>
+        <td mat-cell *matCellDef="let row">{{row.bano}}</td>
+    </ng-container>
+
+    <ng-container  matColumnDef="instSanitarias" *ngIf="displayedColumns.includes('instSanitarias')">
+        <th mat-header-cell *matHeaderCellDef>C. Electricidad</th>
+        <td mat-cell *matCellDef="let row">{{row.instSanitarias}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="aConstruida">
+        <th mat-header-cell *matHeaderCellDef>Area construida (m)</th>
+        <td mat-cell *matCellDef="let row">{{row.aConstruida}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<div class="px-1 py-4">
+    Sin niveles de construcción declarados
+</div>
+</div>

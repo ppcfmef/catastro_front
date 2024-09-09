@@ -42,6 +42,7 @@ import { WidgetMapComponent } from './components/widget-map/widget-map.component
 import { LocationComponent } from './container/location/location.component';
 
 import { NotificacionModalComponent } from './components/notificacion-modal/notificacion-modal.component';
+import { TableDjComponent } from './components/table-dj/table-dj.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { NotificacionModalComponent } from './components/notificacion-modal/noti
     MatDialogModule,
     FormsModule,
     MatInputModule,
+    TableDjComponent
 
   ]
 })
