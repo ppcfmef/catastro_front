@@ -4,7 +4,7 @@
         <div class="w-full">
             <b class="font-medium">Contribuyente : </b>
             <ng-container *ngIf="landOwner.isBussiness;else documentGeneral">
-                {{ landOwner.descriptionOwner }}
+                {{ landOwner.name }}
             </ng-container>
             <ng-template #documentGeneral>
                 {{ landOwner.name | titlecase }} {{ landOwner.paternalSurname | titlecase}} {{ this.landOwner.maternalSurname | titlecase }}

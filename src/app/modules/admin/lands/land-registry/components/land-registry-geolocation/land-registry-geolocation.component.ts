@@ -2421,7 +2421,7 @@ export class LandRegistryGeolocationComponent
         let resp = '';
 
         if (!this.isNullOrBlank(data)) {
-            resp = `${frase} ${data}`;
+            resp = `${frase} ${data}`.trim();
         }
         return resp;
     }
@@ -2562,15 +2562,15 @@ export class LandRegistryGeolocationComponent
                             {
                                 style: 'p2',
                                 width: '100%',
-                                text: ['DECLARO BAJO JURAMENTO : Tener un predio ubicado en el',
+                                text: ['DECLARO BAJO JURAMENTO : Tener un predio ubicado en el ',
                                     // eslint-disable-next-line max-len
-                                    { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.urbanLotNumber, ', Lote ')} ${this.getFrase(land.block, ',Bloque ')} ${this.getFrase(land.municipalNumber, ',Nro Puerta ')} ${this.getFrase(land.apartmentNumber, ',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}`, style: 'textR' },
+                                    { text: `${uuType ? this.toTitleCase(uuType.name) : ''} ${this.getFrase(this.toTitleCase(land.habilitacionName), '')} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase( land.urbanLotNumber, ', Lote ')} ${this.getFrase(land.block, ',Bloque ')} ${this.getFrase(land.municipalNumber, ',Nro Puerta ')} ${this.getFrase(land.apartmentNumber, ',Nro Dpto ')} ${this.getFrase(land.km, ',Kilometro ')}`, style: 'textR' },
 
                                     //cambiar los campos segun servicio
                                     // eslint-disable-next-line max-len
-                                    {text: `${land.idLotePuerta ? ', el cual cuenta con paso de servidumbre en':'' }`},
+                                    {text: `${land.idLotePuerta ? ', el cual cuenta con paso de servidumbre en ':'' }`},
                                     // eslint-disable-next-line max-len
-                                    { text: `${land.idLotePuerta ? `${streetType ? this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? ' ' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta, ', Lote ')}` : ''}`, style: 'textR' }, ', conforme al siguiente croquis: \n'
+                                    { text: `${land.idLotePuerta ? `${streetType ? this.toTitleCase(streetType.name) : ' '} ${streetType && land.streetName ? '' + this.toTitleCase(land.streetName) : ''} ${this.getFrase(land.urbanMza, ', Manzana ')} ${this.getFrase(land.loteUrbanoPuerta, ', Lote ')}` : ''}`, style: 'textR' }, ', conforme al siguiente croquis: \n'
                                 ]
                             }
 
@@ -2694,7 +2694,7 @@ export class LandRegistryGeolocationComponent
                                 margin: [0, 15, 0, 10],
                                 bold: false,
                                 width: '100%',
-                                text: `${district.name ? this.toTitleCase(this.district?.name) : ''},${moment(new Date()).format('DD [de] MMMM [del] YYYY')
+                                text: `${district.name ? this.toTitleCase(this.district?.name) : ''}, ${moment(new Date()).format('DD [de] MMMM [del] YYYY')
                                 .replace(moment(new Date()).format('MMMM'), this.toTitleCase(moment(new Date()).format('MMMM')))}`,
                             },
                         ],
