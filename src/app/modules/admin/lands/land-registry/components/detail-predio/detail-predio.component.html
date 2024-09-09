@@ -28,7 +28,7 @@
                     <mat-icon
                         class="icon-size-5 mr-2"
                         [svgIcon]="'heroicons_outline:identification'"></mat-icon>
-                    <span class="leading-none font-medium text-lg mr-2">DNI: </span>
+                    <span class="leading-none font-medium text-lg mr-2">{{landOwner?.documentType | documents}}: </span>
                     <span class="leading-none text-base">{{ landOwner?.dni }}</span>
             </div>
 
