@@ -21,7 +21,7 @@
                     class="icon-size-5 mr-2"
                     [svgIcon]="'mat_solid:person'"></mat-icon>
                 <span class="leading-none font-medium text-lg mr-2">Propietario: </span>
-                <span class="leading-none text-base">{{ landOwner?.name + ' ' + landOwner?.paternalSurname + ' ' + landOwner?.maternalSurname | titlecase }}</span>
+                <span class="leading-none text-base">{{ landOwner?.name || '' | titlecase }} {{landOwner?.paternalSurname || '' | titlecase}} {{ landOwner?.maternalSurname|| '' | titlecase }}</span>
             </div>
 
             <div class="flex items-center">
