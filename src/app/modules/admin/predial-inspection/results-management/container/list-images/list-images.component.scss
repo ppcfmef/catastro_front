@@ -1,4 +1,33 @@
 
-img {
-    border: 2px solid #E89027;
-}
+// img {
+//     border: 2px solid #E89027;
+// }
+
+
+.carousel {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .slide {
+    padding-right: 5px;
+    min-width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  img {
+    max-width: 100%; /* Ajustar a un tamaño específico */
+    max-height: calc(100vh - 275px);
+    object-fit: cover; /* Para mantener la proporción */
+    border-radius: 5px; /* Bordes redondeados si lo deseas */
+  }

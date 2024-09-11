@@ -21,6 +21,8 @@ export class ListImagesComponent implements OnInit,OnChanges {
         {url: 'https://e.rpp-noticias.io/large/2016/07/27/572657_204736.jpg'},
         {url: 'https://e.rpp-noticias.io/large/2016/07/27/572657_204736.jpg'},
     ];
+
+    currentSlide = 0;
   constructor(
     private _activeRoute: ActivatedRoute,
   ) { }
@@ -33,5 +35,14 @@ export class ListImagesComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.listImg=this.fotos.map((f: IFoto)=>({url:f.foto}));
+
+  }
+
+next(): void {
+        this.currentSlide = (this.currentSlide + 1) % this.listImg.length;
+}
+
+prev(): void {
+        this.currentSlide = (this.currentSlide - 1 + this.listImg.length) % this.listImg.length;
 }
 }

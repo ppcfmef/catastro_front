@@ -1,6 +1,23 @@
-<div class="flex gap-4" >
+<!-- <div class="flex gap-4 p-4" >
     <ng-container *ngFor="let img of listImg | slice:0:5">
-        <img class="object-contain h-40 rounded-md" src="{{img.url}}" alt="">
+        <img class="object-contain rounded-md" src="{{img.url}}" alt="">
     </ng-container>
-</div>
+</div> -->
+<div class="flex relative">
+    <div class="carousel">
+        <div class="slides" [style.transform]="'translateX(-' + currentSlide * 50 + '%)'">
+          <div *ngFor="let img of listImg" class="slide">
+            <img src="{{img.url}}" alt="Image">
+          </div>
+        </div>
 
+    </div>
+    <button mat-mini-fab class="absolute top-1/2 left-2" (click)="prev()" [disabled]="currentSlide === 0">
+        <mat-icon svgIcon="mat_outline:arrow_back_ios"></mat-icon>
+
+    </button>
+    <button mat-mini-fab   class="absolute top-1/2 right-2" (click)="next()" [disabled]="currentSlide === listImg.length - 2">
+        <mat-icon svgIcon="mat_outline:arrow_forward_ios"></mat-icon>
+    </button>
+
+</div>

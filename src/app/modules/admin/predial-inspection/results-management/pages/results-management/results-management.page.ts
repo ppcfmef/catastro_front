@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
 import { CommonService } from 'app/core/common/services/common.service';
 import { UserService } from 'app/core/user/user.service';
@@ -6,6 +6,7 @@ import { User } from 'app/core/user/user.types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ResultsService } from '../../services/results.service';
+import { CheckTicketService } from '../../services/check-ticket.service';
 //import { parseString } from 'rrule/dist/esm/src/parsestring';
 
 @Component({
@@ -20,12 +21,22 @@ export class ResultsManagementPage implements OnInit {
   _emailUserAdmin='jcramireztello@gmail.com';
   _unsubscribeAll: Subject<any> = new Subject<any>();
   idView='resmanagi';
+  checkTicket: boolean = false;
+
+  checkTicketService = inject(CheckTicketService);
   constructor(  private _userService: UserService,
     private _commonService: CommonService,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     private _resultsService: ResultsService) { }
 
   ngOnInit(): void {
+
+    this.checkTicketService.checkTicket$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((check: boolean) => {
+            this.checkTicket = check;
+    });
+
 
     this._userService.user$
     .pipe(takeUntil(this._unsubscribeAll))

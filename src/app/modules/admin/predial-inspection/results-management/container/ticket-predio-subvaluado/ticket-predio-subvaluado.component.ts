@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
-import { PrevisualizacionComponent } from '../previsualizacion/previsualizacion.component';
 import { ActivatedRoute } from '@angular/router';
+import { CheckTicketService } from '../../services/check-ticket.service';
 
 @Component({
   selector: 'app-ticket-predio-subvaluado',
@@ -10,8 +10,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TicketPredioSubvaluadoComponent implements OnInit {
 
+    checkTicketService = inject(CheckTicketService);
   constructor(
-    private _messageProviderService: MessageProviderService,
     private _activatedRoute: ActivatedRoute,
   ) {}
 
@@ -20,7 +20,4 @@ export class TicketPredioSubvaluadoComponent implements OnInit {
 
   }
 
-  prev(): void {
-    this._messageProviderService.showModal(PrevisualizacionComponent,{width:1100, height:720} );
-  }
 }

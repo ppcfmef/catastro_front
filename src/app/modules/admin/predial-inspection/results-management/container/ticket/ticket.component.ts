@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -15,6 +15,7 @@ import { TicketStatus } from 'app/shared/enums/ticket-status.enum';
 import { CFTicketService } from '../../services/cfticket.service';
 import { CommonService } from 'app/core/common/services/common.service';
 import { DistrictResource } from 'app/core/common/interfaces/common.interface';
+import { CheckTicketService } from '../../services/check-ticket.service';
 
 @Component({
   selector: 'app-ticket',
@@ -34,6 +35,8 @@ export class TicketComponent implements OnInit, OnDestroy {
   openLocation: boolean = true;
   ubicacion: IUbicacion;
   distrito: DistrictResource;
+
+  checkTicketService =inject(CheckTicketService);
 constructor(
   private _router: Router,
   private _activatedRoute: ActivatedRoute,
@@ -116,7 +119,8 @@ ngOnDestroy(): void {
 
 
 navegateTo(): void {
-  this._router.navigate(['land-inspection/results-management/'] );
+    this.checkTicketService.checkTicket$.next(false);
+    this._router.navigate(['land-inspection/results-management/'] );
 }
 
 

@@ -1,60 +1,75 @@
-<div class="flex flex-col items-center justify-center gap-5 bg-white ">
-    <!-- <app-table-dj></app-table-dj> -->
-    <div class="flex flex-col items-center justify-center gap-5 p-4">
-        <h1 class="text-lg font-bold">INFORMACIÓN DE GABINETE</h1>
-        <div class="font-bold text-lg self-start">DATOS DEL PREDIO </div>
+<div class="flex flex-auto flex-col bg-white w-full pt-6">
 
-        <div class="flex gap-3" >
-            <app-short-table *ngFor="let item of dataCaracteristicasOrigen" [dataTable] = item></app-short-table>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+        <mat-tab class="font-bold" label="Información del Predio">
+            <div class="flex flex-col justify-center px-4">
+                <div class="pb-4">
+                    <div class="flex gap-4">
+                        <mat-icon class="rotate-90" svgIcon="heroicons_solid:bookmark"></mat-icon>
+                        <h1 class="text-lg font-bold">INFORMACIÓN CONSIGNADA  EN LA DECLARACIÓN JURADA DE AUTOVALUO</h1>
+                    </div>
+
+                    <div class="p-4">
+                        <h2 class="text-lg font-bold py-4">Caracteristicas </h2>
+                        <div class="flex flex-wrap gap-4 pb-4" >
+                            <app-short-table *ngFor="let item of dataCaracteristicasOrigen" [dataTable] = item></app-short-table>
+                        </div>
+
+                        <h2 class="text-lg font-bold py-2">Datos de las edificaciones </h2>
+                        <table-dj [dataSource]="dataEdificacionesOrigen"></table-dj>
+
+                        <h2 class="text-lg font-bold py-2">Instalaciones </h2>
+                        <div class="flex header-vertical ">
+                            <app-table
+                                [dataSource]="dataSourceInstOrigen"
+                                [columns]="tableColumnsInst"
+                            >
+                            </app-table>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="py-4">
+                    <div class="flex gap-4">
+                        <mat-icon class="rotate-90" svgIcon="heroicons_solid:bookmark"></mat-icon>
+                        <h1 class="text-lg font-bold">INFORMACIÓN RESULTANTE DE LA INSPECCIÓN PREDIAL</h1>
+                    </div>
+                    <div class="p-4">
+                        <h2 class="text-lg font-bold py-4">Caracteristicas </h2>
+                        <div class="flex flex-wrap gap-4 pb-4" >
+                            <app-short-table *ngFor="let item of dataCaracteristicas" [dataTable] = item></app-short-table>
+                        </div>
+
+                        <h2 class="text-lg font-bold py-2">Datos de las edificaciones </h2>
+                        <table-dj [dataSource]="dataEdificaciones"></table-dj>
+                        <h2 class="text-lg font-bold py-4">Instalaciones </h2>
+                        <div  class="flex header-vertical ">
+                            <app-table
+                                [dataSource]="dataSourceInst"
+                                [columns]="tableColumnsInst"
+                                >
+                            </app-table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </mat-tab>
+        <mat-tab label="Fotos">
+            <app-list-images [fotos]="fotos"></app-list-images>
+        </mat-tab>
+
+    </mat-tab-group>
+
+
+    <div class="sticky z-10 p-4 w-full bottom-0 left-0 flex flex-wrap md:justify-between gap-4 bg-[#f5f1f1]">
+        <button mat-button class="red btn rounded-md" (click)="onClickCerrar($event)" >Cerrar</button>
+        <div class="flex gap-4">
+            <button mat-button class="blue btn rounded-md"  (click)="onClickConfirmarPredio($event)" >Predio Conforme</button>
+            <button mat-button class="cblue btn rounded-md" (click)="onClickSubvaluarPredio($event)" >Predio Subvaluado</button>
         </div>
-
-        <div class="font-bold text-lg self-start">DATOS DE LAS EDIFICACIONES </div>
-        <app-table
-            [dataSource]="dataEdificacionesOrigen"
-            [columns]="tableColumns"
-        >
-        </app-table>
-
-        <div class="font-bold text-lg self-start">DATOS DE OTRAS INSTALACIONES</div>
-        <div class=" self-start">
-            <app-table
-            [dataSource]="dataSourceInstOrigen"
-            [columns]="tableColumnsInst"
-        >
-        </app-table>
-        </div>
-
-    </div>
-
-    <div class="flex flex-col items-center justify-center gap-5 p-4">
-        <h1 class="text-lg font-bold">INFORMACIÓN DE CAMPO</h1>
-        <div class="font-bold text-lg self-start">DATOS DEL PREDIO </div>
-        <div class="flex gap-3" >
-            <app-short-table *ngFor="let item of dataCaracteristicas" [dataTable] = item></app-short-table>
-        </div>
-        <div class="font-bold text-lg self-start">DATOS DE LAS EDIFICACIONES </div>
-        <app-table
-            [dataSource]="dataEdificaciones"
-            [columns]="tableColumns"
-        >
-        </app-table>
-
-
-        <div class="font-bold text-lg self-start">DATOS DE OTRAS INSTALACIONES</div>
-        <div class=" self-start">
-            <app-table
-            [dataSource]="dataSourceInst"
-            [columns]="tableColumnsInst"
-        >
-        </app-table>
-        </div>
-
-    </div>
-    <app-list-images [fotos]="fotos"></app-list-images>
-    <div  class="flex gap-4">
-        <button class="blue btn"  (click)="onClickConfirmarPredio($event)" >Predio Conforme</button>
-        <button class="red btn" (click)="onClickSubvaluarPredio($event)" >Predio Subvaluado</button>
-        <button class="red btn" (click)="onClickCerrar($event)" >Cerrar</button>
     </div>
 
 </div>
