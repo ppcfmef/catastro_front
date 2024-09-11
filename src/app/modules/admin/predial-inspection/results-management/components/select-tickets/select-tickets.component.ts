@@ -32,11 +32,9 @@ export class SelectTicketsComponent implements OnInit,OnChanges {
     private _activeRoute: ActivatedRoute,
   ) { }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('this.ticket select-tickets>>',this.ticket);
     }
 
   ngOnInit(): void {
-    console.log('this.openLocation>>>',this.openLocation);
     //console.log('this.ticket select-tickets>>',this.ticket);
       if(
         [TypeGap.PREDIO_SIN_GEORREFERENCIACION,TypeGap.PUNTO_IMAGEN,TypeGap.PUNTOS_LOTE_SIN_PREDIO,TypeGap.PREDIO_SUBVALUADO].includes( this.ticket.codTipoTicket)
@@ -63,7 +61,6 @@ export class SelectTicketsComponent implements OnInit,OnChanges {
     this.itemSelect =  item; //  `${item.id}. Ubicación`;
     this.text = `${item.id}. Ubicación ${item.codUbicacion}`;
     this.openLocation = true;
-    console.log({openLocation:this.openLocation,codUbicacion:item.codUbicacion});
     this.eventOpenLocation.emit({openLocation:this.openLocation,codUbicacion:item.codUbicacion});
   }
 

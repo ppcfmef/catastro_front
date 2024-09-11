@@ -497,8 +497,6 @@ hideSelectUbigeo = false;
         this.view.when(() => {
             this._fuseSplashScreenService.hide();
 
-
-            console.log('ubigeo>>',this.ubigeo);
             if(this.ubicacion){
               this.onChangeUbicacion(this.ubicacion);
             }

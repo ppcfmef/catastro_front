@@ -58,7 +58,7 @@ export class CaseComponent implements OnInit , OnChanges{
     }
 
     refreshForm(): void{
-        console.log('this.registro>>>',this.registro);
+
         this.item.codCase = this.registro?.predioInspeccion?.codPre;
         this.item.landStatus = this.registro?.predioPadron?.status;
         if (this.registro?.predioInspeccion?.predioContribuyente.length>0){

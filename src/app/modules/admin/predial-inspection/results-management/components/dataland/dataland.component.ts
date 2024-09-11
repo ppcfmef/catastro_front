@@ -41,7 +41,6 @@ export class DatalandComponent implements OnInit {
     this.landRegistryService.getMasterDomain()
     .pipe(takeUntil(this.unsubscribeAll))
     .subscribe((result) => {
-        console.log('this.ubicacion>>',this.ubicacion);
         this.masterDomain = result;
         this.datosPredio.ubigeo = this.ubigeo;
         this.datosPredio.hab = `${this.masterDomain.uuType.find(e=> e.id ===this.ubicacion.codTipoUu)?.name} ${this.ubicacion.nomUu}`;

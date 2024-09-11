@@ -19,6 +19,21 @@
     background-color: #DE3F43;
 }
 
+.cblue {
+    background-color: #2945d6;
+}
+
 .blue {
    background-color: #0795FA;
 }
+
+
+app-table ::ng-deep .table-list,
+table-dj ::ng-deep .header-vertical{
+    thead .mat-mdc-header-cell {
+        background-color: #BFE1FF !important;
+    }
+}
+
+
+

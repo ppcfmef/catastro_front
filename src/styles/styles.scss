@@ -113,6 +113,13 @@ Personalizacion
     padding-right: 16px !important;
 }
 
+.color-dj {
+    .mat-mdc-header-cell {
+        background-color: #BFE1FF !important;
+        background: #BFE1FF !important;
+    }
+}
+
 .header-vertical {
     .mat-mdc-header-cell {
         writing-mode: vertical-rl;
