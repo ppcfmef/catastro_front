@@ -43,12 +43,26 @@
 
         </div>
         <div [style.display]="accordionItem.expanded ? '' : 'none'">
+<<<<<<< HEAD
             <div class="grid grid-cols-1 gap-4 px-4 py-2">
                 <div class="flex flex-col" *ngIf="this.registro?.predioPadron">
                     <strong><span>Dirección declarada</span></strong>
                     <span >
                       {{ registro?.predioPadron?.address ?? '  -  ' }}
                     </span>
+=======
+            <div class="flex flex-col items-center pl-3">
+
+                <div class="flex w-90 py-2 justify-between"  *ngIf="this.registro?.predioPadron" >
+
+
+                    <div class="flex flex-col">
+                        <strong><span>Direccion declarada</span></strong>
+                        <span>
+                            {{ registro?.predioPadron?.address}}
+                        </span>
+                    </div>
+>>>>>>> bb22a89d7d54a0c0d61df14a38c109068faa1140
 
                 </div>
 
