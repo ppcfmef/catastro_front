@@ -43,31 +43,24 @@
 
         </div>
         <div [style.display]="accordionItem.expanded ? '' : 'none'">
-            <div class="flex flex-col items-center pl-3">
 
-                <div class="flex w-90 py-2 justify-between"  *ngIf="this.registro?.predioPadron" >
+            <div class="grid grid-cols-1 gap-4">
 
-
-                    <div class="flex flex-col">
-                        <strong><span>Direccion declarada</span></strong>
-                        <span>
+                <div class="flex flex-col" *ngIf="this.registro?.predioPadron">
+                    <strong><span>Direccion declarada</span></strong>
+                    <span>
                             {{ registro?.predioPadron?.address}}
-                        </span>
-                    </div>
-
+                    </span>
                 </div>
 
-                <div class="flex flex-col gap-4" *ngIf="this.registro?.predioPadron?.predioContribuyente[0]?.contribuyente " >
-                    <div class="flex flex-col">
-                        <strong><span>Nombres y apellidos</span></strong>
-                        <span
+                <div class="flex flex-col" *ngIf="this.registro?.predioPadron?.predioContribuyente[0]?.contribuyente ">
+                    <strong><span>Nombres y apellidos</span></strong>
+                    <span
                             >{{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.apPat }} {{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.apMat }}
                             {{ registro?.predioPadron?.predioContribuyente[0]?.contribuyente?.nombre }}</span
-                        >
-                    </div>
-
-
+                    >
                 </div>
+
                 <div class="flex justify-between" *ngIf="item.codCPU && item.codCPU !=='' && item.landStatus===1">
                     <ng-container *ngIf="this.registro?.predioPadron?.predioContribuyente[0]?.contribuyente ">
                         <div class="flex flex-col" *ngIf="this.registro?.predioPadron ">
@@ -101,8 +94,8 @@
                     </div>
                   <div class="flex w-full justify-around " *ngIf="iniciar" >
 
-                    <button
-                    class="btnGenerar green "
+                    <button mat-button
+                    class="btnGenerar green text-white rounded-md shadow-sm "
                     (click)="onClickGenerarPredio()"
                     [disabled]="predioButtonDisabled"
                       >
@@ -110,8 +103,8 @@
                     Generar predio
                     </button>
 
-                    <button
-                    class="btnGenerar btnAdd "
+                    <button mat-button
+                    class="btnGenerar btnAdd  text-white rounded-md shadow-sm"
                     (click)="onClickGenerarPuntoImagen()"
                     [disabled]="puntoImagenDisabled"
                     >
@@ -126,7 +119,7 @@
                 <some-element *ngSwitchCase="2">
                     <div class="flex w-full " *ngIf="!iniciar" >
                         <button mat-button
-                        class=" green w-full rounded-md shadow-md text-white"
+                        class=" green w-full rounded-md shadow-sm text-white"
                         (click)="onClickOpenItem()"
                         >
                         Iniciar
@@ -136,15 +129,15 @@
                     </div>
                     <div class="flex w-full justify-around gap-2"  *ngIf="iniciar">
 
-                        <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="iniciar && item.landStatus === 0"   (click)="onClickGenerarPredio()" >
+                        <button mat-button class="btnGenerar w-full text-white rounded-md shadow-sm"    [disabled]="predioButtonDisabled" *ngIf="iniciar && item.landStatus === 0"   (click)="onClickGenerarPredio()" >
                             Generar predio
                           </button>
 
-                          <button class="btnGenerar w-full"   [disabled]="predioButtonDisabled" *ngIf="iniciar &&  item.landStatus === 1"   (click)="onClickReasignarPredio()" >
+                          <button mat-button class="btnGenerar w-full text-white rounded-md shadow-sm"   [disabled]="predioButtonDisabled" *ngIf="iniciar &&  item.landStatus === 1"   (click)="onClickReasignarPredio()" >
                             Reasignar
                           </button>
 
-                          <button class="btnNotify w-full" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
+                          <button mat-button class="btnNotify w-full text-white rounded-md shadow-sm" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
                             Notificar
                         </button>
                     </div>
@@ -154,8 +147,8 @@
 
                 <some-element *ngSwitchCase="3">
                     <div class="flex w-full" *ngIf="!iniciar" >
-                        <button
-                        class="btnGenerar green w-full "
+                        <button mat-button
+                        class=" green w-full text-white rounded-md shadow-sm "
                         (click)="onClickOpenItem()"
                         >
                         Iniciar
@@ -166,8 +159,8 @@
 
                   <div class="flex w-full justify-around gap-2"  *ngIf="iniciar">
 
-                    <button
-                    class="btnGenerar green w-1/2 justify-around "
+                    <button mat-button
+                    class="btnGenerar green w-1/2 justify-around  text-white rounded-md shadow-sm"
                     (click)="onClickValidarUbicacion()"
                     [disabled]="predioButtonDisabled"
                       >
@@ -175,8 +168,8 @@
                     Validar ubicación
                     </button>
 
-                    <button
-                    class="btnGenerar btnAdd w-1/2 justify-around"
+                    <button mat-button
+                    class="btnGenerar btnAdd w-1/2 justify-around  text-white rounded-md shadow-sm"
                     (click)="onClickNuevaDireccion()"
                     [disabled]="puntoImagenDisabled"
                     >
@@ -198,8 +191,8 @@
                 <some-element *ngSwitchCase="4">
 
                     <div class="flex w-full" *ngIf="!iniciar" >
-                        <button
-                        class="btnGenerar green w-full "
+                        <button mat-button
+                        class=" green w-full  text-white rounded-md shadow-sm"
                         (click)="onClickOpenItem()"
                         >
                         Iniciar
@@ -208,11 +201,11 @@
 
                     </div>
 
-                    <button class="btnGenerar w-full"    [disabled]="predioButtonDisabled" *ngIf="iniciar  && registro?.predioPadron"   (click)="onClickValidarUbicacion()" >
+                    <button mat-button class="btnGenerar w-full  text-white rounded-md shadow-sm"    [disabled]="predioButtonDisabled" *ngIf="iniciar  && registro?.predioPadron"   (click)="onClickValidarUbicacion()" >
                       Generar predio
                     </button>
 
-                    <button class="btnNotify w-full" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
+                    <button mat-button class="btnNotify w-full text-white rounded-md shadow-sm" *ngIf="!registro?.predioPadron && iniciar  " (click)="onClickGenerarNotificacion()" >
                         Notificar
                     </button>
 
