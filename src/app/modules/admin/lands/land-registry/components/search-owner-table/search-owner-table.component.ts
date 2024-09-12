@@ -32,7 +32,7 @@ export class SearchOwnerTableComponent implements OnInit, OnChanges, AfterViewIn
     this.defaultPaginator = {previousPageIndex: 0, pageIndex: this.pageIndex, pageSize: this.pageSize, length: 0};
     this.tableFilters = {
       paginator: this.defaultPaginator,
-      sort: {active: 'creationDate', direction: 'desc'}
+      sort: {active: 'creationDate', direction: 'asc'}
     };
   }
 

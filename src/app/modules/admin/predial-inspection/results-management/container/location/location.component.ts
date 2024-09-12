@@ -198,10 +198,8 @@ export class LocationComponent implements OnInit, OnChanges {
                             data: {
                                 registrosTitularidad: this.data.registrosTitularidad,
                                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                                texto_editar: `las ventanillas Nro 7 a 9`,
-                                texto_fijo: `Si encontrara divergencias en lo que obra en su Declaración Jurada de Autoavaluo con lo señalado en la Ficha
-                    adjunta sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y
-                    PU que serán proporcionados en`,
+                                texto_editar: ``,
+                                texto_fijo: `Es fundamental recordarle la importancia de cumplir con esta obligación tributaria, así como con el pago puntual del impuesto predial y los arbitrios municipales, por ello sírvase cumplir con modificar su Declaración acercándose a la Municipalidad y llenar los formularios HR y PU que serán proporcionados en`,
                             },
                         }
                     );
