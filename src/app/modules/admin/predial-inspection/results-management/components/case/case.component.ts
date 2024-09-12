@@ -55,6 +55,7 @@ export class CaseComponent implements OnInit , OnChanges{
 
     ngOnInit(): void {
         this.refreshForm();
+        console.log('this.registro',this.registro);
     }
 
     refreshForm(): void{

@@ -8,7 +8,7 @@
     <div class="p-4" *ngIf="ubicacion?.status===98 && ubicacion?.fileObs">
         <a class="btn btnObs w-full justify-around" href="{{ubicacion?.fileObs}}" target="_blank"> Archivo Adjunto</a>
     </div>
-    <div class="p-4">
+    <div class="px-2">
         <app-dataland [ubicacion]="ubicacion" (clickPosition)="onClickPosition($event)" [ubigeo]="ubigeo" ></app-dataland>
     </div>
 
@@ -115,13 +115,13 @@
         </container-element>
     <div class="flex w-full justify-around gap-2" *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='2' || ticket?.codTipoTicket==='4'  )">
 
-        <button class=" btn btnAdd w-1/2 justify-around" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled" >Aprobar </button>
-        <button class="btn btnObs w-1/2 justify-around" (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
+        <button mat-button class="btnAdd w-1/2 shadow-md rounded-md text-white" (click)="onClickAprTicket()" [disabled] ="appButtonDisabled" >Aprobar </button>
+        <button mat-button class="btnObs w-1/2 shadow-md rounded-md text-white " (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
     </div>
 
-    <div class="flex w-full justify-around " *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='1' || ticket?.codTipoTicket==='3' || ticket?.codTipoTicket==='5' )">
+    <div class="flex w-full  " *ngIf="ubicacion.status===0 && (ticket?.codTipoTicket==='1' || ticket?.codTipoTicket==='3' || ticket?.codTipoTicket==='5' )">
 
 
-        <button class="btn btnObs w-full justify-around"  (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
+        <button mat-button class="btn btnObs w-full justify-around rounded-md shadow-md"  (click)="onClickObsTicket()"  [disabled]="obsButtonDisabled" >Observar </button>
     </div>
 </div>

@@ -2,7 +2,7 @@
 <cdk-accordion class="example-accordion">
     <cdk-accordion-item
       #accordionItem="cdkAccordionItem"   [expanded]="!openLocation" (opened)="opened($event)">
-      <div class="example-accordion-item-header"    (click)=" accordionItem.toggle(); " *ngIf="itemSelect?.state!==98" >
+      <div class="example-accordion-item-header shadow-md"    (click)=" accordionItem.toggle(); " *ngIf="itemSelect?.state!==98" >
         {{ !openLocation ? 'Seleccione Ubicación' : text}}
       </div>
 

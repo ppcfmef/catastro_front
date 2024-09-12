@@ -376,7 +376,7 @@ export class PrevisualizacionComponent implements OnInit {
             .toPromise()
             .then((option) => {
                 if (option === 'confirmed') {
-                   this.checkTicketService.resolverTicket$.next('confirmar');
+                    this.checkTicketService.resolverTicket$.next('confirmar');
                 }
 
             });
