@@ -19,6 +19,14 @@ export class FormUtils {
         return formData;
     }
 
+    static isNullorBlank(value: any): any {
+        let result = true;
+        if((value && value.trim() !==''  ) || value ===0){
+            result = false;
+        }
+
+        return result;
+    }
 
     static deleteKeysNullInObject(rawValue): any {
         Object.keys(rawValue).forEach((key) => {

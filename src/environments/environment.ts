@@ -4,8 +4,8 @@
 //const host = 'https://catastro-fiscal.codtree.com/';
 /*const host = 'https://catastromef.apistoring.com/catastroback';*/
 
-/*const host = 'http://127.0.0.1:8000/';*/
-const host = 'https://vmd120205.contaboserver.net/';
+const host = 'http://127.0.0.1:8000/';
+/*const host = 'https://vmd120205.contaboserver.net/';*/
 
 export const environment = {
     production: false,
