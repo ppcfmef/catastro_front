@@ -2,7 +2,7 @@
   <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-4/12 input-icon-form">
     <input type="text" matInput formControlName="search"
              placeholder="Buscar por Nombres o Documento"
-             autocomplete="off">
+             autocomplete="off" (keyup.enter)="onClickSearch()" >
       <mat-select formControlName="view" matPrefix
       (selectionChange)="onChangeView()">
         <mat-option [value]="'predio'">Predios</mat-option>

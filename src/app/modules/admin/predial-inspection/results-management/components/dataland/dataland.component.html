@@ -13,11 +13,11 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 ">
-
-            <div class="flex flex-col" *ngIf="datosPredio.mz">
-                <span class="text-title ">Manzana urbana</span>
-                <span class="text">{{datosPredio.mz}}</span>
+    <div class="flex items-center">
+        <div class="flex flex-col gap-y-3 w-48">
+            <div class="flex flex-col">
+                <span class="text-bold">Manzana urbana</span>
+                <span class="text">{{datosPredio?.mz}}</span>
             </div>
             <div class="flex flex-col" *ngIf="datosPredio.type">
                 <span class="text-title ">Tipo de via</span>
@@ -27,9 +27,11 @@
                 <span class="text-title ">Numero de puerta</span>
                 <span class="text">{{datosPredio.numdoor}}</span>
             </div>
-            <div class="flex flex-col" *ngIf="datosPredio.lote">
-                <span class="text-title ">Lote Urbano</span>
-                <span class="text">{{datosPredio.lote}}</span>
+        </div>
+        <div class="flex flex-col gap-y-3">
+            <div class="flex flex-col">
+                <span class="text-bold">Lote Urbano</span>
+                <span class="text">{{datosPredio?.lote}}</span>
             </div>
             <div class="flex flex-col" *ngIf="datosPredio.name">
                 <span class="text-title ">Nombre de via</span>

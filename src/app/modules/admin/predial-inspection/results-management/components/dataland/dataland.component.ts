@@ -4,6 +4,7 @@ import { ResultsService } from '../../services/results.service';
 import { LandRegistryService } from 'app/modules/admin/lands/land-registry/services/land-registry.service';
 import { Subject, takeUntil } from 'rxjs';
 import { MasterDomain } from 'app/modules/admin/lands/land-registry/interfaces/master-domain.interface';
+import { FormUtils } from 'app/shared/utils/form.utils';
 
 @Component({
   selector: 'app-dataland',
@@ -44,11 +45,11 @@ export class DatalandComponent implements OnInit {
         this.masterDomain = result;
         this.datosPredio.ubigeo = this.ubigeo;
         this.datosPredio.hab = `${this.masterDomain.uuType.find(e=> e.id ===this.ubicacion.codTipoUu)?.name} ${this.ubicacion.nomUu}`;
-        this.datosPredio.mz = this.ubicacion.mznUrb;
-        this.datosPredio.lote = this.ubicacion.lotUrb;
+        this.datosPredio.mz =  !FormUtils.isNullorBlank(this.ubicacion.mznUrb)?this.ubicacion.mznUrb:'-';
+        this.datosPredio.lote = !FormUtils.isNullorBlank(this.ubicacion.lotUrb)?this.ubicacion.lotUrb:'-';
         this.datosPredio.type = this.masterDomain.codStreet.find(e=> e.id ===this.ubicacion.codTipVia)?.name;
         this.datosPredio.name = this.ubicacion.nomVia;
-        this.datosPredio.numdoor = this.ubicacion.numMun;
+        this.datosPredio.numdoor =  !FormUtils.isNullorBlank(this.ubicacion.numMun)? this.ubicacion.numMun:'-';
         this.datosPredio.address = this.ubicacion.address;
 
     });

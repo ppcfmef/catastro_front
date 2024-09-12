@@ -6,7 +6,7 @@
     [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollY: true}">
 
     <table  class="table-base w-full" mat-table [dataSource]="dataTable"
-    matSort matSortStart="desc" matSortActive="creationDate" matSortDirection="desc" matSortDisableClear #landOwnertTableSort="matSort" matSortDisableClear
+    matSort matSortActive="creationDate"  matSortDisableClear #landOwnertTableSort="matSort" matSortDisableClear
     >
       <ng-container matColumnDef="nro">
           <th mat-header-cell *matHeaderCellDef>
