@@ -44,6 +44,7 @@ import { LocationComponent } from './container/location/location.component';
 import { NotificacionModalComponent } from './components/notificacion-modal/notificacion-modal.component';
 import { TableDjComponent } from './components/table-dj/table-dj.component';
 import { CheckTicketComponent } from './container/check-ticket/check-ticket.component';
+import { TableOtherInstComponent } from './components/table-other-inst/table-other-inst.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { CheckTicketComponent } from './container/check-ticket/check-ticket.comp
     MatInputModule,
     TableDjComponent,
     CheckTicketComponent,
+    TableOtherInstComponent,
 
   ]
 })

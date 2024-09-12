@@ -20,11 +20,7 @@
 
                         <h2 class="text-lg font-bold py-2">Instalaciones </h2>
                         <div class="flex header-vertical ">
-                            <app-table
-                                [dataSource]="dataSourceInstOrigen"
-                                [columns]="tableColumnsInst"
-                            >
-                            </app-table>
+                            <table-other-inst [dataSource]="dataSourceInstOrigen"></table-other-inst>
                         </div>
                     </div>
 
@@ -46,11 +42,7 @@
                         <table-dj [dataSource]="dataEdificaciones"></table-dj>
                         <h2 class="text-lg font-bold py-4">Instalaciones </h2>
                         <div  class="flex header-vertical ">
-                            <app-table
-                                [dataSource]="dataSourceInst"
-                                [columns]="tableColumnsInst"
-                                >
-                            </app-table>
+                            <table-other-inst [dataSource]="dataSourceInst"></table-other-inst>
                         </div>
                     </div>
                 </div>
