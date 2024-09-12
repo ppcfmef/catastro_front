@@ -16,8 +16,6 @@ data= {
 set dataTable(data: any) {
     this.data = data;
 }
-  constructor() { }
-
   ngOnInit(): void {
   }
 
