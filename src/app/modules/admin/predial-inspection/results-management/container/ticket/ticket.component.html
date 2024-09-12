@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto gap-y-3">
+<div class="flex flex-col flex-auto gap-y-3 container">
     <div class="flex justify-between items-center pt-8 pb-2 px-4">
         <div class="flex gap-x-2">
             <button>
@@ -20,7 +20,7 @@
     </div>
     <div class="content" *ngIf="openLocation">
     <app-location [ticket]="ticket" [ubicacion]="ubicacion" (eventUpdateLocation)="eventUpdateLocation($event)" [user]="user" [ubigeo]="ubigeo" (eventCloseLocation)="eventCloseLocation($event)"  [distrito]="distrito"></app-location>
-    </div>
+</div>
 
 
    </div>
