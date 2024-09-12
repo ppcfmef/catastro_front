@@ -22,21 +22,23 @@
 
 .example-accordion-item-header,
 .example-accordion-item-body {
-  padding: 6px;
+  padding: 12px 14px;
   display: flex;
 }
 .example-accordion-item-header {
     display: flex;
     justify-content: space-between;
 
-    color: #0D2855;
+    color: #1f0105;
     font-size: 14px;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 2px;
+    margin: 12px 0;
+
 }
 
 .inactive {
-    background-color: #EBEBEB ;
+    background-color: #faf3f3 ;
 }
 
 .active {
@@ -79,7 +81,7 @@ button[disabled]{
   color: #666666;
 }
 .btnNotify {
-    background-color: #DE3F43;
+    background-color: #f35256;
     color: white;
     height: 33px;
     /*width: 98%;*/

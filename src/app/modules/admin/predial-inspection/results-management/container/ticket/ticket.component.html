@@ -1,10 +1,14 @@
-<div class="flex flex-col flex-auto gap-y-3 container">
-    <div class="flex items-center justify-between px-4">
-        <div class="flex gap-x-1">
+<div class="flex flex-col flex-auto gap-y-3">
+    <div class="flex justify-between items-center pt-8 pb-2 px-4">
+        <div class="flex gap-x-2">
             <button>
                 <mat-icon svgIcon="arrow_back_ios" class="arrow-back" (click)="navegateTo()"></mat-icon>
             </button>
-            <span class="title-primary">Ticket  {{ticket?.codTicket}}  -   {{ticket?.tipoTicket}}</span>
+            <div class="flex flex-col">
+                <h1 class="title-primary">Ticket {{ticket?.codTicket}}</h1>
+                <span class="font-semibold text-gray-600">{{ticket?.tipoTicket}}</span>
+            </div>
+
         </div>
         <div class="btnorange">
             <span >{{totalUbicaciones}}  {{ totalUbicaciones>1?  "LOTES": "LOTE" }}  </span>
@@ -14,9 +18,9 @@
     <div *ngIf="ticket">
         <app-select-tickets [ticket]="ticket" [ubicaciones]="ubicaciones" [openLocation]="openLocation" (eventOpenLocation)="eventOpenLocation($event)"  ></app-select-tickets>
     </div>
-    <div class="content" *ngIf="openLocation">
+
         <app-location [ticket]="ticket" [ubicacion]="ubicacion" (eventUpdateLocation)="eventUpdateLocation($event)" [user]="user" [ubigeo]="ubigeo" (eventCloseLocation)="eventCloseLocation($event)"  [distrito]="distrito"></app-location>
-    </div>
+
    </div>
 
 

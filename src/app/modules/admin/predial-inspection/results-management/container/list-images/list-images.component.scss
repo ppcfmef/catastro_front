@@ -26,8 +26,8 @@
   }
 
   img {
-    max-width: 100%; /* Ajustar a un tamaño específico */
+    max-width: 100%;
     max-height: calc(100vh - 275px);
-    object-fit: cover; /* Para mantener la proporción */
-    border-radius: 5px; /* Bordes redondeados si lo deseas */
+    object-fit: cover;
+    border-radius: 5px;
   }

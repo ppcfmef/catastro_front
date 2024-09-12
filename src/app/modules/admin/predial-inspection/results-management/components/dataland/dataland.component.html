@@ -1,12 +1,10 @@
-<div class="flex flex-col gap-y-3 py-1" *ngIf="ubicacion">
-    <span class="title">DATOS DE UBICACION</span>
-    <div class="flex items-center">
-        <div class="flex flex-col gap-y-3 w-48">
-            <span class="text-bold">UBIGEO {{ubigeo}}</span>
-            <div class="flex flex-col">
-                <span class="text-bold">Habilitacion</span>
+<div class="flex flex-col gap-y-3 pt-3" *ngIf="ubicacion">
+    <span class="text-bold">DATOS DE UBICACION</span>
+    <span class="text-bold">UBIGEO {{ubigeo}}</span>
+    <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col" *ngIf="datosPredio.hab">
+                <span class="text-title">Habilitacion</span>
                 <span class="text">{{datosPredio.hab}}</span>
-            </div>
         </div>
         <div>
             <button class="buttonMap" (click)="onClickPosition()">
@@ -15,35 +13,33 @@
         </div>
     </div>
 
-    <div class="flex items-center">
-        <div class="flex flex-col gap-y-3 w-48">
-            <div class="flex flex-col">
-                <span class="text-bold">Manzana urbana</span>
+    <div class="grid grid-cols-2 gap-4 ">
+
+            <div class="flex flex-col" *ngIf="datosPredio.mz">
+                <span class="text-title ">Manzana urbana</span>
                 <span class="text">{{datosPredio.mz}}</span>
             </div>
-            <div class="flex flex-col">
-                <span class="text-bold">Tipo de via</span>
+            <div class="flex flex-col" *ngIf="datosPredio.type">
+                <span class="text-title ">Tipo de via</span>
                 <span class="text">{{datosPredio.type}}</span>
             </div>
-            <div class="flex flex-col">
-                <span class="text-bold">Numero de puerta</span>
+            <div class="flex flex-col" *ngIf="datosPredio.numdoor">
+                <span class="text-title ">Numero de puerta</span>
                 <span class="text">{{datosPredio.numdoor}}</span>
             </div>
-        </div>
-        <div class="flex flex-col gap-y-3">
-            <div class="flex flex-col">
-                <span class="text-bold">Lote Urbano</span>
+            <div class="flex flex-col" *ngIf="datosPredio.lote">
+                <span class="text-title ">Lote Urbano</span>
                 <span class="text">{{datosPredio.lote}}</span>
             </div>
-            <div class="flex flex-col">
-                <span class="text-bold">Nombre de via</span>
+            <div class="flex flex-col" *ngIf="datosPredio.name">
+                <span class="text-title ">Nombre de via</span>
                 <span class="text">{{datosPredio.name}}</span>
             </div>
-            <div class="flex flex-col">
-                <span class="text-bold">Direccion</span>
+            <div class="flex flex-col" *ngIf="datosPredio.address">
+                <span class="text-title ">Direccion</span>
                 <span class="text">{{datosPredio.address}}</span>
             </div>
-        </div>
+
     </div>
 
 </div>

@@ -2,8 +2,9 @@
     ---black: #1E293B;
 }
 @mixin text() {
-    color: #1E293B;
+    color: #292828;
     font-size: 14px;
+    font-weight: 700
 }
 
 .text-bold {
@@ -23,8 +24,8 @@
 
 }
 
-.title {
-    color: #0795FA;
+.text-title {
+    color: #727272;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
 }
