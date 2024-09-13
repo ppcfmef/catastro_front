@@ -13,31 +13,30 @@
         </div>
     </div>
 
-    <div class="flex items-center">
-        <div class="flex flex-col gap-y-3 w-48">
-            <div class="flex flex-col">
+    <div class="grid grid-cols-2 gap-4 py-2">
+
+            <div class="flex flex-col" *ngIf="datosPredio.mz && datosPredio.mz !== '-'" >
                 <span class="text-bold">Manzana urbana</span>
                 <span class="text">{{datosPredio?.mz}}</span>
             </div>
-            <div class="flex flex-col" *ngIf="datosPredio.type">
+            <div class="flex flex-col" *ngIf="datosPredio.type && datosPredio.type !== '-'">
                 <span class="text-title ">Tipo de via</span>
                 <span class="text">{{datosPredio.type}}</span>
             </div>
-            <div class="flex flex-col" *ngIf="datosPredio.numdoor">
+            <div class="flex flex-col" *ngIf="datosPredio.numdoor && datosPredio.numdoor !== '-'">
                 <span class="text-title ">Numero de puerta</span>
                 <span class="text">{{datosPredio.numdoor}}</span>
             </div>
-        </div>
-        <div class="flex flex-col gap-y-3">
-            <div class="flex flex-col">
+
+            <div class="flex flex-col" *ngIf="datosPredio.lote && datosPredio.lote !== '-'">
                 <span class="text-bold">Lote Urbano</span>
                 <span class="text">{{datosPredio?.lote}}</span>
             </div>
-            <div class="flex flex-col" *ngIf="datosPredio.name">
+            <div class="flex flex-col" *ngIf="datosPredio.name && datosPredio.name !== '-'">
                 <span class="text-title ">Nombre de via</span>
                 <span class="text">{{datosPredio.name}}</span>
             </div>
-            <div class="flex flex-col" *ngIf="datosPredio.address">
+            <div class="flex flex-col" *ngIf="datosPredio.address && datosPredio.address !== '-'">
                 <span class="text-title ">Direccion</span>
                 <span class="text">{{datosPredio.address}}</span>
             </div>
