@@ -1,13 +1,14 @@
-<h1 mat-dialog-title>Desea Modificar la Notificacion?</h1>
+<h1 mat-dialog-title>Previsualizacion de Notificacion</h1>
 
 <mat-dialog-content>
-<p> {{dataDialog.textoFijo}}
-</p>
-<br>
+  {{texto}} <input    class=" w-1/3" [(ngModel)]="texto1"  type="text" />  o  comunicarse a
+  <input   class=" w-1/3" [(ngModel)]="texto2"  type="text" /> {{textoFinal}}
+
+<!--
 <textarea name="" id="" cols="70" rows="7"  [(ngModel)]="dataDialog.textoEditar" placeholder="modifique el texto" >
 
 </textarea>
-
+-->
 </mat-dialog-content>
 
 <mat-dialog-actions>
