@@ -215,7 +215,7 @@ export class OwnerLandCreateAndEditComponent implements OnInit, OnChanges, OnDes
             this.formEdit.get('dni').setValue(result.numeroDocumento);
             if (result.tipoDocumento === 2) {
               this.formEdit.get('documentType').setValue('06');
-              this.formEdit.get('descriptionOwner').setValue(result.razonSocial);
+              this.formEdit.get('name').setValue(result.razonSocial);
             } else {
               this.formEdit.get('name').setValue(result.nombres);
               this.formEdit.get('documentType').setValue('01');
