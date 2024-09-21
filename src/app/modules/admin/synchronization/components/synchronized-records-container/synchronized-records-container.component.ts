@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
@@ -6,12 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TableSynchronizationsProcessedComponent } from '../table-synchronizations-processed/table-synchronizations-processed.component';
-import { stat } from 'fs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Subject, switchMap, takeUntil, filter, distinctUntilChanged } from 'rxjs';
-import { debounce } from 'lodash';
+import { debounceTime, Subject, switchMap, takeUntil, filter, distinctUntilChanged, of, Observable, tap, catchError } from 'rxjs';
 import { FiltersComponent } from '../filters/filters.component';
-
+import { SynchronizationDjService } from '../../services/synchronization-dj.service';
+import { DJ, DJResponse } from '../../interfaces/dj.interface';
+import { FormUtils } from 'app/shared/utils/form.utils';
+import moment from 'moment';
+import { Console } from 'console';
+import { CustomConfirmationService } from 'app/shared/services/custom-confirmation.service';
 @Component({
     selector: 'app-synchronized-records-container',
     standalone: true,
@@ -32,153 +36,118 @@ import { FiltersComponent } from '../filters/filters.component';
 })
 export class SynchronizedRecordsContainerComponent implements OnInit {
 
-    tableSinchronizationsProcessed  = [
-        {
-            codigoDeclaracionJurada: '123456789',
-            codigoPredio: '73042128-0001-1',
-            codigoContribuyente: '0854',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:18:02',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '123457444',
-            codigoPredio: '73042128-0005-1',
-            codigoContribuyente: '0853',
-            falloDescripcion: 'Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:17:04',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042128-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:17:03',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042728-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:17:02',
-            estado: 'No Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '123456789',
-            codigoPredio: '73042128-0001-1',
-            codigoContribuyente: '0854',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 12:17:02',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '123457444',
-            codigoPredio: '73042128-0005-1',
-            codigoContribuyente: '0853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:15:02',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042128-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 23:15:02',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042728-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 22:15:02',
-            estado: 'No Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '123456789',
-            codigoPredio: '73042128-0001-1',
-            codigoContribuyente: '0854',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024 12:15:02',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '123457444',
-            codigoPredio: '73042128-0005-1',
-            codigoContribuyente: '0853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042128-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024',
-            estado: 'Sincronizado'
-        },
-        {
-            codigoDeclaracionJurada: '17457444',
-            codigoPredio: '73042728-0705-1',
-            codigoContribuyente: '8853',
-            falloDescripcion: 'Fallo de conexción',
-            secuenciaEjecutora: 'Tarapoto',
-            fecha: '17/18/2024',
-            estado: 'No Sincronizado'
-        },
-    ];
-
+    tableSinchronizationsProcessed: Observable<DJ[]> = of([]) ;
+    length: number = 0;
     isLoading: boolean = false;
+    params: any;
     filtersForm: FormGroup;
     #changeDetectorRef = inject(ChangeDetectorRef);
-
+    synchronizationDjService = inject(SynchronizationDjService);
     private unsubscribeAll: Subject<any> = new Subject<any>();
-
+    private confirmationService = inject(CustomConfirmationService);
     constructor() {}
     ngOnInit(): void {
         this.filtersForm = new FormGroup({
             search: new FormControl(''),
-            status: new FormControl(''),
         });
+
+        this.params = {
+            pageSize: 10,
+            page: 1,
+        };
+
+        this.getDJ(this.params);
 
         this.filtersForm.get('search').valueChanges
             .pipe(
                     debounceTime(300),
                     takeUntil(this.unsubscribeAll),
-                    distinctUntilChanged()
+                    distinctUntilChanged(),
+                    tap(()=> this.isLoading = true)
                 )
-            .subscribe(() => {
-                this.filterTable();
+            .subscribe((value) => {
+                this.params['contribuyenteNumero'] = value;
+                this.getDJ(this.params);
             });
     }
 
+    paginatorChange(event: any): void {
+        this.params['pageSize'] = event.pageSize;
+        this.params['page'] = event.pageIndex;
+        this.getDJ(this.params);
+    }
 
-    filterTable(): void {
-        const filters = this.filtersForm.getRawValue();
+    filterOptions(options: any): void {
+        this.params['procesado'] = options.status ?? '';
+        this.params['municipalidadId'] = options.municipalidadId ?? '';
+        this.params['fechaInicio'] = options?.start?.format('DD/MM/YYYY') ?? '';
+        this.params['fechaFin'] = options?.end?.format('DD/MM/YYYY') ?? moment().format('DD/MM/YYYY');
+
+        const filters = FormUtils.deleteKeysNullInObject(this.params);
         this.isLoading = true;
-        this.#changeDetectorRef.markForCheck();
+        this.getDJ(filters);
 
-        setTimeout(() => {
-            const respFilter =
-                this.tableSinchronizationsProcessed.filter(row => String(row.codigoContribuyente).includes(filters.search));
-                this.isLoading = false;
-                this.tableSinchronizationsProcessed = respFilter;
-                this.#changeDetectorRef.markForCheck();
-        },1000);
+    }
+
+    getDJ(params): void {
+        this.synchronizationDjService.synchronizationAll(params).pipe(
+            tap(() => this.isLoading = false),
+            takeUntil(this.unsubscribeAll)
+        ).subscribe((response)=> {
+            this.length = response.pageable.totalElements;
+            this.tableSinchronizationsProcessed = of(response.data);
+            this.#changeDetectorRef.detectChanges();
+            this.isLoading = false;
+        });
+    }
+    sinchronizationsOne(row): void {
+        console.log(row, 'row');
+        const params = {
+            movimiento_id: row.logIntegracionId,
+            contribuyente_numero: row.contribuyenteNumero,
+            dj_predial_numero: row.djPredialNumero,
+        };
+        this.synchronizationDjService.synchronizationIndividual(params).pipe(
+            takeUntil(this.unsubscribeAll),
+            catchError((error) => {
+                console.log(error, 'error');
+                this.confirmationService.errorInfo(
+                    'Error en el Servicio',
+                    'Error al sincronizar DJ, intente nuevamente'
+                );
+                return of(null);
+            })
+        ).subscribe((response) => {
+            if (response) {
+                const dialogRef = this.confirmationService.success(
+                    'Sincronización',
+                    'Se sincronizo correctamente'
+                );
+                dialogRef.afterClosed().subscribe(() => this.getDJ(this.params));
+            }
+        });
+    }
+
+    sinchronizeMasive(): void {
+        this.synchronizationDjService.synchronizationMassive()
+            .pipe(
+                takeUntil(this.unsubscribeAll),
+                catchError((error) => {
+                    console.log(error, 'error');
+                    this.confirmationService.errorInfo(
+                        'Error en el Servicio',
+                        'Error al sincronizar, intente nuevamente'
+                    );
+                    return of(null);
+                })
+            ).subscribe((response) => {
+                if (response) {
+                    const dialogRef = this.confirmationService.success(
+                        'Sincronización',
+                        'Se sincronizo correctamente'
+                    );
+                    dialogRef.afterClosed().subscribe(() => this.getDJ(this.params));
+                }
+            });
     }
 }

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DJ } from '../../interfaces/dj.interface';
+import { elementAt } from 'rxjs';
 
 @Component({
     selector: 'app-table-synchronizations-processed',
@@ -23,28 +25,63 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     styleUrls: ['./table-synchronizations-processed.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableSynchronizationsProcessedComponent  implements OnChanges  , OnInit{
+export class TableSynchronizationsProcessedComponent  implements OnInit, OnChanges, AfterViewInit {
 
-    @Input() dataSource: any[];
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    tableDataSource;
-    pageIndex = 0;
-    pageSize = 10;
-    displayedColumns: string[] = ['Nro','codigoDeclaracionJurada', 'codigoPredio', 'codigoContribuyente', 'falloDescripcion','secuenciaEjecutora', 'fecha', 'estado','actions'];
+
+    @Input() tableDataSource;
+    @Input() length: number;
+    @Output() paginatorChange = new EventEmitter<any>();
+    @Output() rowClick = new EventEmitter<any>();
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    dataSource = new MatTableDataSource<DJ>();
+    displayedColumns: string[] = ['Nro','codigoDeclaracionJurada', 'codigoContribuyente', 'falloDescripcion','secuenciaEjecutora', 'fecha', 'estado','actions'];
+    #changeDetectorRef = inject(ChangeDetectorRef);
+
+    ngOnInit(): void {
+        this.dataSource.data = this.tableDataSource;
+        this.dataSource.paginator = this.paginator;
+        this.#changeDetectorRef.detectChanges();
+    }
+
+
+    ngAfterViewInit(): void {
+        // this.dataSource.paginator = this.paginator;
+        // this.paginator.length = this.length;
+        // this.#changeDetectorRef.detectChanges();
+    }
+
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.tableDataSource) {
+            this.dataSource.data = this.tableDataSource || [];
+        }
+
+        if (changes.length && this.paginator) {
+            this.paginator.length = this.length;
+            this.#changeDetectorRef.detectChanges();
+        }
+
+
+    }
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
     }
 
-
-    ngOnInit(): void {
-        console.log(this.dataSource);
-       this.tableDataSource = new MatTableDataSource(this.dataSource);
+    onPageChange(event: any): void {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+        event.pageIndex+=1;
+        this.paginatorChange.emit({
+            pageIndex: event.pageIndex,
+            pageSize: event.pageSize
+        });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-
-        this.tableDataSource = new MatTableDataSource(this.dataSource);
-
+    onAction(element): void {
+        this.rowClick.emit(element);
+        console.log('onAction', element);
     }
- }
+}
