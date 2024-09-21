@@ -1,7 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { FormUtils } from 'app/shared/utils/form.utils';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -32,12 +33,15 @@ import { Subject } from 'rxjs';
 })
 export class FiltersComponent {
 
+    @Output() filters: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('filtersOrigin') private _filtersOrigin: MatButton;
     @ViewChild('filtersPanel') private _filtersPanel: TemplateRef<any>;
 
     range = new FormGroup({
         start: new FormControl<Date | null>(null),
         end: new FormControl<Date | null>(null),
+        status: new FormControl(''),
+        municipalidadId: new FormControl(''),
       });
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -67,11 +71,22 @@ export class FiltersComponent {
 
     clearFilters(): void {
         this._overlayRef.detach();
+        this.range.reset({
+            start: null,
+            end: null,
+            status: '',
+            municipalidadId: ''
+        });
+
+        this.filters.emit(FormUtils.deleteKeysNullInObject(this.range.getRawValue()));
     }
 
     applyFilters(): void {
+        const filters = this.range.getRawValue();
+        this.filters.emit(filters);
         this._overlayRef.detach();
     }
+
     private _createOverlay(): void
     {
         // Create the overlay

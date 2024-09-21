@@ -19,7 +19,11 @@ export const environment = {
     versionCodigo1 :1,
     versionCodigo2 :2,
     versionCodigo3 :30,
-     redirect: ''
+    redirect: '',
+    apiUrlSrtm:'https://srtmcapa.mineco.gob.pe/v1',
+    authorizesrtm :'https://authorizesrtmcapa.mineco.gob.pe',
+    usernameSrtm:'47477576',
+    passwordSrtm:'RU15389',
 
 };
 

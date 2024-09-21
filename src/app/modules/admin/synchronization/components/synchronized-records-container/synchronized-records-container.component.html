@@ -8,9 +8,8 @@
                 class="flex-auto w-full">
                 <input class="text-base"
                     matInput
-                    [placeholder]="'Cod. DJ , Predio o Contribuyente'"
-                    formControlName="search"
-                    (keydown.enter)="filterTable()">
+                    [placeholder]="'Cod. DJ o Contribuyente'"
+                    formControlName="search">
                 <mat-icon
                     class="icon-size-5"
                     matSuffix
@@ -21,7 +20,7 @@
 
         <div class="flex gap-2 md:justify-end md:gap-4">
 
-            <app-filters></app-filters>
+            <app-filters (filters)="filterOptions($event)"></app-filters>
 
             <button mat-button class="bg-mef-c-download rounded-md text shadow-sm ">
                 <span class="ml-1">Descargar</span>
@@ -31,7 +30,7 @@
                 </mat-icon>
             </button>
 
-            <button mat-button class="shadow-sm btn-basic">
+            <button mat-button class="shadow-sm btn-basic" (click)="sinchronizeMasive()">
                 <span class="ml-1">Sincronizar</span>
                 <mat-icon
                     class="icon-size-5 text-white"
@@ -43,7 +42,12 @@
     </form>
 
     <div [ngClass]=" isLoading ? 'wrapper_loader--loading' : 'wrapper_loader'">
-        <app-table-synchronizations-processed [dataSource]="tableSinchronizationsProcessed" class="w-full"></app-table-synchronizations-processed>
+        <app-table-synchronizations-processed
+            [tableDataSource]="tableSinchronizationsProcessed"
+            [length]="length"
+            (paginatorChange)="paginatorChange($event)"
+            (rowClick)="sinchronizationsOne($event)"
+            class="w-full"></app-table-synchronizations-processed>
         <span class="loader"></span>
     </div>
 

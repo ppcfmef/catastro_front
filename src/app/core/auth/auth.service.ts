@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, Observable, of, throwError } from 'rxjs';
@@ -28,20 +29,18 @@ export class AuthService
     /**
      * Setter & getter for access token
      */
-    set accessToken(token: string)
-    {
-        localStorage.setItem('accessToken', token);
-    }
+
+
 
     get accessToken(): string
     {
         return localStorage.getItem('accessToken') ?? '';
     }
+    set accessToken(token: string)
+    {
+        localStorage.setItem('accessToken', token);
+    }
 
-
-        /**
-         * Setter & getter for access token
-         */
     set accessTokenArcGis(token: string)
     {
         localStorage.setItem('accessTokenArcGis', token);
@@ -51,6 +50,8 @@ export class AuthService
     {
         return localStorage.getItem('accessTokenArcGis') ?? '';
     }
+
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -91,6 +92,7 @@ export class AuthService
         return this._httpClient.post(`${this._apiUrl}/auth/sign-in/`, credentials).pipe(
             switchMap((response: any) => {
 
+                console.log(response, 'token ');
                 // Store the access token in the local storage
                 this.accessToken = response.token;
                 this.accessTokenArcGis = response.tokenArcGis;
@@ -144,7 +146,7 @@ export class AuthService
     {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
-
+        localStorage.removeItem('accessTokenSrtm');
         // Set the authenticated flag to false
         this._authenticated = false;
 
