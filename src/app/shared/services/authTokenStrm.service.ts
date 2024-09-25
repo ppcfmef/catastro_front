@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpClient } from '@angular/common/http';
+import { ReturnStatement } from '@angular/compiler';
 import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
+import { get } from 'lodash';
+import { COMMA } from 'mat-table-exporter';
 import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 
 @Injectable({
@@ -10,7 +13,11 @@ import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 })
 export class AuthTokenStrmService {
 
+    public accessTokenExpiry: number | null = null;
+
     private _httpClient = inject(HttpClient);
+
+
     get accessTokenSrtm(): string
     {
         return localStorage.getItem('accessTokenSrtm') ?? '';
@@ -33,13 +40,18 @@ export class AuthTokenStrmService {
             {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cookie': 'visid_incap_3019525=VpkY3qCeT+G6RpV6lV8v6kv8vGYAAAAQUIPAAAAACRfWgREtxhjxFV4wOkprRU'
+                    'Cookie': 'visid_incap_3019525=VpkY3qCeT+G6RpV6lV8v6kv8vGYAAAAQUIPAAAAACRfWgREtxhjxFV4wOkprRU',
+                    'Skip-Auth': 'true'
                 },
                 withCredentials: true
             }
         ).pipe(
-            tap((response: any) => this.accessTokenSrtm = response.access_token),
+            tap((response: any) =>{
+                this.accessTokenSrtm = response.access_token;
+                this.accessTokenExpiry = Date.now() + response.expires_in * 1000;
+            }),
             catchError( err =>  of(false))
         );
     }
 }
+

@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, throwError, switchMap } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { AuthTokenStrmService } from 'app/shared/services/authTokenStrm.service';
+import { startWith } from 'rxjs/operators';
+import { ContentObserver } from '@angular/cdk/observers';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -27,13 +29,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
         const specificUrl = 'https://srtmcapa.mineco.gob.pe/v1/nsrtm-services/djpredial/consultas-externas';
 
+         // Clone the request object
+         let newReq = req.clone();
         if (req.headers.has('Skip-Auth' )) {
-            const newReq = req.clone({ headers: req.headers.delete('Skip-Auth') });
+            newReq = req.clone({ headers: req.headers.delete('Skip-Auth') });
             return next.handle(newReq);
         }
-
-        // Clone the request object
-        let newReq = req.clone();
 
         // Request
         //
@@ -44,8 +45,23 @@ export class AuthInterceptor implements HttpInterceptor {
         // catch and delete the access token from the local storage while logging
         // the user out from the app.
 
+
         if (req.url.startsWith(specificUrl) && this._authServiceTokenSrtrm.accessTokenSrtm) {
-            newReq = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + this._authServiceTokenSrtrm.accessTokenSrtm) });
+            if (this._authServiceTokenSrtrm.accessTokenExpiry < Date.now()) {
+                return this._authServiceTokenSrtrm.getTokenSrtm().pipe(
+                    switchMap((response: any) => {
+                        newReq = req.clone({
+                            headers: req.headers.set('Authorization', 'Bearer ' + response.access_token)
+                        });
+                        return next.handle(newReq);
+                    }),
+                    catchError(error =>  throwError(error))
+                );
+            }else {
+                newReq = req.clone({
+                    headers: req.headers.set('Authorization', 'Bearer ' + this._authServiceTokenSrtrm.accessTokenSrtm)
+                });
+            }
         }
         else if (this._authService.accessToken && !AuthUtils.isTokenExpired(this._authService.accessToken)){
             newReq = req.clone({
