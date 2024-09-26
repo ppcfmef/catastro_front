@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-len */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SynchronizationComponent } from '../synchronization.component';
 import { Observable } from 'rxjs';
@@ -14,6 +15,7 @@ export class SynchronizationDjService {
 
     apiUrlSrtm = environment.apiUrlSrtm;
     private _httpClient = inject(HttpClient);
+
   constructor() { }
 
     synchronizationAll(params): Observable<DJResponse> {
@@ -23,10 +25,19 @@ export class SynchronizationDjService {
 
 
     synchronizationIndividual(params): Observable<any> {
-        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-individual`,null, {params});
+        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-individual`,null, {
+            headers:{
+                'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
+            },
+            params,
+        });
     }
 
     synchronizationMassive(): Observable<any> {
-        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-masivo`, {});
+        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-masivo`, {
+            headers:{
+                'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
+            },
+        });
     }
 }

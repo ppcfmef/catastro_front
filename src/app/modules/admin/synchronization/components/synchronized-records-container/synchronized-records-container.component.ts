@@ -103,7 +103,7 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
     sinchronizationsOne(row): void {
         console.log(row, 'row');
         const params = {
-            movimiento_id: row.logIntegracionId,
+            log_integracion_id: row.logIntegracionId,
             contribuyente_numero: row.contribuyenteNumero,
             dj_predial_numero: row.djPredialNumero,
         };
