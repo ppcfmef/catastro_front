@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DJ } from '../../interfaces/dj.interface';
 import { elementAt } from 'rxjs';
+import { SynchronizationDjService } from '../../services/synchronization-dj.service';
 
 @Component({
     selector: 'app-table-synchronizations-processed',
@@ -33,16 +34,24 @@ export class TableSynchronizationsProcessedComponent  implements OnInit, OnChang
     @Output() paginatorChange = new EventEmitter<any>();
     @Output() rowClick = new EventEmitter<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    pageIndex: number = 0;
-    pageSize: number = 10;
+    pageIndex: number= 0;
+    pageSize: number= 10;
     dataSource = new MatTableDataSource<DJ>();
     displayedColumns: string[] = ['Nro','codigoDeclaracionJurada', 'codigoContribuyente', 'falloDescripcion','secuenciaEjecutora', 'fecha', 'estado','actions'];
     #changeDetectorRef = inject(ChangeDetectorRef);
+    synchronizationDjService = inject(SynchronizationDjService);
+
 
     ngOnInit(): void {
         this.dataSource.data = this.tableDataSource;
         this.dataSource.paginator = this.paginator;
         this.#changeDetectorRef.detectChanges();
+
+
+        this.synchronizationDjService.params$.subscribe((params) => {
+            this.pageIndex = params.pageIndex ??  this.pageIndex;
+            this.pageSize = params.pageSize ??  this.pageSize;
+        });
     }
 
 
@@ -63,7 +72,6 @@ export class TableSynchronizationsProcessedComponent  implements OnInit, OnChang
             this.#changeDetectorRef.detectChanges();
         }
 
-
     }
     trackByFn(index: number, item: any): any
     {
@@ -80,8 +88,8 @@ export class TableSynchronizationsProcessedComponent  implements OnInit, OnChang
         });
     }
 
+
     onAction(element): void {
         this.rowClick.emit(element);
-        console.log('onAction', element);
     }
 }

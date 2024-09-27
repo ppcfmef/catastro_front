@@ -3,7 +3,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SynchronizationComponent } from '../synchronization.component';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DJResponse } from '../interfaces/dj.interface';
 import { environment } from 'environments/environment';
 import { Params } from '@angular/router';
@@ -14,6 +14,7 @@ import { Params } from '@angular/router';
 export class SynchronizationDjService {
 
     apiUrlSrtm = environment.apiUrlSrtm;
+    params$ = new BehaviorSubject<Params>({});
     private _httpClient = inject(HttpClient);
 
   constructor() { }
@@ -30,14 +31,16 @@ export class SynchronizationDjService {
                 'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
             },
             params,
+            responseType: 'text' as 'json'
         });
     }
 
     synchronizationMassive(): Observable<any> {
-        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-masivo`, {
+        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/Reprocesar-scf-masivo`,{}, {
             headers:{
                 'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
             },
+            responseType: 'text' as 'json'
         });
     }
 }
