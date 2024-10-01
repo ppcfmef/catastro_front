@@ -211,7 +211,8 @@ searhSrtm(searchText: any): void{
                     this.landOwner.dni =result.numeroDocumento;
                     if (result.tipoDocumento === 2) {
                         this.landOwner.documentType ='06';
-                        this.landOwner.descriptionOwner =result.razonSocial;
+                        //this.landOwner.descriptionOwner =result.razonSocial;
+                        this.landOwner.name = result.nombres;
 
                       } else {
 
