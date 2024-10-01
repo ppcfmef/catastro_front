@@ -27,6 +27,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TitleCasePipe } from '@angular/common';
 
+
 @Component({
     selector: 'app-show-map-point',
     templateUrl: './show-map-point.component.html',
@@ -330,7 +331,7 @@ export class ShowMapPointComponent
                 }, 0.001);
             }
         }*/
-        
+
     }
     /* eslint-disable @typescript-eslint/naming-convention */
     async initializeMap(): Promise<void> {
@@ -460,8 +461,8 @@ export class ShowMapPointComponent
             const x = inputPoints[0].longitude;
             const y = inputPoints[0].latitude;
             this.view.center = [x, y];
-            
-            
+
+
             const textSymbol = {
                 type: 'text',  // autocasts as new TextSymbol()
                 color: 'black',
@@ -472,11 +473,11 @@ export class ShowMapPointComponent
                 yoffset: 15,
                 font: {  // autocasts as new Font()
                   size: 10,
-            
+
                   weight: 'bold'
                 }
             };
-            
+
 
             /*this.textSymbol.text*/
 
@@ -506,233 +507,61 @@ export class ShowMapPointComponent
             .getDistrictResource(this.landRecord.ubigeo)
             .toPromise();
         const utm = _districtResource?.resources[0]?.utm;
-
-        // const legendJson = [];
-
-        // this.layersInfo
-        //     .filter(l => l.title.includes(utm?.toString()))
-        //     .forEach((l) => {
-        //         const legendLayers = l.legend.layers;
-        //         legendLayers.forEach((lf) => {
-        //             const layerName = lf.layerName;
-        //             const legend = lf.legend[0];
-        //             const imageData = legend.imageData;
-        //             legendJson.push({ layerName, imageData });
-        //         });
-        //     });
-
-        // console.log('legendJson>>', legendJson);
-
-        // const doc = new jsPDF();
-        // const data: any = document.getElementById('divDownloadPDF');
-        // const options = {
-        //     background: 'white',
-        //     scale: 3,
-        // };
-
-        // autoTable(doc, {
-        //     theme: 'grid',
-        //     styles: {
-        //         overflow: 'hidden',
-        //         lineWidth: 0,
-        //         cellPadding: 2,
-        //     },
-
-        //     body: [
-        //         [
-        //             {
-        //                 content: 'FICHA DE PREDIO - CATASTRO FISCAL',
-        //                 colSpan: 2,
-        //                 styles: { halign: 'center', fontStyle: 'bold', fontSize: 14},
-        //             },
-        //         ],
-
-        //         [
-        //             {
-        //                 content: `MUNICIPALIDAD DE ${_districtResource?.name} UBIGEO  ${this.landRecord.ubigeo}`,
-        //                 colSpan: 2,
-        //                 styles: { halign: 'center', fontStyle: 'normal', fontSize: 10,},
-        //             },
-        //         ],
-
-        //         [
-        //             { content: `Fecha:  ${moment().format('DD/MM/YYYY')}`,
-        //                 styles: { halign: 'left', fontSize: 11,cellPadding: [12,4,4,8] , fontStyle: 'bold'},
-        //             },
-        //         ],
-
-        //         [
-        //             { content: `Datos del predio`,
-        //                  styles: { halign: 'left', fontSize: 11,cellPadding: [1,4,4,8] , fontStyle: 'bold'}
-
-        //             },
-
-        //             {
-        //                 content: `Datos del contribuyente`,
-        //                 styles: { halign: 'left', fontSize: 10,cellPadding:[1,4,4,8], fontStyle: 'bold'},
-
-        //             },
-
-        //         ],
-
-        //         [
-        //             {
-        //                 content: `Código Predial Único: ${this.landRecord.cup ? this.landRecord.cup : ''}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-
-        //             },
-        //             { content: `RUC / DNI: ${this.landOwner?.dni}`,
-        //               styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-        //             }
-
-        //         ],
-        //         [
-        //             {
-        //                 content: `Código de Predio Municipal: ${this.landRecord.cpm ? this.landRecord.cpm : ''}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-
-        //             },
-        //             {
-        //                 content: `Contribuyente: ${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-        //             }
-        //         ],
-
-        //         [
-        //             {
-        //                 content: `Latitud: ${this.landRecord.latitude ? this.landRecord.latitude : ''}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-
-        //             },
-
-        //             { content: `Puesto Laboral: ${this.user?.jobTitle ? this.user?.jobTitle : '-'}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-
-        //             },
-        //         ],
-
-        //         [
-        //             {
-        //                 content: `Longitud: ${this.landRecord.longitude ? this.landRecord.longitude : ''}`,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-
-        //             },
-        //             { content: `Usuario: ${this.user?.name}`,
-        //               styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-        //             },
-        //         ],
-
-        //         [
-        //             {
-        //                 content: `Área terreno: ${this.landRecord?.landArea ? this.landRecord?.landArea + 'mt2' : '-'}   `,
-        //                 colSpan: 2,
-        //                 styles: { halign: 'left', fontSize: 10 ,cellPadding: [1,1,2,8]},
-        //             },
-        //         ],
-
-        //     ],
-        // });
-
         const screenshot = await this.view?.takeScreenshot({
             format: 'jpg',
             quality: 100,
             with: 1280,
         });
 
-        // doc.addImage(screenshot?.dataUrl, 'JPEG', 35, 100, 135, 75);
-        // const x: number = 35;
-        // const y: number = 200;
-        // const bodyLegend = [];
-
-        // const columns = 3;
-        // let array1 = [];
-
-        // // eslint-disable-next-line @typescript-eslint/no-shadow
-        // legendJson.forEach((l, i) => {
-        //     array1 = array1.concat([{ content: '' }, { content: l.layerName }]);
-        //     // eslint-disable-next-line eqeqeq
-        //     if (i + 1 === legendJson.length || (i + 1) % columns === 0) {
-        //         //array1  = array1.concat([{'content':''},{'content':l.layerName}]);
-        //         bodyLegend.push(array1);
-        //         array1 = [];
-        //         //bodyLegend.push([{'content':''},{'content':l.layerName}]);
-        //     } else {
-        //         //array1  = array1.concat([{'content':''},{'content':l.layerName}]);
-        //     }
-
-        //     /*const l =[{'content':''},{'content':l.layerName}];*/
-
-        //     /*doc.addImage(`data:image/jpeg;base64,${l.imageData}`, 'JPEG', x,y+i*5,4,4);
-        // doc.text(l.layerName, x+10,y+i*5);*/
-        // });
-
-        // console.log('bodyLegend>>>', bodyLegend);
-        // let i = 0;
-        // autoTable(doc, {
-        //     theme: 'grid',
-        //     startY: y,
-        //     body: bodyLegend,
-        //     columnStyles: {
-        //         0: { cellWidth: 10 },
-        //         1: { cellWidth: 50 },
-        //         2: { cellWidth: 10 },
-        //         3: { cellWidth: 50 },
-        //         4: { cellWidth: 10 },
-        //         5: { cellWidth: 50 },
-        //         // etc
-        //     },
-
-        //     styles: {
-        //         overflow: 'hidden',
-        //         lineWidth: 0,
-        //         //lineColor: [217, 216, 216]
-        //     },
-        //     // eslint-disable-next-line @typescript-eslint/no-shadow
-        //     didDrawCell: (data: any) => {
-        //         if (data.section === 'body' && data.column.index % 2 === 0) {
-        //             if (i + 1 <= legendJson.length) {
-        //                 const base64Img = `data:image/jpeg;base64,${legendJson[i].imageData}`;
-        //                 doc.addImage(
-        //                     base64Img,
-        //                     'JPEG',
-        //                     data.cell.x + 2,
-        //                     data.cell.y + 2,
-        //                     4,
-        //                     4
-        //                 );
-        //             }
-
-        //             i = i + 1;
-        //         }
-        //     },
-        // });
-
-        // doc.save('Ficha de Predio.pdf');
         const now = moment();
         const formattedDate = now.format('DD/MM/YYYY HH:mm:ss');
         const formatO = moment(this.landOwner?.creationDate).format(
             'DD/MM/YYYY'
         );
 
-        const originalWidth = 3300; // por ejemplo, 600px
-        const originalHeight = 697; // por ejemplo, 400px
-
-        // Nuevo ancho deseado
-        const desiredWidth = 200; // Nuevo ancho, por ejemplo, 250px
-
-        // Calcular el nuevo alto para mantener la proporción
+        const originalWidth = 3300;
+        const originalHeight = 697;
+        const desiredWidth = 200;
         const desiredHeight = (desiredWidth / originalWidth) * originalHeight;
 
         const dd = {
             pageOrientation: 'landscape',
             footer: {
-                width: '100%',
+                fontSize: 8,
                 columns: [
                     {
-                        text: `Fecha: ${formattedDate}`,
-                        alignment: 'right',
-                        style: 'footer',
+                        ul: [
+                            {
+                                text: `Registrador: ${this.user?.name}`, listType: 'none',lineHeight: 1.2
+                            },
+                            {
+                                text: `Puesto Laboral : ${
+                                    this.user
+                                        ?.jobTitle
+                                        ? this
+                                                .user
+                                                ?.jobTitle
+                                        : '-'
+                                }`,
+                                listType: 'none',lineHeight: 1.2
+                            },
+                            {
+                                text: `Fecha de Registro : ${
+                                    formatO
+                                        ? formatO
+                                        : '-'
+                                }`,
+                                listType: 'none',lineHeight: 1.2
+                            }
+                          ],
+                          alignment: 'right',
+                          width:'98%',
                     },
+                    // {
+                    //     text: `Fecha: ${formattedDate}`,
+                    //     alignment: 'right',
+                    //     style: 'footer',
+                    // },
                 ],
             },
             content: [
@@ -759,7 +588,7 @@ export class ShowMapPointComponent
                                     stack: [
                                         'CATASTRO FISCAL - FICHA DE PREDIO',
                                         // eslint-disable-next-line max-len
-                                        {   text:  _districtResource?.municipalName ?  _districtResource?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${_districtResource?.name ?  _districtResource?.name : ''}`, 
+                                        {   text:  _districtResource?.municipalName ?  _districtResource?.municipalName.toUpperCase() :  `MUNICIPALIDAD DE ${_districtResource?.name ?  _districtResource?.name : ''}`,
                                             style: 'subheader'
                                         },
 
@@ -815,33 +644,6 @@ export class ShowMapPointComponent
                                                         ':',
                                                         {
                                                             text: `${this.landOwner?.name} ${this.landOwner?.paternalSurname} ${this.landOwner?.maternalSurname}`,
-                                                            style: 'value',
-                                                        },
-                                                    ],
-                                                    [
-                                                        'Fecha de Registro',
-                                                        ':',
-                                                        {
-                                                            text: `${
-                                                                formatO
-                                                                    ? formatO
-                                                                    : '-'
-                                                            }`,
-                                                            style: 'value',
-                                                        },
-                                                    ],
-                                                    [
-                                                        'Puesto Laboral',
-                                                        ':',
-                                                        {
-                                                            text: `${
-                                                                this.user
-                                                                    ?.jobTitle
-                                                                    ? this
-                                                                            .user
-                                                                            ?.jobTitle
-                                                                    : '-'
-                                                            }`,
                                                             style: 'value',
                                                         },
                                                     ],
@@ -1122,7 +924,6 @@ export class ShowMapPointComponent
                     bold: true,
                     margin: [-20, -20, -20, 10],
                 },
-
                 title: {
                     alignment: 'center',
                     margin: [0, 14],
@@ -1165,6 +966,9 @@ export class ShowMapPointComponent
 
                 value: {
                     color: '#3d454b',
+                },
+                footerText: {
+                    fontSize: 8,
                 },
                 footer: {
                     margin: [0, 15, 20, 15],
