@@ -1,4 +1,4 @@
-<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters">
+<div class="flex flex-row gap-4 justify-start my-4" [formGroup]="formFilters" >
   <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense w-5/12 input-icon-form">
     <mat-label class=" font-semibold">Buscar</mat-label>
     <input type="text" matInput formControlName="search"
@@ -58,7 +58,24 @@
     <select-ubigeo *ngIf="!hideSelectUbigeo"
     (ubigeoSelected)="onSelectUbigeo($event)"></select-ubigeo>
   </div>
+
+
+
+<div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4" >
+  <button
+      class="ml-4 bg-mef-btn-success rounded-md"
+      mat-raised-button
+      [color]="'accent'"
+      (click)="onExportDataExcel()">
+      <mat-icon [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
+      <span class="ml-2">Descargar</span>
+  </button>
 </div>
+
+
+</div>
+
+
 
 <app-search-land-table
 [dataSource]="dataSourceLands"
