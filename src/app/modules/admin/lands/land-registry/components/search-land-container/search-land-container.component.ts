@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
@@ -18,8 +19,10 @@ import { fuseAnimations } from '@fuse/animations';
 import { LandOwnerDetailService } from '../../services/land-owner-detail.service';
 import { LandOwnerDetail } from '../../interfaces/land-owner-detail.interface';
 import moment from 'moment';
-
-
+import { ExportUtils } from 'app/shared/utils/export.util';
+import { environment } from 'environments/environment';
+import { loadModules, utils } from 'esri-loader';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 @Component({
   selector: 'app-search-land-container',
   templateUrl: './search-land-container.component.html',
@@ -51,6 +54,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
   unsubscribeAll: Subject<any> = new Subject<any>();
   idView = 'gprpregist';
   hideSelectUbigeo = true;
+
   optionS = [
     {
       cod:'',
@@ -74,6 +78,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     }
   ];
   isVisible = false;
+
+
   constructor(
     private router: Router,
     private cdRef: ChangeDetectorRef,
@@ -81,7 +87,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     private landRecordService: LandRecordService,
     private exportReportService: ExportReportService,
     private navigationAuthorizationService: NavigationAuthorizationService,
-    private landOwnerDetailService: LandOwnerDetailService
+    private landOwnerDetailService: LandOwnerDetailService,
+    private _fuseSplashScreenService: FuseSplashScreenService,
   ) {};
 
   ngOnInit(): void {
@@ -219,6 +226,127 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     setTimeout(() => document.getElementById('dowloandCroquis').scrollIntoView(), 0.001);
   }
 
+
+   async onExportDataExcel(): Promise<any> {
+    const [
+      geoprocessor
+    ] = await loadModules([
+      'esri/rest/geoprocessor',
+    ]);
+    const gpUrl = `${environment.apiUrlArcGisServer}/geoprocesos/registros_cargados/GPServer/descarga_reporte_cf_predio`;
+    const params = {
+      'String': this.ubigeo
+    };
+    //this.isLoading =  true;
+    this._fuseSplashScreenService.show();
+    geoprocessor.submitJob(gpUrl, params).then((jobInfo)=>{
+      //console.log('Trabajo enviado, ID del trabajo:', jobInfo.jobId);
+
+
+
+      jobInfo.waitForJobCompletion(jobInfo.jobId).then( (result) =>{
+        this._fuseSplashScreenService.hide();
+        //console.log('Trabajo completado');
+
+        //console.log(result);
+      
+         jobInfo.fetchResultData('reporte_cf_predio_xls').then((r)=>{
+          //this.isLoading =  false;
+          if (r && r?.value && r?.value?.url){
+            const fileUrl = r?.value?.url;
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = 'reporte_cf_predio_xls.xls';  // Name the downloaded file
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        }).catch( (error) =>{
+          this._fuseSplashScreenService.hide();
+          //this.isLoading =  false;
+          console.error('Error al completar el trabajo:', error);
+      });
+        // Obtener los resultados del trabajo
+        /*const result=jobInfo.fetchResultData();
+        console.log(result);*/
+        
+        //(result)=> {
+           /* console.log('Resultado obtenido:', result);*/
+
+
+        //}
+        //).catch( (error)=> {
+          //  console.error('Error al obtener el resultado:', error);
+       // });
+
+    }).catch( (error) =>{
+      this._fuseSplashScreenService.hide();
+       // this.isLoading =  false;
+        console.error('Error al completar el trabajo:', error);
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+    /*this.ownerLandSubscription = this.landRecordService.getList(queryParams)
+    .subscribe(
+      (response: IPagination<LandRecord>) => {
+        const data=response.results;
+        const dataExcel = data.map( (d: any) =>({
+          'Tipo de predio':d.tipoPredioNombre,
+            'Codigo Unico de Predio':d.cup,
+            'Codigo de sector':d.codSect,
+            'Codigo de unidad urbana': d.codUu,
+            'Codigo de manzana': d.codMzn,
+            'Tipo de Habilitacion urbana':d.uuTypeName,
+            'Habilitacion Urbana':d.habilitacionName,
+            'Manzana Urbana':d.urbanMza,
+            'Numero de lote urbano':d.urbanLotNumber,
+            'Codigo de Via':d.codStreet,
+            'Tipo de via':d.streetTypeName,
+            'Nombre de via':d.streetName,
+            'Numero municipal':d.municipalNumber,
+            'bloque':d.block,
+            'puerta':d.indoor,
+            'piso':d.floor,
+            'kilometro':d.km,
+            'Direccion Urbana':d.urbanAddress,
+            'Longitud':d.longitude,
+            'Latitud':d.latitude,
+            'Codigo de Arancel':d.idAranc,
+            'Tipo de Resolución': d.resolutionTypeName,
+            'Numero de Resolución':d.resolutionDocument,
+            'Ubigeo':d.ubigeo,
+            'Secuencia Ejecutora': d.secEjec
+
+          }));
+
+       
+
+        if (data && data.length>0) {
+          ExportUtils.exportToExcel(
+            dataExcel,
+              'predios.xlsx'
+          );
+      }
+
+
+    });*/
+  }
+
+
   scrollTo(): void{
 
     this.detailLandByOwner$ = this.landOwnerDetailService.getDetailLandByOwner(this.landRecord.id, this.landOwner.id);
@@ -334,6 +462,8 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
     const queryParams = this.makeQueryParams();
     this.getLandRecords({limit: 10,... queryParams});
   }
+
+
 
   private getLandRecords(queryParams): void {
     this.ownerLandSubscription = this.landRecordService.getList(queryParams)
