@@ -290,14 +290,6 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
 
 
-
-
-
-
-
-
-
-
     });
 
     /*this.ownerLandSubscription = this.landRecordService.getList(queryParams)
@@ -333,8 +325,7 @@ export class SearchLandContainerComponent implements OnInit, OnDestroy, AfterVie
 
           }));
 
-       
-
+  
         if (data && data.length>0) {
           ExportUtils.exportToExcel(
             dataExcel,
