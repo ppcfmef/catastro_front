@@ -99,6 +99,12 @@
 }
 
 .container {
-    max-height: calc(100vh - 400px) !important; /* Ajusta esto a tu caso de uso específico */
-    overflow-y: auto;
+    max-height: fit-content !important; 
+    max-width: fit-content !important;
+  }
+
+
+  :host .mat-header-cell {
+    background-color: #eaeaed !important;
+    color:#01121e !important;
   }

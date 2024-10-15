@@ -1,32 +1,14 @@
-@import "styles/mixins";
 
-@include btn-success;
-@include input-btn-icon;
-@include box-shadow-z1;
-
-:host{
-    .container{
-        background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        margin-top: 10px;
-        position: relative;
-    }
-    .add-container{
-        position: absolute;
-        top: 1px;
-        right: 5px;
-        z-index: 1;
-        mat-icon{
-            color: white;
-        }
-    }
-    .subtitle-card{
-        font-size: 16px;
-        line-height: 15px;
-        font-weight: 700;
-        color: #666699;
-        width: 100%;
-        padding-bottom: 20px;
-    }
+.mat-accordion .mat-expansion-panel { 
+    border-radius: 5px 5px 0 0 !important;
 }
+
+::ng-deep .mat-expansion-panel .mat-expansion-panel-body {
+    padding: 0 0 12px !important;
+  }
+  
+
+  .container {
+    max-height: calc(100vh - 275px);
+    overflow-y: scroll;
+  }
