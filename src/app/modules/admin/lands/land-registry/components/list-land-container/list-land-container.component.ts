@@ -22,6 +22,7 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   landRecords: LandRegistryMap[];
   tableLength: number;
   masterDomain: MasterDomain;
+  panelOpenState = false;
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private landOwnerId!: number;

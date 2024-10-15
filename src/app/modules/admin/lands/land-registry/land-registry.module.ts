@@ -44,6 +44,9 @@ import { SearchModule } from 'app/layout/common/search/search.module';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { DetailPredioByOwnerComponent } from './components/detail-predio-by-owner/detail-predio-by-owner.component';
 import { DocumentsPipe } from './pipes/documents.pipe';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -81,6 +84,9 @@ import { DocumentsPipe } from './pipes/documents.pipe';
     MatInputModule,
     MatSlideToggleModule,
     MatTooltipModule,
+    MatMenuModule,
+    MatButtonToggleModule,
+    MatExpansionModule,
     CustomSharedModule,
     DocumentsPipe,
     //LandRegistryGeolocationComponent,

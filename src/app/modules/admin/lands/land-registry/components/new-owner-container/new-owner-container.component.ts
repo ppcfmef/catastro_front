@@ -29,6 +29,7 @@ export class NewOwnerContainerComponent implements OnInit, OnChanges, OnDestroy 
   idView = 'gprpregist';
   hideSelectUbigeo = true;
   estadoIniciar = true;
+  isShowButton: boolean = false;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -281,4 +282,13 @@ searhSrtm(searchText: any): void{
     this.unsubscribeAll.next(null);
     this.unsubscribeAll.complete();
   };
+
+  closed(): void {
+    this.isShowButton = false;
+  }
+
+
+  open(): void {
+    this.isShowButton = true;
+  }
 }
