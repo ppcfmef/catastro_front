@@ -2,7 +2,7 @@ export interface LandUI{
     id: number;
     hasApplications: boolean;
     idPlot: string | null;
-    idCartographicImg: string | null;
+    codPredioSinCarto: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string; // codigo unico patrimonial

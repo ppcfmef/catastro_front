@@ -10,7 +10,7 @@ export enum Estado {
 
     CREAR = 'crear',
 
-    NUEVO_PUNTO ='nuevo_punto',
+    CREAR_PUNTO_SIN_CARTO ='crear_punto_sin_carto',
 
     CERRAR ='cerrar',
 

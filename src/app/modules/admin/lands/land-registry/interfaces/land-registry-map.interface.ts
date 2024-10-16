@@ -2,7 +2,7 @@ export interface LandRegistryMap {
     idObjectImg: number;
     id: number;
     idPlot: string | null;
-    idCartographicImg: string | null;
+    codPredioSinCarto: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string; // codigo unico patrimonial

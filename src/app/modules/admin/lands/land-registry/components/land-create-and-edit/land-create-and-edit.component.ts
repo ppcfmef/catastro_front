@@ -11,6 +11,7 @@ import { MasterDomain } from '../../interfaces/master-domain.interface';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { MessageProviderService } from 'app/shared/services/message-provider.service';
 import { CommonUtils } from 'app/core/common/utils/common.utils';
+import { PredioService } from 'app/modules/admin/predial-inspection/gap-analysis/services/predio.service';
 
 export enum LandStatus {
   withOutMapping = 0,
@@ -52,7 +53,7 @@ resolutionType: any[];
     private _landRegistryMapService: LandRegistryMapService,
     private _fuseSplashScreenService: FuseSplashScreenService,
     private _messageProviderService: MessageProviderService,
-
+    private _predioService: PredioService
   ) {
     console.log('this.landRecord',this.landRecord);
     console.log('this.landMapRecord',this.landMapRecord);
@@ -97,7 +98,7 @@ resolutionType: any[];
       idObjectImg:[{ value: this.landMergeRecord?.idObjectImg, disabled}],
       id: [{ value: this.landMergeRecord?.id, disabled}],
       idPlot: [{ value: this.landMergeRecord?.idPlot, disabled}],
-      idCartographicImg: [{ value: this.landMergeRecord?.idCartographicImg, disabled}],
+      codPredioSinCarto: [{ value: this.landMergeRecord?.codPredioSinCarto, disabled}],
       status: [{ value: this.landActive, disabled}],
       inactiveReason: [{ value: this.landMergeRecord?.inactiveReason, disabled}],
       statusImg: [{ value: this.landMergeRecord?.statusImg, disabled}],
@@ -150,13 +151,16 @@ resolutionType: any[];
 
   ngOnChanges(changes: SimpleChanges): void {
     const landCurentValue = changes?.landMapRecord?.currentValue;
+    console.log('landCurentValue',landCurentValue);
     if (landCurentValue) {
       // Si la data es enviada por el mapa
+      console.log('data es enviada por el mapa');
       this.landMergeRecord = this.mergeRecords(landCurentValue);
-      this.setShowCartographicImg();
+      //this.setShowCartographicImg();
       this.setShowPlot();
     }else {
       // si la data es enviada al crear o editar
+      console.log('data es enviada al revisar o editar un predio');
       this.landMergeRecord = this.landRecord;
       this.isEdit = this.landMergeRecord ? true : false;
       this.showCartographicImg = false;
@@ -176,18 +180,27 @@ resolutionType: any[];
         const data = this.formEdit.value;
         data.owner = this.ownerId;
         data.status = this.toggleToStatus(data.status);
+        data.origen= 'registro_predios';
         // this.showFormEdit.emit(false);
         // ToDo: debe ser en el container
         if (data.idPlot && !data.cup) {
-        this._fuseSplashScreenService.show();
-        this._landRegistryMapService.createCpu(data).toPromise()
-        .then((result) => {
-            result.origen= 'registro_predios';
-            this.saveLandApi(result);
-        });
+          this._fuseSplashScreenService.show();
+          this._predioService.generateMaxCPU(data)
+          .then((result) => {
+              data.idLandCartographic = result?.ID_PRED;
+              data.cup = result?.COD_CPU;
+              this.saveLandApi(data);
+          });
+
         }else {
-        this._fuseSplashScreenService.show();
-        this.saveLandApi(data);
+
+          this._fuseSplashScreenService.show();
+          this._predioService.generateMaxSecuenPredioSinCartografia(data)
+          .then((secuencia) => {
+              data.codPredioSinCarto = secuencia;
+              this.saveLandApi(data);
+          });
+          //this.saveLandApi(data);
         }
 
     }else {
@@ -318,7 +331,7 @@ resolutionType: any[];
   }
 
   private setShowCartographicImg(): void {
-    if (this.landMergeRecord.idCartographicImg && !this.landMergeRecord.idPlot) {
+    if (this.landMergeRecord.codPredioSinCarto && !this.landMergeRecord.idPlot) {
       this.showCartographicImg = true;
     }
   }
@@ -340,7 +353,7 @@ resolutionType: any[];
     if (status && this.landMergeRecord?.idPlot) {
       return LandStatus.withMapping;
     }
-    else if (status && this.landMergeRecord?.idCartographicImg) {
+    else if (status && this.landMergeRecord?.codPredioSinCarto) {
       return LandStatus.withMappingImg;
     }
     else if (!status) {

@@ -3,7 +3,7 @@ import { IPredioContribuyente } from './predio-inspeccion.interface';
 export interface IPredio{
     id: number;
     idPlot: string | null;
-    idCartographicImg: string | null;
+    codPredioSinCarto: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string; // codigo unico patrimonial

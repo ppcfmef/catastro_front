@@ -647,9 +647,9 @@ export class LandRegistryGeolocationComponent
         'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/GESTION_DE_PREDIOS/FeatureServer/0/addFeatures';
         https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer
         */
-
-    urlGestionPredios =
-        'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer';
+    urlPrediosRegistrados =`${environment.apiUrlArcGisServer}/pruebas/CARTO_FISCAL/FeatureServer`;
+    urlPrediosRegistradosSinCartografia =`${environment.apiUrlArcGisServer}/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer`;
+        //'https://ws.mineco.gob.pe/serverdf/rest/services/ACTUALIZACION/ACTUALIZACION_DE_PUNTO_IMG/FeatureServer';
 
     urlSearchDistrito =
 
@@ -704,7 +704,7 @@ export class LandRegistryGeolocationComponent
             this.view.graphics.removeAll();
         }
 
-        this.estado = Estado.INICIAR;
+        //this.estado = Estado.INICIAR;
         this._landRegistryMapService.setEstado(
             Estado.INICIAR
         );
@@ -753,17 +753,13 @@ export class LandRegistryGeolocationComponent
             .getEstado()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((estado: any) => {
-                if (this.view) {
-                    this.view.popup.close();
-                }
-                this.estado = estado;
-                this.changeUI();
+                this.actualizarEstado(estado);
             });
 
         this._landRegistryMapService.landIn$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((land: LandRegistryMap) => {
-
+                console.log('landIn',land);
                 if (land) {
                     this.onCancel();
                     this.landRegistryMapModel = new LandRegistryMapModel(land);
@@ -771,7 +767,7 @@ export class LandRegistryGeolocationComponent
                         //this.onCancel();
                         let symbol = this.simpleMarkerSymbolUndefined;
                         if (
-                            this.landRegistryMapModel?.idCartographicImg &&
+                            this.landRegistryMapModel?.codPredioSinCarto &&
                             !this.landRegistryMapModel?.idPlot
                         ) {
                             symbol = this.simpleMarkerSymbolUndefined;
@@ -803,15 +799,17 @@ export class LandRegistryGeolocationComponent
 
                         //this._landRegistryMapService.setEstado(Estado.INICIAR);
                     } else if (land && land.ubigeo) {
-                        //this.onCancel();
+                     
                         this.resetMap();
-                        //this._landRegistryMapService.setEstado(Estado.EDITAR);
+                       
                     }
                 } else {
                     this._messageProviderService.showAlert(
                         'Por favor elija un punto en el mapa'
                     );
                     this.landRegistryMapModel = new LandRegistryMapModel();
+
+                    console.log('this.landOwner.id',this.landOwner.id);
                     if (this.landOwner.id) {
                         this.resetMap();
                         this._landRegistryMapService.setEstado(Estado.CREAR);
@@ -840,7 +838,6 @@ export class LandRegistryGeolocationComponent
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 this.landOwner.setValue(result);
-                //this.estado =Estado.INICIAR;
                 this.resetMap();
                 this._landRegistryMapService.setEstado(Estado.INICIAR);
             });
@@ -878,6 +875,14 @@ export class LandRegistryGeolocationComponent
 
     ngAfterViewInit(): void {
 
+    }
+
+
+    actualizarEstado(estado): void {
+        if (this.view) {
+            this.view.popup.close();
+        }
+        this.estado = estado;
     }
 
     async initializeMap(inputPoints: any[] = []): Promise<void> {
@@ -1172,10 +1177,9 @@ export class LandRegistryGeolocationComponent
 
                     }
 
-                    if (
-                        this.estado === Estado.EDITAR ||
-                        this.estado === Estado.CREAR ||
-                        this.estado === Estado.NUEVO_PUNTO
+                    else if (
+                        this.estado === Estado.EDITAR
+                        || this.estado === Estado.CREAR
                     ) {
                         puntosPredio.popupEnabled = false;
                         let graphic = event.mapPoint;
@@ -1183,7 +1187,7 @@ export class LandRegistryGeolocationComponent
                         let latitude = graphic.latitude;
 
                         const point = {
-                            //Create a point
+                            
                             type: 'point',
                             longitude: longitude,
                             latitude: latitude,
@@ -1204,7 +1208,7 @@ export class LandRegistryGeolocationComponent
                                     return r;
                                 }
                             }); // layer Id es de lotes
-                            const resultsPredio = response.results.filter(
+                            /*const resultsPredio = response.results.filter(
                                 (r) => {
                                     if (
                                         r &&
@@ -1215,7 +1219,7 @@ export class LandRegistryGeolocationComponent
                                         return r;
                                     }
                                 }
-                            );
+                            );*/
 
                             const resultsLote = response.results.filter((r) => {
                                 if (
@@ -1258,7 +1262,7 @@ export class LandRegistryGeolocationComponent
                                                 !this.landRegistryMapModel
                                                     .idPlot &&
                                                 this.landRegistryMapModel
-                                                    .idCartographicImg
+                                                    .codPredioSinCarto
                                             ) {
                                                 dialogRef =
                                                     this.confirmationService.info(
@@ -1273,12 +1277,7 @@ export class LandRegistryGeolocationComponent
                                                     );
                                             }
                                         } else {
-
-
                                             const tipoLote = graphic.attributes['TIP_LOT'];
-
-
-
 
                                             if (
                                                 resultsLote.length > 0 &&
@@ -1370,9 +1369,6 @@ export class LandRegistryGeolocationComponent
 
                                                                         });
                                                                         return;
-
-
-
                                                                     }
 
 
@@ -1390,13 +1386,12 @@ export class LandRegistryGeolocationComponent
 
 
                                                                         res.forEach((responseOwner: any) => {
-                                                                            /*owners.concat(responseOwner.results);*/
+                                                                          
                                                                             owners = [...owners, ...responseOwner.results];
-                                                                            /*return   responseOwner.results;*/
+                                                                           
                                                                         });
 
-                                                                        /*const owners =
-                                                                        responseOwner.results;*/
+                                                                      
 
                                                                         dialogRef =
                                                                             this.dialog.open(
@@ -1435,10 +1430,7 @@ export class LandRegistryGeolocationComponent
                                                                                     this.lote =
                                                                                         graphic.attributes;
                                                                                     this.landRegistryMapModel =
-                                                                                        FormatUtils.formatLoteToLandRegistryMapModel(
-                                                                                            this
-                                                                                                .lote
-                                                                                        );
+                                                                                        FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
 
 
 
@@ -1459,7 +1451,7 @@ export class LandRegistryGeolocationComponent
                                                                                                     option2 ===
                                                                                                     'confirmed'
                                                                                                 ) {
-                                                                                                    this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+                                                                                                    //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
 
                                                                                                     this._landRegistryMapService
                                                                                                     .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
@@ -1471,9 +1463,6 @@ export class LandRegistryGeolocationComponent
                                                                                                     console.log('this.lote>>',this.lote);*/
 
                                                                                                     puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
-
-
-
 
                                                                                                     const puntosPredio = this.layersInfo.find(
                                                                                                         l => l.id === -1
@@ -1492,11 +1481,10 @@ export class LandRegistryGeolocationComponent
                                                                                                         manzanaUrbana,
                                                                                                         where
                                                                                                     ).then(()=>{
-                                                                                                        //console.log(this.view.zoom);
+                                                                                                        
                                                                                                         this.view.zoom = this.view.zoom - 1;
-                                                                                                        //console.log(this.view.zoom);
+                                                                                                       
                                                                                                     });
-
 
 
                                                                                                 }
@@ -1507,18 +1495,15 @@ export class LandRegistryGeolocationComponent
 
                                                                                             });
 
-
-
-
-
-
                                                                                     }
 
                                                                                     else{
-
                                                                                         this._landRegistryMapService.landOut =
                                                                                         this.landRegistryMapModel;
-                                                                                        this.estado =   Estado.LEER;
+                                                                                        this._landRegistryMapService.setEstado(
+                                                                                            Estado.LEER
+                                                                                        );
+                                                                                        //this.estado =   Estado.LEER;
 
                                                                                     }
 
@@ -1536,39 +1521,13 @@ export class LandRegistryGeolocationComponent
                                                                 }
 
                                                                 else {
-                                                                    dialogRef =
-                                                                    /*
-
-                                                                    this.confirmationService.info(
-                                                                        'Error del predio',
-                                                                    `El predio  ${featurePredio
-                                                                        ?.attributes[
-                                                                        'COD_CPU'
-                                                                    ]} no se encuentra registrado en el Catastro Fiscal `,false
-                                                                    );*/
-
-                                                                    this.confirmationService.errorInfo(
+                                                                    dialogRef = this.confirmationService.errorInfo(
                                                                         'Error del predio','No es posible continuar con el registro en esta ubicacion, porfavor contactese con el administrador de la plataforma'
                                                                     );
 
                                                                     this.onCancel();
 
-                                                                    /*if (this.view) {
-                                                                        this.view.popup.close();
-                                                                        this.view.graphics.removeAll();
-                                                                    }
 
-
-                                                                    this.estado =   Estado.LEER;
-                                                                                                this._landRegistryMapService.setEstado(
-                                                                                                    Estado.LEER
-                                                                                                );*/
-
-                                                                    /*dialogRef
-                                                                    .afterClosed()
-                                                                    .toPromise().then((option) => {
-
-                                                                    });*/
                                                                 }
 
                                                             }
@@ -1615,7 +1574,7 @@ export class LandRegistryGeolocationComponent
                                                                 );
 
 
-                                                                this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+                                                                //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
 
                                                                 this._landRegistryMapService
                                                                 .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
@@ -1623,8 +1582,6 @@ export class LandRegistryGeolocationComponent
                                                                 const puntosLote = this.layersInfo.find(
                                                                     l => l.id === 0
                                                                 )?.featureLayer;
-
-
 
 
 
@@ -1658,7 +1615,10 @@ export class LandRegistryGeolocationComponent
 
                                                             else {
                                                                 this._landRegistryMapService.landOut = this.landRegistryMapModel;
-                                                                this.estado = Estado.LEER;
+                                                                this._landRegistryMapService.setEstado(
+                                                                    Estado.LEER
+                                                                );
+                                                                //this.estado = Estado.LEER;
                                                                 /*this._landRegistryMapService.setEstado(
                                                                                                 Estado.LEER
                                                                                             );*/
@@ -1667,84 +1627,14 @@ export class LandRegistryGeolocationComponent
 
                                                         } else {
                                                             this.onCancel();
-                                                            /*if (this.view) {
-                                                                this.view.popup.close();
-                                                                this.view.graphics.removeAll();
-                                                            }
 
-
-                                                            this.estado =   Estado.LEER;
-                                                            this._landRegistryMapService.setEstado(
-                                                                                            Estado.LEER
-                                                                                        );*/
                                                         }
                                                     });
                                             }
                                         }
                                     }
                                 } else {
-                                    if (!this.landRegistryMapModel.cup) {
-                                        intersect.then((data: any) => {
-                                            if (data && data.attributes) {
-                                                const ubigeo =
-                                                    data.attributes['UBIGEO'];
-
-                                                if (
-                                                    this.idCargo ===
-                                                    Role.DISTRITAL &&
-                                                    this.userUbigeo !== ubigeo
-                                                ) {
-                                                    this._messageProviderService.showAlert(
-                                                        'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
-                                                    );
-                                                } else {
-                                                    this.addPoint(
-                                                        latitude,
-                                                        longitude,
-                                                        this
-                                                            .simpleMarkerSymbolUndefined
-                                                    );
-
-                                                    const dialogRef =
-                                                        this.confirmationService.info(
-                                                            'Guardar Nueva Ubicacion',
-                                                            'Desea guardar esta nueva ubicación'
-                                                        );
-
-                                                    dialogRef
-                                                        .afterClosed()
-                                                        .toPromise()
-                                                        .then((option) => {
-                                                            if (
-                                                                option ===
-                                                                'confirmed'
-                                                            ) {
-                                                                this.landRegistryMapModel =
-                                                                    new LandRegistryMapModel();
-                                                                this.landRegistryMapModel.latitude =
-                                                                    latitude;
-                                                                this.landRegistryMapModel.longitude =
-                                                                    longitude;
-                                                                this.landRegistryMapModel.ubigeo =
-                                                                    ubigeo;
-
-                                                                this.saveNewPointGestionPredio();
-                                                                this._landRegistryMapService.setEstado(
-                                                                    Estado.LEER
-                                                                );
-
-
-
-                                                            } else {
-                                                            }
-                                                        });
-                                                }
-                                            }
-                                        });
-                                    }
-
-
-
+                                 
 
 
                                 }
@@ -1869,6 +1759,140 @@ export class LandRegistryGeolocationComponent
                             }
 
                         });
+                    }
+
+
+                    else if( this.estado === Estado.CREAR_PUNTO_SIN_CARTO){
+
+                        const graphic = event.mapPoint;
+                        const longitude = graphic.longitude;
+                        const latitude = graphic.latitude;
+
+                        const point = {
+                            type: 'point',
+                            longitude: longitude,
+                            latitude: latitude,
+                        };
+                        const intersect = this.queryIntersectFeaturelayer(
+                            this.featureDistrito,
+                            point
+                        );
+
+
+                        this.addPoint(
+                            latitude,
+                            longitude,
+                            this.simpleMarkerSymbolUndefined
+                        );
+
+
+                        const dialogRef =
+                        this.confirmationService.info(
+                            'Guardar Nueva Ubicacion',
+                            'Desea guardar esta nueva ubicación'
+                        );
+
+                        dialogRef
+                        .afterClosed()
+                        .toPromise()
+                        .then((option) => {
+                            if (
+                                option ===
+                                'confirmed'
+                            ) {
+                                this.landRegistryMapModel =
+                                    new LandRegistryMapModel();
+                                this.landRegistryMapModel.latitude =
+                                    latitude;
+                                this.landRegistryMapModel.longitude =
+                                    longitude;
+
+                                this.landRegistryMapModel.ubigeo =   this.userUbigeo;
+                                /*this.landRegistryMapModel.ubigeo =
+                                    ubigeo;*/
+
+
+                                this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                //this.estado = Estado.LEER;
+                                //this.nuevoPuntoSinCartografia();
+                                this._landRegistryMapService.setEstado(
+                                    Estado.LEER
+                                );
+
+                            } else {
+
+                                this.onCancel();
+                            }
+                        });
+
+
+/*
+
+                        if (!this.landRegistryMapModel.cup) {
+                            intersect.then((data: any) => {
+                                if (data && data.attributes) {
+                                    const ubigeo =
+                                        data.attributes['UBIGEO'];
+
+                                    if (
+                                        this.idCargo ===
+                                        Role.DISTRITAL &&
+                                        this.userUbigeo !== ubigeo
+                                    ) {
+                                        this._messageProviderService.showAlert(
+                                            'El punto esta fuera de su ambito , porfavor seleccione un punto dentro del distrito'
+                                        );
+                                    } else {
+                                        this.addPoint(
+                                            latitude,
+                                            longitude,
+                                            this
+                                                .simpleMarkerSymbolUndefined
+                                        );
+
+                                        const dialogRef =
+                                            this.confirmationService.info(
+                                                'Guardar Nueva Ubicacion',
+                                                'Desea guardar esta nueva ubicación'
+                                            );
+
+                                        dialogRef
+                                            .afterClosed()
+                                            .toPromise()
+                                            .then((option) => {
+                                                if (
+                                                    option ===
+                                                    'confirmed'
+                                                ) {
+                                                    this.landRegistryMapModel =
+                                                        new LandRegistryMapModel();
+                                                    this.landRegistryMapModel.latitude =
+                                                        latitude;
+                                                    this.landRegistryMapModel.longitude =
+                                                        longitude;
+                                                    this.landRegistryMapModel.ubigeo =
+                                                        ubigeo;
+
+
+                                                    this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                                    //this.estado = Estado.LEER;
+                                                    this.nuevoPuntoSinCartografia();
+                                                    this._landRegistryMapService.setEstado(
+                                                        Estado.LEER
+                                                    );
+
+
+
+                                                } else {
+
+                                                    this.onCancel();
+                                                }
+                                            });
+                                    }
+                                }
+                            });
+                        }
+*/
                     }
                 });
 
@@ -2279,7 +2303,7 @@ export class LandRegistryGeolocationComponent
                     position: 'top-right',
                 });
                 this.displayImprimir='flex';*/
-            } else if (this.estado === Estado.NUEVO_PUNTO) {
+            } else if (this.estado === Estado.CREAR_PUNTO_SIN_CARTO) {
                 this.displaySave = 'flex';
                 this.view.ui.add([this.saveNewPointDiv], {
                     position: 'top-right',
@@ -2611,7 +2635,7 @@ export class LandRegistryGeolocationComponent
                                                 [{
                                                     border: [false, false, false, true],
                                                     // eslint-disable-next-line max-len
-                                                    stack: [{ text: `${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}` }, { text: ` ${land.cup ? land.cup : land.idCartographicImg}`, style: 'cellSub' }], style: 'cell'
+                                                    stack: [{ text: `${land.cup ? 'CPU \n' : 'Codigo Imagen \n'}` }, { text: ` ${land.cup ? land.cup : land.codPredioSinCarto}`, style: 'cellSub' }], style: 'cell'
                                                 }],
                                                 [{
                                                     border: [false, false, false, true],
@@ -2814,7 +2838,7 @@ export class LandRegistryGeolocationComponent
         }, 2000);
     }
 
-    async saveNewPointGestionPredio(): Promise<void> {
+    async nuevoPuntoSinCartografia(): Promise<void> {
         const [
             // eslint-disable-next-line @typescript-eslint/naming-convention
             FeatureLayer,
@@ -2825,14 +2849,14 @@ export class LandRegistryGeolocationComponent
             .toPromise();
         const utm = this.district.resources[0].utm;
 
-        const urlBase = `${this.urlGestionPredios}/0`;
+        const urlBase = `${this.urlPrediosRegistradosSinCartografia}/0`;
         const feature = new FeatureLayer(urlBase);
         const secuen =
             (await this.generateMaxSecuen(feature, this.landRegistryMapModel)) +
             1;
         const idImg = `i${utm}${this.landRegistryMapModel.ubigeo}${secuen}`;
 
-        this.landRegistryMapModel.idCartographicImg = idImg;
+        this.landRegistryMapModel.codPredioSinCarto = idImg;
         this.landRegistryMapModel.secuen = secuen;
 
         this.landRegistryMapModel = await this.saveLandRegistryMap(
@@ -2851,18 +2875,20 @@ export class LandRegistryGeolocationComponent
         this.district = await this._commonService
             .getDistrictResource(data.ubigeo)
             .toPromise();
-        const utm = this.district.resources[0].utm;
-        const _urlBase =
-            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';
+        //const utm = this.district.resources[0].utm;
+        /*const _urlBase =
+            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer';*/
 
         const wkid = 4326;
 
         if (data.idPlot && !data.id)  {
-            console.log('aqui  se guarda');
+
+            const urlBase = `${this.urlPrediosRegistrados}/0/addFeatures`;
+            /*console.log('aqui  se guarda');*/
             const _predio =
                 FormatUtils.formatLandRegistryMapModelToPredio(data);
 
-                console.log('_predio>>',_predio);
+            /*console.log('_predio>>',_predio);*/
             _predio.NOM_USER = this.user.username;
             _predio.NOM_PC = 'PLATAFORMA';
             _predio.ID_LOTE_P =
@@ -2890,10 +2916,10 @@ export class LandRegistryGeolocationComponent
                 this.lote && this.lote?.VAL_ACT ? this.lote.VAL_ACT : null;
             _predio.ESTADO = 1;
             _predio.COD_LOTE = this.lote.COD_LOTE;
-            const urlBase = `${_urlBase.replace(
+            /*const urlBase = `${_urlBase.replace(
                 'MapServer',
                 'FeatureServer'
-            )}/0/addFeatures`;
+            )}/0/addFeatures`;*/
 
             const json = await this.createArcgisJSON([_predio], wkid);
 
@@ -2951,7 +2977,7 @@ export class LandRegistryGeolocationComponent
             _gestionPredio.ESTADO = 0;
             /*_gestionPredio.COD_MZN = (this.lote && this.lote?.COD_MZN)?this.lote.COD_MZN:null;
             _gestionPredio.COD_SECT = (this.lote && this.lote?.COD_SECT)?this.lote.COD_SECT:null;*/
-            const urlBase = `${this.urlGestionPredios}/0/addFeatures`;
+            const urlBase = `${this.urlPrediosRegistradosSinCartografia}/0/addFeatures`;
             const json = await this.createArcgisJSON([_gestionPredio], 4326);
 
             const formData = new FormData();
@@ -2986,7 +3012,7 @@ export class LandRegistryGeolocationComponent
         _gestionPredio.NOM_USER = this.user.username;
         _gestionPredio.NOM_PC = 'PLATAFORMA';
 
-        const urlBase = `${this.urlGestionPredios}/0/updateFeatures`;
+        const urlBase = `${this.urlPrediosRegistradosSinCartografia}/0/updateFeatures`;
         const json = await this.createArcgisJSON([_gestionPredio], 4326);
 
         const formData = new FormData();

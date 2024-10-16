@@ -8,6 +8,10 @@ import { from } from 'rxjs';
 import { LandOwner } from '../interfaces/land-owner.interface';
 import { FormUtils } from 'app/shared/utils/form.utils';
 import { I } from '@angular/cdk/keycodes';
+import { PredioService } from 'app/modules/admin/predial-inspection/gap-analysis/services/predio.service';
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,55 +27,7 @@ export class LandRegistryMapService {
 
   public _eventCancel: Subject<any> = new Subject();
 
-  layersInfo = [
-
-    {
-
-        id: 0,
-        idServer: 0,
-        urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/MapServer',
-            utm: null,
-
-    },
-   /*  {
-
-         id: 0,
-         idServer: 0,
-         urlBase:
-             'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_17/MapServer',
-             utm: 17,
-
-     },
-
-     {
-
-        id: 1,
-        idServer: 0,
-        urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_18/MapServer',
-            utm: 18,
-
-    },
-
-    {
-
-        id: 2,
-        idServer: 0,
-        urlBase:
-            'https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_19/MapServer',
-            utm: 19,
-
-    },*/
-
-
-
- ];
-
-
-
-
-  constructor(private _commonService: CommonService,) {
+  constructor(private _commonService: CommonService ) {
   }
 
     set landIn(value: LandRegistryMap){
@@ -82,29 +38,12 @@ export class LandRegistryMapService {
         return this._landIn.asObservable();
     }
 
-
     set landOut(value: LandRegistryMap){
         this._landOut.next(value);
     }
 
     get landOut$(): Observable<LandRegistryMap>{
         return this._landOut.asObservable();
-    }
-
-    createCpu(value: LandRegistryMap): Observable<LandRegistryMap> {
-
-         const o  = new Subject<LandRegistryMap>();
-         o.next(value);
-
-        if(value.cup) {
-          return o.asObservable();
-        }
-
-        else{
-            return from(this.generateMaxCPU(value));
-        }
-
-
     }
 
     set gestionPredios(value: LandRegistryMap){
@@ -115,9 +54,44 @@ export class LandRegistryMapService {
     get gestionPredios$(): Observable<LandRegistryMap>{
         return this._gestionPredios.asObservable();
 
+    }
+
+   /* createCpu(value: LandRegistryMap): Observable<LandRegistryMap> {
+
+         const o  = new Subject<LandRegistryMap>();
+         o.next(value);
+
+        if(value.cup) {
+          return o.asObservable();
+        }
+
+        else{
+
+
+            return from(this.generateMaxCPU(value));
+        }
 
 
     }
+
+
+    createSecuencia(value: LandRegistryMap): Observable<LandRegistryMap> {
+
+        const o  = new Subject<LandRegistryMap>();
+        o.next(value);
+
+       if(value.cup) {
+         return o.asObservable();
+       }
+
+       else{
+           return from((value));
+       }
+
+
+   }
+
+   */
 
 
     getEstado(): Observable<any>{
@@ -151,12 +125,12 @@ export class LandRegistryMapService {
         return this._print.asObservable();
     }
 
-
+/*
    async generateMaxCPU( value: LandRegistryMap): Promise<LandRegistryMap>{
 
     const [
 
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+       
         FeatureLayer,
 
     ] = await loadModules([
@@ -220,15 +194,12 @@ export class LandRegistryMapService {
 
     const factores=[2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7];
 
-    const temp=`${rangCPU}${unidadImbNew}`.split('').reverse().join('');
-
-    /* eslint-disable @typescript-eslint/prefer-for-of */
+   
     let s=0;
     for(let i=0;i< temp.length ;i++){
         s=parseInt(temp[i],10)*factores[i]+s;
     }
-    /* eslint-enable @typescript-eslint/prefer-for-of */
-    //let v = 11-s%11;
+    
     let v=([11,10].includes(s%11))?s%11: 11-s%11;
     v= (v>9)?11-(v):v;
 
@@ -243,7 +214,7 @@ export class LandRegistryMapService {
 return value;
 
    }
-
+*/
 
 
 }

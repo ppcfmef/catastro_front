@@ -8,7 +8,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     idObjectImg: number;
     id: number;
     idPlot: string | null;
-    idCartographicImg: string | null;
+    codPredioSinCarto: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string;  // codigo unico patrimonial
@@ -88,6 +88,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
     manzanaUrbanaPuerta: string;
     idLoteP: number;
     origen?: string;
+    
     //owner?: number;
  
     /*applications: any[];
@@ -159,7 +160,7 @@ export class LandRegistryMapModel implements LandRegistryMap{
         //this.idImg = l?.idImg;
         this.secuen =l?.secuen;
 
-        this.idCartographicImg = l?.idCartographicImg;
+        this.codPredioSinCarto = l?.codPredioSinCarto;
         this.idPlot = l?.idPlot;
 
         this.idLandCartographic = l?.idLandCartographic;

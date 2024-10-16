@@ -132,7 +132,7 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
 
         ESTADO: 0,
 
-        ID_IMG: land.idCartographicImg,
+        ID_IMG: land.codPredioSinCarto,
         SECUEN: land.secuen,
 
         PARTIDA: land.departure,
@@ -142,7 +142,6 @@ public static   formatLandRegistryMapModelToGestionPredio(land: LandRegistryMapM
         NOM_USER: '',
         NOM_PC: '',
         ZONA_UTM: 0,
-        
         /*PARTIDA:  land.resolutionType==='1'?  land.resolutionDocument:null,
         ESTADO_PARTIDA: land.resolutionType==='1'?  0:null,*/
     };
@@ -250,7 +249,7 @@ public static  formatResultUIToResultUI(r: ResultUI):  ResultUI{
         id: r.id,
         hasApplications: r.hasApplications,
         idPlot: r.idPlot,
-        idCartographicImg:  r.idCartographicImg,
+        codPredioSinCarto:  r.codPredioSinCarto,
         secEjec: r.secEjec,
         ubigeo: r.ubigeo,
         cup:  r.cup,

@@ -4,7 +4,7 @@ export class ResultModel  implements ResultUI {
     id: number;
     hasApplications: boolean;
     idPlot: string | null;
-    idCartographicImg: string | null;
+    codPredioSinCarto: string | null;
     secEjec: number;
     ubigeo: string;
     cup: string; // codigo unico patrimonial
@@ -147,7 +147,7 @@ export class ResultModel  implements ResultUI {
         //this.idImg = l?.idImg;
         this.secuen =l?.secuen;
 
-        this.idCartographicImg = l?.idCartographicImg;
+        this.codPredioSinCarto = l?.codPredioSinCarto;
         this.idPlot = l?.idPlot;
 
         this.idLandCartographic = l?.idLandCartographic;
