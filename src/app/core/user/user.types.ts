@@ -42,6 +42,7 @@ export interface User {
     ubigeo: string;
     permissionsNavigation: any[];
     districtName?: string;
+    municipalName?: string;
 }
 
 

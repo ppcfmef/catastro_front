@@ -5,15 +5,47 @@
         </button>
 </section>
 -->
-<section *ngIf="landRecords" class="bg-card p-4 rounded-md shadow">
-    <h3 class="text-lg mb-4 font-semibold tracking-[-0.5px]">Predios del contribuyente</h3>
+<section *ngIf="landRecords" class="bg-card p-4 rounded-md shadow-md container">
+    <h3 class="text-lg mb-4 font-semibold tracking-[-0.5px]">
+        Predios del contribuyente
+    </h3>
 
-    <app-land-summary-table
-    [dataSource]="landRecords"
-    [length]="tableLength"
-    [selectedId]="landId"
-    (seledRecord)="seledRecord($event)"
-    (changePage)="onChangePage($event)"
-    (downloadDeclaration)="downloadDeclaration($event)"
-    ></app-land-summary-table>
+    <mat-accordion>
+
+        <mat-expansion-panel class="border-b-[3px]  border-b-[#17c653] border-[#17c65333] border-[1px] mb-4 rounded-sm shadow-none"
+            (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false"
+        >
+            <mat-expansion-panel-header>
+                <div class="flex items-center gap-3">
+                    <mat-icon svgIcon="heroicons_outline:maps-custom" ></mat-icon>
+                    <mat-panel-title class=""> Predios generados con catografía</mat-panel-title>
+                </div>
+            </mat-expansion-panel-header>
+                <app-land-summary-table
+                [dataSource]="landRecords"
+                [length]="tableLength"
+                [selectedId]="landId"
+                (seledRecord)="seledRecord($event)"
+                (changePage)="onChangePage($event)"
+                (downloadDeclaration)="downloadDeclaration($event)"
+            ></app-land-summary-table>
+        
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="border-b-[3px] border-b-[#f8ad1c] border-[1px] border-[#fde8c4] mb-1"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        >
+            <mat-expansion-panel-header>
+                <div class="flex items-center gap-3">
+                    <mat-icon svgIcon="heroicons_outline:with-out-map" ></mat-icon>
+                    <mat-panel-title class=""> Predios generados sin catografía</mat-panel-title>
+                </div>
+            </mat-expansion-panel-header>
+            <div class="flex p-6">
+                Sin registros 
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </section>

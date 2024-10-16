@@ -1,23 +1,37 @@
 <section class="container">
-    <article class="flex">
-        <section class="input-btn-icon mr-3">
-            <input type="search" placeholder="Codigo de contribuyente" [formControl]="search" (keyup.enter)="searchOwner()" >
-            <button (click)="searchOwner()"  >Buscar
-                <mat-icon svgIcon="heroicons_outline:search">
+    <article class="flex items-center gap-4">
+        <section class="flex items-center bg-white rounded-md shadow-md">
+            <div class="flex w-64 rounded-sm">
+                <input matInput
+                    class="p-3"
+                    type="type" placeholder="Codigo de contribuyente" [formControl]="search" (keyup.enter)="searchOwner()" >
+                <button mat-icon-button *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear" (click)="clean()">
+                    <mat-icon svgIcon="heroicons_outline:x" class="text-red-500" ></mat-icon>
+                </button>
+            </div>
+            <button mat-icon-button class="bg-gray-800 rounded-md" (click)="searchOwner()">
+                <mat-icon class="text-white" svgIcon="heroicons_outline:search">
                 </mat-icon>
             </button>
         </section>
-        <button mat-button class="box-shadow-z1 rounded-md bg-mef-skyBlue text-white"
-        (click)="clean()"  >
-            <span class="ml-1">Limpiar</span>
-             <mat-icon class="text-white " svgIcon="mat_outline:cleaning_services"></mat-icon>
-        </button>
-
         <ng-container *ngIf="showButtons && estadoIniciar">
-            <button mat-button class="box-shadow-z1 rounded-md bg-mef-aplleGreen-100 ml-2 text-white"
-            (click)="createLandRecord()"> Crear predio nuevo
-            <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
-        </button>
+            <button
+                class="rounded-md text-white flex-row-reverse bg-[#1b84ff] shadow-md"
+                mat-button
+                [matMenuTriggerFor]="options"
+                (menuClosed)="closed()"
+                (menuOpened)="open()"
+               >
+                <span class="mr-3">Crear predio</span>
+                <mat-icon class="text-white" [svgIcon]="isShowButton ? 'mat_solid:keyboard_arrow_up' : 'mat_solid:keyboard_arrow_down'">
+                </mat-icon>
+            </button>
+                <mat-menu #options="matMenu" class="w-full">
+                        <mat-button-toggle-group class="flex flex-col gap-4 p-2" #group="matButtonToggleGroup">
+                            <mat-button-toggle value="con cartografía" class="rounded-md" (click)="createLandRecord(); isShowButton = false"> Con Cartografía </mat-button-toggle>
+                            <mat-button-toggle value="sin cartografía" class="rounded-md" > Sin Cartografía</mat-button-toggle>
+                        </mat-button-toggle-group>
+                </mat-menu>
         </ng-container>
 
     </article>
