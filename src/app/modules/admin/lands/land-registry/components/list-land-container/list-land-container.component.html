@@ -23,6 +23,7 @@
                 </div>
             </mat-expansion-panel-header>
                 <app-land-summary-table
+                [displayedColumns]="displayedColumns"
                 [dataSource]="landRecords"
                 [length]="tableLength"
                 [selectedId]="landId"
@@ -43,9 +44,19 @@
                     <mat-panel-title class=""> Predios generados sin catografía</mat-panel-title>
                 </div>
             </mat-expansion-panel-header>
-            <div class="flex p-6">
-                Sin registros 
-            </div>
+            
+
+            <app-land-summary-table *ngIf="tableLength2>0"
+                [displayedColumns]="displayedColumns2"
+            [dataSource]="landRecords2"
+            [length]="tableLength2"
+            [selectedId]="landId"
+            (seledRecord)="seledRecord($event)"
+            (changePage)="onChangePage2($event)"
+            (downloadDeclaration)="downloadDeclaration($event)"
+        ></app-land-summary-table>
+
+      
         </mat-expansion-panel>
     </mat-accordion>
 </section>

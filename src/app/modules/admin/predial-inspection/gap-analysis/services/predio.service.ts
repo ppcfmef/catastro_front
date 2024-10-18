@@ -66,9 +66,29 @@ export class PredioService {
 
         const query = layer?.createQuery();
         const query2 = layer?.createQuery();
-        if (value.UBIGEO && value.RAN_CPU && parseInt(value.RAN_CPU, 10) > 0) {
+
+
+
+        if( value.ubigeo && value.rangCup && parseInt(value.rangCup,10)>0 ){
+
+            query.where = `UBIGEO='${value.ubigeo}' and RAN_CPU='${value.rangCup}'`;
+            query2.where = `UBIGEO='${value.ubigeo}'`;
+
+
+        }
+
+
+
+        if (value.UBIGEO && value.RAN_CPU && parseInt(value.RAN_CPU, 10) > 0 ){
             query.where = `UBIGEO='${value.UBIGEO}' and RAN_CPU=${value.RAN_CPU}`;
             query2.where = `UBIGEO='${value.UBIGEO}' `;
+
+        }
+        if ( (value.UBIGEO && value.RAN_CPU && parseInt(value.RAN_CPU, 10) > 0) || ( value.ubigeo && value.rangCup && parseInt(value.rangCup,10)>0)) {
+
+
+            /*query.where = `UBIGEO='${value.UBIGEO}' and RAN_CPU=${value.RAN_CPU}`;
+            query2.where = `UBIGEO='${value.UBIGEO}' `;*/
             const maxCPUStatistics = {
                 onStatisticField: 'COD_CPU', // service field for 2015 population
                 outStatisticFieldName: 'max_COD_CPU',
@@ -87,7 +107,7 @@ export class PredioService {
             const response2 = await layer?.queryFeatures(query2);
             const stats = response.features[0].attributes;
             const stats2 = response2.features[0].attributes;
-            const rangCPU = value.RAN_CPU;
+            const rangCPU = value.RAN_CPU?value.RAN_CPU:value.rangCup ;
             let unidadImbNew = '0001';
             if (
                 response.features.length > 0 &&
@@ -128,10 +148,10 @@ export class PredioService {
     }
 
 
-     async  generateMaxSecuenPredioSinCartografia(
+     async  generateCodPredioSinCartografia(
         //layer: any,
         land: LandRegistryMapModel
-    ): Promise<number> {
+    ): Promise<string> {
 
 
         const [
@@ -152,8 +172,8 @@ export class PredioService {
         const response = await layer.queryFeatures(query);
         const stats = response.features[0].attributes;
         const maxSecuen = stats.max_SECUEN ? stats.max_SECUEN : 0;
-
-        return maxSecuen;
+        const codigo = `i${land.ubigeo}${maxSecuen}`;
+        return codigo;
     }
 
 }

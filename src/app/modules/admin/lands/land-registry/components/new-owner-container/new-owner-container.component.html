@@ -28,8 +28,8 @@
             </button>
                 <mat-menu #options="matMenu" class="w-full">
                         <mat-button-toggle-group class="flex flex-col gap-4 p-2" #group="matButtonToggleGroup">
-                            <mat-button-toggle value="con cartografía" class="rounded-md" (click)="createLandRecord(); isShowButton = false"> Con Cartografía </mat-button-toggle>
-                            <mat-button-toggle value="sin cartografía" class="rounded-md" > Sin Cartografía</mat-button-toggle>
+                            <mat-button-toggle value="con cartografía" class="rounded-md" (click)="crearPredio(); isShowButton = false"> Con Cartografía </mat-button-toggle>
+                            <mat-button-toggle value="sin cartografía" class="rounded-md" (click)="crearPredioSinCarto();" > Sin Cartografía</mat-button-toggle>
                         </mat-button-toggle-group>
                 </mat-menu>
         </ng-container>

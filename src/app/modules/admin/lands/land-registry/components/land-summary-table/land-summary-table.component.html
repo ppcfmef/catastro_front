@@ -6,8 +6,17 @@
             {{ (pageIndex * pageSize) + i + 1 }}
         </td>
     </ng-container>
+    
 
-    <ng-container matColumnDef="cup">
+    <ng-container *ngIf="displayedColumns.includes('codPredioSinCarto')"  matColumnDef="codPredioSinCarto">
+      <th mat-header-cell *matHeaderCellDef 
+      class="w-26"
+      matTooltip="Pre codigo"
+      >Pre codigo </th>
+      <td mat-cell *matCellDef="let element"  class=""> {{element.codPredioSinCarto?? '-'}} </td>
+    </ng-container>
+
+    <ng-container *ngIf="displayedColumns.includes('cup')"  matColumnDef="cup">
       <th mat-header-cell *matHeaderCellDef 
       class="w-26"
       matTooltip="Codigo único predio"
@@ -15,7 +24,9 @@
       <td mat-cell *matCellDef="let element"  class=""> {{element.cup}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="cpm">
+
+
+    <ng-container *ngIf="displayedColumns.includes('cpm')" matColumnDef="cpm">
       <th mat-header-cell *matHeaderCellDef 
       matTooltip="Codigo de predio municipal"
       > CPM</th>
@@ -52,7 +63,7 @@
                       <ng-container *ngSwitchCase="2">
                         <div class="text-blue-600 bg-blue-50 p-1 w-full rounded-sm flex items-end justify-center" >
                           <mat-icon class="mr-2 text-blue-600 icon-size-4 self-center" svgIcon="feather:map-pin"></mat-icon>
-                          <b>Con cartografía asignada (Punto Imagen)</b>
+                          <b>Predio generado sin cartografia</b>
                         </div>
 
                       </ng-container>

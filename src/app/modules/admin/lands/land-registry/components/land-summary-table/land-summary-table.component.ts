@@ -14,11 +14,12 @@ export class LandSummaryTableComponent implements OnInit, OnDestroy {
   @Input() dataSource: LandRegistryMap[];
   @Input() length: number;
   @Input() selectedId: number;
+  @Input() displayedColumns: string[] = ['nro', 'cup', 'cpm', 'print', 'steetName'];
   @Output() changePage: EventEmitter<MatPaginator> = new EventEmitter();
   @Output() seledRecord: EventEmitter<LandRegistryMap> = new EventEmitter();
   @Output() downloadDeclaration: EventEmitter<LandRegistryMap> = new EventEmitter();
 
-  displayedColumns: string[] = ['nro', 'cup', 'cpm', 'print', 'steetName'];
+  
   landSelected = new Set<any>();
   pageIndex = 0;
   pageSize = 5;

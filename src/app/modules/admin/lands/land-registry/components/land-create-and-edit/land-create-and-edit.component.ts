@@ -179,7 +179,7 @@ resolutionType: any[];
         });
         const data = this.formEdit.value;
         data.owner = this.ownerId;
-        data.status = this.toggleToStatus(data.status);
+        //this.toggleToStatus(data.status);
         data.origen= 'registro_predios';
         // this.showFormEdit.emit(false);
         // ToDo: debe ser en el container
@@ -187,17 +187,22 @@ resolutionType: any[];
           this._fuseSplashScreenService.show();
           this._predioService.generateMaxCPU(data)
           .then((result) => {
+
+              console.log('result>>',result);
               data.idLandCartographic = result?.ID_PRED;
+              data.status = 1;
               data.cup = result?.COD_CPU;
               this.saveLandApi(data);
+
           });
 
         }else {
 
           this._fuseSplashScreenService.show();
-          this._predioService.generateMaxSecuenPredioSinCartografia(data)
-          .then((secuencia) => {
-              data.codPredioSinCarto = secuencia;
+          this._predioService.generateCodPredioSinCartografia(data)
+          .then((codigo) => {
+              data.status = 2;
+              data.codPredioSinCarto = codigo;
               this.saveLandApi(data);
           });
           //this.saveLandApi(data);

@@ -273,10 +273,16 @@ searhSrtm(searchText: any): void{
     this.landRegistryService.showFormEdit.next(null);
   }
 
-  createLandRecord(): void {
+  crearPredio(): void {
     this.landRegistryService.setLandCreate(true);
-    //this.landRegistryMapService.landIn = null;
+    this._landRegistryMapService.setEstado(Estado.CREAR);
   }
+
+  crearPredioSinCarto(): void {
+    this.landRegistryService.setLandCreate(true);
+    this._landRegistryMapService.setEstado(Estado.CREAR_PUNTO_SIN_CARTO);
+  }
+  
   ngOnDestroy(): void{
     this.landRegistryService.setLandOwner(null);
     this.unsubscribeAll.next(null);

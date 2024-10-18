@@ -20,7 +20,11 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
   @Input() landId: number;
   @Input() ubigeo: string;
   landRecords: LandRegistryMap[];
+  landRecords2: LandRegistryMap[];
+  displayedColumns: string[] = ['nro', 'cup', 'cpm', 'print', 'steetName'];
+  displayedColumns2: string[] = ['nro',  'codPredioSinCarto', 'print', 'steetName'];
   tableLength: number;
+  tableLength2: number;
   masterDomain: MasterDomain;
   panelOpenState = false;
 
@@ -68,11 +72,13 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
           this.landOwnerId = registerLand?.owner;
         }
         if (this.landOwnerId && ownerResult) {
-          const queryParams = CommonUtils.deleteKeysNullInObject( { limit: this.defaultTableLimit , ubigeo:this.ubigeo });
+          const queryParams = CommonUtils.deleteKeysNullInObject( { limit: this.defaultTableLimit , ubigeo:this.ubigeo, status:1 });
 
           if (this.landId) {
             queryParams['id'] = this.landId;
           }
+
+
           this.landRegistryService
           .getLandbyOwner(this.landOwnerId, queryParams)
           .toPromise()
@@ -88,6 +94,25 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
               }
             }
           );
+
+          const queryParams2 = CommonUtils.deleteKeysNullInObject( { limit: this.defaultTableLimit , ubigeo:this.ubigeo, status:2 });
+          
+          this.landRegistryService
+          .getLandbyOwner(this.landOwnerId, queryParams2)
+          .toPromise()
+          .then(
+            (landResult) => {
+                this.updateDataSourceWithStreetNames(landResult.results);
+              this.landRecords2 = landResult.results;
+              this.tableLength2 = landResult.count;
+              if (this.landId && this.tableLength2 > 0) {
+                setTimeout(() => { // ToDo: Coordinar con frank porque demora tanto su mapa
+                  this.seledRecord(this.landRecords2[0]);
+                }, 6000);
+              }
+            }
+          );
+
         }
       }
     );
@@ -102,11 +127,25 @@ export class ListLandContainerComponent implements OnInit, OnDestroy, OnChanges 
     const limit = paginator.pageSize;
     const offset = limit * paginator.pageIndex;
 
-    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset });
+    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset, status:1  });
     this.landRegistryService
     .getLandbyOwner(ownerFilter.owner, queryParams)
     .toPromise()
     .then(result => this.landRecords = result.results);
+
+  }
+
+
+  onChangePage2(paginator: MatPaginator | {pageSize: number; pageIndex: number}): void {
+    const ownerFilter = { owner: this.landOwnerId };
+    const limit = paginator.pageSize;
+    const offset = limit * paginator.pageIndex;
+
+    const queryParams = CommonUtils.deleteKeysNullInObject( {  ubigeo:this.ubigeo ,limit, offset, status:2  });
+    this.landRegistryService
+    .getLandbyOwner(ownerFilter.owner, queryParams)
+    .toPromise()
+    .then(result => this.landRecords2 = result.results);
 
   }
 
