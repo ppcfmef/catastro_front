@@ -73,8 +73,6 @@ export class PredioService {
 
             query.where = `UBIGEO='${value.ubigeo}' and RAN_CPU='${value.rangCup}'`;
             query2.where = `UBIGEO='${value.ubigeo}'`;
-
-
         }
 
 
