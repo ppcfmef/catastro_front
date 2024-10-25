@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 //const host = 'https://catastro-fiscal.codtree.com/';
 /*const host = 'https://catastromef.apistoring.com/catastroback';*/
-/*const host = 'http://127.0.0.1:8000/';*/
+//const host = 'http://127.0.0.1:8000/';
 const host = 'https://vmd120205.contaboserver.net/';
 export const environment = {
     production: false,
@@ -26,7 +26,7 @@ export const environment = {
     versionCodigo3 :31,
     apiUrlSrtm:'https://srtmcapa.mineco.gob.pe/v1',
     authorizesrtm :'https://authorizesrtmcapa.mineco.gob.pe',
-    usernameSrtm:'47477576',
+    usernameSrtm:'70868104',
     passwordSrtm:'RU15389',
 };
 

@@ -22,10 +22,9 @@ export class SynchronizationDjService {
     synchronizationAll(params): Observable<DJResponse> {
 
         //api/v1/lands/external/consultar-log-scf
-       // return this._httpClient.get<DJResponse>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/consultar-log-scf`, {params: params});
-       
-       
-        return this._httpClient.get<DJResponse>(`${this.apiUrl}/lands/external/consultar-log-scf`, {params: params});
+       return this._httpClient.get<DJResponse>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/consultar-log-scf`, {params: params});
+
+    //return this._httpClient.get<DJResponse>(`${this.apiUrl}/lands/external/consultar-log-scf`, {params: params});
     
 
     }
@@ -34,33 +33,31 @@ export class SynchronizationDjService {
     synchronizationIndividual(params): Observable<any> {
 
 
-       return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-individual`,null, {
+       /*return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/reprocesar-scf-individual`,null, {
             headers:{
                 'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
             },
             params,
             responseType: 'text' as 'json'
-        });
-/*
+        });*/
+
         return this._httpClient.post<any>(`${this.apiUrl}/lands/external/reprocesar-scf-individual`,null, {
        
             params,
-        });*/
+        });
     }
 
-    synchronizationMassive(): Observable<any> {
-        return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/Reprocesar-scf-masivo`,{}, {
+    synchronizationMassive(payload: any): Observable<any> {
+        /*return this._httpClient.post<any>(`${this.apiUrlSrtm}/nsrtm-services/djpredial/consultas-externas/Reprocesar-scf-masivo`,payload
+        , {
             headers:{
                 'client-nsrtm': JSON.stringify({ terminal: '1.2.0.0' })
             },
             responseType: 'text' as 'json'
         });
-        
+*/
 
-        /*
-        return this._httpClient.post<any>(`${this.apiUrlSrtm}/lands/external/reprocesar-scf-masivo`,{}, {
-           
-        });*/
+        return this._httpClient.post<any>(`${this.apiUrl}/lands/external/reprocesar-scf-masivo`,payload);
 
     }
 }

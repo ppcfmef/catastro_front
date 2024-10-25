@@ -74,6 +74,7 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
         this.params = {
             pageSize: 10,
             page: 1,
+            fechaInicio:''
         };
 
         this.getDJ(this.params);
@@ -87,7 +88,7 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
                 tap(() => (this.isLoading = true))
             )
             .subscribe((value) => {
-                this.params['contribuyenteNumero'] = value;
+                //this.params['contribuyenteNumero'] = value;
                 this.resetPage();
                 this.getDJ(this.params);
             });
@@ -101,7 +102,8 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
 
     filterOptions(options: any): void {
         this.resetPage();
-        this.params['procesado'] = options.status ?? '';
+
+        this.params['estadoLogScfId'] = options.status ?? '';
         this.params['municipalidadId'] = options.municipalidadId ?? '';
         this.params['fechaInicio'] = options?.start?.format('DD/MM/YYYY') ?? '';
         this.params['fechaFin'] =
@@ -138,9 +140,15 @@ export class SynchronizedRecordsContainerComponent implements OnInit {
     }
 
     sinchronizeMasive(): void {
+        //ejemplo de payload
+        const payload = {
+            municipalidadId: null,
+            estadoLogScf: 2,
+            terminal: '1.2.0.0'
+          };
         this.isLoading = true;
         this.handleSynchronization(this.synchronizationDjService
-            .synchronizationMassive(), 'Se sincronizo correctamente', 'Error al sincronizar DJ, intente nuevamente');
+            .synchronizationMassive(payload), 'Se sincronizo correctamente', 'Error al sincronizar DJ, intente nuevamente');
     }
 
     private handleSynchronization(
