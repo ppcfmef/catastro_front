@@ -1,6 +1,6 @@
-name: Deploy(Pruebas)
+name: Deploy
 
-run-name: Build & Deploy Front (Pruebas)
+run-name: Build & Deploy Front
 
 env:
   NODE_OPTIONS: --openssl-legacy-provider
@@ -37,7 +37,7 @@ jobs:
         with:
           command: cp
           source: ./dist/fuse
-          destination:  s3://piloto-catastro-mef/
+          destination:  s3://pcf-mef-aws-s3-ejemplo-1/
           aws_access_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: us-east-2

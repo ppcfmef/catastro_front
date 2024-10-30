@@ -15,7 +15,14 @@
             </button>
         </section>
         <ng-container *ngIf="showButtons && estadoIniciar">
-            <button
+
+                <button mat-button class="box-shadow-z1 rounded-md bg-mef-aplleGreen-100 ml-2 text-white"
+                (click)="crearPredio()"> Crear predio nuevo
+                <mat-icon class="text-white" svgIcon="heroicons_outline:plus"></mat-icon>
+            </button>
+
+
+            <!-- <button
                 class="rounded-md text-white flex-row-reverse bg-[#1b84ff] shadow-md"
                 mat-button
                 [matMenuTriggerFor]="options"
@@ -31,7 +38,7 @@
                             <mat-button-toggle value="con cartografía" class="rounded-md" (click)="crearPredio(); isShowButton = false"> Con Cartografía </mat-button-toggle>
                             <mat-button-toggle value="sin cartografía" class="rounded-md" (click)="crearPredioSinCarto();" > Sin Cartografía</mat-button-toggle>
                         </mat-button-toggle-group>
-                </mat-menu>
+                </mat-menu> -->
         </ng-container>
 
     </article>
