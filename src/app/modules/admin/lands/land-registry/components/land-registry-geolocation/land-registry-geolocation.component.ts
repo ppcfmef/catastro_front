@@ -137,29 +137,29 @@ export class LandRegistryGeolocationComponent
         },
     ];
     landRegistryMapModel: LandRegistryMapModel;
-    simpleMarkerSymbol = {
+    simbologiaPuntoConBaseCartografica = {
         /*type: 'web-style',
         name: 'tear-pin-1',
         styleName: 'Esri2DPointSymbolsStyle',
         width: '20px'*/
         type: 'picture-marker',
-        url: 'https://static.arcgis.com/images/Symbols/Shapes/RedPin1LargeB.png',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/GreenPin1LargeB.png',
         //url: '/assets/images/map/location2.png',
         width: '50px',
         height: '50px',
         yoffset: '15px',
     };
 
-    simpleMarkerSymbolUndefined = {
+    simbologiaPuntoSinBaseCartografica = {
         type: 'picture-marker',
-        url: 'https://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png',
+        url: 'https://static.arcgis.com/images/Symbols/Shapes/YellowPin1LargeB.png',
         width: '50px',
         height: '50px',
         yoffset: '15px',
     };
 
 
-    simpleMarkerSymbolEntrada = {
+    simbologiaLoteServidumbre = {
         type: 'simple-marker',
         style: 'square',
         size: '10px', // pixels
@@ -732,14 +732,14 @@ export class LandRegistryGeolocationComponent
                     if (land?.latitude && land?.longitude) {
 
                         //leyendo un punto cartografico ya generado antes
-                        let symbol = this.simpleMarkerSymbolUndefined;
+                        let symbol = this.simbologiaPuntoSinBaseCartografica;
                         if (
                             this.landRegistryMapModel?.codPredioSinCarto &&
                             !this.landRegistryMapModel?.idPlot
                         ) {
-                            symbol = this.simpleMarkerSymbolUndefined;
+                            symbol = this.simbologiaPuntoSinBaseCartografica;
                         } else {
-                            symbol = this.simpleMarkerSymbol;
+                            symbol = this.simbologiaPuntoConBaseCartografica;
                         }
 
                         this.addPoint(
@@ -1130,11 +1130,6 @@ export class LandRegistryGeolocationComponent
                                 }
                             });
 
-
-
-                            if (results.length > 0) {
-                             
-                            }
                         });
 
 
@@ -1155,441 +1150,497 @@ export class LandRegistryGeolocationComponent
                             latitude: latitude,
                         };
 
-                        /*const intersect = this.queryIntersectFeaturelayer(
-                            this.featureDistrito,
+                        const featureUnidadUrbana = this.layersInfo.find(e=> e.id === 4)?.featureLayer;
+
+
+                        /*let intersect= false;*/
+                        const intersectUnidadUrbana =await  this.queryIntersectFeaturelayer(
+                            featureUnidadUrbana,
                             point
+                        );
 
-                        );*/
+                        if (intersectUnidadUrbana){
 
-                        this.view.hitTest(event).then((response) => {
-                            const results = response.results.filter((r) => {
-                                if (
-                                    r &&
-                                    r.graphic &&
-                                    r.graphic.layer &&
-                                    r.graphic.layer.layerId === 1
-                                ) {
-                                    return r;
-                                }
-                            }); // layer Id es de lotes
-                           
-
-                            const resultsLote = response.results.filter((r) => {
-                                if (
-                                    r &&
-                                    r.graphic &&
-                                    r.graphic.layer &&
-                                    r.graphic.layer.layerId === 5
-                                ) {
-                                    return r;
-                                }
-                            });// layer Id es de poligono de lotes
-
-                            if (results.length > 0) {
-                                const resultsLen = results.length - 1;
-
-                                if (
-                                    results[resultsLen] &&
-                                    results[resultsLen].graphic &&
-                                    results[resultsLen].graphic.geometry
-                                ) {
-                                    graphic = results[resultsLen].graphic;
-
-                                    //let graphic = event.mapPoint;
-                                    longitude = graphic.geometry.longitude;
-                                    latitude = graphic.geometry.latitude;
-
+                            this.view.hitTest(event).then((response) => {
+                                const results = response.results.filter((r) => {
                                     if (
-                                        graphic &&
-                                        graphic.attributes &&
-                                        graphic.attributes['ID_LOTE']
+                                        r &&
+                                        r.graphic &&
+                                        r.graphic.layer &&
+                                        r.graphic.layer.layerId === 1
                                     ) {
-                                        this.addPoint(
-                                            latitude,
-                                            longitude,
-                                            this.simpleMarkerSymbol
-                                        );
-                                        let dialogRef = null;
-                                        if (this.landRegistryMapModel.cup) {
-                                            if (
-                                                !this.landRegistryMapModel
-                                                    .idPlot &&
-                                                this.landRegistryMapModel
-                                                    .codPredioSinCarto
-                                            ) {
-                                                dialogRef =
-                                                    this.confirmationService.info(
-                                                        'Convertir a predio',
-                                                        'Desea actualizar esta ubicacion a predio ?'
-                                                    );
+                                        return r;
+                                    }
+                                }); // layer Id es de lotes
+                               
+    
+                                const resultsLote = response.results.filter((r) => {
+                                    if (
+                                        r &&
+                                        r.graphic &&
+                                        r.graphic.layer &&
+                                        r.graphic.layer.layerId === 5
+                                    ) {
+                                        return r;
+                                    }
+                                });// layer Id es de poligono de lotes
+    
+                                if (results.length > 0) {
+                                    const resultsLen = results.length - 1;
+    
+                                    if (
+                                        results[resultsLen] &&
+                                        results[resultsLen].graphic &&
+                                        results[resultsLen].graphic.geometry
+                                    ) {
+                                        graphic = results[resultsLen].graphic;
+    
+                                        //let graphic = event.mapPoint;
+                                        longitude = graphic.geometry.longitude;
+                                        latitude = graphic.geometry.latitude;
+    
+                                        if (
+                                            graphic &&
+                                            graphic.attributes &&
+                                            graphic.attributes['ID_LOTE']
+                                        ) {
+                                            this.addPoint(
+                                                latitude,
+                                                longitude,
+                                                this.simbologiaPuntoConBaseCartografica
+                                            );
+                                            let dialogRef = null;
+                                            if (this.landRegistryMapModel.cup) {
+                                                if (
+                                                    !this.landRegistryMapModel
+                                                        .idPlot &&
+                                                    this.landRegistryMapModel
+                                                        .codPredioSinCarto
+                                                ) {
+                                                    dialogRef =
+                                                        this.confirmationService.info(
+                                                            'Convertir a predio',
+                                                            'Desea actualizar esta ubicacion a predio ?'
+                                                        );
+                                                } else {
+                                                    dialogRef =
+                                                        this.confirmationService.info(
+                                                            'Actualizar Predio',
+                                                            'Desea actualizar el predio?'
+                                                        );
+                                                }
                                             } else {
-                                                dialogRef =
-                                                    this.confirmationService.info(
-                                                        'Actualizar Predio',
-                                                        'Desea actualizar el predio?'
-                                                    );
-                                            }
-                                        } else {
-                                            const tipoLote = graphic.attributes['TIP_LOT'];
-
-                                            if (
-                                                resultsLote.length > 0 &&
-                                                resultsLote[0].graphic
-                                                    .attributes['ESTADO_INS'] >
-                                                0
-                                            ) {
-                                                this._fuseSplashScreenService.show();
-                                                graphic =
-                                                    resultsLote[0].graphic;
-                                                const layerPredio =
-                                                    this.layersInfo.find(
-                                                        l => l.id === -1
-                                                    )?.featureLayer;
-                                                const params = {
-                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                                    UBIGEO: graphic.attributes[
-                                                        'UBIGEO'
-                                                    ],
-                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                                    COD_UU: graphic.attributes[
-                                                        'COD_UU'
-                                                    ],
-                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                                    MZN_URB:
-                                                        graphic.attributes[
-                                                        'MZN_URB'
-                                                        ].replace('\'','\'\''),
-                                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                                    LOT_URB:
-                                                        graphic.attributes[
-                                                        'LOT_URB'
-                                                        ],
-                                                };
-                                                const where =
-                                                    CommonUtils.generateWhereArgis(
-                                                        params,
-                                                        true
-                                                    );
-                                                MapUtils.queryFeaturelayer(
-                                                    layerPredio,
-                                                    where
-                                                ).then((featurePredios) => {
-                                                    const featurePredio =
-                                                        featurePredios[0];
-                                                    const filters = {
-                                                        cup: featurePredio
-                                                            ?.attributes[
-                                                            'COD_CPU'
-                                                        ],
-                                                        ubigeo: featurePredio
-                                                            ?.attributes[
+                                                const tipoLote = graphic.attributes['TIP_LOT'];
+    
+                                                if (
+                                                    resultsLote.length > 0 &&
+                                                    resultsLote[0].graphic
+                                                        .attributes['ESTADO_INS'] >
+                                                    0
+                                                ) {
+                                                    this._fuseSplashScreenService.show();
+                                                    graphic =
+                                                        resultsLote[0].graphic;
+                                                    const layerPredio =
+                                                        this.layersInfo.find(
+                                                            l => l.id === -1
+                                                        )?.featureLayer;
+                                                    const params = {
+                                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                                        UBIGEO: graphic.attributes[
                                                             'UBIGEO'
                                                         ],
+                                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                                        COD_UU: graphic.attributes[
+                                                            'COD_UU'
+                                                        ],
+                                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                                        MZN_URB:
+                                                            graphic.attributes[
+                                                            'MZN_URB'
+                                                            ].replace('\'','\'\''),
+                                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                                        LOT_URB:
+                                                            graphic.attributes[
+                                                            'LOT_URB'
+                                                            ],
                                                     };
-
-                                                    this._landRecordService
-                                                        .getList(filters)
-                                                        .subscribe(
-                                                            (
-                                                                r: IPagination<LandRecord>
-                                                            ) => {
-                                                                this._fuseSplashScreenService.hide();
-                                                                const landRecords: LandRecord[] =
-                                                                    r.results;
-                                                                if (
-                                                                    landRecords.length >
-                                                                    0
-                                                                ) {
-                                                                    const id =
-                                                                        landRecords[0]
-                                                                            .id;
-
-                                                                    const hasApplications = landRecords.filter( r=> ( r.hasApplications ===true) ).length> 0?true:false;
-
-                                                                    if (hasApplications){
-                                                                        const landRecord = landRecords.filter( r=> ( r.hasApplications ===true) )[0];
-                                                                        const application =landRecord.applications;
-
-                                                                        const dialogRef2 =
-                                                                        this.confirmationService.errorInfo(
-                                                                            'Error de registro',
-                                                                            `Los predios asociados a este lote tiene una solicitud pendiente de tipo ${application.type} `,
-
-                                                                        );
-
-                                                                        dialogRef2.afterClosed().toPromise().then((option)=>{
-                                                                            this.onCancel();
-
-                                                                        });
-                                                                        return;
-                                                                    }
-
-
-
-                                                                    const arrayService = landRecords.map((l) => {
-                                                                        return this._landOwnerService
-                                                                            .getLandDetail(
-                                                                                l.id
-                                                                            );
-                                                                    });
-
-
-                                                                    forkJoin(arrayService).subscribe((res: any[]) => {
-                                                                        let owners = [];
-
-
-                                                                        res.forEach((responseOwner: any) => {
-                                                                          
-                                                                            owners = [...owners, ...responseOwner.results];
-                                                                           
-                                                                        });
-
-                                                                      
-
-                                                                        dialogRef =
-                                                                            this.dialog.open(
-                                                                                AlertLandOwnerComponent,
-                                                                                {
-                                                                                    data: {
-                                                                                        owners: owners,
-                                                                                        ownerId: this.ownerId
-                                                                                    },
-                                                                                    width: '600px',
-                                                                                }
-                                                                            );
-
-
-
-                                                    dialogRef.afterClosed().toPromise().then(
-                                                                            (
-                                                                                option
-                                                                            ) => {
-                                                                                if (
-                                                                                    option ===
-                                                                                    'confirmed'
-                                                                                ) {
-
-                                                                                    graphic =
-                                                                                    results[0].graphic;
-
-                                                                                    graphic.attributes[
-                                                                                        'COORD_X'
-                                                                                    ] =
-                                                                                        longitude;
-                                                                                    graphic.attributes[
-                                                                                        'COORD_Y'
-                                                                                    ] =
-                                                                                        latitude;
-                                                                                    this.lote =
-                                                                                        graphic.attributes;
-                                                                                    this.landRegistryMapModel =
-                                                                                        FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
-
-
-
-                                                                                    if( tipoLote === '2'){
-                                                                                        const dialogRef2 =
-                                                                                        this.confirmationService.info(
-                                                                                            'Lote paso de servidumbre',
-                                                                                            'Ahora debe seleccionar el lote paso de servidumbre',
-
-                                                                                        );
-
-
-                                                                                        dialogRef2.afterClosed().toPromise().then(
-                                                                                            (
-                                                                                                option2
-                                                                                            ) => {
-                                                                                                if (
-                                                                                                    option2 ===
-                                                                                                    'confirmed'
-                                                                                                ) {
-                                                                                                    //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
-
-                                                                                                    this._landRegistryMapService
-                                                                                                    .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
-                                                                                                    const puntosLote = this.layersInfo.find(
-                                                                                                        l => l.id === 0
-                                                                                                    )?.featureLayer;
-
-                                                                                                    /*
-                                                                                                    console.log('this.lote>>',this.lote);*/
-
-                                                                                                    puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
-
-                                                                                                    const puntosPredio = this.layersInfo.find(
-                                                                                                        l => l.id === -1
-                                                                                                    )?.featureLayer;
-
-                                                                                                    puntosPredio['definitionExpression'] = '1<>1';
-
-
-                                                                                                    const manzanaUrbana = this.layersInfo.find(
-                                                                                                        l => l.id === 3
-                                                                                                    )?.featureLayer;
-
-                                                                                                    const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
-                                                                                                    MapUtils.zoomToFeature(
-                                                                                                        this.view,
-                                                                                                        manzanaUrbana,
-                                                                                                        where
-                                                                                                    ).then(()=>{
-                                                                                                        
-                                                                                                        this.view.zoom = this.view.zoom - 1;
-                                                                                                       
-                                                                                                    });
-
-
-                                                                                                }
-
-                                                                                                else{
-                                                                                                    this.onCancel();
-                                                                                                }
-
-                                                                                            });
-
-                                                                                    }
-
-                                                                                    else{
-                                                                                        this._landRegistryMapService.landOut =
-                                                                                        this.landRegistryMapModel;
-                                                                                        this._landRegistryMapService.setEstado(
-                                                                                            Estado.LEER
-                                                                                        );
-                                                                                        //this.estado =   Estado.LEER;
-
-                                                                                    }
-
-
-
-                                                                                } else {
-
-                                                                                    this.onCancel();
-                                                                                }
-                                                                      }  );
-
-                                                                    });
-
-                                                                }
-
-                                                                else {
-                                                                    dialogRef = this.confirmationService.errorInfo(
-                                                                        'Error del predio','No es posible continuar con el registro en esta ubicacion, porfavor contactese con el administrador de la plataforma'
-                                                                    );
-
-                                                                    this.onCancel();
-
-
-                                                                }
-
-                                                            }
+                                                    const where =
+                                                        CommonUtils.generateWhereArgis(
+                                                            params,
+                                                            true
                                                         );
-                                                });
-                                            } else {
-                                                dialogRef =
-                                                    this.confirmationService.info(
-                                                        'Asignar Lote',
-                                                        'Desea asignar este lote?'
-                                                    );
-
-                                                dialogRef
-                                                    .afterClosed()
-                                                    .toPromise()
-                                                    .then((option) => {
-                                                        if (
-                                                            option ===
-                                                            'confirmed'
-                                                        ) {
-                                                            graphic.attributes[
-                                                                'COORD_X'
-                                                            ] = longitude;
-                                                            graphic.attributes[
-                                                                'COORD_Y'
-                                                            ] = latitude;
-                                                            this.lote =
-                                                                graphic.attributes;
-
-                                                            this.landRegistryMapModel =
-                                                                FormatUtils.formatLoteToLandRegistryMapModel(
-                                                                    this.lote
-                                                                );
-                                                            this._landRegistryMapService.setEstado(
-                                                                Estado.LEER
+                                                    MapUtils.queryFeaturelayer(
+                                                        layerPredio,
+                                                        where
+                                                    ).then((featurePredios) => {
+                                                        const featurePredio =
+                                                            featurePredios[0];
+                                                        const filters = {
+                                                            cup: featurePredio
+                                                                ?.attributes[
+                                                                'COD_CPU'
+                                                            ],
+                                                            ubigeo: featurePredio
+                                                                ?.attributes[
+                                                                'UBIGEO'
+                                                            ],
+                                                        };
+    
+                                                        this._landRecordService
+                                                            .getList(filters)
+                                                            .subscribe(
+                                                                (
+                                                                    r: IPagination<LandRecord>
+                                                                ) => {
+                                                                    this._fuseSplashScreenService.hide();
+                                                                    const landRecords: LandRecord[] =
+                                                                        r.results;
+                                                                    if (
+                                                                        landRecords.length >
+                                                                        0
+                                                                    ) {
+                                                                        const id =
+                                                                            landRecords[0]
+                                                                                .id;
+    
+                                                                        const hasApplications = landRecords.filter( r=> ( r.hasApplications ===true) ).length> 0?true:false;
+    
+                                                                        if (hasApplications){
+                                                                            const landRecord = landRecords.filter( r=> ( r.hasApplications ===true) )[0];
+                                                                            const application =landRecord.applications;
+    
+                                                                            const dialogRef2 =
+                                                                            this.confirmationService.errorInfo(
+                                                                                'Error de registro',
+                                                                                `Los predios asociados a este lote tiene una solicitud pendiente de tipo ${application.type} `,
+    
+                                                                            );
+    
+                                                                            dialogRef2.afterClosed().toPromise().then((option)=>{
+                                                                                this.onCancel();
+    
+                                                                            });
+                                                                            return;
+                                                                        }
+    
+    
+    
+                                                                        const arrayService = landRecords.map((l) => {
+                                                                            return this._landOwnerService
+                                                                                .getLandDetail(
+                                                                                    l.id
+                                                                                );
+                                                                        });
+    
+    
+                                                                        forkJoin(arrayService).subscribe((res: any[]) => {
+                                                                            let owners = [];
+    
+    
+                                                                            res.forEach((responseOwner: any) => {
+                                                                              
+                                                                                owners = [...owners, ...responseOwner.results];
+                                                                               
+                                                                            });
+    
+                                                                          
+    
+                                                                            dialogRef =
+                                                                                this.dialog.open(
+                                                                                    AlertLandOwnerComponent,
+                                                                                    {
+                                                                                        data: {
+                                                                                            owners: owners,
+                                                                                            ownerId: this.ownerId
+                                                                                        },
+                                                                                        width: '600px',
+                                                                                    }
+                                                                                );
+    
+    
+    
+                                                        dialogRef.afterClosed().toPromise().then(
+                                                                                (
+                                                                                    option
+                                                                                ) => {
+                                                                                    if (
+                                                                                        option ===
+                                                                                        'confirmed'
+                                                                                    ) {
+    
+                                                                                        graphic =
+                                                                                        results[0].graphic;
+    
+                                                                                        graphic.attributes[
+                                                                                            'COORD_X'
+                                                                                        ] =
+                                                                                            longitude;
+                                                                                        graphic.attributes[
+                                                                                            'COORD_Y'
+                                                                                        ] =
+                                                                                            latitude;
+                                                                                        this.lote =
+                                                                                            graphic.attributes;
+                                                                                        this.landRegistryMapModel =
+                                                                                            FormatUtils.formatLoteToLandRegistryMapModel(this.lote);
+    
+    
+    
+                                                                                        if( tipoLote === '2'){
+                                                                                            const dialogRef2 =
+                                                                                            this.confirmationService.info(
+                                                                                                'Lote paso de servidumbre',
+                                                                                                'Ahora debe seleccionar el lote paso de servidumbre',
+    
+                                                                                            );
+    
+    
+                                                                                            dialogRef2.afterClosed().toPromise().then(
+                                                                                                (
+                                                                                                    option2
+                                                                                                ) => {
+                                                                                                    if (
+                                                                                                        option2 ===
+                                                                                                        'confirmed'
+                                                                                                    ) {
+                                                                                                        //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+    
+                                                                                                        this._landRegistryMapService
+                                                                                                        .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
+                                                                                                        const puntosLote = this.layersInfo.find(
+                                                                                                            l => l.id === 0
+                                                                                                        )?.featureLayer;
+    
+                                                                                                        /*
+                                                                                                        console.log('this.lote>>',this.lote);*/
+    
+                                                                                                        puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  and TIP_LOT="1" `;
+    
+                                                                                                        const puntosPredio = this.layersInfo.find(
+                                                                                                            l => l.id === -1
+                                                                                                        )?.featureLayer;
+    
+                                                                                                        puntosPredio['definitionExpression'] = '1<>1';
+    
+    
+                                                                                                        const manzanaUrbana = this.layersInfo.find(
+                                                                                                            l => l.id === 3
+                                                                                                        )?.featureLayer;
+    
+                                                                                                        const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+                                                                                                        MapUtils.zoomToFeature(
+                                                                                                            this.view,
+                                                                                                            manzanaUrbana,
+                                                                                                            where
+                                                                                                        ).then(()=>{
+                                                                                                            
+                                                                                                            this.view.zoom = this.view.zoom - 1;
+                                                                                                           
+                                                                                                        });
+    
+    
+                                                                                                    }
+    
+                                                                                                    else{
+                                                                                                        this.onCancel();
+                                                                                                    }
+    
+                                                                                                });
+    
+                                                                                        }
+    
+                                                                                        else{
+                                                                                            this._landRegistryMapService.landOut =
+                                                                                            this.landRegistryMapModel;
+                                                                                            this._landRegistryMapService.setEstado(
+                                                                                                Estado.LEER
+                                                                                            );
+                                                                                            //this.estado =   Estado.LEER;
+    
+                                                                                        }
+    
+    
+    
+                                                                                    } else {
+    
+                                                                                        this.onCancel();
+                                                                                    }
+                                                                          }  );
+    
+                                                                        });
+    
+                                                                    }
+    
+                                                                    else {
+                                                                        dialogRef = this.confirmationService.errorInfo(
+                                                                            'Error del predio','No es posible continuar con el registro en esta ubicacion, porfavor contactese con el administrador de la plataforma'
+                                                                        );
+    
+                                                                        this.onCancel();
+    
+    
+                                                                    }
+    
+                                                                }
                                                             );
-
-                                                            if (tipoLote === '2') {
-                                                                dialogRef =
-                                                                this.confirmationService.info(
-                                                                    'Puerta de Ingreso',
-                                                                    'Debe seleccionar la puerta de ingreso',
-                                                                    false
-                                                                );
-
-
-                                                                //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
-
-                                                                this._landRegistryMapService
-                                                                .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
-
-                                                                const puntosLote = this.layersInfo.find(
-                                                                    l => l.id === 0
-                                                                )?.featureLayer;
-
-
-
-                                                                puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
-                                                                const puntosPredio = this.layersInfo.find(
-                                                                    l => l.id === -1
-                                                                )?.featureLayer;
-
-                                                                puntosPredio['definitionExpression'] = '1<>1';
-
-
-                                                                 const manzanaUrbana = this.layersInfo.find(
-                                                                    l => l.id === 3
-                                                                )?.featureLayer;
-
-                                                                const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
-
-                                                                MapUtils.zoomToFeature(
-                                                                    this.view,
-                                                                    manzanaUrbana,
-                                                                    where
-                                                                ).then(()=>{
-
-                                                                    this.view.zoom = this.view.zoom - 1;
-
-                                                                });
-
-                                                                //this.view.zoom = this.view.zoom - 1;
-
-                                                            }
-
-                                                            else {
-                                                                this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                                    });
+                                                } else {
+                                                    dialogRef =
+                                                        this.confirmationService.info(
+                                                            'Crear Predio',
+                                                            'Desea crear el predio con base cartografica?'
+                                                        );
+    
+                                                    dialogRef
+                                                        .afterClosed()
+                                                        .toPromise()
+                                                        .then((option) => {
+                                                            if (
+                                                                option ===
+                                                                'confirmed'
+                                                            ) {
+                                                                graphic.attributes[
+                                                                    'COORD_X'
+                                                                ] = longitude;
+                                                                graphic.attributes[
+                                                                    'COORD_Y'
+                                                                ] = latitude;
+                                                                this.lote =
+                                                                    graphic.attributes;
+    
+                                                                this.landRegistryMapModel =
+                                                                    FormatUtils.formatLoteToLandRegistryMapModel(
+                                                                        this.lote
+                                                                    );
                                                                 this._landRegistryMapService.setEstado(
                                                                     Estado.LEER
                                                                 );
-                                                                //this.estado = Estado.LEER;
-                                                                /*this._landRegistryMapService.setEstado(
-                                                                                                Estado.LEER
-                                                                                            );*/
+    
+                                                                if (tipoLote === '2') {
+                                                                    dialogRef =
+                                                                    this.confirmationService.info(
+                                                                        'Puerta de Ingreso',
+                                                                        'Debe seleccionar la puerta de ingreso',
+                                                                        false
+                                                                    );
+    
+    
+                                                                    //this.estado = Estado.NUEVO_PUNTO_MEDITERRANEO;
+    
+                                                                    this._landRegistryMapService
+                                                                    .setEstado(Estado.NUEVO_PUNTO_MEDITERRANEO);
+    
+                                                                    const puntosLote = this.layersInfo.find(
+                                                                        l => l.id === 0
+                                                                    )?.featureLayer;
+    
+    
+    
+                                                                    puntosLote['definitionExpression'] = `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}' and  TIP_LOT="1" `;
+                                                                    const puntosPredio = this.layersInfo.find(
+                                                                        l => l.id === -1
+                                                                    )?.featureLayer;
+    
+                                                                    puntosPredio['definitionExpression'] = '1<>1';
+    
+    
+                                                                     const manzanaUrbana = this.layersInfo.find(
+                                                                        l => l.id === 3
+                                                                    )?.featureLayer;
+    
+                                                                    const where =   `MZN_URB = '${this.lote.MZN_URB.replace('\'','\'\'')}' AND UBIGEO = '${this.lote.UBIGEO}'  and COD_UU = '${this.lote.COD_UU}'  `;
+    
+                                                                    MapUtils.zoomToFeature(
+                                                                        this.view,
+                                                                        manzanaUrbana,
+                                                                        where
+                                                                    ).then(()=>{
+    
+                                                                        this.view.zoom = this.view.zoom - 1;
+    
+                                                                    });
+    
+                                                                    //this.view.zoom = this.view.zoom - 1;
+    
+                                                                }
+    
+                                                                else {
+                                                                    this._landRegistryMapService.landOut = this.landRegistryMapModel;
+                                                                    this._landRegistryMapService.setEstado(
+                                                                        Estado.LEER
+                                                                    );
+                                                                    //this.estado = Estado.LEER;
+                                                                    /*this._landRegistryMapService.setEstado(
+                                                                                                    Estado.LEER
+                                                                                                );*/
+                                                                }
+    
+    
+                                                            } else {
+                                                                this.onCancel();
+    
                                                             }
-
-
-                                                        } else {
-                                                            this.onCancel();
-
-                                                        }
-                                                    });
+                                                        });
+                                                }
                                             }
                                         }
+                                    } else {
+                        
                                     }
-                                } else {
-                    
                                 }
-                            }
-                        });
+                            });
+
+
+                        }
+
+                        else{
+
+
+                            this.addPoint(
+                                latitude,
+                                longitude,
+                                this.simbologiaPuntoSinBaseCartografica
+                            );
+    
+    
+                            const dialogRef =
+                            this.confirmationService.info(
+                                'Crear predio',
+                                '¿Desea crear el predio sin base cartografica?'
+                            );
+    
+                            dialogRef
+                            .afterClosed()
+                            .toPromise()
+                            .then((option) => {
+                                if (
+                                    option ===
+                                    'confirmed'
+                                ) {
+                                    this.landRegistryMapModel =
+                                        new LandRegistryMapModel();
+                                    this.landRegistryMapModel.latitude =
+                                        latitude;
+                                    this.landRegistryMapModel.longitude =
+                                        longitude;
+    
+                                    this.landRegistryMapModel.ubigeo =   this.userUbigeo;
+                               
+    
+                                    this._landRegistryMapService.landOut = this.landRegistryMapModel;
+
+                                    this._landRegistryMapService.setEstado(
+                                        Estado.LEER
+                                    );
+                                    //this.resetCapas();
+    
+                                } else {
+    
+                                    this.onCancel();
+                                }
+                            });
+                        }
                     }
 
 
@@ -1621,7 +1672,7 @@ export class LandRegistryGeolocationComponent
 
                                 this.pointEntradaGraphic = new Graphic({
                                     geometry: pointEntrada,
-                                    symbol: this.simpleMarkerSymbolEntrada,
+                                    symbol: this.simbologiaLoteServidumbre,
                                     /*symbol: this.simpleMarkerSymbolUndefined*/
                                 });
 
@@ -1684,7 +1735,7 @@ export class LandRegistryGeolocationComponent
                         });
                     }
 
-
+/*
                     else if( this.estado === Estado.CREAR_PUNTO_SIN_CARTO){
 
                         const graphic = event.mapPoint;
@@ -1776,9 +1827,7 @@ export class LandRegistryGeolocationComponent
                                         longitude;
     
                                     this.landRegistryMapModel.ubigeo =   this.userUbigeo;
-                                    /*this.landRegistryMapModel.ubigeo =
-                                        ubigeo;*/
-    
+                                  
     
                                     this._landRegistryMapService.landOut = this.landRegistryMapModel;
 
@@ -1862,8 +1911,8 @@ export class LandRegistryGeolocationComponent
                                 }
                             });
                         }
-*/
-                    }
+
+                    }*/
                 });
 
                 //this.resetMap();
@@ -2485,7 +2534,7 @@ export class LandRegistryGeolocationComponent
             this.addPoint(
                 land.latitude,
                 land.longitude,
-                this.simpleMarkerSymbol,
+                this.simbologiaPuntoConBaseCartografica,
 
 
             );
